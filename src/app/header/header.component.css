@@ -1,0 +1,29 @@
+:host ::ng-deep .logo {
+    width: 257px;
+    height:50px;
+    border-radius: 6px;
+    margin: 15px 28px 15px 0;
+    float: left;
+}
+
+
+.header-title{
+    color:#ffffff;
+    font-size: 2rem;
+    font-weight: bold;
+}
+.header{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.ant-layout-header {
+    height: 80px;
+    line-height: 80px;
+    font-size: 1.2rem;
+}
+
+.ant-menu{
+    line-height: 80px !important;
+}
