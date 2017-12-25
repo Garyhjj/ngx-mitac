@@ -1,0 +1,67 @@
+.container {
+  position: relative;
+  background-image: url('../../assets/imgs/login-bg.jpg');
+  background-size: 100% 100%;
+  height: 100%;
+}
+
+.ant-layout-footer {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  color: #fff;
+  background-color: #404040;
+}
+
+.login-body {
+  padding: 74px 0 118px;
+  text-align: center;
+}
+
+.login-body-box {
+  width: 990px;
+  margin: auto;
+  position: relative;
+  height: 388px;
+}
+
+.login-content {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  width: 380px;
+  height: 380px;
+  padding-top: 22px;
+  border: none;
+  position: absolute;
+  margin-right: -190px;
+  right: 50%;
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+.login-title{
+    height:34px;
+    line-height: 34px;
+    font-size: 26px;
+    margin-bottom: 30px;
+    margin-top: 30px;
+    color: #000;
+    font-weight: bold;
+}
+
+.login-form {
+  width: 80%;
+}
+
+.login-form-forgot {
+  float: right;
+}
+
+.login-form-button {
+  width: 100%;
+}
+
+.ant-checkbox-wrapper:not(:last-child) {
+    float: left;
+}

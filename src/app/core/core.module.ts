@@ -1,14 +1,23 @@
+import { EncryptUtilService } from './services/encryptUtil.service';
+import { HttpHeaderInterceptor } from './interceptors/http-header.interceptor';
+import { AuthService } from './services/auth.service';
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS } from '@angular/common/http'
 
 @NgModule({
-    imports: [CommonModule, HttpClientModule, FormsModule,
-        ReactiveFormsModule
+    imports: [CommonModule, HttpClientModule
     ],
     declarations: [],
     providers: [
+        AuthService,
+        EncryptUtilService,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: HttpHeaderInterceptor,
+            multi: true,
+        }
     ],
     exports: []
 })

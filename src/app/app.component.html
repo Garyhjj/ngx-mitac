@@ -1,11 +1,4 @@
 <nz-layout class="layout">
   <app-header></app-header>
-  <nz-layout class="sub-layout">
-    <nz-sider [nzWidth]="200" style="background:#fff">
-      <app-sider></app-sider>
-    </nz-sider>
-    <nz-layout style="padding:0 24px" class="content">
-      <app-content style="height:100%;"></app-content>
-    </nz-layout>
-  </nz-layout>
+  <router-outlet></router-outlet>
 </nz-layout>

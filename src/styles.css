@@ -1,6 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
+html{
+    font-size: 62.5%;
+}
 body {
     width: 100%;
     min-height: 100%;
-    font-size: 62.5%;/*10 ÷ 16 × 100% = 62.5%*/
+    /* font-size: 62.5%;10 ÷ 16 × 100% = 62.5% */
+}
+
+app-home, app-login {
+    height:100%;
+    min-height: 90%;
 }

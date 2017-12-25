@@ -1,0 +1,42 @@
+<div class="container">
+  <div class="login-body">
+    <div class="login-body-box">
+      <div class="login-content">
+        <form nz-form [formGroup]="validateForm" class="login-form">
+          <div class="login-title">
+            登录
+          </div>
+          <div nz-form-item>
+            <div nz-form-control>
+              <nz-input formControlName="userName" [nzPlaceHolder]="'Username'" [nzSize]="'large'">
+                <ng-template #prefix>
+                  <i class="anticon anticon-user"></i>
+                </ng-template>
+              </nz-input>
+              <div nz-form-explain *ngIf="validateForm.controls.userName.dirty&&validateForm.controls.userName.hasError('required')">Please input your username!</div>
+            </div>
+          </div>
+          <div nz-form-item>
+            <div nz-form-control>
+              <nz-input formControlName="password" [nzType]="'password'" [nzPlaceHolder]="'Password'" [nzSize]="'large'">
+                <ng-template #prefix>
+                  <i class="anticon anticon-lock"></i>
+                </ng-template>
+              </nz-input>
+              <div nz-form-explain *ngIf="validateForm.controls.password.dirty&&validateForm.controls.password.hasError('required')">Please input your Password!</div>
+            </div>
+          </div>
+          <div nz-form-item>
+            <div nz-form-control>
+              <label nz-checkbox formControlName="remember">
+                    <span>Remember me</span>
+                  </label>
+              <button nz-button class="login-form-button" [nzType]="'primary'" [nzSize]="'large'" (click)="login()" [disabled]="!validateForm.valid">Log in</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <nz-footer style="text-align: center;">Ant Design ©2017 Implement By Mitac</nz-footer>
+</div>
