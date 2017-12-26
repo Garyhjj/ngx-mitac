@@ -1,13 +1,12 @@
+import { AuthService } from './../core/services/auth.service';
 import { Injectable }     from '@angular/core';
 import { CanActivate, CanActivateChild }    from '@angular/router';
-
-import { Store } from '@ngrx/store';
 
 @Injectable()
 export class AuthGuard implements CanActivate, CanActivateChild {
   auth:boolean;
-  constructor(private store$: Store<any>){
-    store$.select('authReducer').subscribe((store)=>this.auth = store.auth)
+  constructor(private authService: AuthService){
+    this.auth = this.authService.checkAuth();
   }
   canActivate() {
     return this.auth;

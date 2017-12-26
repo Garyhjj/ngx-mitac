@@ -1,6 +1,8 @@
 import { SharedModule } from './shared/shared.module';
 import { AppRoutingModule } from './route/app-routing.module';
 import { breadcrumbReducer } from './core/reducers/breadcrumb.reducer';
+import { userReducer } from './core/reducers/user.reducer';
+
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
@@ -23,7 +25,7 @@ import { HeaderComponent } from './header/header.component';
     CoreModule,
     SharedModule,
     AppRoutingModule,
-    StoreModule.forRoot({breadcrumbReducer})
+    StoreModule.forRoot({breadcrumbReducer, userReducer})
   ],
   providers: [],
   bootstrap: [AppComponent]

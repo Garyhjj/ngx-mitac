@@ -4,7 +4,7 @@ import { BreadcrumbState } from './../store';
 
 
 export const BREADCRUMB_UPDATE = '[breadcrumb] update';
-
+export const BREADCRUMB_CLEAR = '[breadcrumb] clear';
 
 export class Breadcrumb_Update implements Action {
   readonly type = BREADCRUMB_UPDATE;
@@ -14,5 +14,12 @@ export class Breadcrumb_Update implements Action {
   }
 }
 
+export class Breadcrumb_Clear implements Action {
+  readonly type = BREADCRUMB_CLEAR;
+  payload;
+  constructor() {
+  }
+}
 
-export type BreadcrumbActions = Breadcrumb_Update ;
+
+export type BreadcrumbActions = Breadcrumb_Update | Breadcrumb_Clear;

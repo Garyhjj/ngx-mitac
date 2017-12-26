@@ -1,3 +1,5 @@
+import { NzNotificationService } from 'ng-zorro-antd';
+import { AuthGuard } from './../route/auth-guard.service';
 import { EncryptUtilService } from './services/encryptUtil.service';
 import { HttpHeaderInterceptor } from './interceptors/http-header.interceptor';
 import { AuthService } from './services/auth.service';
@@ -11,8 +13,10 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http'
     ],
     declarations: [],
     providers: [
+        NzNotificationService,
         AuthService,
         EncryptUtilService,
+        AuthGuard,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: HttpHeaderInterceptor,

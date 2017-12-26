@@ -31,9 +31,10 @@
               <label nz-checkbox formControlName="remember">
                     <span>Remember me</span>
                   </label>
-              <button nz-button class="login-form-button" [nzType]="'primary'" [nzSize]="'large'" (click)="login()" [disabled]="!validateForm.valid">Log in</button>
+              <button nz-button class="login-form-button" [nzType]="'primary'" [nzSize]="'large'" (click)="login()" [disabled]="!validateForm.valid">确认</button>
             </div>
           </div>
+          <nz-spin *ngIf="loading"></nz-spin>
         </form>
       </div>
     </div>

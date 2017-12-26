@@ -13,11 +13,12 @@
     font-weight: bold;
 }
 .header{
-    display: flex;
-    justify-content: space-between;
     margin-bottom: 10px;
 }
 
 .ant-layout-header {
     font-size: 0.9rem;
+}
+.menu {
+    float: right;
 }
