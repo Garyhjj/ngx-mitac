@@ -4,14 +4,14 @@ import { CanActivate, CanActivateChild }    from '@angular/router';
 
 @Injectable()
 export class AuthGuard implements CanActivate, CanActivateChild {
-  auth:boolean;
+
   constructor(private authService: AuthService){
-    this.auth = this.authService.checkAuth();
   }
   canActivate() {
-    return this.auth;
+    return this.authService.checkAuth();
   }
   canActivateChild(): boolean {
-    return this.auth;
+    return this.authService.checkAuth();
   }
+  
 }

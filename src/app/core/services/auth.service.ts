@@ -1,3 +1,4 @@
+import { reqObserve } from './../interceptors/http-header.interceptor';
 import { User_Login } from './../actions/user.action';
 import { Store } from '@ngrx/store';
 import { UserState, myStore } from './../store';
@@ -20,12 +21,16 @@ export class AuthService {
     authSubject = new BehaviorSubject<boolean>(false);
     tokenStoreName: string = 'tokenMes';
     loginPageSubject = new BehaviorSubject<boolean>(false);
+    user:UserState;
+    tokenEffectTime: number = 1000*60*20;
     constructor(
         private http: HttpClient,
         private encryptUtilService: EncryptUtilService,
         private store$: Store<myStore>
     ) { 
-        this.updateAuth(this.checkAuth())
+        this.updateAuth(this.checkAuth());
+        reqObserve.subscribe((a) => this.updateToken());
+        this.store$.select(s => s.userReducer).subscribe(u => this.user = u);
     }
 
     login(data: any) {
@@ -35,28 +40,45 @@ export class AuthService {
             user.modules = d.Modules;
             user.password = data.password;
             user.rememberPWD = data.remember;
-            this.updateTokenMes(d.Expires,d.Token);
+            let expires = d.Expires;
+            this.tokenEffectTime = expires - new Date().getTime();
+            this.updateTokenMes(expires,d.Token);
             this.auth = true;
             this.updateAuth(true);
             this.store$.dispatch(new User_Login(user));
         })
     }
 
-    checkAuth() {
-        let tokenStr = localStorage.getItem(this.tokenStoreName);
-        if(tokenStr) {
-            let tokenMes:TokenMes = JSON.parse(tokenStr);
-            if(typeof tokenMes === 'object') {
-                if(tokenMes.expires > new Date().getTime()) {
-                    return true
-                }
+    updateToken() {
+        let tokenMes = this.getTokenMes();
+        if(tokenMes) {
+            let expires = tokenMes.expires;
+            let time = new Date().getTime();
+            if((expires > time) && expires < time + this.tokenEffectTime*0.5) {
+                let user = this.user;
+                this.login({userName:user.USER_NAME,password:user.password,remember:user.rememberPWD}).subscribe();
             }
         }
-        return false;
+    }
+
+    checkAuth() {
+        let tokenMes = this.getTokenMes();
+        return tokenMes && (tokenMes.expires> new Date().getTime());
     }
     updateTokenMes(expires:number, token:string) {
         let tokenMes: TokenMes ={expires, token};
         localStorage.setItem(this.tokenStoreName, JSON.stringify(tokenMes));
+    }
+
+    getTokenMes() {
+        let tokenStr = localStorage.getItem(this.tokenStoreName);
+        if(tokenStr) {
+            let tokenMes:TokenMes = JSON.parse(tokenStr);
+            if(typeof tokenMes === 'object') {
+                return tokenMes;
+            }
+        }
+        return null;
     }
 
     clearTokenMes() {
@@ -74,7 +96,7 @@ export class AuthService {
     }
 }
 
-interface TokenMes {
+export interface TokenMes {
     expires: number;
     token: string;
 }

@@ -18,3 +18,7 @@ app-home, app-login {
 .my-hide{
     display: none;
 }
+
+app-empi {
+    height: 100%;
+}
