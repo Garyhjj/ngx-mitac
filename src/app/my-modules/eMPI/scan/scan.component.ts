@@ -15,7 +15,7 @@ export class ScanComponent implements OnInit {
 
   constructor(
     private domSanitizer:DomSanitizer,
-    private util: UtilService
+    private utilService: UtilService
   ) { }
 
   ngOnInit() {

@@ -14,12 +14,16 @@ export class UtilService {
         if(err && !isNaN(err.status)) {
             switch(err.status){
                 case 403:
-                  this._message.create('error','授权已超时,请重新登录' {nzDuration:5000})
-                  this.router.navigate(['/login'])
+                  this.tokenTimeOut();
                   return 
                   
             }
         }
+    }
+
+    tokenTimeOut() {
+        this._message.create('error','授权已超时,请重新登录', {nzDuration: 5000})
+        this.router.navigate(['/login'])
     }
 
 }

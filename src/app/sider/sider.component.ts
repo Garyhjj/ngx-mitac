@@ -1,3 +1,5 @@
+import { UtilService } from './../core/services/util.service';
+import { AuthService } from './../core/services/auth.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 import { myStore, UserState, MyModule } from './../core/store';
@@ -16,7 +18,9 @@ export class SiderComponent implements OnInit,OnDestroy {
   mySub: Subscription;
   constructor(
     private store$: Store<myStore>,
-    private router: Router
+    private router: Router,
+    private authService: AuthService,
+    private utilService: UtilService
   ) { }
 
   ngOnInit() {
@@ -30,6 +34,9 @@ export class SiderComponent implements OnInit,OnDestroy {
     return this.myModules && this.myModules.find(m => m.MODULE_ID === id);
   }
   select(e:any){
+    if(!this.authService.checkAuth()) {
+      return this.utilService.tokenTimeOut();
+    }
     let target = e.target;
     if(target.nodeName.toLowerCase() === 'li') {
       try{
