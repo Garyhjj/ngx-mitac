@@ -1,3 +1,4 @@
+import { UtilService } from './../../../core/services/util.service';
 import { eMPIConfig } from './../shared/config/index';
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeUrl} from '@angular/platform-browser'
@@ -13,7 +14,8 @@ export class ScanComponent implements OnInit {
   frameSrc:SafeUrl;
 
   constructor(
-    private domSanitizer:DomSanitizer
+    private domSanitizer:DomSanitizer,
+    private util: UtilService
   ) { }
 
   ngOnInit() {
