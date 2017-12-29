@@ -32,7 +32,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       viewHeight -= headerHeight;
       content.style.height = viewHeight + 'px';
       content.style.minHeight = viewHeight + 'px';
-      setTimeout(() => content.style.height = '',20);
+      setTimeout(() => content.style.height = '',100);
     }
   }
 
