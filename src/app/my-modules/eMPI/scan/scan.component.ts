@@ -8,7 +8,7 @@ import { DomSanitizer, SafeUrl} from '@angular/platform-browser'
 })
 export class ScanComponent implements OnInit {
 
-  testFileUri:string  = 'http://localhost:3000/pdfs';
+  testFileUri:string  = '/assets/123.pdf';
 
   frameSrc:SafeUrl;
 

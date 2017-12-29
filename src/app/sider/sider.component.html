@@ -1,5 +1,5 @@
 <ul nz-menu [nzMode]="'inline'" style="height:100%" [nzTheme]="'dark'" (click)="select($event)">
-  <li nz-submenu>
+  <li nz-submenu nzOpen>
     <span title><i class="anticon anticon-file-pdf"></i>eMPI</span>
     <ul>
       <li nz-menu-item data-route="/eMPI">添加</li>
@@ -7,7 +7,7 @@
       <li nz-menu-item data-route="/eMPI/scan">查看(test)</li>
     </ul>
   </li>
-  <li nz-submenu nzOpen *ngIf="canSeeModule(61)">
+  <li nz-submenu *ngIf="canSeeModule(61)">
       <span title><i class="anticon anticon-mail"></i>巡检</span>
       <ul>
         <li nz-menu-group>
