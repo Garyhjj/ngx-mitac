@@ -8,7 +8,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { StoreModule } from '@ngrx/store';
-import { ServiceWorkerModule } from '@angular/service-worker';
+// import { ServiceWorkerModule } from '@angular/service-worker';
 
 import { CoreModule } from './core/core.module';
 
@@ -27,7 +27,7 @@ import { HeaderComponent } from './header/header.component';
     CoreModule,
     SharedModule,
     AppRoutingModule,
-    ServiceWorkerModule.register('/ngsw-worker.js', {enabled: environment.production}),
+    // ServiceWorkerModule.register('/ngsw-worker.js', {enabled: environment.production}),
     StoreModule.forRoot({breadcrumbReducer, userReducer})
   ],
   providers: [],
