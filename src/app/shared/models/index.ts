@@ -1,4 +1,4 @@
-import { InputSet } from './index';
+import { bindEventForArray } from "../util/index";
 
 export interface DataDriveOptions {
     id: number;
@@ -17,7 +17,7 @@ export interface DataDriveOptions {
 export class DataDrive implements DataDriveOptions {
     id: number;
     searchSets?: SearchItemSet[];
-    tableData: TableData;
+    tableData: TableDataModel;
     APIs: {
         search: string;
         delete?: string;
@@ -28,23 +28,34 @@ export class DataDrive implements DataDriveOptions {
     private user: string;
     private _selfHideLists?: string[];
     allHideLists: string[];
-    constructor(opts: DataDriveOptions, user: string) {
+    private dataViewSetFactory;
+    private inputSetFactory;
+    private selfStoreSet;
+    private selfStore;
+    constructor(opts: DataDriveOptions, user: string = 'default', dataViewSetFactory: DataViewSetFactory = DataViewSetFactory, inputSetFactory = DataViewSetFactory, selfStoreSet = SelfStoreSet, selfStore = SelfStore) {
         Object.assign(this, opts);
         this.user = user;
+        this.dataViewSetFactory = dataViewSetFactory;
+        this.inputSetFactory = inputSetFactory;
+        this.selfStoreSet = new selfStoreSet();
+        this.selfStore = selfStore;
+        this.init();
     }
 
-    get selfStoreName() {
-        return 'selfStoreSet';
-    }
     set selfHideLists(ls: string[]) {
         this._selfHideLists = ls;
-        // localStorage.setItem(this.selfStoreName,)
+        bindEventForArray(this._selfHideLists, this.updateSelfStoreSet.bind(this))
+        this.updateSelfStoreSet()
+    }
+    private updateSelfStoreSet() {
+        const storeSet = new this.selfStore(this.user, [{ id: this.id, prefer: this._selfHideLists }]);
+        this.selfStoreSet.update(storeSet);
         this.combineHideLists();
     }
     get selfHideLists() {
         return this._selfHideLists;
     }
-    combineHideLists() {
+    private combineHideLists() {
         this.selfHideLists = this.selfHideLists || [];
         const baseHideLists: string[] = this.dataViewSet.hideLists || [];
         this.allHideLists = this.selfHideLists.concat(baseHideLists).filter(function (ele, index, array) {
@@ -52,27 +63,100 @@ export class DataDrive implements DataDriveOptions {
         });
     }
     private init() {
-
+        this.initDataViewSet();
+        this.initSearchSets();
+        this.initTableData();
     }
     private initSearchSets() {
         if (this.searchSets && this.searchSets.length > 0) {
             this.searchSets = this.searchSets.map(s => {
-                s.InputOpts = new InputSetFactory(s.InputOpts);
+                s.InputOpts = new this.inputSetFactory(s.InputOpts);
                 return s;
             });
         }
     }
 
     private initDataViewSet() {
-        this.dataViewSet = this.dataViewSet || {};
-        this.dataViewSet = new DataViewSetFactory(this.dataViewSet);
+        this.dataViewSet = new this.dataViewSetFactory(this.dataViewSet);
     }
     private initTableData() {
         this.tableData.columns = this.tableData.columns.map(c => {
             c.type = c.type || {};
-            c.type.InputOpts = new InputSetFactory(c.type.InputOpts);
+            c.type.InputOpts = new this.inputSetFactory(c.type.InputOpts);
             return c;
         });
+    }
+}
+
+export class SelfStore {
+    user: string; set: { id: string | number, prefer: any }[];
+    constructor(user: string, set: { id: string | number, prefer: any }[]) {
+        this.user = user;
+        this.set = set;
+    }
+    combine(other: SelfStore) {
+        if (other.user == this.user) {
+            other.set = other.set || [];
+            this.set.forEach(s => {
+                let idx = other.set.findIndex(o => o.id === s.id);
+                if (idx > -1) {
+                    other.set.splice(idx, 1, s);
+                } else {
+                    other.set.push(s);
+                }
+                other.set = other.set.map(o => {
+                    if (o.id === s.id) {
+                        o.prefer = s.prefer;
+                    }
+                    return o;
+                })
+            })
+        } else {
+            return other;
+        }
+    }
+}
+export class SelfStoreSet {
+    store: SelfStore[]
+    private _maxUser: number = 3;
+    constructor() {
+        this.store = this.getStore();
+    }
+
+    get selfStoreName() {
+        return 'selfStoreSet';
+    }
+    get maxUser() {
+        return this._maxUser;
+    }
+    set maxUser(val: number) {
+        this._maxUser = val;
+    }
+
+    getStore() {
+        const storeStr = localStorage.getItem(this.selfStoreName);
+        let store;
+        if (storeStr) {
+            store = JSON.parse(store);
+            return store instanceof Array ? store : [];
+        }
+        return [];
+    }
+    update(set: SelfStore) {
+        let store = this.getStore();
+        let targetIdx = store.findIndex(s => s.user === set.user);
+        if (targetIdx < 0) {
+            while (store.length > 2) {
+                store.shift();
+            }
+            store.push(set);
+        } else {
+            store = store.map((s: SelfStore, i) => {
+                return set.combine(s);
+            })
+        }
+        this.store = store;
+        localStorage.setItem(this.selfStoreName, JSON.stringify(store));
     }
 }
 
@@ -84,16 +168,58 @@ export interface DataViewSet {
     hideLists?: string[];
     more?: Object;
 }
+
+export interface TabelViewSetMore {
+    title?: {
+        enable: boolean;
+    };
+    border_y?: {
+        enable: boolean;
+    };
+    addOrder?: boolean;
+    fixedHeader?: {
+        enable: boolean;
+        scrollHeight?: number | 'auto';
+        width?: string[];
+        autoScroll?:{
+            interval:number;
+            loop?:boolean
+        }
+    };
+    pageSet?: {
+        enable: boolean;
+        count?: number;
+    };
+    size?: 'default' | 'middle' | 'small';
+    footer?: {
+        enable: boolean;
+        content: string;
+    }
+}
 export class TabelViewSet implements DataViewSet {
     type: DataViewType;
-    more: {
-        addOrder: boolean
-    };
+    title?: string;
+    more: TabelViewSetMore;
+    
     constructor(opts?: DataViewSet) {
         if (opts) {
             Object.assign(this, opts);
         }
-        this.more = this.more || { addOrder: true };
+        this.title = 'test';
+        this.more = this.more || {
+            title: { enable: true },
+            pageSet: { enable: false, count: 10 },
+            size: 'default', border_y: { enable: false },
+            fixedHeader: { 
+                enable: true, 
+                scrollHeight: 'auto',
+                autoScroll:{
+                    interval: 200,
+                    loop:true
+                }
+            },
+            footer: { enable: false, content: '' }
+        };
         this.type = 'table';
     }
 }
@@ -111,10 +237,29 @@ export interface SearchItemSet {
     InputOpts?: InputSet;
 }
 export interface TableData {
+    editable?: boolean;
+    addable?: boolean;
+    deletable?: boolean;
+    visible?: boolean;
     columns: { property: string, value: string, type: DataType }[];
-    data: { property: string, value: string }[];
+    data?: { property: string, value: string }[][];
 }
 
+export class TableDataModel implements TableData {
+    editable: boolean;
+    addable: boolean;
+    deletable: boolean;
+    visible: boolean;
+    columns: { property: string, value: string, type: DataType }[];
+    data?: { property: string, value: string }[][];
+    constructor(opts: TableData) {
+        this.editable = false;
+        this.deletable = false;
+        this.addable = false;
+        this.visible = true;
+        Object.assign(this, opts);
+    }
+}
 export interface DataType {
     InputOpts?: InputSet;
 }

@@ -1,0 +1,31 @@
+
+<nz-table *ngIf="_dataDrive"
+    #nzTable
+    [nzScroll]="setDetail.fixedHeader.enable?{ y: setDetail.fixedHeader.scrollHeight>0?setDetail.fixedHeader.scrollHeight: 300 }:null"
+    [nzDataSource]="tableData.data"
+    [nzPageSize]="setDetail.pageSet.count"
+    [nzBordered]="setDetail.border_y.enable"
+    [nzLoading]="_loading"
+    [nzIsPagination]="setDetail.pageSet.enable"
+    [nzShowFooter]="setDetail.footer.enable"
+    [nzShowTitle]="setDetail.title.enable"
+    [nzSize]="setDetail.size"
+    (nzDataChange)="dataChange()"
+    >
+    <span nz-table-title>{{tableSet.title}}</span>
+    <ng-template #nzFixedHeader [ngIf]="_header&&!setDetail.fixedHeader.enable&&tableData">
+        <thead nz-thead>
+            <tr>
+              <th nz-th *ngFor="let item of tableData.columns;let i = index" [nzWidth]="setDetail.fixedHeader.enable &&setDetail.fixedHeader.width && setDetail.fixedHeader.width[i]?setDetail.fixedHeader.width[i]:(100/tableData.columns.length) + '%'"><span>{{item.value}}</span></th>
+            </tr>
+          </thead>
+    </ng-template>
+    <tbody nz-tbody 
+    (mouseenter)="mouseEnter()"
+    (mouseleave)="mouseLeave()">
+        <tr nz-tbody-tr *ngFor="let data of nzTable.data">
+          <td nz-td *ngFor="let item of data">{{item.value}}</td>
+        </tr>
+      </tbody>
+    <span nz-table-footer>{{setDetail.footer.content}}</span>
+  </nz-table>

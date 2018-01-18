@@ -1,0 +1,4 @@
+<div [ngSwitch]="_viewSet.type">
+  <app-table [opts]="_dataDrive" *ngSwitchCase="'table'"></app-table>
+  <div *ngSwitchDefault>output2</div>
+</div>

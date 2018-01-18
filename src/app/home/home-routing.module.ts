@@ -7,12 +7,18 @@ import { HomeComponent } from './home.component';
 const homeRoutes: Routes = [
     {
         path: '',
-        component:HomeComponent,
-        children:[{
-            path:'eMPI',
-            canActivateChild: [AuthGuard],
-            loadChildren: 'app/my-modules/eMPI/eMPI.module#EMPIModule'
-        }]
+        component: HomeComponent,
+        canActivateChild: [AuthGuard],
+        children: [
+            {
+                path: 'eMPI',
+                loadChildren: 'app/my-modules/eMPI/eMPI.module#EMPIModule'
+            },
+            {
+                path: 'board',
+                loadChildren: 'app/my-modules/board/board.module#BoardModule'
+            }
+        ]
     }
 ]
 
