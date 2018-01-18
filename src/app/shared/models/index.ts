@@ -32,7 +32,13 @@ export class DataDrive implements DataDriveOptions {
     private inputSetFactory;
     private selfStoreSet;
     private selfStore;
-    constructor(opts: DataDriveOptions, user: string = 'default', dataViewSetFactory: DataViewSetFactory = DataViewSetFactory, inputSetFactory = DataViewSetFactory, selfStoreSet = SelfStoreSet, selfStore = SelfStore) {
+    constructor(
+        opts: DataDriveOptions,
+        user: string = 'default',
+        dataViewSetFactory: DataViewSetFactory = DataViewSetFactory,
+        inputSetFactory = DataViewSetFactory,
+        selfStoreSet = SelfStoreSet,
+        selfStore = SelfStore) {
         Object.assign(this, opts);
         this.user = user;
         this.dataViewSetFactory = dataViewSetFactory;
@@ -44,8 +50,8 @@ export class DataDrive implements DataDriveOptions {
 
     set selfHideLists(ls: string[]) {
         this._selfHideLists = ls;
-        bindEventForArray(this._selfHideLists, this.updateSelfStoreSet.bind(this))
-        this.updateSelfStoreSet()
+        bindEventForArray(this._selfHideLists, this.updateSelfStoreSet.bind(this));
+        this.updateSelfStoreSet();
     }
     private updateSelfStoreSet() {
         const storeSet = new this.selfStore(this.user, [{ id: this.id, prefer: this._selfHideLists }]);
@@ -56,7 +62,7 @@ export class DataDrive implements DataDriveOptions {
         return this._selfHideLists;
     }
     private combineHideLists() {
-        this.selfHideLists = this.selfHideLists || [];
+        this._selfHideLists = this._selfHideLists || [];
         const baseHideLists: string[] = this.dataViewSet.hideLists || [];
         this.allHideLists = this.selfHideLists.concat(baseHideLists).filter(function (ele, index, array) {
             return index === array.indexOf(ele);
@@ -95,10 +101,10 @@ export class SelfStore {
         this.set = set;
     }
     combine(other: SelfStore) {
-        if (other.user == this.user) {
+        if (other && other.user === this.user) {
             other.set = other.set || [];
             this.set.forEach(s => {
-                let idx = other.set.findIndex(o => o.id === s.id);
+                const idx = other.set.findIndex(o => o.id === s.id);
                 if (idx > -1) {
                     other.set.splice(idx, 1, s);
                 } else {
@@ -109,18 +115,19 @@ export class SelfStore {
                         o.prefer = s.prefer;
                     }
                     return o;
-                })
-            })
+                });
+            });
         } else {
             return other;
         }
     }
 }
 export class SelfStoreSet {
-    store: SelfStore[]
-    private _maxUser: number = 3;
+    store: SelfStore[];
+    private _maxUser: number;
     constructor() {
         this.store = this.getStore();
+        this._maxUser = 3;
     }
 
     get selfStoreName() {
@@ -137,14 +144,14 @@ export class SelfStoreSet {
         const storeStr = localStorage.getItem(this.selfStoreName);
         let store;
         if (storeStr) {
-            store = JSON.parse(store);
+            store = JSON.parse(storeStr);
             return store instanceof Array ? store : [];
         }
         return [];
     }
     update(set: SelfStore) {
         let store = this.getStore();
-        let targetIdx = store.findIndex(s => s.user === set.user);
+        const targetIdx = store.findIndex(s => s && s.user === set.user);
         if (targetIdx < 0) {
             while (store.length > 2) {
                 store.shift();
@@ -153,7 +160,7 @@ export class SelfStoreSet {
         } else {
             store = store.map((s: SelfStore, i) => {
                 return set.combine(s);
-            })
+            });
         }
         this.store = store;
         localStorage.setItem(this.selfStoreName, JSON.stringify(store));
@@ -176,14 +183,30 @@ export interface TabelViewSetMore {
     border_y?: {
         enable: boolean;
     };
+    header?: {
+        textColor?: string;
+        textSize?: string;
+        bgColor?: string
+    };
+    body?: {
+        textColor?: string;
+        textSize?: string;
+        bgColor?: string;
+        rule?: {
+            match: string[][];
+            textColor?: string;
+            textSize?: string;
+            bgColor?: string;
+        }
+    };
     addOrder?: boolean;
     fixedHeader?: {
         enable: boolean;
         scrollHeight?: number | 'auto';
         width?: string[];
-        autoScroll?:{
-            interval:number;
-            loop?:boolean
+        autoScroll?: {
+            interval: number;
+            loop?: boolean
         }
     };
     pageSet?: {
@@ -194,13 +217,13 @@ export interface TabelViewSetMore {
     footer?: {
         enable: boolean;
         content: string;
-    }
+    };
 }
 export class TabelViewSet implements DataViewSet {
     type: DataViewType;
     title?: string;
     more: TabelViewSetMore;
-    
+
     constructor(opts?: DataViewSet) {
         if (opts) {
             Object.assign(this, opts);
@@ -210,12 +233,24 @@ export class TabelViewSet implements DataViewSet {
             title: { enable: true },
             pageSet: { enable: false, count: 10 },
             size: 'default', border_y: { enable: false },
-            fixedHeader: { 
-                enable: true, 
+            header: {
+                textColor: '#fff',
+                bgColor: '#000'
+            },
+            body: {
+                textColor: 'red',
+                bgColor: '#000',
+                rule: {
+                    match: [['1', '^\s*$']],
+                    textColor: 'green',
+                }
+            },
+            fixedHeader: {
+                enable: true,
                 scrollHeight: 'auto',
-                autoScroll:{
-                    interval: 200,
-                    loop:true
+                autoScroll: {
+                    interval: 1000,
+                    loop: true
                 }
             },
             footer: { enable: false, content: '' }

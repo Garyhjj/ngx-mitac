@@ -9,33 +9,28 @@ import { Component, OnInit } from '@angular/core';
 export class UrgentMaterialComponent implements OnInit {
   data: any = [];
   data2: TableDataModel;
-  dataDrive;
+  dataDrive: DataDrive;
   constructor() { }
 
   ngOnInit() {
     this.dataDrive = this.prepare();
+    this.dataDrive.selfHideLists = ['3'];
+    this.dataDrive.selfHideLists.push('2');
     this.data2 = this.dataDrive.tableData;
-    
     this.data2.data = [];
     for (let i = 0; i < 100; i++) {
+      const v = (i % 2 === 0) ? '' : '55';
       this.data2.data.push([{
-        property: '1', value: '345'
+        property: '1', value: v
       },
       {
         property: '2', value: '456456'
       }, {
         property: '3', value: '67879'
       }, {
-        property: '4', value: '2342354'
+        property: '4', value: ''
       }]);
-      this.data.push({
-        name: `Edward King ${i}`,
-        age: 32,
-        address: `London, Park Lane no. ${i}`,
-      });
-    };
-   
-
+    }
   }
 
   prepare() {

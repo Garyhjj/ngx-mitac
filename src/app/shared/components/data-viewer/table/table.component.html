@@ -16,7 +16,11 @@
     <ng-template #nzFixedHeader [ngIf]="_header&&!setDetail.fixedHeader.enable&&tableData">
         <thead nz-thead>
             <tr>
-              <th nz-th *ngFor="let item of tableData.columns;let i = index" [nzWidth]="setDetail.fixedHeader.enable &&setDetail.fixedHeader.width && setDetail.fixedHeader.width[i]?setDetail.fixedHeader.width[i]:(100/tableData.columns.length) + '%'"><span>{{item.value}}</span></th>
+              <th nz-th 
+              [style.backgroundColor]="setDetail.header?setDetail.header.bgColor:''"
+              [style.color]= "setDetail.header?setDetail.header.textColor:''"
+              [style.fontSize]= "setDetail.header?setDetail.header.textSize:''"
+              *ngFor="let item of tableData.columns;let i = index" [nzWidth]="setDetail.fixedHeader.enable &&setDetail.fixedHeader.width && setDetail.fixedHeader.width[i]?setDetail.fixedHeader.width[i]:(100/tableData.columns.length) + '%'"><span>{{item.value}}</span></th>
             </tr>
           </thead>
     </ng-template>
@@ -24,8 +28,12 @@
     (mouseenter)="mouseEnter()"
     (mouseleave)="mouseLeave()">
         <tr nz-tbody-tr *ngFor="let data of nzTable.data">
-          <td nz-td *ngFor="let item of data">{{item.value}}</td>
+          <td 
+          [style.backgroundColor]="setDetail.body && setDetail.body.rule && runRegExp(data, setDetail.body.rule.match) && setDetail.body.rule.bgColor?setDetail.body.rule.bgColor:setDetail.body?setDetail.body.bgColor:''"
+          [style.fontSize]= "setDetail.body && setDetail.body.rule && runRegExp(data, setDetail.body.rule.match) && setDetail.body.rule.textSize?setDetail.body.rule.textSize:setDetail.body?setDetail.body.textSize:''"
+          [style.color]= "setDetail.body && setDetail.body.rule && runRegExp(data, setDetail.body.rule.match) && setDetail.body.rule.textColor?setDetail.body.rule.textColor:setDetail.body?setDetail.body.textColor:''"
+          nz-td *ngFor="let item of data">{{item.value}}</td>
         </tr>
       </tbody>
     <span nz-table-footer>{{setDetail.footer.content}}</span>
-  </nz-table>
+  </nz-table>runRegExp
