@@ -269,12 +269,12 @@ export class TabelViewSet implements DataViewSet {
             header: {
                 textColor: '#fff',
                 bgColor: '#000',
-                textSize: '1.6rem'
+                textSize: '1.8rem'
             },
             body: {
                 textColor: 'red',
                 bgColor: '#000',
-                textSize: '1.6rem',
+                textSize: '1.8rem',
                 rule: {
                     match: [['LOT_NO', '^\s*$']],
                     textColor: 'yellow',
