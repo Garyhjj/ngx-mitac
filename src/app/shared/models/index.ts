@@ -1,3 +1,4 @@
+import { BehaviorSubject } from 'rxjs/Rx';
 import { bindEventForArray } from "../util/index";
 
 export interface DataDriveOptions {
@@ -15,6 +16,15 @@ export interface DataDriveOptions {
 }
 
 export class DataDrive implements DataDriveOptions {
+    private user: string;
+    private _selfHideLists?: string[];
+    private dataViewSetFactory;
+    private inputSetFactory;
+    private selfStoreSet;
+    private selfStore;
+    private hideListSubject = new BehaviorSubject<string[]>([]);
+    private isGetingDataSubject = new BehaviorSubject<boolean>(false);
+    private isShowModalSubject = new BehaviorSubject<boolean>(false);
     id: number;
     searchSets?: SearchItemSet[];
     tableData: TableDataModel;
@@ -25,13 +35,7 @@ export class DataDrive implements DataDriveOptions {
         update?: string;
     };
     dataViewSet?: DataViewSet;
-    private user: string;
-    private _selfHideLists?: string[];
     allHideLists: string[];
-    private dataViewSetFactory;
-    private inputSetFactory;
-    private selfStoreSet;
-    private selfStore;
     constructor(
         opts: DataDriveOptions,
         user: string = 'default',
@@ -47,11 +51,16 @@ export class DataDrive implements DataDriveOptions {
         this.selfStore = selfStore;
         this.init();
     }
-
+    set isGetingData(status:boolean) {
+        this.isGetingDataSubject.next(status);
+    }
     set selfHideLists(ls: string[]) {
         this._selfHideLists = ls;
         bindEventForArray(this._selfHideLists, this.updateSelfStoreSet.bind(this));
         this.updateSelfStoreSet();
+    }
+    set modalSataus(s:boolean) {
+        this.isShowModalSubject.next(s);
     }
     private updateSelfStoreSet() {
         const storeSet = new this.selfStore(this.user, [{ id: this.id, prefer: this._selfHideLists }]);
@@ -64,14 +73,29 @@ export class DataDrive implements DataDriveOptions {
     private combineHideLists() {
         this._selfHideLists = this._selfHideLists || [];
         const baseHideLists: string[] = this.dataViewSet.hideLists || [];
-        this.allHideLists = this.selfHideLists.concat(baseHideLists).filter(function (ele, index, array) {
+        this.allHideLists = this._selfHideLists.concat(baseHideLists).filter(function (ele, index, array) {
             return index === array.indexOf(ele);
         });
+        this.hideListSubject.next(this.allHideLists);
+    }
+    private initHideLists() {
+        this._selfHideLists = this.selfStoreSet.getSetByUserAndId(this.user, this.id);
+        this.combineHideLists();
+    }
+    observeHideLists() {
+        return this.hideListSubject.asObservable();
+    }
+    observeIsGettingData() {
+        return this.isGetingDataSubject.asObservable();
+    }
+    observeIsShowModal() {
+        return this.isShowModalSubject.asObservable();
     }
     private init() {
         this.initDataViewSet();
         this.initSearchSets();
         this.initTableData();
+        this.initHideLists();
     }
     private initSearchSets() {
         if (this.searchSets && this.searchSets.length > 0) {
@@ -117,6 +141,7 @@ export class SelfStore {
                     return o;
                 });
             });
+            return other;
         } else {
             return other;
         }
@@ -146,6 +171,14 @@ export class SelfStoreSet {
         if (storeStr) {
             store = JSON.parse(storeStr);
             return store instanceof Array ? store : [];
+        }
+        return [];
+    }
+    getSetByUserAndId(user:string,id:string | number) {
+        const all = this.getStore().find(s => s && s.user === user);
+        if(all && all.set.length > 0) {
+            const set = all.set.find(s => s.id === id);
+            return set? set.prefer: [];
         }
         return [];
     }
@@ -228,21 +261,23 @@ export class TabelViewSet implements DataViewSet {
         if (opts) {
             Object.assign(this, opts);
         }
-        this.title = 'test';
+        this.title = '急料看板';
         this.more = this.more || {
             title: { enable: true },
             pageSet: { enable: false, count: 10 },
             size: 'default', border_y: { enable: false },
             header: {
                 textColor: '#fff',
-                bgColor: '#000'
+                bgColor: '#000',
+                textSize: '1.6rem'
             },
             body: {
                 textColor: 'red',
                 bgColor: '#000',
+                textSize: '1.6rem',
                 rule: {
-                    match: [['1', '^\s*$']],
-                    textColor: 'green',
+                    match: [['LOT_NO', '^\s*$']],
+                    textColor: 'yellow',
                 }
             },
             fixedHeader: {

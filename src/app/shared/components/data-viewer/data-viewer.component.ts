@@ -13,11 +13,12 @@ export class DataViewerComponent implements OnInit {
 
   @Input()
   set opts(opts: DataDrive){
-    console.log(opts);
     this._dataDrive = opts;
     this._viewSet = opts.dataViewSet;
   };
 
+  @Input()
+  isModal:boolean;
   constructor() { }
 
   ngOnInit() {

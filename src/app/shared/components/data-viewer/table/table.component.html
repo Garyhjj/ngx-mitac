@@ -8,7 +8,7 @@
     [nzLoading]="_loading"
     [nzIsPagination]="setDetail.pageSet.enable"
     [nzShowFooter]="setDetail.footer.enable"
-    [nzShowTitle]="setDetail.title.enable"
+    [nzShowTitle]="setDetail.title.enable && !isModal"
     [nzSize]="setDetail.size"
     (nzDataChange)="dataChange()"
     >
@@ -36,4 +36,4 @@
         </tr>
       </tbody>
     <span nz-table-footer>{{setDetail.footer.content}}</span>
-  </nz-table>runRegExp
+  </nz-table>

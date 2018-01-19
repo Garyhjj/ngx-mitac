@@ -15,3 +15,19 @@
       }
     })
   }
+
+
+  /**
+   *  节流，限制事件的触发频率
+   * 
+   * @param {*} 方法 
+   * @param {Object} 上下文 
+   * @param {any[]} 需要传入的参数 
+   * @param {number} [during=100] 间隔的时间 
+   */
+  export const throttle = (method: any, context: Object, args: any[] = [], during: number = 200) =>{
+    clearTimeout(method.tId);
+    method.tId = setTimeout(function () {
+      method.call(context, ...args);
+    }, during);
+  }
