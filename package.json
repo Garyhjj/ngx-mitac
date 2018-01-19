@@ -11,7 +11,7 @@
     "e2e": "ng e2e",
     "prod": "npm run build && node server.js",
     "serve": "npm run build && pm2 start server.js --name='mitac-end'",
-    "update": "git pull && pm2 reload mitac-end"
+    "update": "git pull && npm i && npm run build && pm2 reload mitac-end"
   },
   "private": true,
   "dependencies": {
