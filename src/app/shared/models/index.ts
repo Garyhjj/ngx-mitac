@@ -272,12 +272,12 @@ export class TabelViewSet implements DataViewSet {
                 textSize: '1.8rem'
             },
             body: {
-                textColor: 'red',
+                textColor: 'green',
                 bgColor: '#000',
                 textSize: '1.8rem',
                 rule: {
-                    match: [['LOT_NO', '^\s*$']],
-                    textColor: 'yellow',
+                    match: [['IQC_TIME', '^\s*$']],
+                    textColor: 'red',
                 }
             },
             fixedHeader: {

@@ -52,7 +52,7 @@ export class UrgentMaterialComponent implements OnInit {
 
   prepare() {
     var a = new DataDrive({
-      id: 1, APIs: { search: 'UrgentMaterial/GetUrgentMaterial?wo={wo}' }, tableData: new TableDataModel({
+      id: 1, APIs: { search: 'UrgentMaterial/GetUrgentMaterial?wo=' }, tableData: new TableDataModel({
         columns: [
           {
             property: 'LOT_NO', value: 'LOT_NO', type: {}
