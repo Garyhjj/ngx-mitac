@@ -1,7 +1,8 @@
+import { TabelViewSetMore, TabelViewSet } from './../../data-drive/shared/models/viewer/table';
 import { Subscription } from 'rxjs/Rx';
-import { TabelViewSet, TableData, TabelViewSetMore } from './../../../models/index';
+import { TableData } from '../../data-drive/shared/models/index';
 import { Component, OnInit, Input, AfterViewInit, OnDestroy, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
-import { DataDrive } from '../../../models/index';
+import { DataDrive } from '../../data-drive/shared/models/index';
 import { throttle } from '../../../util/index';
 import { Observable } from 'rxjs/Observable';
 
@@ -17,7 +18,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   setDetail: TabelViewSetMore;
   tableData: TableData;
   dataViewList: any = [];
-  canScroll: boolean = true;
+  canScroll = true;
   private timeEvent1;
   private timeEvent2;
   private hideLists: string[];
@@ -85,7 +86,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     const filter = c => ls.indexOf(c.property) < 0;
     const filterColumns = this._dataDrive.tableData.columns.slice().filter(filter);
     const originData = this._dataDrive.tableData.data && this._dataDrive.tableData.data.slice();
-    var filterData;
+    let filterData;
     if (originData && originData.length > 0) {
       filterData = originData.map((trs) => trs.filter(filter));
     }
@@ -101,7 +102,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   initAutoScroll() {
     let autoScroll;
     if (this.setDetail && this.setDetail.fixedHeader && (autoScroll = this.setDetail.fixedHeader.autoScroll)) {
-      const selector = this.isModal? '.my-modal app-table tr': '.main-view app-table tr'
+      const selector = this.isModal ? '.my-modal app-table tr' : '.main-view app-table tr';
       this.dataViewList = document.querySelectorAll(selector);
       this._scrollInterval = autoScroll.interval;
       this._loopScroll = autoScroll.loop;
@@ -116,36 +117,70 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   }
   autoScroll(idx: number = 0) {
     clearTimeout(this.timeEvent1);
-    if (idx >= this.dataViewList.length && this._loopScroll) { idx = 0 };
+    if (idx >= this.dataViewList.length && this._loopScroll) { idx = 0; }
     if (idx < this.dataViewList.length) {
       if (this.canScroll) {
         this.dataViewList[idx].scrollIntoView();
       } else {
         --idx;
       }
-      this.timeEvent1 = setTimeout(() => this.autoScroll(++idx), this._scrollInterval)
+      this.timeEvent1 = setTimeout(() => this.autoScroll(++idx), this._scrollInterval);
     }
 
   }
-  runRegExp(target: any[], rules: string[][]) {
-    if (rules && rules.length > 0) {
-      for (let i = 0; i < rules.length; i++) {
-        const rule = rules[i];
-        if (rule.length < 2) {
-          return false;
-        } else {
-          const t = target.find(s => s.property === rule[0]);
-          if (!t) {
-            return false;
-          }
-          if (!new RegExp(rule[1]).test(t.value?t.value:'')) {
-            return false;
+  runRegExp(target: any[], body: {
+    textColor?: string;
+    textSize?: string;
+    bgColor?: string;
+    rules?: {
+      matches: string[][];
+      textColor?: string;
+      textSize?: string;
+      bgColor?: string;
+    }[]
+  }, type: string) {
+    let rules: {
+      matches: string[][];
+      textColor?: string;
+      textSize?: string;
+      bgColor?: string;
+    }[];
+    if (!(rules = body.rules)) {
+      return body[type];
+    } else {
+      if (rules.length > 0) {
+        for (let i = 0; i < rules.length; i++) {
+          const rule = rules[i];
+          if (rule.matches && rule.matches.length > 0) {
+            const matches = rule.matches;
+            if (matches instanceof Array) {
+              let result = true;
+              for (let y = 0; y < matches.length; y++) {
+                const match = matches[y];
+                if (match.length < 2) {
+                  result = false;
+                  break;
+                } else {
+                  const t = target.find(s => s.property === match[0]);
+                  if (!t) {
+                    result = false;
+                    break;
+                  }
+                  if (!new RegExp(match[1]).test(t.value ? t.value : '')) {
+                    result = false;
+                    break;
+                  }
+                }
+              }
+              if (result) {
+                return rule[type] ? rule[type] : body[type];
+              }
+            }
           }
         }
       }
-      return true;
     }
-    return false;
+    return body[type];
   }
   clearTimeEvent() {
     clearTimeout(this.timeEvent1);
@@ -163,8 +198,8 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     this.canScroll = true;
   }
   ngOnInit() {
-    if(!this.isModal) {
-      this.sub3 = this._dataDrive.observeIsShowModal().subscribe(s => this.canScroll = s);
+    if (!this.isModal) {
+      this.sub3 = this._dataDrive.observeIsShowModal().subscribe(s => this.canScroll = !s);
     }
   }
 
@@ -177,7 +212,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   }
 
   ngAfterViewChecked() {
-    throttle(this.cacalScrollHeight,this);
+    throttle(this.cacalScrollHeight, this, [], 500);
   }
 
 }

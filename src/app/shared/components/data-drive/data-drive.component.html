@@ -1,0 +1,17 @@
+<div *ngIf="dataDrive && dataDrive.additionalFn">
+  <nz-collapseset *ngIf="dataDrive.additionalFn.filterColumn">
+    <nz-collapse [nzTitle]="'挑选列'">
+      <app-filter-column [opts]="dataDrive"></app-filter-column>
+    </nz-collapse>
+    <nz-collapse [nzTitle]="'菜单'">
+      <app-menu [opts]="dataDrive"></app-menu>
+    </nz-collapse>
+  </nz-collapseset>
+</div>
+
+
+<app-data-viewer [opts]="dataDrive" class="main-view" *ngIf="dataDrive && dataDrive.tableData && dataDrive.tableData.visible"></app-data-viewer>
+
+<div class="my-modal" *ngIf="isShowModal | async">
+  <app-data-viewer [opts]="dataDrive" [isModal]="true"></app-data-viewer>
+</div>

@@ -1,5 +1,5 @@
 import { Subscription } from 'rxjs/Rx';
-import { DataDrive } from './../../models/index';
+import { DataDrive } from '../data-drive/shared/models/index';
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 
 @Component({
@@ -12,13 +12,13 @@ export class FilterColumnComponent implements OnInit, OnDestroy {
 
   @Input()
   set opts(opts: DataDrive) {
-    this.dataDrive = opts
+    this.dataDrive = opts;
     this.columns = opts.tableData.columns.slice();
   }
   hideLists: string[] = [];
   columns;
   private sub1: Subscription;
-  checkOptionsOne: { label: string, value: string, checked: boolean }[]
+  checkOptionsOne: { label: string, value: string, checked: boolean }[];
   allChecked = false;
   indeterminate = true;
 
@@ -30,7 +30,7 @@ export class FilterColumnComponent implements OnInit, OnDestroy {
     this.checkOptionsOne = this.columns.map(c => {
       const property = c.property;
       return { label: c.value, value: property, checked: this.hideLists.indexOf(property) > -1 ? false : true };
-    })
+    });
   }
 
   ngOnDestroy() {
@@ -59,9 +59,9 @@ export class FilterColumnComponent implements OnInit, OnDestroy {
       this.checkOptionsOne.forEach(item => item.checked = true);
       this.dataDrive.selfHideLists = [];
     } else {
-      let hideList = [];
+      const hideList = [];
       this.checkOptionsOne.forEach(item => {
-        item.checked = false
+        item.checked = false;
         hideList.push(item.value);
       });
       this.dataDrive.selfHideLists = hideList;
@@ -69,7 +69,7 @@ export class FilterColumnComponent implements OnInit, OnDestroy {
   }
 
   updateHideList() {
-    let hideList = [];
+    const hideList = [];
     this.checkOptionsOne.forEach(item => {
       !item.checked && hideList.push(item.value);
     });

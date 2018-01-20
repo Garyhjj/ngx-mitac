@@ -29,9 +29,9 @@
     (mouseleave)="mouseLeave()">
         <tr nz-tbody-tr *ngFor="let data of nzTable.data">
           <td 
-          [style.backgroundColor]="setDetail.body && setDetail.body.rule && runRegExp(data, setDetail.body.rule.match) && setDetail.body.rule.bgColor?setDetail.body.rule.bgColor:setDetail.body?setDetail.body.bgColor:''"
-          [style.fontSize]= "setDetail.body && setDetail.body.rule && runRegExp(data, setDetail.body.rule.match) && setDetail.body.rule.textSize?setDetail.body.rule.textSize:setDetail.body?setDetail.body.textSize:''"
-          [style.color]= "setDetail.body && setDetail.body.rule && runRegExp(data, setDetail.body.rule.match) && setDetail.body.rule.textColor?setDetail.body.rule.textColor:setDetail.body?setDetail.body.textColor:''"
+          [style.backgroundColor]="setDetail.body && setDetail.body.rules?runRegExp(data, setDetail.body, 'bgColor'):''"
+          [style.fontSize]= "setDetail.body && setDetail.body.rules?runRegExp(data, setDetail.body, 'textSize'):''"
+          [style.color]= "setDetail.body && setDetail.body.rules?runRegExp(data, setDetail.body, 'textColor'):''"
           nz-td *ngFor="let item of data">{{item.value}}</td>
         </tr>
       </tbody>

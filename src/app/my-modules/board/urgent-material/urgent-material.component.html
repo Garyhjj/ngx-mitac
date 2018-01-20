@@ -1,16 +1,1 @@
-<nz-collapseset>
-  <nz-collapse [nzTitle]="'挑选列'">
-    <app-filter-column [opts]="dataDrive"></app-filter-column>
-  </nz-collapse>
-  <nz-collapse [nzTitle]="'菜单'">
-    <button nz-button [nzType]="'primary'" (click)="showModal()">
-      <span>视图全屏显示</span>
-    </button>
-  </nz-collapse>
-</nz-collapseset>
-
-<app-data-viewer [opts]="dataDrive" class="main-view"></app-data-viewer>
-
-<div class="my-modal" *ngIf="isShowModal">
-  <app-data-viewer [opts]="dataDrive" [isModal]="true"></app-data-viewer>
-</div>
+<app-data-drive [name]= "'urgentMaterial'"></app-data-drive>

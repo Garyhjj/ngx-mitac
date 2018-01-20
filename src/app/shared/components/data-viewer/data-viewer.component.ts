@@ -1,4 +1,4 @@
-import { DataDrive, DataViewSet } from './../../models/index';
+import { DataDrive, DataViewSet } from '../data-drive/shared/models/index';
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
@@ -12,13 +12,13 @@ export class DataViewerComponent implements OnInit {
   _viewSet: DataViewSet;
 
   @Input()
-  set opts(opts: DataDrive){
+  set opts(opts: DataDrive) {
     this._dataDrive = opts;
     this._viewSet = opts.dataViewSet;
-  };
+  }
 
   @Input()
-  isModal:boolean;
+  isModal: boolean;
   constructor() { }
 
   ngOnInit() {
