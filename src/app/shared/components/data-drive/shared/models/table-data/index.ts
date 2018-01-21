@@ -1,13 +1,23 @@
 import { InputSet } from '../input/index';
 import { InputSetFactory } from '../input';
+
+export interface TableDataColumn {
+    property: string;
+    value: string;
+    type: DataType;
+}
+export interface TableInsideData {
+    property: string;
+    value: string;
+}
 export interface TableData {
     editable?: boolean;
     addable?: boolean;
     deletable?: boolean;
     visible?: boolean;
     searchable?: boolean;
-    columns: { property: string, value: string, type: DataType }[];
-    data?: { property: string, value: string }[][];
+    columns: TableDataColumn[];
+    data?: TableInsideData[][];
 }
 
 export class TableDataModel implements TableData {

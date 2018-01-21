@@ -1,0 +1,47 @@
+<form nz-form [nzLayout]="formLayout" [formGroup]="validateForm" (ngSubmit)="submitForm()">
+    <ng-container *ngFor="let item of columnNameStrings;let i =index">
+  
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSpan]="isHorizontal?6:8">
+          <label>{{inputTypeList[i].label}}</label>
+        </div>
+  
+  
+        <div nz-form-control nz-col [nzSpan]="isHorizontal?16:16">
+          <nz-input [formControlName]="item" [nzPlaceHolder]="inputTypeList[i].placeHolder" [nzSize]="'large'" *ngIf="inputTypeList[i]?.type === 'text'">
+          </nz-input>
+  
+          <nz-select 
+          [formControlName]="item" 
+          [nzSize]="'large'" 
+          [nzPlaceHolder]="inputTypeList[i].placeHolder" 
+          *ngIf="inputTypeList[i]?.type === 'select'"
+          [style.minWidth]="'100px'"
+          >
+            <nz-option [nzLabel]="'China'" [nzValue]="'China'"></nz-option>
+            <nz-option [nzLabel]="'U.S.A'" [nzValue]="'U.S.A'"></nz-option>
+          </nz-select>
+  
+          <nz-datepicker [formControlName]="item" [nzSize]="'large'" *ngIf="inputTypeList[i]?.type === 'datepicker'">
+          </nz-datepicker>
+  
+          <nz-timepicker [formControlName]="item" [nzSize]="'large'" *ngIf="inputTypeList[i]?.type === 'timepicker'">
+          </nz-timepicker>
+  
+          <nz-input-number [formControlName]="item" [nzSize]="'large'" [nzStep]="1" [nzMax]="4" [nzMin]="1" [style.width]="'50%'" *ngIf="inputTypeList[i]?.type === 'number'"></nz-input-number>
+  
+          <!-- <div nz-form-explain *ngIf="validateForm.controls.userName.dirty&&validateForm.controls.userName.hasError('required')">Please input your username!</div> -->
+        </div>
+        <!-- <div nz-form-control nz-col [nzSpan]="14">
+              <nz-switch formControlName="switch"></nz-switch>
+            </div> -->
+  
+  
+      </div>
+    </ng-container>
+  
+    <div nz-form-item nz-row [style.display] = "'block'">
+      <button nz-button nz-col [nzOffset]="6" [nzSpan]="12" type="submit" [nzType]="'primary'" [nzSize]="'large'" [disabled]="!validateForm.valid"
+      >Submit</button>
+    </div>
+  </form>

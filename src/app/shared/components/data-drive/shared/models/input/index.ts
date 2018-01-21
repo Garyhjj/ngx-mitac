@@ -17,6 +17,22 @@ export class InputSetDefault implements InputSet {
         this.default = '';
     }
 }
+
+export class SelectInputSet implements InputSet {
+    type: InputTypes = 'select';
+    editable?: boolean;
+    placeHolder?: string;
+    default?: string | boolean | number;
+    constructor(opts?: InputSet) {
+        if (opts) {
+            this.default = opts.default;
+            this.editable = opts.editable;
+            this.placeHolder = opts.placeHolder;
+        }
+        this.type = 'select';
+    }
+}
+
 export class InputSetFactory extends InputSetDefault {
     constructor(opts: InputSet = {}) {
         super();
@@ -25,6 +41,10 @@ export class InputSetFactory extends InputSetDefault {
 
     private get(type: InputTypes = 'text', opts?: InputSet) {
         switch (type) {
+            case 'number':
+                return new NumberInputSet(opts);
+            case 'select':
+                return new SelectInputSet(opts);
             case 'text':
             default:
                 return new TextInputSet(opts);
@@ -46,7 +66,7 @@ export class TextInputSet implements InputSet {
         if (opts) {
             Object.assign(this, opts);
         }
-        opts.type = 'select';
+        this.type = 'text';
     }
 }
 
@@ -56,20 +76,6 @@ export class NumberInputSet extends TextInputSet {
         super(opts);
         this.type = 'number';
         this.default = Number(this.default);
-    }
-}
-
-export class SelectInputSet implements InputSet {
-    type: InputTypes = 'select';
-    editable?: boolean;
-    placeHolder?: string;
-    default?: string | boolean | number;
-    constructor(opts?: InputSet) {
-        if (opts) {
-            this.default = opts.default;
-            this.editable = opts.editable;
-            this.placeHolder = opts.placeHolder;
-        }
     }
 }
 
