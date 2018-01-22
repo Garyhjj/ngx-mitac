@@ -46,6 +46,8 @@ export class DataDriveComponent implements OnInit {
     this.dataDriveService.getInitData(this.dataDrive).subscribe((ds: any) => {
       if (ds.length && ds.length > 0) {
         const sortMes = Object.keys(ds[0]);
+        // 根据返回的数据筛选已配置的列
+        this.tableData.columns = this.tableData.columns.filter(c => sortMes.indexOf(c.property) > -1);
         this.tableData.columns.sort((a, b) => sortMes.indexOf(a.property) - sortMes.indexOf(b.property));
         const data = ds.map(d => {
           const trs = [];

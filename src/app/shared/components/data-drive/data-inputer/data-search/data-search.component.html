@@ -1,7 +1,7 @@
 <form nz-form [nzLayout]="formLayout" [formGroup]="validateForm" (ngSubmit)="submitForm()">
     <ng-container *ngFor="let item of columnNameStrings;let i =index">
   
-      <div nz-form-item nz-row>
+      <div nz-form-item nz-row [style.marginBottom.px]="20">
         <div nz-form-label nz-col [nzSpan]="isHorizontal?6:8">
           <label>{{inputTypeList[i].label}}</label>
         </div>
@@ -41,7 +41,7 @@
     </ng-container>
   
     <div nz-form-item nz-row [style.display] = "'block'">
-      <button nz-button nz-col [nzOffset]="6" [nzSpan]="12" type="submit" [nzType]="'primary'" [nzSize]="'large'" [disabled]="!validateForm.valid"
-      >Submit</button>
+      <button nz-button nz-col [nzOffset]="8" [nzSpan]="8" type="submit" [nzType]="'primary'" [nzSize]="'large'" [disabled]="!validateForm.valid"
+      ><i class="anticon anticon-search"></i>查询</button>
     </div>
   </form>

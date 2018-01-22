@@ -5,13 +5,15 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BoardRoutingModule } from './board-routing.module';
 import { UrgentMaterialComponent } from './urgent-material/urgent-material.component';
+import { UrgentNoComponent } from './urgent-no/urgent-no.component';
 
 @NgModule({
   imports: [CommonModule, BoardRoutingModule, SharedModule, DataDriveModule],
   declarations: [
     BoardComponent,
-    UrgentMaterialComponent
-  ],
+    UrgentMaterialComponent,
+    UrgentNoComponent
+],
   providers: []
 })
 export class BoardModule { }

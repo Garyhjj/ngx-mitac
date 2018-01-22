@@ -27,11 +27,11 @@
     <tbody nz-tbody 
     (mouseenter)="mouseEnter()"
     (mouseleave)="mouseLeave()">
-        <tr nz-tbody-tr *ngFor="let data of nzTable.data">
+        <tr nz-tbody-tr *ngFor="let data of nzTable.data;let i = index">
           <td 
-          [style.backgroundColor]="setDetail.body && setDetail.body.rules?runRegExp(data, setDetail.body, 'bgColor'):''"
-          [style.fontSize]= "setDetail.body && setDetail.body.rules?runRegExp(data, setDetail.body, 'textSize'):''"
-          [style.color]= "setDetail.body && setDetail.body.rules?runRegExp(data, setDetail.body, 'textColor'):''"
+          [style.backgroundColor]="setDetail.body && setDetail.body.rules?runRegExp(i, setDetail.body, 'bgColor'):''"
+          [style.fontSize]= "setDetail.body && setDetail.body.rules?runRegExp(i, setDetail.body, 'textSize'):''"
+          [style.color]= "setDetail.body && setDetail.body.rules?runRegExp(i, setDetail.body, 'textColor'):''"
           nz-td *ngFor="let item of data">{{item.value}}</td>
         </tr>
       </tbody>

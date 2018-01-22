@@ -5,7 +5,7 @@ import { DataViewSet } from './viewer/index';
 import { BehaviorSubject } from 'rxjs/Rx';
 import { bindEventForArray } from '../../../../util/index';
 import { DataViewSetFactory } from './viewer/index';
-import { SelfStoreSet } from './self-store/index';
+import { SelfStoreSet, SelfStore } from './self-store/index';
 import { InputSetFactory } from './input/index';
 export * from './viewer';
 export * from './self-store';
@@ -55,7 +55,7 @@ export class DataDrive implements DataDriveOptions {
         dataViewSetFactory: DataViewSetFactory = DataViewSetFactory,
         inputSetFactory = InputSetFactory,
         selfStoreSet = SelfStoreSet,
-        selfStore = SelfStoreSet,
+        selfStore = SelfStore,
         tableDataModel = TableDataModel
     ) {
         Object.assign(this, opts);

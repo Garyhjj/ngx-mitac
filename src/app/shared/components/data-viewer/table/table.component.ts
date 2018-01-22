@@ -128,7 +128,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     }
 
   }
-  runRegExp(target: any[], body: {
+  runRegExp(dataIdx: number, body: {
     textColor?: string;
     textSize?: string;
     bgColor?: string;
@@ -145,7 +145,8 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
       textSize?: string;
       bgColor?: string;
     }[];
-    if (!(rules = body.rules)) {
+    const target = this._dataDrive.tableData.data && this._dataDrive.tableData.data[dataIdx];
+    if (!(rules = body.rules) || !target) {
       return body[type];
     } else {
       if (rules.length > 0) {

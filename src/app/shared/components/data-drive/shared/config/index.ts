@@ -6,7 +6,8 @@ export const DataDriveStore = {
             filterColumn: true,
             fullScreen: true,
             changeBodyFontSize: true,
-            changeHeaderFontSize: true
+            changeHeaderFontSize: true,
+            menu: true
         },
         dataViewSet: {
             title: '急料看板',
@@ -24,11 +25,11 @@ export const DataDriveStore = {
                     textSize: '1.8rem',
                     rules: [
                         {
-                            matches: [['LOT_NO', '^\s*$'], ['SHORTAGE_QUANTITY', '^[1-9][0-9]{2,}$']],
+                            matches: [['IQC_FINISHED_TIME', '^\\s*$'], ['ATA_MSL_TIME', '^\\s*$']],
                             textColor: 'yellow',
                         },
                         {
-                            matches: [['LOT_NO', '^\s*$']],
+                            matches: [['IQC_FINISHED_TIME', '^\\s*$']],
                             textColor: 'red',
                         }
                     ]
@@ -49,37 +50,124 @@ export const DataDriveStore = {
                     property: 'LOT_NO', value: 'LOT_NO', type: {}
                 },
                 {
-                    property: 'CONTAINER_NO', value: 'CONTAINER_NO', type: {}
+                    property: 'CONTAINER_NO', value: '進口柜號', type: {}
                 },
                 {
-                    property: 'CUSTOMS_TIME', value: 'CUSTOMS_TIME', type: {}
+                    property: 'CUSTOMS_TIME', value: '報關時間', type: {}
                 },
                 {
-                    property: 'ATA_MSL_TIME', value: 'ATA_MSL_TIME', type: {}
+                    property: 'ATA_MSL_TIME', value: '回廠時間', type: {}
                 },
                 {
-                    property: 'WO_NO', value: 'WO_NO', type: {}
+                    property: 'WO_NO', value: '工單', type: {}
                 },
                 {
-                    property: 'PART_NO', value: 'PART_NO', type: {}
+                    property: 'PART_NO', value: '料號', type: {}
                 },
                 {
-                    property: 'SHORTAGE_QUANTITY', value: 'SHORTAGE_QUANTITY', type: {}
+                    property: 'SHORTAGE_QUANTITY', value: '數量', type: {}
                 },
                 {
-                    property: 'SIC_NAME', value: 'SIC_NAME', type: {}
+                    property: 'SIC_NAME', value: '對應庫別', type: {}
                 },
                 {
-                    property: 'RECEIVE_TIME', value: 'RECEIVE_TIME', type: {}
+                    property: 'RECEIVE_TIME', value: '收料時間', type: {}
                 },
                 {
-                    property: 'IQC_TIME', value: 'IQC_TIME', type: {}
+                    property: 'IQC_TIME', value: '送檢時間', type: {}
                 },
                 {
-                    property: 'INPUT_DATE', value: 'INPUT_DATE', type: {}
+                    property: 'INPUT_DATE', value: '緊急時間', type: {}
                 },
                 {
-                    property: 'IQC_FINISHED_TIME', value: 'IQC_FINISHED_TIME', type: {}
+                    property: 'IQC_FINISHED_TIME', value: '送檢完成時間', type: {}
+                }
+            ]
+        }
+    },
+
+    urgentNo: {
+        id: 2,
+        APIs: { search: 'UrgentMaterial/GetUrgentMaterial?wo={wo}' },
+        additionalFn: {
+            filterColumn: true,
+            fullScreen: true,
+            changeBodyFontSize: true,
+            changeHeaderFontSize: true,
+            menu: true
+        },
+        dataViewSet: {
+            title: '急料工單看板',
+            more: {
+                pageSet: { enable: false },
+                border_y: { enable: false },
+                header: {
+                    textColor: '#fff',
+                    bgColor: '#000',
+                    textSize: '1.8rem'
+                },
+                body: {
+                    textColor: 'red',
+                    bgColor: '#000',
+                    textSize: '1.8rem',
+                    rules: [
+                        {
+                            matches: [['LOT_NO', '\\w+'], ['IQC_FINISHED_TIME', '^\\s*$']],
+                            textColor: 'yellow',
+                        },
+                        {
+                            matches: [['LOT_NO', '\\w+']],
+                            textColor: 'green',
+                        }
+                    ]
+                },
+                fixedHeader: {
+                    enable: true,
+                    scrollHeight: 'auto',
+                    autoScroll: {
+                        interval: 2000,
+                        loop: true
+                    }
+                },
+            }
+        },
+        tableData: {
+            columns: [
+                {
+                    property: 'LOT_NO', value: 'LOT_NO', type: {}
+                },
+                {
+                    property: 'CONTAINER_NO', value: '進口柜號', type: {}
+                },
+                {
+                    property: 'CUSTOMS_TIME', value: '報關時間', type: {}
+                },
+                {
+                    property: 'ATA_MSL_TIME', value: '回廠時間', type: {}
+                },
+                {
+                    property: 'WO_NO', value: '工單', type: {}
+                },
+                {
+                    property: 'PART_NO', value: '料號', type: {}
+                },
+                {
+                    property: 'SHORTAGE_QUANTITY', value: '數量', type: {}
+                },
+                {
+                    property: 'SIC_NAME', value: '對應庫別', type: {}
+                },
+                {
+                    property: 'RECEIVE_TIME', value: '收料時間', type: {}
+                },
+                {
+                    property: 'IQC_TIME', value: '送檢時間', type: {}
+                },
+                {
+                    property: 'INPUT_DATE', value: '緊急時間', type: {}
+                },
+                {
+                    property: 'IQC_FINISHED_TIME', value: '送檢完成時間', type: {}
                 }
             ]
         }

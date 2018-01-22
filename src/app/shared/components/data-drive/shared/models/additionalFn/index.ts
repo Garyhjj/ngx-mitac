@@ -3,4 +3,5 @@ export interface AdditionalFn {
     fullScreen?: boolean;
     changeBodyFontSize?: boolean;
     changeHeaderFontSize?: boolean;
+    menu?: boolean
 }
