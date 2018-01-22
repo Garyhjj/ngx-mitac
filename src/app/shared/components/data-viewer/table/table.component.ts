@@ -217,3 +217,10 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   }
 
 }
+
+class StyleCache {
+  idx: number;
+  bgColor: string;
+  textSize: string;
+  textColor: string
+}
