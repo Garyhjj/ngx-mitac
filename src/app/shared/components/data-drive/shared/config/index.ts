@@ -9,6 +9,15 @@ export const DataDriveStore = {
             changeHeaderFontSize: true,
             menu: true
         },
+        searchSets: [
+            {
+                property: 'LOT_NO',
+                InputOpts: {
+                    default: 'hhhh',
+                    placeHolder: 'hhhhrtyrt'
+                }
+            }
+        ],
         dataViewSet: {
             title: '急料看板',
             more: {
@@ -45,6 +54,7 @@ export const DataDriveStore = {
             }
         },
         tableData: {
+            searchable: true,
             columns: [
                 {
                     property: 'LOT_NO', value: 'LOT_NO', type: {}

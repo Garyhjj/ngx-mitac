@@ -1,3 +1,4 @@
+import { SearchItemSet } from './../../shared/models/searcher/index';
 import { DataDrive, TableDataColumn } from './../../shared/models/index';
 import { Component, OnInit, Input } from '@angular/core';
 import {
@@ -16,6 +17,7 @@ export class DataSearchComponent implements OnInit {
   
   dataDrive: DataDrive;
   columns: TableDataColumn[];
+  searchSets: SearchItemSet[];
   columnNameStrings: string[];
   inputTypeList: any[];
 
@@ -26,8 +28,9 @@ export class DataSearchComponent implements OnInit {
       return;
     }
     this.dataDrive = opts;
+    this.searchSets = opts.searchSets;
     this.columns = opts.tableData.columns;
-    this.columnNameStrings = this.columns.map(c => c.property);
+    this.columnNameStrings = this.searchSets.map(s => s.property);
   }
   @Input()
   changeIdx = 1;
@@ -52,20 +55,11 @@ export class DataSearchComponent implements OnInit {
       return;
     }
     const myForm: any = {};
-    this.inputTypeList = this.columns.map(c => {
-      let def;
-      if (this.changeIdx > -1) {
-        const data = this.dataDrive.tableData && this.dataDrive.tableData.data[this.changeIdx];
-        if (data) {
-          const target = data.find(d => d.property === c.property);
-          if (target) {
-            def = target.value;
-          }
-        }
-      }
-      def = def || c.type.InputOpts.default;
-      myForm[c.property] = [def];
-      return Object.assign({ label: c.value }, c.type.InputOpts);
+    this.inputTypeList = this.searchSets.map(s => {
+      let def = (s.InputOpts && s.InputOpts.default) || '';
+      const mapColumn = this.columns.find(c => c.property === s.property);
+      myForm[s.property] = [def];
+      return Object.assign({ label: mapColumn?mapColumn.value:s.property }, s.InputOpts);
     });
     console.log(myForm);
 
