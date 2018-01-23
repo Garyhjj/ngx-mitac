@@ -5,6 +5,11 @@ export interface InputSet {
     cascadable?: boolean;
     selections?: string[] | number[];
     default?: string | boolean | number;
+    match?: {
+        regexp: string,
+        err: string
+    };
+    more?: any;
 }
 
 
@@ -62,6 +67,10 @@ export class TextInputSet implements InputSet {
     cascadable?: boolean;
     selections?: string[] | number[];
     default?: string | boolean | number;
+    match?: {
+        regexp: string,
+        err: string
+    }
     constructor(opts?: InputSet) {
         if (opts) {
             Object.assign(this, opts);
@@ -72,8 +81,18 @@ export class TextInputSet implements InputSet {
 
 export class NumberInputSet extends TextInputSet {
     type: InputTypes;
+    default?: number;
+    more?: {
+        min?: number,
+        max?: number,
+        step?: number
+    }
     constructor(opts: InputSet) {
         super(opts);
+        this.more = this.more || {};
+        this.more.step = this.more.step || 1;
+        this.more.max = this.more.max || Infinity;
+        this.more.min = this.more.min || -Infinity
         this.type = 'number';
         this.default = Number(this.default);
     }

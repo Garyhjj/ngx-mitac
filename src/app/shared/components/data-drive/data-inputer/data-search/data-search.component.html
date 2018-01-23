@@ -28,9 +28,9 @@
           <nz-timepicker [formControlName]="item" [nzSize]="'large'" *ngIf="inputTypeList[i]?.type === 'timepicker'">
           </nz-timepicker>
   
-          <nz-input-number [formControlName]="item" [nzSize]="'large'" [nzStep]="1" [nzMax]="4" [nzMin]="1" [style.width]="'50%'" *ngIf="inputTypeList[i]?.type === 'number'"></nz-input-number>
+          <nz-input-number [formControlName]="item" [nzSize]="'large'" [nzStep]="inputTypeList[i].more?.step" [nzMax]="inputTypeList[i].more?.max" [nzMin]="inputTypeList[i].more?.min" [style.width]="'50%'" *ngIf="inputTypeList[i]?.type === 'number'"></nz-input-number>
   
-          <!-- <div nz-form-explain *ngIf="validateForm.controls.userName.dirty&&validateForm.controls.userName.hasError('required')">Please input your username!</div> -->
+          <div nz-form-explain *ngIf="validateForm.controls[item].dirty&&validateForm.controls[item].errors">{{errMes[item]}}</div>
         </div>
         <!-- <div nz-form-control nz-col [nzSpan]="14">
               <nz-switch formControlName="switch"></nz-switch>

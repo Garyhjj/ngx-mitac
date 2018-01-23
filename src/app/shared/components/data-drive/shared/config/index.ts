@@ -14,7 +14,23 @@ export const DataDriveStore = {
                 property: 'LOT_NO',
                 InputOpts: {
                     default: 'hhhh',
-                    placeHolder: 'hhhhrtyrt'
+                    placeHolder: 'hhhhrtyrt',
+                    match: {
+                        regexp: '\\w+',
+                        err: '不能為空'
+                    }
+                }
+            },
+            {
+                property: 'CONTAINER_NO',
+                InputOpts: {
+                    type: 'number',
+                    default: '2',
+                    placeHolder: 'hhhhrtyrt',
+                    more: {
+                        min:3,
+                        max:999
+                    }
                 }
             }
         ],

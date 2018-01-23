@@ -6,6 +6,7 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
+import { NgxValidatorExtendService } from '../../../../../core/services/ngx-validator-extend.service';
 
 @Component({
   selector: 'app-data-search',
@@ -20,6 +21,7 @@ export class DataSearchComponent implements OnInit {
   searchSets: SearchItemSet[];
   columnNameStrings: string[];
   inputTypeList: any[];
+  errMes:any = {};
 
   formLayout = 'inline';
   @Input()
@@ -47,7 +49,10 @@ export class DataSearchComponent implements OnInit {
 
 
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private validExd: NgxValidatorExtendService
+  ) {
   }
 
   ngOnInit() {
@@ -58,10 +63,20 @@ export class DataSearchComponent implements OnInit {
     this.inputTypeList = this.searchSets.map(s => {
       let def = (s.InputOpts && s.InputOpts.default) || '';
       const mapColumn = this.columns.find(c => c.property === s.property);
-      myForm[s.property] = [def];
+      const match = s.InputOpts.match;
+      let valid = null;
+      if(match) {
+        if(match.err) {
+          this.errMes[s.property] = match.err;
+        }
+        if(match.regexp) {
+          valid = this.validExd.regex(match.regexp);
+        }
+      }
+      myForm[s.property] = [def,valid];
       return Object.assign({ label: mapColumn?mapColumn.value:s.property }, s.InputOpts);
     });
-    console.log(myForm);
+    console.log(this.inputTypeList);
 
     this.validateForm = this.fb.group(myForm);
   }
