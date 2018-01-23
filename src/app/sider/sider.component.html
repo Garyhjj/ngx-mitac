@@ -1,12 +1,12 @@
-<ul nz-menu [nzMode]="isCollapsed?'vertical':'inline'" style="height:100%" [nzTheme]="'dark'" (click)="select($event)" [class.ant-layout-sider-collapsed]="isCollapsed">
-  <li nz-submenu>
+<ul nz-menu [nzMode]="isCollapsed?'vertical':'inline'" style="height:100%"  (click)="select($event)" [class.ant-layout-sider-collapsed]="isCollapsed">
+  <!-- <li nz-submenu>
     <span title><i class="anticon anticon-file-pdf"></i><span class="nav-text">eMPI</span></span>
     <ul>
       <li nz-menu-item data-route="/eMPI">添加</li>
       <li nz-menu-item>查詢</li>
       <li nz-menu-item data-route="/eMPI/scan">查看(test)</li>
     </ul>
-  </li>
+  </li> -->
   <li nz-submenu nzOpen>
     <span title><i class="anticon anticon-file-pdf"></i><span class="nav-text">看板</span></span>
     <ul>
@@ -14,7 +14,7 @@
       <li nz-menu-item data-route="/board/urgentNo">急料工單看板</li>
     </ul>
   </li>
-  <li nz-submenu *ngIf="canSeeModule(61)">
+  <!-- <li nz-submenu *ngIf="canSeeModule(61)">
       <span title><i class="anticon anticon-mail"></i><span class="nav-text">巡检</span></span>
       <ul>
         <li nz-menu-group>
@@ -32,5 +32,5 @@
           </ul>
         </li>
       </ul>
-    </li>
+    </li> -->
 </ul>
