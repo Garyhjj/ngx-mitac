@@ -43,6 +43,8 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
 
   _scrollInterval: number;
   _loopScroll: boolean;
+
+  styleCache = new StyleCache();
   constructor(private ref: ChangeDetectorRef) {
 
   }
@@ -128,6 +130,8 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     }
 
   }
+  y = 0;
+  i = 0
   runRegExp(dataIdx: number, body: {
     textColor?: string;
     textSize?: string;
@@ -139,49 +143,65 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
       bgColor?: string;
     }[]
   }, type: string) {
-    let rules: {
-      matches: string[][];
-      textColor?: string;
-      textSize?: string;
-      bgColor?: string;
-    }[];
-    const target = this._dataDrive.tableData.data && this._dataDrive.tableData.data[dataIdx];
-    if (!(rules = body.rules) || !target) {
-      return body[type];
-    } else {
-      if (rules.length > 0) {
-        for (let i = 0; i < rules.length; i++) {
-          const rule = rules[i];
-          if (rule.matches && rule.matches.length > 0) {
-            const matches = rule.matches;
-            if (matches instanceof Array) {
-              let result = true;
-              for (let y = 0; y < matches.length; y++) {
-                const match = matches[y];
-                if (match.length < 2) {
-                  result = false;
-                  break;
-                } else {
-                  const t = target.find(s => s.property === match[0]);
-                  if (!t) {
+    const cache = this.styleCache;
+    if(cache.idx === dataIdx) {
+      const styeCache = cache.getCache(type);
+      if(styeCache) {
+        return styeCache;
+      }
+    }else {
+      cache.reset(dataIdx);
+    }
+    const test = () => {
+      let rules: {
+        matches: string[][];
+        textColor?: string;
+        textSize?: string;
+        bgColor?: string;
+      }[];
+      
+      const target = this._dataDrive.tableData.data && this._dataDrive.tableData.data[dataIdx];
+      if (!(rules = body.rules) || !target) {
+        return body[type];
+      } else {
+        if (rules.length > 0) {
+          for (let i = 0; i < rules.length; i++) {
+            const rule = rules[i];
+            if (rule.matches && rule.matches.length > 0) {
+              const matches = rule.matches;
+              if (matches instanceof Array) {
+                let result = true;
+                for (let y = 0; y < matches.length; y++) {
+                  const match = matches[y];
+                  if (match.length < 2) {
                     result = false;
                     break;
-                  }
-                  if (!new RegExp(match[1]).test(t.value ? t.value : '')) {
-                    result = false;
-                    break;
+                  } else {
+                    const t = target.find(s => s.property === match[0]);
+                    if (!t) {
+                      result = false;
+                      break;
+                    }
+                    if (!new RegExp(match[1]).test(t.value ? t.value : '')) {
+                      result = false;
+                      break;
+                    }
                   }
                 }
-              }
-              if (result) {
-                return rule[type] ? rule[type] : body[type];
+                if (result) {
+                  return rule[type] ? rule[type] : body[type];
+                }
               }
             }
           }
         }
       }
+      return body[type];
     }
-    return body[type];
+    const res = test();
+    cache.setCache(type, res);
+    return res;
+    
   }
   clearTimeEvent() {
     clearTimeout(this.timeEvent1);
@@ -192,7 +212,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     this.sub3 && this.sub3.unsubscribe();
   }
   mouseEnter() {
-
+    console.log(this.i,this.y);
     this.canScroll = false;
   }
   mouseLeave() {
@@ -223,4 +243,24 @@ class StyleCache {
   bgColor: string;
   textSize: string;
   textColor: string
+  constructor() {
+
+  }
+
+  reset(idx:number) {
+    this.idx = idx;
+    this.bgColor = '';
+    this.textSize = '';
+    this.textColor = '';
+  }
+
+  getCache(type: string) {
+    if(type && this[type]) {
+      return this[type];
+    }
+  }
+
+  setCache(type: string, val: string) {
+    this[type] = val;
+  }
 }

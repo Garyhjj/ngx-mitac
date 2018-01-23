@@ -1,6 +1,6 @@
-<ul nz-menu [nzMode]="'inline'" style="height:100%" [nzTheme]="'dark'" (click)="select($event)">
+<ul nz-menu [nzMode]="isCollapsed?'vertical':'inline'" style="height:100%" [nzTheme]="'dark'" (click)="select($event)" [class.ant-layout-sider-collapsed]="isCollapsed">
   <li nz-submenu>
-    <span title><i class="anticon anticon-file-pdf"></i>eMPI</span>
+    <span title><i class="anticon anticon-file-pdf"></i><span class="nav-text">eMPI</span></span>
     <ul>
       <li nz-menu-item data-route="/eMPI">添加</li>
       <li nz-menu-item>查詢</li>
@@ -8,14 +8,14 @@
     </ul>
   </li>
   <li nz-submenu nzOpen>
-    <span title><i class="anticon anticon-file-pdf"></i>看板</span>
+    <span title><i class="anticon anticon-file-pdf"></i><span class="nav-text">看板</span></span>
     <ul>
       <li nz-menu-item data-route="/board/urgentMaterial">急料看板</li>
       <li nz-menu-item data-route="/board/urgentNo">急料工單看板</li>
     </ul>
   </li>
   <li nz-submenu *ngIf="canSeeModule(61)">
-      <span title><i class="anticon anticon-mail"></i>巡检</span>
+      <span title><i class="anticon anticon-mail"></i><span class="nav-text">巡检</span></span>
       <ul>
         <li nz-menu-group>
           <span title>主管巡检</span>
@@ -33,13 +33,4 @@
         </li>
       </ul>
     </li>
-  <li nz-submenu *ngIf="canSeeModule(66)">
-    <span title><i class="anticon anticon-notification"></i>subnav 3</span>
-    <ul>
-      <li nz-menu-item>option9</li>
-      <li nz-menu-item>option10</li>
-      <li nz-menu-item>option11</li>
-      <li nz-menu-item>option12</li>
-    </ul>
-  </li>
 </ul>

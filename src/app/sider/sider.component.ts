@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs/Rx';
 import { myStore, UserState, MyModule } from './../core/store';
 import { Store } from '@ngrx/store';
 import { BreadcrumbModel } from './../core/models/breadcrumb.model';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
 @Component({
   selector: 'app-sider',
@@ -16,6 +16,8 @@ export class SiderComponent implements OnInit,OnDestroy {
 
   myModules:MyModule[]
   mySub: Subscription;
+  @Input()
+  isCollapsed;
   constructor(
     private store$: Store<myStore>,
     private router: Router,

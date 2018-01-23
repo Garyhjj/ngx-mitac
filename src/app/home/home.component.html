@@ -1,6 +1,6 @@
 <nz-layout class="sub-layout">
-<nz-sider [nzWidth]="200" style="background:#fff">
-  <app-sider></app-sider>
+<nz-sider style="background:#fff" nzCollapsible [(nzCollapsed)]="isCollapsed" [nzBreakpoint]="'lg'">
+  <app-sider [isCollapsed]="isCollapsed"></app-sider>
 </nz-sider>
 <nz-layout style="padding:0 24px" class="content">
   <app-content style="height:100%;"></app-content>
