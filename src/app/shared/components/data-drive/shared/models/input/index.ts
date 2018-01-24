@@ -11,6 +11,16 @@ export interface InputSet {
     more?: any;
 }
 
+export class Datepicker implements InputSet{
+    type: InputTypes
+    constructor(opts?:any) {
+        if(opts) {
+            Object.assign(this,opts);
+        }
+        this.type = 'datepicker';
+    }
+}
+
 
 export class InputSetDefault implements InputSet {
     editable: boolean;
@@ -34,7 +44,21 @@ export class SelectInputSet implements InputSet {
     constructor(opts?: InputSet) {
         opts && Object.assign(this, opts);
         this.more = this.more || {};
+        this.more.options = this.more.options || [];
         this.type = 'select';
+    }
+    setOptions(options:any[]) {
+        const newOpts = [];
+        if(options && options.length > 0) {
+            options.forEach(o => {
+                if(typeof o === 'object') {
+                    newOpts.push(o);
+                }else if(typeof o === 'string' || typeof o === 'number'){
+                    newOpts.push({property:o, value:o});
+                }
+            })
+        }
+        (newOpts.length >0) && (this.more.options = newOpts);
     }
 }
 
@@ -50,6 +74,8 @@ export class InputSetFactory extends InputSetDefault {
                 return new NumberInputSet(opts);
             case 'select':
                 return new SelectInputSet(opts);
+                case 'datepicker':
+                return new Datepicker(opts);
             case 'text':
             default:
                 return new TextInputSet(opts);
@@ -58,7 +84,7 @@ export class InputSetFactory extends InputSetDefault {
 }
 
 
-export type InputTypes = 'text' | 'number' | 'date' | 'rate' | 'select';
+export type InputTypes = 'text' | 'number' | 'date' | 'rate' | 'select' | 'datepicker';
 
 export class TextInputSet implements InputSet {
     type: InputTypes;

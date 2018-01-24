@@ -1,47 +1,44 @@
-<form nz-form [nzLayout]="formLayout" [formGroup]="validateForm" (ngSubmit)="submitForm()">
+<form nz-form [formGroup]="validateForm" [nzLayout]="formLayout" (ngSubmit)="submitForm()">
+  <nz-row>
     <ng-container *ngFor="let item of columnNameStrings;let i =index">
-  
-      <div nz-form-item nz-row [style.marginBottom.px]="20">
-        <div nz-form-label nz-col [nzSpan]="isHorizontal?6:8">
-          <label>{{inputTypeList[i].label}}</label>
+      <nz-col [nzSpan]="8">
+        <div nz-form-item nz-row [style.marginBottom.px]="20" [style.width.%]="100">
+          <div nz-form-label nz-col [nzSpan]="isHorizontal?6:8">
+            <label>{{inputTypeList[i].label}}</label>
+          </div>
+
+
+          <div nz-form-control nz-col [nzSpan]="isHorizontal?16:16">
+            <nz-input [formControlName]="item" [nzPlaceHolder]="inputTypeList[i].placeHolder" [nzSize]="'large'" *ngIf="inputTypeList[i]?.type === 'text'">
+            </nz-input>
+
+            <nz-select [formControlName]="item" [nzSize]="'large'" [nzPlaceHolder]="inputTypeList[i].placeHolder" *ngIf="inputTypeList[i]?.type === 'select'"
+              [style.minWidth]="'100px'">
+              <nz-option [nzLabel]="item.value" [nzValue]="item.property" *ngFor="let item of inputTypeList[i]?.more?.options"></nz-option>
+            </nz-select>
+
+            <nz-datepicker [formControlName]="item" [nzSize]="'large'" *ngIf="inputTypeList[i]?.type === 'datepicker'" nzShowTime="'hh:mm'" [nzFormat]="'YYYY-MM-DD hh:mm'">
+            </nz-datepicker>
+
+            <nz-timepicker [formControlName]="item" [nzSize]="'large'" *ngIf="inputTypeList[i]?.type === 'timepicker'">
+            </nz-timepicker>
+
+            <nz-input-number [formControlName]="item" [nzSize]="'large'" [nzStep]="inputTypeList[i].more?.step" [nzMax]="inputTypeList[i].more?.max"
+              [nzMin]="inputTypeList[i].more?.min" [style.width]="'50%'" *ngIf="inputTypeList[i]?.type === 'number'"></nz-input-number>
+
+            <div nz-form-explain *ngIf="validateForm.controls[item].dirty&&validateForm.controls[item].errors">{{errMes[item]}}</div>
+          </div>
+          <!-- <div nz-form-control nz-col [nzSpan]="14">
+                    <nz-switch formControlName="switch"></nz-switch>
+                  </div> -->
+
+
         </div>
-  
-  
-        <div nz-form-control nz-col [nzSpan]="isHorizontal?16:16">
-          <nz-input [formControlName]="item" [nzPlaceHolder]="inputTypeList[i].placeHolder" [nzSize]="'large'" *ngIf="inputTypeList[i]?.type === 'text'">
-          </nz-input>
-  
-          <nz-select 
-          [formControlName]="item" 
-          [nzSize]="'large'" 
-          [nzPlaceHolder]="inputTypeList[i].placeHolder" 
-          *ngIf="inputTypeList[i]?.type === 'select'"
-          [style.minWidth]="'100px'"
-          >
-            <nz-option [nzLabel]="'China'" [nzValue]="'China'"></nz-option>
-            <nz-option [nzLabel]="'U.S.A'" [nzValue]="'U.S.A'"></nz-option>
-          </nz-select>
-  
-          <nz-datepicker [formControlName]="item" [nzSize]="'large'" *ngIf="inputTypeList[i]?.type === 'datepicker'">
-          </nz-datepicker>
-  
-          <nz-timepicker [formControlName]="item" [nzSize]="'large'" *ngIf="inputTypeList[i]?.type === 'timepicker'">
-          </nz-timepicker>
-  
-          <nz-input-number [formControlName]="item" [nzSize]="'large'" [nzStep]="inputTypeList[i].more?.step" [nzMax]="inputTypeList[i].more?.max" [nzMin]="inputTypeList[i].more?.min" [style.width]="'50%'" *ngIf="inputTypeList[i]?.type === 'number'"></nz-input-number>
-  
-          <div nz-form-explain *ngIf="validateForm.controls[item].dirty&&validateForm.controls[item].errors">{{errMes[item]}}</div>
-        </div>
-        <!-- <div nz-form-control nz-col [nzSpan]="14">
-              <nz-switch formControlName="switch"></nz-switch>
-            </div> -->
-  
-  
-      </div>
+      </nz-col>
     </ng-container>
-  
-    <div nz-form-item nz-row [style.display] = "'block'">
-      <button nz-button nz-col [nzOffset]="8" [nzSpan]="8" type="submit" [nzType]="'primary'" [nzSize]="'large'" [disabled]="!validateForm.valid"
-      ><i class="anticon anticon-search"></i>查询</button>
-    </div>
-  </form>
+  </nz-row>
+  <div nz-form-item nz-row [style.display]="'block'">
+    <button nz-button nz-col [nzOffset]="8" [nzSpan]="8" type="submit" [nzType]="'primary'" [nzSize]="'large'" [disabled]="!validateForm.valid">
+      <i class="anticon anticon-search"></i>查询</button>
+  </div>
+</form>

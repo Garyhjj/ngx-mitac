@@ -34,11 +34,18 @@ export const DataDriveStore = {
                 }
             },
             {
-                property: 'CUSTOMS_TIME',
+                property: 'ATA_MSL_TIME',
+                InputOpts: {
+                    type: 'datepicker',
+                    default: '2018-01-01',
+                }
+            },
+            {
+                property: 'IQC_FINISHED_TIME',
                 InputOpts: {
                     type: 'select',
-                    default: 'sdf',
-                    placeHolder: 'hhhhrtyrt',
+                    default: 'hhh',
+                    placeHolder: 'hhhrt',
                     more: {
                         options:[{property: 'hhh',value: 23}, {property: 'rerty',value: 45}]
                     }
