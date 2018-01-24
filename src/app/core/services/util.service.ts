@@ -1,7 +1,6 @@
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd';
-import * as ExportJsonExcel from 'js-export-excel';
 
 @Injectable()
 export class UtilService {
@@ -32,7 +31,11 @@ export class UtilService {
     }
 
     toExcel(name: string, header: (string | number)[], data: (string | number)[][]) {
-        let option: any = {};
+        if(!ExportJsonExcel) {
+            this._message.error('由於瀏覽器不支持,該功能不可用,請升級瀏覽器或使用別的瀏覽器,如Chrome', { nzDuration: 4000 })
+            return;
+        }
+        let option: ExportJsonExcelOptions = {} as ExportJsonExcelOptions;
 
         option.fileName = name;
         option.datas = [
@@ -43,7 +46,7 @@ export class UtilService {
         ];
         const toExcel = new ExportJsonExcel(option); //new
         toExcel.saveExcel(); //保存
-        this._message.info('文件將被下載到瀏覽器的默認下載目錄中', { nzDuration: 4000 })
+        this._message.info('文件將被下載到瀏覽器的默認下載目錄中', { nzDuration: 4000 });
     }
 
 }

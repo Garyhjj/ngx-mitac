@@ -130,8 +130,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     }
 
   }
-  y = 0;
-  i = 0
+  
   runRegExp(dataIdx: number, body: {
     textColor?: string;
     textSize?: string;
@@ -212,7 +211,6 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     this.sub3 && this.sub3.unsubscribe();
   }
   mouseEnter() {
-    console.log(this.i,this.y);
     this.canScroll = false;
   }
   mouseLeave() {
