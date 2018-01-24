@@ -38,6 +38,11 @@ export const DataDriveStore = {
                 InputOpts: {
                     type: 'datepicker',
                     default: '2018-01-01',
+                    more: {
+                        pickerFormat: 'YYYY/MM/DD HH:mm',
+                        showFormat: 'YYYY/MM/DD HH:mm',
+                        showTime: true,
+                    }
                 }
             },
             {

@@ -1,3 +1,4 @@
+import { MyDatePickerComponent } from './../../inputs/my-date-picker/my-date-picker.component';
 import { SharedModule } from './../../../shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -11,8 +12,9 @@ import { DataUpdateComponent } from './data-update/data-update.component';
   ],
   declarations: [DataInputerComponent,
     DataSearchComponent,
-    DataUpdateComponent
-],
+    DataUpdateComponent,
+    MyDatePickerComponent
+  ],
   exports: [DataInputerComponent]
 })
 export class DataInputerModule { }

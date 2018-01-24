@@ -12,11 +12,23 @@ export interface InputSet {
 }
 
 export class Datepicker implements InputSet{
-    type: InputTypes
+    type: InputTypes;
+    placeHolder?: string;
+    more?: {
+        pickerFormat?: string;
+        showFormat?: string;
+        showTime?: boolean;
+        showMode?: 'month' | 'day'
+    }
     constructor(opts?:any) {
         if(opts) {
             Object.assign(this,opts);
         }
+        this.more = this.more || {};
+        this.more.pickerFormat = this.more.pickerFormat || 'YYYY-MM-DD';
+        this.more.showFormat = this.more.showFormat || 'YYYY-MM-DD';
+        this.more.showTime = this.more.showTime || false;
+        this.more.showMode = this.more.showMode || 'day';
         this.type = 'datepicker';
     }
 }
