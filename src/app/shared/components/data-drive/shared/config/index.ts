@@ -7,7 +7,8 @@ export const DataDriveStore = {
             fullScreen: true,
             changeBodyFontSize: true,
             changeHeaderFontSize: true,
-            menu: true
+            menu: true,
+            toExcel: true
         },
         dataViewSet: {
             title: '急料看板',
@@ -94,7 +95,8 @@ export const DataDriveStore = {
             fullScreen: true,
             changeBodyFontSize: true,
             changeHeaderFontSize: true,
-            menu: true
+            menu: true,
+            toExcel: true
         },
         dataViewSet: {
             title: '急料工單看板',

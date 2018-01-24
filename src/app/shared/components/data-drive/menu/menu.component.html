@@ -1,5 +1,5 @@
 <div *ngIf="dataDrive && dataDrive.additionalFn">
-  <nz-row [nzType]="'flex'" [nzJustify]="'space-around'">
+  <nz-row >
     <button nz-button [nzType]="'primary'" (click)="showModal()" 
     nz-col [nzSpan]="3"
     *ngIf="dataDrive.additionalFn.fullScreen"
@@ -28,5 +28,11 @@
         ></nz-slider>
       </nz-row>
     </nz-col>
+    <button nz-button [nzType]="'primary'" (click)="toExcel()" 
+    nz-col [nzSpan]="3"
+    *ngIf="dataDrive.additionalFn.toExcel"
+    >
+      <span>导出Excel文件</span>
+    </button>
   </nz-row>
 </div>
