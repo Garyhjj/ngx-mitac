@@ -1,14 +1,14 @@
 <div *ngIf="dataDrive">
   <nz-collapseset>
     <ng-container *ngIf="dataDrive.additionalFn">
-        <nz-collapse [nzTitle]="'挑选列'" *ngIf="dataDrive.additionalFn.filterColumn">
+        <nz-collapse [nzTitle]="'挑選列'" *ngIf="dataDrive.additionalFn.filterColumn">
             <app-filter-column [opts]="dataDrive"></app-filter-column>
           </nz-collapse>
-          <nz-collapse [nzTitle]="'菜单'" *ngIf="dataDrive.additionalFn.menu">
+          <nz-collapse [nzTitle]="'菜單'" *ngIf="dataDrive.additionalFn.menu">
             <app-menu [opts]="dataDrive"></app-menu>
           </nz-collapse>
     </ng-container>
-    <nz-collapse [nzTitle]="'检索'" *ngIf="dataDrive.tableData && dataDrive.tableData.searchable">
+    <nz-collapse [nzTitle]="'檢索'" *ngIf="dataDrive.tableData && dataDrive.tableData.searchable">
         <app-data-inputer [opts]="dataDrive" [type]="2" *ngIf="dataDrive && dataDrive.tableData && dataDrive.tableData.data"></app-data-inputer>
       </nz-collapse>
   </nz-collapseset>
