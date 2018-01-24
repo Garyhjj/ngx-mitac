@@ -22,8 +22,8 @@ export class MyDatePickerComponent implements OnInit {
   @Input() myPlaceHolder: string = '請選擇時間';
   @Input() myMode: string = 'day';
   private propagateChange = (_: string) => { };
-  _date:Date = null;
-  dataString:string;
+  _date: Date = null;
+  dataString: string;
   constructor() { }
 
   ngOnInit() {
@@ -54,15 +54,14 @@ export class MyDatePickerComponent implements OnInit {
    * 也是一样注册,当 touched 然后调用
    * @param {*} fn 
    */
-  registerOnTouched(fn:any) { }
+  registerOnTouched(fn: any) { }
 
   /**
    * 内部更改例子
    * @param {*} fn 
    */
-  change(value:Date){
-    console.log(value)
-    this.dataString = moment(value).format(this.myPickerFormat);
+  change(value: Date) {
+    this.dataString = value ? moment(value).format(this.myPickerFormat) : '';
     this.propagateChange(this.dataString)//去触发外部监控的函数
   }
 

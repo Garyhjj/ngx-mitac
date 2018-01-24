@@ -19,7 +19,7 @@
 
             <!-- <nz-datepicker [formControlName]="item" [nzSize]="'large'" *ngIf="inputTypeList[i]?.type === 'datepicker'" nzShowTime="'hh:mm'" [nzFormat]="'YYYY-MM-DD hh:mm'">
             </nz-datepicker> -->
-            <app-my-date-picker [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'datepicker'"
+            <app-my-date-picker [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'datePicker'"
             [myPickerFormat]="inputTypeList[i].more?.pickerFormat"
             [myFormat]="inputTypeList[i].more?.showFormat"
             [myShowTime]="inputTypeList[i].more?.showTime"

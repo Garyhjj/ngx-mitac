@@ -11,7 +11,7 @@ export interface InputSet {
     more?: any;
 }
 
-export class Datepicker implements InputSet{
+export class DatePicker implements InputSet{
     type: InputTypes;
     placeHolder?: string;
     more?: {
@@ -29,7 +29,7 @@ export class Datepicker implements InputSet{
         this.more.showFormat = this.more.showFormat || 'YYYY-MM-DD';
         this.more.showTime = this.more.showTime || false;
         this.more.showMode = this.more.showMode || 'day';
-        this.type = 'datepicker';
+        this.type = 'datePicker';
     }
 }
 
@@ -86,8 +86,8 @@ export class InputSetFactory extends InputSetDefault {
                 return new NumberInputSet(opts);
             case 'select':
                 return new SelectInputSet(opts);
-                case 'datepicker':
-                return new Datepicker(opts);
+                case 'datePicker':
+                return new DatePicker(opts);
             case 'text':
             default:
                 return new TextInputSet(opts);
@@ -96,7 +96,7 @@ export class InputSetFactory extends InputSetDefault {
 }
 
 
-export type InputTypes = 'text' | 'number' | 'date' | 'rate' | 'select' | 'datepicker';
+export type InputTypes = 'text' | 'number' | 'date' | 'rate' | 'select' | 'datePicker' | 'timePicker';
 
 export class TextInputSet implements InputSet {
     type: InputTypes;

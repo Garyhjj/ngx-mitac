@@ -36,7 +36,7 @@ export const DataDriveStore = {
             {
                 property: 'ATA_MSL_TIME',
                 InputOpts: {
-                    type: 'datepicker',
+                    type: 'datePicker',
                     default: '2018-01-01',
                     more: {
                         pickerFormat: 'YYYY/MM/DD HH:mm',
