@@ -28,8 +28,12 @@
             ></app-my-date-picker>
 
 
-            <nz-timepicker [formControlName]="item" [nzSize]="'large'" *ngIf="inputTypeList[i]?.type === 'timepicker'">
-            </nz-timepicker>
+            <app-my-time-picker [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'timePicker'"
+            [myPickerFormat]="inputTypeList[i].more?.pickerFormat"
+            [myFormat]="inputTypeList[i].more?.showFormat"
+            [myPlaceHolder]="inputTypeList[i].placeHolder"
+            >
+            </app-my-time-picker>
 
             <nz-input-number [formControlName]="item" [nzSize]="'large'" [nzStep]="inputTypeList[i].more?.step" [nzMax]="inputTypeList[i].more?.max"
               [nzMin]="inputTypeList[i].more?.min" [style.width]="'50%'" *ngIf="inputTypeList[i]?.type === 'number'"></nz-input-number>

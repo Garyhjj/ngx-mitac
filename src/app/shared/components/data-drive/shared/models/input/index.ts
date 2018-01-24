@@ -11,7 +11,7 @@ export interface InputSet {
     more?: any;
 }
 
-export class DatePicker implements InputSet{
+export class DatePicker implements InputSet {
     type: InputTypes;
     placeHolder?: string;
     more?: {
@@ -20,16 +20,36 @@ export class DatePicker implements InputSet{
         showTime?: boolean;
         showMode?: 'month' | 'day'
     }
-    constructor(opts?:any) {
-        if(opts) {
-            Object.assign(this,opts);
+    constructor(opts?: any) {
+        if (opts) {
+            Object.assign(this, opts);
         }
+        this.placeHolder = this.placeHolder || '請選擇時間';
         this.more = this.more || {};
         this.more.pickerFormat = this.more.pickerFormat || 'YYYY-MM-DD';
         this.more.showFormat = this.more.showFormat || 'YYYY-MM-DD';
         this.more.showTime = this.more.showTime || false;
         this.more.showMode = this.more.showMode || 'day';
         this.type = 'datePicker';
+    }
+}
+
+export class TimePicker implements InputSet {
+    type: InputTypes;
+    placeHolder?: string;
+    more?: {
+        pickerFormat?: string;
+        showFormat?: string;
+    }
+    constructor(opts?: any) {
+        if (opts) {
+            Object.assign(this, opts);
+        }
+        this.placeHolder = this.placeHolder || '請選擇時間';
+        this.more = this.more || {};
+        this.more.pickerFormat = this.more.pickerFormat || 'HH:mm:ss';
+        this.more.showFormat = this.more.showFormat || 'HH:mm:ss';
+        this.type = 'timePicker';
     }
 }
 
@@ -51,7 +71,7 @@ export class SelectInputSet implements InputSet {
     cascadable?: boolean;
     default?: string | boolean | number;
     more?: {
-        options?:{property:string, value:string | number}[]
+        options?: { property: string, value: string | number }[]
     }
     constructor(opts?: InputSet) {
         opts && Object.assign(this, opts);
@@ -59,18 +79,18 @@ export class SelectInputSet implements InputSet {
         this.more.options = this.more.options || [];
         this.type = 'select';
     }
-    setOptions(options:any[]) {
+    setOptions(options: any[]) {
         const newOpts = [];
-        if(options && options.length > 0) {
+        if (options && options.length > 0) {
             options.forEach(o => {
-                if(typeof o === 'object') {
+                if (typeof o === 'object') {
                     newOpts.push(o);
-                }else if(typeof o === 'string' || typeof o === 'number'){
-                    newOpts.push({property:o, value:o});
+                } else if (typeof o === 'string' || typeof o === 'number') {
+                    newOpts.push({ property: o, value: o });
                 }
             })
         }
-        (newOpts.length >0) && (this.more.options = newOpts);
+        (newOpts.length > 0) && (this.more.options = newOpts);
     }
 }
 
@@ -86,8 +106,10 @@ export class InputSetFactory extends InputSetDefault {
                 return new NumberInputSet(opts);
             case 'select':
                 return new SelectInputSet(opts);
-                case 'datePicker':
+            case 'datePicker':
                 return new DatePicker(opts);
+            case 'timePicker':
+                return new TimePicker(opts);
             case 'text':
             default:
                 return new TextInputSet(opts);

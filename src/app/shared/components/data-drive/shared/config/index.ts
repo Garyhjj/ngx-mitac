@@ -55,6 +55,17 @@ export const DataDriveStore = {
                         options:[{property: 'hhh',value: 23}, {property: 'rerty',value: 45}]
                     }
                 }
+            },
+            {
+                property: 'IQC_TIME',
+                InputOpts: {
+                    type: 'timePicker',
+                    default: new Date('2018-03-05T14:56'),
+                    placeHolder: 'hhhrt',
+                    more: {
+                        options:[{property: 'hhh',value: 23}, {property: 'rerty',value: 45}]
+                    }
+                }
             }
         ],
         dataViewSet: {

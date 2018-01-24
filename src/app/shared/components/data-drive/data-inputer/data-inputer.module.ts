@@ -1,3 +1,4 @@
+import { MyTimePickerComponent } from './../../inputs/my-time-picker/my-time-picker.component';
 import { MyDatePickerComponent } from './../../inputs/my-date-picker/my-date-picker.component';
 import { SharedModule } from './../../../shared.module';
 import { NgModule } from '@angular/core';
@@ -13,7 +14,8 @@ import { DataUpdateComponent } from './data-update/data-update.component';
   declarations: [DataInputerComponent,
     DataSearchComponent,
     DataUpdateComponent,
-    MyDatePickerComponent
+    MyDatePickerComponent,
+    MyTimePickerComponent
   ],
   exports: [DataInputerComponent]
 })
