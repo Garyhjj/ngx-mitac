@@ -3,7 +3,6 @@ export interface InputSet {
     editable?: boolean;
     placeHolder?: string;
     cascadable?: boolean;
-    selections?: string[] | number[];
     default?: string | boolean | number;
     match?: {
         regexp: string,
@@ -27,13 +26,14 @@ export class SelectInputSet implements InputSet {
     type: InputTypes = 'select';
     editable?: boolean;
     placeHolder?: string;
+    cascadable?: boolean;
     default?: string | boolean | number;
+    more?: {
+        options?:{property:string, value:string | number}[]
+    }
     constructor(opts?: InputSet) {
-        if (opts) {
-            this.default = opts.default;
-            this.editable = opts.editable;
-            this.placeHolder = opts.placeHolder;
-        }
+        opts && Object.assign(this, opts);
+        this.more = this.more || {};
         this.type = 'select';
     }
 }
@@ -65,7 +65,6 @@ export class TextInputSet implements InputSet {
     editable?: boolean;
     placeHolder?: string;
     cascadable?: boolean;
-    selections?: string[] | number[];
     default?: string | boolean | number;
     match?: {
         regexp: string,

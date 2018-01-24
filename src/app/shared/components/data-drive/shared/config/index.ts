@@ -32,6 +32,17 @@ export const DataDriveStore = {
                         max:999
                     }
                 }
+            },
+            {
+                property: 'CUSTOMS_TIME',
+                InputOpts: {
+                    type: 'select',
+                    default: 'sdf',
+                    placeHolder: 'hhhhrtyrt',
+                    more: {
+                        options:[{property: 'hhh',value: 23}, {property: 'rerty',value: 45}]
+                    }
+                }
             }
         ],
         dataViewSet: {
