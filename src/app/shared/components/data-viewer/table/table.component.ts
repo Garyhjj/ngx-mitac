@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs/Rx';
 import { TableData } from '../../data-drive/shared/models/index';
 import { Component, OnInit, Input, AfterViewInit, OnDestroy, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { DataDrive } from '../../data-drive/shared/models/index';
-import { throttle } from '../../../util/index';
+import { throttle } from '../../../utils/index';
 import { Observable } from 'rxjs/Observable';
 
 @Component({

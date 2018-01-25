@@ -28,8 +28,8 @@ export const DataDriveStore = {
                     default: '2',
                     placeHolder: 'hhhhrtyrt',
                     more: {
-                        min:3,
-                        max:999
+                        min: 3,
+                        max: 999
                     }
                 }
             },
@@ -52,7 +52,7 @@ export const DataDriveStore = {
                     default: 'hhh',
                     placeHolder: 'hhhrt',
                     more: {
-                        options:[{property: 'hhh',value: 23}, {property: 'rerty',value: 45}]
+                        options: [{ property: 'hhh', value: 23 }, { property: 'rerty', value: 45 }]
                     }
                 }
             },
@@ -60,10 +60,64 @@ export const DataDriveStore = {
                 property: 'IQC_TIME',
                 InputOpts: {
                     type: 'timePicker',
-                    default: new Date('2018-03-05T14:56'),
+                    default: '14:56',
                     placeHolder: 'hhhrt',
                     more: {
-                        options:[{property: 'hhh',value: 23}, {property: 'rerty',value: 45}]
+                        pickerFormat: 'HH:mm',
+                        showFormat: 'HH:mm'
+                    }
+                }
+            },
+            {
+                property: 'SHORTAGE_QUANTITY',
+                InputOpts: {
+                    type: 'switch',
+                    default: 'Y',
+                    trueFormat: 'Y',
+                    falseFormat: 'N'
+                }
+            },
+            {
+                property: 'INPUT_DATE',
+                InputOpts: {
+                    type: 'colleagueSearcher',
+                    default: 'Fx823'
+                }
+            },
+            {
+                property: '级联演示',
+                InputOpts: {
+                    type: 'cascader',
+                    placeHolder: 'hhhrt',
+                    properties: ['aaa','bbbb','ccc'],
+                    options: [{
+                        value: 1,
+                        label: 1,
+                        children: [
+                            // {
+                            //     value: 12,
+                            //     label: 12,
+                            //     children: [
+                            //         {
+                            //             value: 121,
+                            //             label: 121,
+                            //             isLeaf: true
+                            //         }
+                            //     ]
+                            // }
+                        ]
+                    }],
+                    cascaderLazySets: [
+                        {
+                            lazyLayer: 1,
+                        },
+                        {
+                            lazyLayer: 2,
+                        }
+                    ],
+                    more: {
+                        pickerFormat: 'HH:mm',
+                        showFormat: 'HH:mm'
                     }
                 }
             }

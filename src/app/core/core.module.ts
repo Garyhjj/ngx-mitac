@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgxValidatorExtendService } from './services/ngx-validator-extend.service';
+import { AppService } from './services/app.service';
 
 @NgModule({
     imports: [CommonModule, HttpClientModule
@@ -19,6 +20,7 @@ import { NgxValidatorExtendService } from './services/ngx-validator-extend.servi
         NgxValidatorExtendService,
         NzNotificationService,
         NzMessageService,
+        AppService,
         AuthService,
         EncryptUtilService,
         UtilService,

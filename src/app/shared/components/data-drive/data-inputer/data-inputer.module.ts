@@ -1,3 +1,6 @@
+import { ColleagueSearcherComponent } from './../../inputs/colleague-searcher/colleague-searcher.component';
+import { MySwitchComponent } from './../../inputs/my-switch/my-switch.component';
+import { MyCascaderComponent } from './../../inputs/my-cascader/my-cascader.component';
 import { MyTimePickerComponent } from './../../inputs/my-time-picker/my-time-picker.component';
 import { MyDatePickerComponent } from './../../inputs/my-date-picker/my-date-picker.component';
 import { SharedModule } from './../../../shared.module';
@@ -15,7 +18,10 @@ import { DataUpdateComponent } from './data-update/data-update.component';
     DataSearchComponent,
     DataUpdateComponent,
     MyDatePickerComponent,
-    MyTimePickerComponent
+    MyTimePickerComponent,
+    MyCascaderComponent,
+    MySwitchComponent,
+    ColleagueSearcherComponent
   ],
   exports: [DataInputerComponent]
 })

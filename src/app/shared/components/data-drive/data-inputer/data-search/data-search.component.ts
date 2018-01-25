@@ -40,7 +40,14 @@ export class DataSearchComponent implements OnInit {
   validateForm: FormGroup;
 
   submitForm() {
-    console.log(this.validateForm.value);
+    const value = this.validateForm.value;
+    const cascaderProps = this.inputTypeList.filter(i => i.type === 'cascader').map(t => t.label);
+    cascaderProps.forEach(c => {
+      const cascaderProp = value[c];
+      cascaderProp && Object.assign(value, cascaderProp);
+      delete value[c];
+    })
+    console.log(value);
   }
 
   get isHorizontal() {

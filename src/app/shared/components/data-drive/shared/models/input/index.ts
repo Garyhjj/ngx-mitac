@@ -2,13 +2,65 @@ export interface InputSet {
     type?: InputTypes;
     editable?: boolean;
     placeHolder?: string;
-    cascadable?: boolean;
     default?: string | boolean | number;
     match?: {
         regexp: string,
         err: string
     };
     more?: any;
+}
+
+export class ColleagueSearcher implements InputSet {
+    type: InputTypes;
+    default?: string | number;
+    constructor(opts?: any) {
+        opts && Object.assign(this, opts);
+        this.type = 'colleagueSearcher';
+    }
+}
+
+export class Switch implements InputSet {
+    type: InputTypes;
+    default?: string | boolean | number;
+    falseFormat?: string | number;
+    trueFormat?: string | number;
+    constructor(opts?: any) {
+        opts && Object.assign(this, opts);
+        this.type = 'switch';
+    }
+
+}
+export interface CascaderOption {
+    value: string | number,
+    label: string | number,
+    isLeaf?: boolean,
+    children?: CascaderOption[]
+}
+export interface CascaderLazySet {
+    value: string | number,
+    lazyLayer: number,
+    isLeaf?: boolean,
+    api?: string,
+    apiName?: string,
+}
+export class Cascader implements InputSet {
+    type: InputTypes;
+    cascaderLazySets?: CascaderLazySet[];
+    placeHolder?: string;
+    properties: string[];
+    options: CascaderOption[]
+    more?: {
+
+    }
+    constructor(opts?: any) {
+        opts && Object.assign(this, opts);
+        const lazySet = this.cascaderLazySets;
+        if (lazySet && lazySet.length > 0) {
+            lazySet.sort((a, b) => -a.lazyLayer + b.lazyLayer);
+            lazySet[0].isLeaf = true;
+        }
+        this.type = 'cascader';
+    }
 }
 
 export class DatePicker implements InputSet {
@@ -56,7 +108,6 @@ export class TimePicker implements InputSet {
 
 export class InputSetDefault implements InputSet {
     editable: boolean;
-    cascadable: boolean;
     default?: string | boolean | number;
     constructor() {
         this.editable = true;
@@ -68,7 +119,6 @@ export class SelectInputSet implements InputSet {
     type: InputTypes = 'select';
     editable?: boolean;
     placeHolder?: string;
-    cascadable?: boolean;
     default?: string | boolean | number;
     more?: {
         options?: { property: string, value: string | number }[]
@@ -110,6 +160,12 @@ export class InputSetFactory extends InputSetDefault {
                 return new DatePicker(opts);
             case 'timePicker':
                 return new TimePicker(opts);
+            case 'cascader':
+                return new Cascader(opts);
+            case 'switch':
+                return new Switch(opts);
+            case 'colleagueSearcher':
+                return new ColleagueSearcher(opts);
             case 'text':
             default:
                 return new TextInputSet(opts);
@@ -118,13 +174,12 @@ export class InputSetFactory extends InputSetDefault {
 }
 
 
-export type InputTypes = 'text' | 'number' | 'date' | 'rate' | 'select' | 'datePicker' | 'timePicker';
+export type InputTypes = 'text' | 'number' | 'date' | 'rate' | 'select' | 'datePicker' | 'timePicker' | 'cascader' | 'switch' | 'colleagueSearcher';
 
 export class TextInputSet implements InputSet {
     type: InputTypes;
     editable?: boolean;
     placeHolder?: string;
-    cascadable?: boolean;
     default?: string | boolean | number;
     match?: {
         regexp: string,
