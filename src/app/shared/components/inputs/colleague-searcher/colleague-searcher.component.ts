@@ -38,7 +38,8 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
     if(value){
       this.appService.getColleague(value).subscribe((data: any) => {
           this.searchOptions = data;
-          this.selectedOption = data[0]
+          this.selectedOption = data[0];
+          this.propagateChange(data[0].split(',')[0]);
       });
     }
   }

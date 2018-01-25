@@ -1,10 +1,12 @@
 <div class="clearfix">
     <nz-upload
-      nzAction="https://jsonplaceholder.typicode.com/posts/"
+      [nzAction]="uploadUrl"
       nzListType="picture-card"
       [(nzFileList)]="fileList"
       [nzShowButton]="fileList.length < 3"
-      [nzPreview]="handlePreview">
+      [nzPreview]="handlePreview"
+      [nzBeforeUpload]="beforeUpload"
+      >
         <i class="anticon anticon-plus"></i>
         <div class="ant-upload-text">Upload</div>
     </nz-upload>
