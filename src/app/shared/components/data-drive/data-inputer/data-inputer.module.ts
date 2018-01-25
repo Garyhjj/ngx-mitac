@@ -1,3 +1,4 @@
+import { PhotoUploadComponent } from './../../inputs/photo-upload/photo-upload.component';
 import { ColleagueSearcherComponent } from './../../inputs/colleague-searcher/colleague-searcher.component';
 import { MySwitchComponent } from './../../inputs/my-switch/my-switch.component';
 import { MyCascaderComponent } from './../../inputs/my-cascader/my-cascader.component';
@@ -21,7 +22,8 @@ import { DataUpdateComponent } from './data-update/data-update.component';
     MyTimePickerComponent,
     MyCascaderComponent,
     MySwitchComponent,
-    ColleagueSearcherComponent
+    ColleagueSearcherComponent,
+    PhotoUploadComponent
   ],
   exports: [DataInputerComponent]
 })
