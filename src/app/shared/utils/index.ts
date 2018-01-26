@@ -30,6 +30,7 @@ export const throttle = (method: any, context: Object, args: any[] = [], during:
   method.tId = setTimeout(function () {
     method.call(context, ...args);
   }, during);
+  return method.tId;
 }
 
 export const replaceQuery = (url: string, query: any) => {

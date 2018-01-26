@@ -52,6 +52,14 @@
 
             <app-colleague-searcher [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'colleagueSearcher'"></app-colleague-searcher>
 
+            <app-photo-upload [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'photoUpload'"
+            [pickerFormat]="inputTypeList[i]?.more?.pickerFormat"
+            [maxCount]="inputTypeList[i]?.more?.maxCount"
+            [removable]="inputTypeList[i]?.more?.removable"
+            [addable]="inputTypeList[i]?.more?.addable"
+            [scanable]="inputTypeList[i]?.more?.scanable"
+            ></app-photo-upload>
+
             <div nz-form-explain *ngIf="validateForm.controls[item].dirty&&validateForm.controls[item].errors">{{errMes[item]}}</div>
           </div>
           <!-- <div nz-form-control nz-col [nzSpan]="14">
@@ -68,4 +76,3 @@
       <i class="anticon anticon-search"></i>查询</button>
   </div>
 </form>
-<app-photo-upload></app-photo-upload>

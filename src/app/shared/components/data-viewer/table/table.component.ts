@@ -203,6 +203,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   }
   clearTimeEvent() {
     clearTimeout(this.timeEvent1);
+    clearTimeout(this.timeEvent2);
   }
   unsubscribeAll() {
     this.sub1 && this.sub1.unsubscribe();
@@ -230,7 +231,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   }
 
   ngAfterViewChecked() {
-    throttle(this.cacalScrollHeight, this, [], 500);
+    this.timeEvent2 = throttle(this.cacalScrollHeight, this, [], 500);
   }
 
 }

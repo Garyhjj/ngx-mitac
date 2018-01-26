@@ -10,6 +10,29 @@ export interface InputSet {
     more?: any;
 }
 
+export class PhotoUpload implements InputSet {
+    type?: InputTypes;
+    editable?: boolean;
+    default?: string;
+    more?: {
+        pickerFormat?: 'string' | 'array';
+        maxCount?: number;
+        removable?: boolean;
+        addabble?: boolean;
+        scanable?: boolean
+    }
+    constructor(opts?: any) {
+        opts && Object.assign(this, opts);
+        // this.more = this.more || {};
+        // this.more.pickerFormat = this.more.pickerFormat || 'string';
+        // this.more.maxCount = this.more.maxCount || 9;
+        // this.more.removable = this.more.removable || true;
+        // this.more.addabble = this.more.addabble || true;
+        // this.more.scanable = this.more.scanable || true;
+        this.type = 'photoUpload'
+    }
+}
+
 export class ColleagueSearcher implements InputSet {
     type: InputTypes;
     default?: string | number;
@@ -166,6 +189,8 @@ export class InputSetFactory extends InputSetDefault {
                 return new Switch(opts);
             case 'colleagueSearcher':
                 return new ColleagueSearcher(opts);
+            case 'photoUpload':
+                return new PhotoUpload(opts);
             case 'text':
             default:
                 return new TextInputSet(opts);
@@ -174,7 +199,7 @@ export class InputSetFactory extends InputSetDefault {
 }
 
 
-export type InputTypes = 'text' | 'number' | 'date' | 'rate' | 'select' | 'datePicker' | 'timePicker' | 'cascader' | 'switch' | 'colleagueSearcher';
+export type InputTypes = 'text' | 'number' | 'date' | 'rate' | 'select' | 'datePicker' | 'timePicker' | 'cascader' | 'switch' | 'colleagueSearcher' | 'photoUpload';
 
 export class TextInputSet implements InputSet {
     type: InputTypes;

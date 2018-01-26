@@ -85,6 +85,17 @@ export const DataDriveStore = {
                 }
             },
             {
+                property: 'WO_NO',
+                InputOpts: {
+                    type: 'photoUpload',
+                    default: 'Images/IPQA/2018-01/a69a61a1-cc07-4f8e-9ed3-86b9ac776b13.png,Images/IPQA/2018-01/afdeadf0-7db8-41c1-9cee-f81d9b133e5b.png,Images/IPQA/2018-01/e060427e-02fa-4ba8-be42-6ceedf4e492f.png,Images/IPQA/2018-01/a9751ee3-c310-43a7-995a-98cfa18aacaf.png,Images/IPQA/2018-01/c5d1f307-4eea-4ccf-a588-8b4792edf5a3.png,Images/IPQA/2018-01/8e7be8d6-bb93-425b-855a-03104a3a06ac.png',
+                    more: {
+                        pickerFormat: 'array',
+                        maxCount: 5
+                    }
+                }
+            },
+            {
                 property: '级联演示',
                 InputOpts: {
                     type: 'cascader',
