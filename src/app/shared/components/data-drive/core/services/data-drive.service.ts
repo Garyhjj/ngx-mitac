@@ -35,4 +35,22 @@ export class DataDriveService {
         return DataDriveStore[name];
     }
 
+    toExcel(dataDrive: DataDrive) {
+        if(!dataDrive) return;
+        const tableData = dataDrive.tableData;
+        const dataViewSet = dataDrive.dataViewSet;
+        const name = (dataViewSet && dataViewSet.title) || 'default';
+        const columns = tableData.columns;
+        const data = tableData.data;
+        let excelHeader = [];
+        let excelData = [];
+        if (columns && columns.length > 0) {
+            excelHeader = columns.map(c => c.value);
+        }
+        if (data && data.length > 0) {
+            excelData = data.map(c => c.map(d => d.value));
+        }
+        this.utilSerive.toExcel(name, excelHeader, excelData)
+    }
+
 }

@@ -1,6 +1,7 @@
 import { DataDrive } from './../shared/models/index';
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd';
+import { DataDriveService } from '../core/services/data-drive.service';
 
 @Component({
   selector: 'app-menu',
@@ -22,6 +23,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
   constructor(
     private _message: NzMessageService,
+    private dataDriveService: DataDriveService
   ) { }
 
   ngOnInit() {
@@ -54,6 +56,10 @@ export class MenuComponent implements OnInit, OnDestroy {
       window.addEventListener('keydown',
         this.attachFn = (e) => e.keyCode === 27 && (this.dataDrive.modalSataus = this.isShowModal = false));
     }
+  }
+
+  toExcel() {
+    this.dataDriveService.toExcel(this.dataDrive);
   }
 
 }

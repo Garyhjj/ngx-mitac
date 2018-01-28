@@ -1,15 +1,15 @@
 <div *ngIf="dataDrive && dataDrive.additionalFn">
-  <nz-row [nzType]="'flex'" [nzJustify]="'space-around'">
+  <nz-row >
     <button nz-button [nzType]="'primary'" (click)="showModal()" 
     nz-col [nzSpan]="3"
     *ngIf="dataDrive.additionalFn.fullScreen"
     >
-      <span>视图全屏显示</span>
+      <span>視圖全屏顯示</span>
     </button>
     <nz-col [nzSpan]="10" *ngIf="dataDrive.additionalFn.changeHeaderFontSize">
       <nz-row [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="8">
         <div nz-col [nzSpan]="8" class="flex-center">
-          <div>列名字体大小：</div>
+          <div>列名字體大小：</div>
         </div>
         <nz-slider nz-col [nzMin]="10" [nzMax]="60" [nzSpan]="16" 
         [(ngModel)]="headerFontSize"
@@ -20,7 +20,7 @@
     <nz-col [nzSpan]="10" *ngIf="dataDrive.additionalFn.changeBodyFontSize">
       <nz-row [nzType]="'flex'" [nzJustify]="'start'" [nzGutter]="8">
         <div nz-col [nzSpan]="8" class="flex-center">
-          <div>数据字体大小：</div>
+          <div>數據字體大小：</div>
         </div>
         <nz-slider nz-col [nzMin]="10" [nzMax]="60" [nzSpan]="16" 
         [(ngModel)]="bodyFontSize"
@@ -28,5 +28,11 @@
         ></nz-slider>
       </nz-row>
     </nz-col>
+    <button nz-button [nzType]="'primary'" (click)="toExcel()" 
+    nz-col [nzSpan]="3"
+    *ngIf="dataDrive.additionalFn.toExcel"
+    >
+      <span>導出Excel文件</span>
+    </button>
   </nz-row>
 </div>

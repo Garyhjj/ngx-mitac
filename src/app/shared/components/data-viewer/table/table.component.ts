@@ -130,6 +130,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     }
 
   }
+
   runRegExp(dataIdx: number, body: {
     textColor?: string;
     textSize?: string;
