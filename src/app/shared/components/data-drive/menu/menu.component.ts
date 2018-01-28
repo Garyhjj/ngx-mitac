@@ -16,6 +16,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   headerFontSize = 16;
   bodyFontSize = 16;
   viewerType: string;
+  menuDetail: string;
   @Input()
   set opts(opts: DataDrive) {
     this.dataDrive = opts;
@@ -47,6 +48,10 @@ export class MenuComponent implements OnInit, OnDestroy {
         this.dataDrive.dataViewSet.changeBodyFontSize(this.bodyFontSize + 'px');
         break;
     }
+  }
+
+  changeMenuDetail(type:string) {
+    this.menuDetail = type;
   }
 
   showModal() {
