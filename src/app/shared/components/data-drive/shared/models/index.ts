@@ -3,7 +3,7 @@ import { TableDataModel, TableData } from './table-data/index';
 import { SearchItemSet } from './searcher';
 import { DataViewSet } from './viewer/index';
 import { BehaviorSubject } from 'rxjs/Rx';
-import { bindEventForArray } from '../../../../util/index';
+import { bindEventForArray } from '../../../../utils/index';
 import { DataViewSetFactory } from './viewer/index';
 import { SelfStoreSet, SelfStore } from './self-store/index';
 import { InputSetFactory } from './input/index';

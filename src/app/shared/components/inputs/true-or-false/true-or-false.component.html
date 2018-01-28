@@ -1,0 +1,16 @@
+<div>
+  <span class="describe" [style.fontSize]="fontSize" *ngIf="!result || result.trueAnswer === result.yourAnswer">{{titlePrefix}}4566</span>
+  <nz-alert [nzType]="'error'" *ngIf="result && result.trueAnswer !== result.yourAnswer">
+    <span alert-body [style.fontSize]="fontSize">
+      <pre>{{titlePrefix}}4566</pre>
+    </span>
+  </nz-alert>
+  <nz-radio-group [(ngModel)]="radioValue" (ngModelChange)="change($event)">
+    <label nz-radio [nzValue]="_myTrueFormat">
+      <span [style.fontSize]="fontSize">對</span>
+    </label>
+    <label nz-radio [nzValue]="_myFalseFormat">
+      <span [style.fontSize]="fontSize">錯</span>
+    </label>
+  </nz-radio-group>
+</div>

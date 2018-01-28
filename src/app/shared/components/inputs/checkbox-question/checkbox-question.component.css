@@ -1,0 +1,13 @@
+:host ::ng-deep .ant-checkbox-wrapper {
+    display: block;
+    margin-top: 5px;
+}
+
+:host ::ng-deep .ant-checkbox-wrapper + .ant-checkbox-wrapper {
+    margin-left: 0px;
+}
+
+nz-checkbox-group {
+    display: block;
+    margin-left: 10px;
+}

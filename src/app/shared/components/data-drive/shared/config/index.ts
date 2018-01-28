@@ -10,6 +10,138 @@ export const DataDriveStore = {
             menu: true,
             toExcel: true
         },
+        // searchSets: [
+        //     {
+        //         property: 'LOT_NO',
+        //         InputOpts: {
+        //             default: 'hhhh',
+        //             placeHolder: 'hhhhrtyrt',
+        //             match: {
+        //                 regexp: '\\w+',
+        //                 err: '不能為空'
+        //             }
+        //         }
+        //     },
+        //     {
+        //         property: 'PART_NO',
+        //         InputOpts: {
+        //             type: 'textarea',
+        //             default: 'textarea placeHolder',
+        //             placeHolder: 'textarea placeHolder',
+        //         }
+        //     },
+        //     {
+        //         property: 'CONTAINER_NO',
+        //         InputOpts: {
+        //             type: 'number',
+        //             default: '2',
+        //             placeHolder: 'hhhhrtyrt',
+        //             more: {
+        //                 min: 3,
+        //                 max: 999
+        //             }
+        //         }
+        //     },
+        //     {
+        //         property: 'ATA_MSL_TIME',
+        //         InputOpts: {
+        //             type: 'datePicker',
+        //             default: '2018-01-01',
+        //             more: {
+        //                 pickerFormat: 'YYYY/MM/DD HH:mm',
+        //                 showFormat: 'YYYY/MM/DD HH:mm',
+        //                 showTime: true,
+        //             }
+        //         }
+        //     },
+        //     {
+        //         property: 'IQC_FINISHED_TIME',
+        //         InputOpts: {
+        //             type: 'select',
+        //             default: 'hhh',
+        //             placeHolder: 'hhhrt',
+        //             more: {
+        //                 options: [{ property: 'hhh', value: 23 }, { property: 'rerty', value: 45 }]
+        //             }
+        //         }
+        //     },
+        //     {
+        //         property: 'IQC_TIME',
+        //         InputOpts: {
+        //             type: 'timePicker',
+        //             default: '14:56',
+        //             placeHolder: 'hhhrt',
+        //             more: {
+        //                 pickerFormat: 'HH:mm',
+        //                 showFormat: 'HH:mm'
+        //             }
+        //         }
+        //     },
+        //     {
+        //         property: 'SHORTAGE_QUANTITY',
+        //         InputOpts: {
+        //             type: 'switch',
+        //             default: 'Y',
+        //             trueFormat: 'Y',
+        //             falseFormat: 'N'
+        //         }
+        //     },
+        //     {
+        //         property: 'INPUT_DATE',
+        //         InputOpts: {
+        //             type: 'colleagueSearcher',
+        //             default: 'Fx823'
+        //         }
+        //     },
+        //     {
+        //         property: 'WO_NO',
+        //         InputOpts: {
+        //             type: 'photoUpload',
+        //             default: 'Images/IPQA/2018-01/a69a61a1-cc07-4f8e-9ed3-86b9ac776b13.png,Images/IPQA/2018-01/afdeadf0-7db8-41c1-9cee-f81d9b133e5b.png,Images/IPQA/2018-01/e060427e-02fa-4ba8-be42-6ceedf4e492f.png,Images/IPQA/2018-01/a9751ee3-c310-43a7-995a-98cfa18aacaf.png,Images/IPQA/2018-01/c5d1f307-4eea-4ccf-a588-8b4792edf5a3.png,Images/IPQA/2018-01/8e7be8d6-bb93-425b-855a-03104a3a06ac.png',
+        //             more: {
+        //                 pickerFormat: 'array',
+        //                 maxCount: 5
+        //             }
+        //         }
+        //     },
+        //     {
+        //         property: '级联演示',
+        //         InputOpts: {
+        //             type: 'cascader',
+        //             placeHolder: 'hhhrt',
+        //             properties: ['aaa','bbbb','ccc'],
+        //             options: [{
+        //                 value: 1,
+        //                 label: 1,
+        //                 children: [
+        //                     // {
+        //                     //     value: 12,
+        //                     //     label: 12,
+        //                     //     children: [
+        //                     //         {
+        //                     //             value: 121,
+        //                     //             label: 121,
+        //                     //             isLeaf: true
+        //                     //         }
+        //                     //     ]
+        //                     // }
+        //                 ]
+        //             }],
+        //             cascaderLazySets: [
+        //                 {
+        //                     lazyLayer: 1,
+        //                 },
+        //                 {
+        //                     lazyLayer: 2,
+        //                 }
+        //             ],
+        //             more: {
+        //                 pickerFormat: 'HH:mm',
+        //                 showFormat: 'HH:mm'
+        //             }
+        //         }
+        //     }
+        // ],
         dataViewSet: {
             title: '急料看板',
             more: {
@@ -46,6 +178,7 @@ export const DataDriveStore = {
             }
         },
         tableData: {
+            searchable: true,
             columns: [
                 {
                     property: 'LOT_NO', value: 'LOT_NO', type: {}

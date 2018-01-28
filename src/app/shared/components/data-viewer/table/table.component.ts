@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs/Rx';
 import { TableData } from '../../data-drive/shared/models/index';
 import { Component, OnInit, Input, AfterViewInit, OnDestroy, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { DataDrive } from '../../data-drive/shared/models/index';
-import { throttle } from '../../../util/index';
+import { throttle } from '../../../utils/index';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
@@ -130,7 +130,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     }
 
   }
-  
+
   runRegExp(dataIdx: number, body: {
     textColor?: string;
     textSize?: string;
@@ -204,6 +204,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   }
   clearTimeEvent() {
     clearTimeout(this.timeEvent1);
+    clearTimeout(this.timeEvent2);
   }
   unsubscribeAll() {
     this.sub1 && this.sub1.unsubscribe();
@@ -231,7 +232,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   }
 
   ngAfterViewChecked() {
-    throttle(this.cacalScrollHeight, this, [], 500);
+    this.timeEvent2 = throttle(this.cacalScrollHeight, this, [], 500);
   }
 
 }

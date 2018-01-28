@@ -1,0 +1,16 @@
+<nz-select
+      style="width: 200px;"
+      nzAllowClear
+      [nzPlaceHolder]="'請輸入英文名/工號/中文名'"
+      [nzFilter]="false"
+      [(ngModel)]="selectedOption"
+      (ngModelChange)="change($event)"
+      (nzSearchChange)="searchChange($event)"
+      [nzNotFoundContent]="'无法找到'"
+      nzShowSearch>
+      <nz-option
+        *ngFor="let option of searchOptions"
+        [nzLabel]="option"
+        [nzValue]="option">
+      </nz-option>
+    </nz-select>

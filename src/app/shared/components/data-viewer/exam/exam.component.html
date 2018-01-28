@@ -1,0 +1,60 @@
+<div class="exam-title">4645654</div>
+<nz-alert [nzType]="'info'">
+  <nz-row alert-body [nzType]="'flex'" [nzJustify]="'space-around'">
+    <nz-col>
+      <span>考試科目：XXXXX</span>
+    </nz-col>
+    <nz-col>
+      <span>姓名：XXXXX</span>
+    </nz-col>
+    <nz-col>
+      <span>限時：{{examTime}}分鐘</span>
+    </nz-col>
+    <nz-col>
+      剩餘時間：
+      <span>{{leftTime}}</span>
+    </nz-col>
+    <nz-col>
+      <span>得分：90</span>
+    </nz-col>
+  </nz-row>
+</nz-alert>
+
+<nz-card>
+  <ng-template #title>
+    {{subTitlePrefixs[0]}}、 判斷題,總分
+    <span>30</span>分,每題
+    <span>10</span>分
+  </ng-template>
+  <ng-template #body>
+    <app-true-or-false [titlePrefix]="'1. '" class="question-item"></app-true-or-false>
+    <app-true-or-false [titlePrefix]="'2. '" class="question-item"></app-true-or-false>
+    <app-true-or-false [titlePrefix]="'3. '" class="question-item"></app-true-or-false>
+  </ng-template>
+</nz-card>
+
+<nz-card>
+  <ng-template #title>
+    {{subTitlePrefixs[1]}}、 選擇題,總分
+    <span>30</span>分,每題
+    <span>10</span>分
+  </ng-template>
+  <ng-template #body>
+    <app-radio-question [titlePrefix]="'1. '" class="question-item"></app-radio-question>
+    <app-radio-question [titlePrefix]="'2. '" class="question-item"></app-radio-question>
+    <app-radio-question [titlePrefix]="'3. '" class="question-item"></app-radio-question>
+  </ng-template>
+</nz-card>
+
+<nz-card>
+  <ng-template #title>
+    {{subTitlePrefixs[2]}}、 多選題,總分
+    <span>30</span>分,每題
+    <span>10</span>分
+  </ng-template>
+  <ng-template #body>
+    <app-checkbox-question [titlePrefix]="'1. '" class="question-item"></app-checkbox-question>
+    <app-checkbox-question [titlePrefix]="'2. '" class="question-item"></app-checkbox-question>
+    <app-checkbox-question [titlePrefix]="'3. '" class="question-item"></app-checkbox-question>
+  </ng-template>
+</nz-card>

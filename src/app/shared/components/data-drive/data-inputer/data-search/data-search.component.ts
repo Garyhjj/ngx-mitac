@@ -1,3 +1,4 @@
+import { SearchItemSet } from './../../shared/models/searcher/index';
 import { DataDrive, TableDataColumn } from './../../shared/models/index';
 import { Component, OnInit, Input } from '@angular/core';
 import {
@@ -5,6 +6,7 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
+import { NgxValidatorExtendService } from '../../../../../core/services/ngx-validator-extend.service';
 
 @Component({
   selector: 'app-data-search',
@@ -16,8 +18,10 @@ export class DataSearchComponent implements OnInit {
   
   dataDrive: DataDrive;
   columns: TableDataColumn[];
+  searchSets: SearchItemSet[];
   columnNameStrings: string[];
   inputTypeList: any[];
+  errMes:any = {};
 
   formLayout = 'inline';
   @Input()
@@ -26,8 +30,9 @@ export class DataSearchComponent implements OnInit {
       return;
     }
     this.dataDrive = opts;
+    this.searchSets = opts.searchSets;
     this.columns = opts.tableData.columns;
-    this.columnNameStrings = this.columns.map(c => c.property);
+    this.columnNameStrings = this.searchSets.map(s => s.property);
   }
   @Input()
   changeIdx = 1;
@@ -35,7 +40,14 @@ export class DataSearchComponent implements OnInit {
   validateForm: FormGroup;
 
   submitForm() {
-    console.log(this.validateForm.value);
+    const value = this.validateForm.value;
+    const cascaderProps = this.inputTypeList.filter(i => i.type === 'cascader').map(t => t.label);
+    cascaderProps.forEach(c => {
+      const cascaderProp = value[c];
+      cascaderProp && Object.assign(value, cascaderProp);
+      delete value[c];
+    })
+    console.log(value);
   }
 
   get isHorizontal() {
@@ -44,7 +56,10 @@ export class DataSearchComponent implements OnInit {
 
 
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private validExd: NgxValidatorExtendService
+  ) {
   }
 
   ngOnInit() {
@@ -52,22 +67,23 @@ export class DataSearchComponent implements OnInit {
       return;
     }
     const myForm: any = {};
-    this.inputTypeList = this.columns.map(c => {
-      let def;
-      if (this.changeIdx > -1) {
-        const data = this.dataDrive.tableData && this.dataDrive.tableData.data[this.changeIdx];
-        if (data) {
-          const target = data.find(d => d.property === c.property);
-          if (target) {
-            def = target.value;
-          }
+    this.inputTypeList = this.searchSets.map(s => {
+      let def = (s.InputOpts && s.InputOpts.default) || '';
+      const mapColumn = this.columns.find(c => c.property === s.property);
+      const match = s.InputOpts.match;
+      let valid = null;
+      if(match) {
+        if(match.err) {
+          this.errMes[s.property] = match.err;
+        }
+        if(match.regexp) {
+          valid = this.validExd.regex(match.regexp);
         }
       }
-      def = def || c.type.InputOpts.default;
-      myForm[c.property] = [def];
-      return Object.assign({ label: c.value }, c.type.InputOpts);
+      myForm[s.property] = [def,valid];
+      return Object.assign({ label: mapColumn?mapColumn.value:s.property }, s.InputOpts);
     });
-    console.log(myForm);
+    console.log(this.inputTypeList);
 
     this.validateForm = this.fb.group(myForm);
   }

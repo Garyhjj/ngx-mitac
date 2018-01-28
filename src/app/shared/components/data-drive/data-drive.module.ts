@@ -11,7 +11,8 @@ import { DataInputerModule } from './data-inputer/data-inputer.module';
   imports: [
     CommonModule, SharedModule, DataViewerModule, DataInputerModule
   ],
-  declarations: [DataDriveComponent,
+  declarations: [
+    DataDriveComponent,
     MenuComponent
 ],
   exports: [DataDriveComponent],
