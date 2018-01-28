@@ -191,6 +191,8 @@ export class InputSetFactory extends InputSetDefault {
                 return new ColleagueSearcher(opts);
             case 'photoUpload':
                 return new PhotoUpload(opts);
+            case 'textarea':
+                return new TextareaInputSet(opts)
             case 'text':
             default:
                 return new TextInputSet(opts);
@@ -199,7 +201,10 @@ export class InputSetFactory extends InputSetDefault {
 }
 
 
-export type InputTypes = 'text' | 'number' | 'date' | 'rate' | 'select' | 'datePicker' | 'timePicker' | 'cascader' | 'switch' | 'colleagueSearcher' | 'photoUpload';
+export type InputTypes =
+    'text' | 'number' | 'date' | 'rate' | 'select' | 'datePicker' |
+    'timePicker' | 'cascader' | 'switch' | 'colleagueSearcher' |
+    'photoUpload' | 'textarea';
 
 export class TextInputSet implements InputSet {
     type: InputTypes;
@@ -215,6 +220,22 @@ export class TextInputSet implements InputSet {
             Object.assign(this, opts);
         }
         this.type = 'text';
+    }
+}
+export class TextareaInputSet implements InputSet {
+    type: InputTypes;
+    editable?: boolean;
+    placeHolder?: string;
+    default?: string | boolean | number;
+    match?: {
+        regexp: string,
+        err: string
+    }
+    constructor(opts?: InputSet) {
+        if (opts) {
+            Object.assign(this, opts);
+        }
+        this.type = 'textarea';
     }
 }
 

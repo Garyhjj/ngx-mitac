@@ -1,0 +1,16 @@
+.exam-title{
+    text-align: center;
+    font-size: 3.0rem;
+    font-weight: bold;
+}
+
+nz-card{
+    margin-top: 15px;
+}
+
+:host ::ng-deep .ant-card-head {
+    background-color: #ecf6fd;
+}
+.question-item {
+    margin: 20px;
+}

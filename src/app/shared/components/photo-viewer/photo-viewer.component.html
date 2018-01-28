@@ -2,6 +2,6 @@
     <div class="showImg">
         <span class="prev" (click)="prev($event)"><i class="anticon anticon-caret-left"></i></span>
         <span class="next" (click)="next($event)"><i class="anticon anticon-caret-right"></i></span>
-        <img [src]="imgList[previewImageIdx].url" alt="" class="image" (click)="stopPropagation($event)">
+        <img [src]="imgList[_previewImageIdx]?.url" alt="" class="image" (click)="stopPropagation($event)">
     </div>
 </div>

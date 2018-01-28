@@ -92,6 +92,9 @@ export class PhotoUploadComponent implements OnInit {
       arr = value.split(',');
     }
     arr = arr || value;
+    while(arr.length > this._maxCount) {
+      arr.pop();
+    }
     this._fileList = arr.map(a => ({
       name: a,
       status: 'done',

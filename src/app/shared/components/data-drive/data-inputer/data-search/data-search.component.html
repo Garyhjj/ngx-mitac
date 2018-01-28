@@ -9,8 +9,12 @@
 
 
           <div nz-form-control nz-col [nzSpan]="isHorizontal?16:16">
+
             <nz-input [formControlName]="item" [nzPlaceHolder]="inputTypeList[i].placeHolder" [nzSize]="'large'" *ngIf="inputTypeList[i]?.type === 'text'">
             </nz-input>
+
+            <nz-input [formControlName]="item" [nzPlaceHolder]="inputTypeList[i].placeHolder" *ngIf="inputTypeList[i]?.type === 'textarea'" 
+            nzType="textarea" [nzAutosize]="'1'"></nz-input>
 
             <nz-select [formControlName]="item" [nzSize]="'large'" [nzPlaceHolder]="inputTypeList[i].placeHolder" *ngIf="inputTypeList[i]?.type === 'select'"
               [style.minWidth]="'100px'">
@@ -62,10 +66,6 @@
 
             <div nz-form-explain *ngIf="validateForm.controls[item].dirty&&validateForm.controls[item].errors">{{errMes[item]}}</div>
           </div>
-          <!-- <div nz-form-control nz-col [nzSpan]="14">
-                    <nz-switch formControlName="switch"></nz-switch>
-                  </div> -->
-
 
         </div>
       </nz-col>
