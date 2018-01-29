@@ -1,3 +1,4 @@
+import { FormGroup } from '@angular/forms';
 import { AdditionalFn } from './additionalFn/index';
 import { TableDataModel, TableData } from './table-data/index';
 import { SearchItemSet } from './searcher';
@@ -7,6 +8,7 @@ import { bindEventForArray } from '../../../../utils/index';
 import { DataViewSetFactory } from './viewer/index';
 import { SelfStoreSet, SelfStore } from './self-store/index';
 import { InputSetFactory } from './input/index';
+import { Subject } from 'rxjs/Subject';
 export * from './viewer';
 export * from './self-store';
 export * from './table-data';
@@ -14,6 +16,7 @@ export * from './input';
 export interface DataDriveOptions {
     id: number;
     searchSets?: SearchItemSet[];
+    updateSets?: SearchItemSet[];
     additionalFn?: AdditionalFn;
     tableData: TableData;
     APIs: {
@@ -37,8 +40,12 @@ export class DataDrive implements DataDriveOptions {
     private hideListSubject = new BehaviorSubject<string[]>([]);
     private isGetingDataSubject = new BehaviorSubject<boolean>(false);
     private isShowModalSubject = new BehaviorSubject<boolean>(false);
+    private updateFormGroup: FormGroup
+    eventSubject = new Subject<string>();
+    eventsQueue = {};
     id: number;
     searchSets?: SearchItemSet[];
+    updateSets?: SearchItemSet[];
     tableData: TableDataModel;
     additionalFn?: AdditionalFn;
     APIs: {
@@ -107,12 +114,61 @@ export class DataDrive implements DataDriveOptions {
     observeIsShowModal() {
         return this.isShowModalSubject.asObservable();
     }
+    onUpdateFormShow(cb: (fg:FormGroup) => void) {
+        this.on('updateFormShow', cb);
+    }
+    on(eventType: string, cb: Function): void {
+        if (this.eventsQueue[eventType]) {
+            this.eventsQueue[eventType].push(cb);
+        } else {
+            this.eventsQueue[eventType] = [cb];
+        }
+    }
+
+    private subscribeEvent() {
+        this.eventSubject.subscribe(type => {
+            const eventQueue: Array<Function> = this.eventsQueue[type] || [];
+            switch (type) {
+                case 'updateFormShow':
+                    eventQueue.forEach(cb => {
+                        if (cb && this.updateFormGroup) {
+                            cb(this.updateFormGroup);
+                        }
+                    });
+                    break;
+                default:
+                    eventQueue.forEach(cb => {
+                        if (cb) {
+                            cb();
+                        }
+                    });
+            }
+        })
+    }
+
+    updateFormGroupInited(fg: FormGroup) {
+        this.updateFormGroup = fg;
+        this.eventSubject.next('updateFormShow');
+    }
+
     private init() {
         this.initDataViewSet();
         this.initSearchSets();
+        this.initUpdateSets();
         this.initTableData();
         this.initHideLists();
+        this.subscribeEvent();
     }
+
+    private initUpdateSets() {
+        if (this.updateSets && this.updateSets.length > 0) {
+            this.updateSets = this.updateSets.map(s => {
+                s.InputOpts = new this.inputSetFactory(s.InputOpts);
+                return s;
+            });
+        }
+    }
+
     private initSearchSets() {
         if (this.searchSets && this.searchSets.length > 0) {
             this.searchSets = this.searchSets.map(s => {

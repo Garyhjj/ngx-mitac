@@ -2,13 +2,13 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataViewerComponent } from './data-viewer.component';
 import { TableComponent } from './table/table.component';
-import { SharedModule } from '../../shared.module';
+import { SharedModule } from '../../../shared.module';
 import { FilterColumnComponent } from '../filter-column/filter-column.component';
-import { ExamModule } from './exam/exam.module';
+import { ExamPaperModule } from './exam-paper/exam-paper.module';
 
 @NgModule({
   imports: [
-    CommonModule, SharedModule, ExamModule
+    CommonModule, SharedModule, ExamPaperModule
   ],
   declarations: [DataViewerComponent, TableComponent, FilterColumnComponent],
   exports: [DataViewerComponent, TableComponent, FilterColumnComponent],

@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-exam',
-  templateUrl: './exam.component.html',
-  styleUrls: ['./exam.component.css']
+  selector: 'app-exam-paper',
+  templateUrl: './exam-paper.component.html',
+  styleUrls: ['./exam-paper.component.css']
 })
-export class ExamComponent implements OnInit {
+export class ExamPaperComponent implements OnInit {
 
   beginTime: Date;
   examTime: number = 25;

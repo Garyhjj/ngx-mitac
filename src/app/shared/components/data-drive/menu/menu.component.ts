@@ -1,6 +1,7 @@
+import { DataUpdateComponent } from './../data-inputer/data-update/data-update.component';
 import { DataDrive } from './../shared/models/index';
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { NzMessageService } from 'ng-zorro-antd';
+import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { DataDriveService } from '../core/services/data-drive.service';
 
 @Component({
@@ -24,7 +25,8 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
   constructor(
     private _message: NzMessageService,
-    private dataDriveService: DataDriveService
+    private dataDriveService: DataDriveService,
+    private modalService: NzModalService
   ) { }
 
   ngOnInit() {
@@ -52,6 +54,25 @@ export class MenuComponent implements OnInit, OnDestroy {
 
   changeMenuDetail(type:string) {
     this.menuDetail = type;
+  }
+
+  addItem() {
+    const subscription = this.modalService.open({
+      title          : '新增',
+      content        : DataUpdateComponent,
+      onOk() {
+      },
+      onCancel() {
+
+      },
+      footer         : false,
+      componentParams: {
+        opts: this.dataDrive
+      }
+    });
+    subscription.subscribe(result => {
+      // console.log(result);
+    })
   }
 
   showModal() {

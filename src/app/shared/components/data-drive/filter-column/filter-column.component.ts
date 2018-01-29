@@ -1,5 +1,5 @@
 import { Subscription } from 'rxjs/Rx';
-import { DataDrive } from '../data-drive/shared/models/index';
+import { DataDrive } from '../../data-drive/shared/models/index';
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 
 @Component({

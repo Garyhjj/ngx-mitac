@@ -4,5 +4,6 @@ export interface AdditionalFn {
     changeBodyFontSize?: boolean;
     changeHeaderFontSize?: boolean;
     menu?: boolean;
-    toExcel?: boolean
+    toExcel?: boolean,
+    addItem?: boolean
 }

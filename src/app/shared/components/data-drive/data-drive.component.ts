@@ -1,11 +1,10 @@
 import { Observable } from 'rxjs/Observable';
 import { DataDrive, TableDataModel } from './shared/models/index';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { APPConfig } from '../../../shared/config/app.config';
 import { NzModalService } from 'ng-zorro-antd';
 import { NzMessageService } from 'ng-zorro-antd';
-import { DataViewerComponent } from '../../../shared/components/data-viewer/data-viewer.component';
 import { DataDriveService } from './core/services/data-drive.service';
 import { UtilService } from '../../../core/services/util.service';
 
@@ -26,6 +25,9 @@ export class DataDriveComponent implements OnInit {
   set name(n: string) {
     this._name = n;
   }
+
+  @Output() dataDriveInit: EventEmitter<DataDrive> = new EventEmitter();
+
   constructor(
     private http: HttpClient,
     private modalService: NzModalService,
@@ -62,13 +64,7 @@ export class DataDriveComponent implements OnInit {
         final();
       }
     }, (err) => { this.utilService.errDeal(err); final(); });
+
+    this.dataDriveInit.emit(this.dataDrive);
   }
-  // showModal() {
-  //   this.dataDrive.modalSataus = this.isShowModal = true;
-  //   this._message.info('按下键盘Esc按钮可退出', { nzDuration: 5000 });
-  //   if (!this.attachFn) {
-  //     window.addEventListener('keydown',
-  //     this.attachFn = (e) => e.keyCode === 27 && (this.dataDrive.modalSataus = this.isShowModal = false));
-  //   }
-  // }
 }

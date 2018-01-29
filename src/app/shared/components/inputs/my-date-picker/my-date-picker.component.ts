@@ -36,8 +36,11 @@ export class MyDatePickerComponent implements OnInit {
    */
   writeValue(value: string) {
     if (value) {
-      this.dataString = value;
-      this._date = new Date(value);
+      const date = new Date(value);
+      if(date.toString() !== 'Invalid Date') {
+        this.dataString = value;
+        this._date = date;
+      }
     }
   }
 

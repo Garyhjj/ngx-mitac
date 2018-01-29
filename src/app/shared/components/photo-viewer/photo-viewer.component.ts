@@ -9,12 +9,7 @@ import { Observable } from 'rxjs/Observable';
 })
 export class PhotoViewerComponent implements OnInit, OnDestroy {
 
-  @Input() imgList: any[] = [{
-    uid: -1,
-    name: 'xxx.png',
-    status: 'done',
-    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-  }];
+  @Input() imgList: any[] = [];
   _previewImageIdx = 0;
   @Input()
   set previewImageIdx(idx: number) {
@@ -36,18 +31,18 @@ export class PhotoViewerComponent implements OnInit, OnDestroy {
     return false;
   }
   prev(e: Event) {
-    if (this.previewImageIdx === 0) {
-      this.previewImageIdx = this.imgList.length - 1
+    if (this._previewImageIdx === 0) {
+      this._previewImageIdx = this.imgList.length - 1
     } else {
       --this.previewImageIdx;
     }
     return this.stopPropagation(e);
   }
   next(e: Event) {
-    if (this.previewImageIdx === this.imgList.length - 1) {
-      this.previewImageIdx = 0
+    if (this._previewImageIdx === this.imgList.length - 1) {
+      this._previewImageIdx = 0
     } else {
-      ++this.previewImageIdx;
+      ++this._previewImageIdx;
     }
     return this.stopPropagation(e);
   }

@@ -17,6 +17,10 @@ const homeRoutes: Routes = [
             {
                 path: 'board',
                 loadChildren: 'app/my-modules/board/board.module#BoardModule'
+            },
+            {
+                path: 'exam',
+                loadChildren: 'app/my-modules/exam/exam.module#ExamModule'
             }
         ]
     }

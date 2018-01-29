@@ -1,4 +1,4 @@
-import { DataDrive, DataViewSet } from '../data-drive/shared/models/index';
+import { DataDrive, DataViewSet } from '../../data-drive/shared/models/index';
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({

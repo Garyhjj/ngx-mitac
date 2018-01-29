@@ -8,9 +8,10 @@ export const DataDriveStore = {
             changeBodyFontSize: true,
             changeHeaderFontSize: true,
             menu: true,
-            toExcel: true
+            toExcel: true,
+            // addItem: true
         },
-        // searchSets: [
+        // updateSets: [
         //     {
         //         property: 'LOT_NO',
         //         InputOpts: {

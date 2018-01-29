@@ -1,3 +1,4 @@
+import { UtilService } from './../../../../core/services/util.service';
 import { Subject } from 'rxjs/Rx';
 import { AppService } from './../../../../core/services/app.service';
 import { Component, OnInit, forwardRef, OnDestroy } from '@angular/core';
@@ -25,7 +26,8 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
   mySub: Subscription
 
   constructor(
-    private appService: AppService
+    private appService: AppService,
+    private util: UtilService
   ) { }
 
   /**
@@ -37,10 +39,14 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
     value = value + '';
     if(value){
       this.appService.getColleague(value).subscribe((data: any) => {
+        if(data.length === 1) {
           this.searchOptions = data;
           this.selectedOption = data[0];
           this.propagateChange(data[0].split(',')[0]);
-      });
+        }else {
+          this.propagateChange('')
+        }
+      }, (err) => {this.util.errDeal(err); this.propagateChange('')});
     }
   }
 
@@ -64,7 +70,7 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
       const query = encodeURI(term);
       this.appService.getColleague(term).subscribe((data: any) => {
         this.searchOptions = data;
-      });
+      }, (err) => {this.util.errDeal(err)});
     })
   }
 

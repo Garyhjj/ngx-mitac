@@ -25,6 +25,7 @@ import { DataUpdateComponent } from './data-update/data-update.component';
     ColleagueSearcherComponent,
     PhotoUploadComponent
   ],
-  exports: [DataInputerComponent]
+  exports: [DataInputerComponent],
+  entryComponents: [DataUpdateComponent]
 })
 export class DataInputerModule { }

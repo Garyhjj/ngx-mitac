@@ -1,5 +1,5 @@
 <div [ngSwitch]="_viewSet.type">
-  <!-- <app-exam></app-exam> -->
+  <!-- <app-exam-paper></app-exam-paper> -->
   <app-table [opts]="_dataDrive" *ngSwitchCase="'table'" [isModal]="isModal"></app-table>
   <div *ngSwitchDefault>output2</div>
 </div>

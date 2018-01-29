@@ -1,4 +1,3 @@
-import { filter } from 'rxjs/operators/filter';
 // tslint:disable
 import { Subject } from 'rxjs/Rx';
 import { Component, OnInit, forwardRef, Input } from '@angular/core';

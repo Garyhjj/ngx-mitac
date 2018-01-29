@@ -11,7 +11,7 @@ import { UrgentNoComponent } from './urgent-no/urgent-no.component';
   imports: [CommonModule, BoardRoutingModule, SharedModule, DataDriveModule],
   declarations: [
     BoardComponent,
-    UrgentMaterialComponent,
+    UrgentMaterialComponent,
     UrgentNoComponent
 ],
   providers: []
