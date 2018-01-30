@@ -1,8 +1,8 @@
 
-<nz-table *ngIf="_dataDrive"
+<nz-table *ngIf="_dataDrive && setDetail"
     #nzTable
-    [nzScroll]="setDetail.fixedHeader.enable?{ y: setDetail.fixedHeader.scrollHeight>0?setDetail.fixedHeader.scrollHeight: 300 }:null"
-    [nzDataSource]="tableData.data"
+    [nzScroll]="setDetail.fixedHeader?.enable?{ y: setDetail.fixedHeader.scrollHeight>0?setDetail.fixedHeader.scrollHeight: 300 }:null"
+    [nzDataSource]="_dataDrive.tableData.data?_dataDrive.tableData.data:[]"
     [nzPageSize]="setDetail.pageSet.count"
     [nzBordered]="setDetail.border_y.enable"
     [nzLoading]="_loading"
@@ -13,14 +13,14 @@
     (nzDataChange)="dataChange()"
     >
     <span nz-table-title>{{tableSet.title}}</span>
-    <ng-template #nzFixedHeader [ngIf]="_header&&!setDetail.fixedHeader.enable&&tableData">
+    <ng-template #nzFixedHeader [ngIf]="_header&&!setDetail.fixedHeader?.enable&&tableData">
         <thead nz-thead>
             <tr>
               <th nz-th 
               [style.backgroundColor]="setDetail.header?setDetail.header.bgColor:''"
               [style.color]= "setDetail.header?setDetail.header.textColor:''"
               [style.fontSize]= "setDetail.header?setDetail.header.textSize:''"
-              *ngFor="let item of tableData.columns;let i = index" [nzWidth]="setDetail.fixedHeader.enable &&setDetail.fixedHeader.width && setDetail.fixedHeader.width[i]?setDetail.fixedHeader.width[i]:(100/tableData.columns.length) + '%'"><span>{{item.value}}</span></th>
+              *ngFor="let item of tableData.columns;let i = index" [nzWidth]="setDetail.fixedHeader?.enable &&setDetail.fixedHeader?.width && setDetail.fixedHeader?.width[i]?setDetail.fixedHeader?.width[i]:(100/tableData.columns.length) + '%'"><span>{{item.value}}</span></th>
             </tr>
           </thead>
     </ng-template>

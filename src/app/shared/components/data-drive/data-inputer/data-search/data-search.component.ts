@@ -7,6 +7,7 @@ import {
   Validators
 } from '@angular/forms';
 import { NgxValidatorExtendService } from '../../../../../core/services/ngx-validator-extend.service';
+import { DataDriveService } from '../../core/services/data-drive.service';
 
 @Component({
   selector: 'app-data-search',
@@ -39,6 +40,17 @@ export class DataSearchComponent implements OnInit {
 
   validateForm: FormGroup;
 
+  constructor(
+    private fb: FormBuilder,
+    private validExd: NgxValidatorExtendService,
+    private dataDriveService: DataDriveService
+  ) {
+  }
+
+  reSet() {
+    this.validateForm.reset();
+  }
+
   submitForm() {
     const value = this.validateForm.value;
     const cascaderProps = this.inputTypeList.filter(i => i.type === 'cascader').map(t => t.label);
@@ -47,19 +59,17 @@ export class DataSearchComponent implements OnInit {
       cascaderProp && Object.assign(value, cascaderProp);
       delete value[c];
     })
+
+    const send:any = {};
+    this.searchSets.forEach(s => {
+      send[s.apiProperty?s.apiProperty:s.property] = value[s.property];
+    })
+    this.dataDriveService.searchData(this.dataDrive, send).subscribe((c:any[]) => this.dataDriveService.initTableData(this.dataDrive, c));
     console.log(value);
   }
 
   get isHorizontal() {
     return this.formLayout === 'horizontal';
-  }
-
-
-
-  constructor(
-    private fb: FormBuilder,
-    private validExd: NgxValidatorExtendService
-  ) {
   }
 
   ngOnInit() {

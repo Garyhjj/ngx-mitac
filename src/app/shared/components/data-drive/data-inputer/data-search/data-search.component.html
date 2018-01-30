@@ -1,4 +1,4 @@
-<form nz-form [formGroup]="validateForm" [nzLayout]="formLayout" (ngSubmit)="submitForm()">
+<form nz-form [formGroup]="validateForm" [nzLayout]="formLayout">
   <nz-row>
     <ng-container *ngFor="let item of columnNameStrings;let i =index">
       <nz-col [nzSpan]="8">
@@ -71,8 +71,14 @@
       </nz-col>
     </ng-container>
   </nz-row>
-  <div nz-form-item nz-row [style.display]="'block'">
-    <button nz-button nz-col [nzOffset]="8" [nzSpan]="8" type="submit" [nzType]="'primary'" [nzSize]="'large'" [disabled]="!validateForm.valid">
-      <i class="anticon anticon-search"></i>查询</button>
-  </div>
+  <nz-row [nzType]="'flex'" [nzJustify]="'center'">
+    <nz-col [nzSpan]="'6'">
+        <button nz-button nz-col type="submit" [nzType]="'primary'" [nzSize]="'large'" [disabled]="!validateForm.valid" (click)="submitForm()">
+            <i class="anticon anticon-search"></i>查询</button>
+    </nz-col>
+    <nz-col [nzSpan]="'6'">
+        <button nz-button nz-col [nzType]="'primary'" type="botton" [nzSize]="'large'" (click)="reSet()">
+            <i class="anticon anticon-reload"></i>重置</button>
+    </nz-col>
+  </nz-row>
 </form>

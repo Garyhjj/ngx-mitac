@@ -1,3 +1,4 @@
+import { MxCheckboxComponent } from './../../inputs/mx-checkbox/mx-checkbox.component';
 import { PhotoUploadComponent } from './../../inputs/photo-upload/photo-upload.component';
 import { ColleagueSearcherComponent } from './../../inputs/colleague-searcher/colleague-searcher.component';
 import { MySwitchComponent } from './../../inputs/my-switch/my-switch.component';
@@ -23,7 +24,8 @@ import { DataUpdateComponent } from './data-update/data-update.component';
     MyCascaderComponent,
     MySwitchComponent,
     ColleagueSearcherComponent,
-    PhotoUploadComponent
+    PhotoUploadComponent,
+    MxCheckboxComponent
   ],
   exports: [DataInputerComponent],
   entryComponents: [DataUpdateComponent]

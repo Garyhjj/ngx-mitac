@@ -1,4 +1,144 @@
 export const DataDriveStore = {
+    examQuestions: {
+        id: 3,
+        APIs: { 
+            search: 'EXAM/GetExamQuestions?title={title}&type={type}',
+            update: 'EXAM/UpdateQuestions'
+         },
+        additionalFn: {
+            filterColumn: true,
+            changeBodyFontSize: true,
+            changeHeaderFontSize: true,
+            menu: true,
+            toExcel: true,
+            addItem: true
+        },
+        dataViewSet: {
+            title: '测试题目'
+        },
+        updateSets: [
+            {
+                property: 'ID',
+                InputOpts: {
+                    type: 'primary',
+                    default: 0
+                }
+            },
+            {
+                property: 'TITLE',
+                InputOpts: {
+                    placeHolder: '请输入题目'
+                }
+            },
+            {
+                property: 'TYPE',
+                InputOpts: {
+                    type: 'select',
+                    placeHolder: '请选择类别',
+                    more: {
+                        options: [{ property: 'RADIO', value: '单选' }, { property: 'CHECKBOX', value: '多选' }, { property: 'TF', value: '判断' }]
+                    }
+                }
+            },
+            {
+                property: 'OPTION_A',
+                InputOpts: {
+                    placeHolder: '请输入第一個選項'
+                }
+            },
+            {
+                property: 'OPTION_B',
+                InputOpts: {
+                    placeHolder: '请输入第二個選項'
+                }
+            },
+            {
+                property: 'OPTION_C',
+                InputOpts: {
+                    placeHolder: '请输入第三個選項'
+                }
+            },
+            {
+                property: 'OPTION_D',
+                InputOpts: {
+                    placeHolder: '请输入第四個選項'
+                }
+            },
+            {
+                property: 'OPTION_E',
+                InputOpts: {
+                    placeHolder: '请输入第五個選項'
+                }
+            },
+            {
+                property: 'RIGHT_ANSWER',
+                InputOpts: {
+                    type: 'checkbox',
+                    placeHolder: '请选择正確答案',
+                    default:'A',
+                    more: {
+                        options: [
+                            { property: 'A', value: '选项1' }, 
+                            { property: 'B', value: '选项2' }, 
+                            { property: 'C', value: '选项3' },
+                            { property: 'D', value: '选项4' }, 
+                            { property: 'E', value: '选项5' },
+                            { property: 'Y', value: '正確' }, 
+                        ]
+                    }
+                }
+            }
+        ],
+        searchSets: [
+            {
+                property: 'TITLE',
+                apiProperty: 'title',
+                InputOpts: {
+                    placeHolder: '请输入题目'
+                }
+            },
+            {
+                property: 'TYPE',
+                apiProperty: 'type',
+                InputOpts: {
+                    type: 'select',
+                    placeHolder: '请选择类别',
+                    more: {
+                        options: [{ property: 'RADIO', value: '单选' }, { property: 'CHECKBOX', value: '多选' }, { property: 'TF', value: '判断' }]
+                    }
+                }
+            }
+        ],
+        tableData: {
+            searchable: true,
+            columns: [
+                {
+                    property: 'TITLE', value: '题目', type: {}
+                },
+                {
+                    property: 'TYPE', value: '类别', type: {}
+                },
+                {
+                    property: 'OPTION_A', value: '选项1', type: {}
+                },
+                {
+                    property: 'OPTION_B', value: '选项2', type: {}
+                },
+                {
+                    property: 'OPTION_C', value: '选项3', type: {}
+                },
+                {
+                    property: 'OPTION_D', value: '选项4', type: {}
+                },
+                {
+                    property: 'OPTION_E', value: '选项5', type: {}
+                },
+                {
+                    property: 'RIGHT_ANSWER', value: '正确答案', type: {}
+                }
+            ]
+        }
+    },
     urgentMaterial: {
         id: 1,
         APIs: { search: 'UrgentMaterial/GetUrgentMaterial?wo=' },

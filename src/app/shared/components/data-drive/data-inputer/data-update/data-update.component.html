@@ -18,6 +18,11 @@
                 [style.minWidth]="'100px'">
                 <nz-option [nzLabel]="item.value" [nzValue]="item.property" *ngFor="let item of inputTypeList[i]?.more?.options"></nz-option>
               </nz-select>
+
+              <app-mx-checkbox [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'checkbox'"
+              [myPlaceHolder]="inputTypeList[i].placeHolder"
+              [options]="inputTypeList[i]?.more?.options"
+              ></app-mx-checkbox>
   
               <!-- <nz-datepicker [formControlName]="item" [nzSize]="'large'" *ngIf="inputTypeList[i]?.type === 'datepicker'" nzShowTime="'hh:mm'" [nzFormat]="'YYYY-MM-DD hh:mm'">
               </nz-datepicker> -->
@@ -71,6 +76,6 @@
   
     <div nz-form-item nz-row [style.display] = "'block'">
       <button nz-button nz-col [nzOffset]="6" [nzSpan]="12" type="submit" [nzType]="'primary'" [nzSize]="'large'" [disabled]="!validateForm.valid"
-      >Submit</button>
+      >確定</button>
     </div>
   </form>

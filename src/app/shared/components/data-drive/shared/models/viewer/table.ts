@@ -48,54 +48,15 @@ export class TabelViewSet implements DataViewSet {
     more: TabelViewSetMore;
 
     constructor(opts: DataViewSet = {}) {
-        if (opts.more) {
-            if (!opts.more.title) {
-                opts.more.title = { enable: true };
-            }
-            if (!opts.more.border_y) {
-                opts.more.border_y = { enable: false };
-            }
-            if (!opts.more.pageSet && !opts.more.pageSet.count) {
-                opts.more.pageSet = { enable: true, count: 10 };
-            }
-            if (!opts.more.size) {
-                opts.more.size = 'default';
-            }
-            if (!opts.more.footer) {
-                opts.more.footer = { enable: false, content: '' };
-            }
-        }
-        // this.more = this.more || {
-        //     title: { enable: true },
-        //     pageSet: { enable: false, count: 10 },
-        //     size: 'default', border_y: { enable: false },
-        //     header: {
-        //         textColor: '#fff',
-        //         bgColor: '#000',
-        //         textSize: '1.8rem'
-        //     },
-        //     body: {
-        //         textColor: 'green',
-        //         bgColor: '#000',
-        //         textSize: '1.8rem',
-        //         rule: {
-        //             match: [['ATA_MSL_TIME', '^\s*$']],
-        //             textColor: 'red',
-        //         }
-        //     },
-        //     fixedHeader: {
-        //         enable: true,
-        //         scrollHeight: 'auto',
-        //         autoScroll: {
-        //             interval: 1000,
-        //             loop: true
-        //         }
-        //     },
-        //     footer: { enable: false, content: '' }
-        // };
         if (opts) {
             Object.assign(this, opts);
         }
+        this.more = this.more || {};
+        this.more.title = this.more.title || { enable: true };
+        this.more.border_y = this.more.border_y || { enable: false };
+        this.more.pageSet = this.more.pageSet || { enable: true, count: 10 };
+        this.more.size = this.more.size || 'default';
+        this.more.footer = this.more.footer || { enable: false, content: '' };
         this.type = 'table';
     }
     changeHeaderFontSize(size: string) {

@@ -137,6 +137,34 @@ export class InputSetDefault implements InputSet {
         this.default = '';
     }
 }
+export class CheckboxInputSet implements InputSet {
+    type: InputTypes = 'checkbox';
+    editable?: boolean;
+    placeHolder?: string;
+    default?: string | boolean | number;
+    more?: {
+        options?: { property: string, value: string | number }[]
+    }
+    constructor(opts?: InputSet) {
+        opts && Object.assign(this, opts);
+        this.more = this.more || {};
+        this.more.options = this.more.options || [];
+        this.type = 'checkbox';
+    }
+    setOptions(options: any[]) {
+        const newOpts = [];
+        if (options && options.length > 0) {
+            options.forEach(o => {
+                if (typeof o === 'object') {
+                    newOpts.push(o);
+                } else if (typeof o === 'string' || typeof o === 'number') {
+                    newOpts.push({ property: o, value: o });
+                }
+            })
+        }
+        (newOpts.length > 0) && (this.more.options = newOpts);
+    }
+}
 
 export class SelectInputSet implements InputSet {
     type: InputTypes = 'select';
@@ -179,6 +207,8 @@ export class InputSetFactory extends InputSetDefault {
                 return new NumberInputSet(opts);
             case 'select':
                 return new SelectInputSet(opts);
+            case 'checkbox':
+                return new CheckboxInputSet(opts);
             case 'datePicker':
                 return new DatePicker(opts);
             case 'timePicker':
@@ -192,7 +222,9 @@ export class InputSetFactory extends InputSetDefault {
             case 'photoUpload':
                 return new PhotoUpload(opts);
             case 'textarea':
-                return new TextareaInputSet(opts)
+                return new TextareaInputSet(opts);
+            case 'primary':
+                return new PrimaryInputSet(opts);
             case 'text':
             default:
                 return new TextInputSet(opts);
@@ -204,7 +236,7 @@ export class InputSetFactory extends InputSetDefault {
 export type InputTypes =
     'text' | 'number' | 'date' | 'rate' | 'select' | 'datePicker' |
     'timePicker' | 'cascader' | 'switch' | 'colleagueSearcher' |
-    'photoUpload' | 'textarea';
+    'photoUpload' | 'textarea' | 'primary' | 'checkbox';
 
 export class TextInputSet implements InputSet {
     type: InputTypes;
@@ -258,3 +290,14 @@ export class NumberInputSet extends TextInputSet {
     }
 }
 
+export class PrimaryInputSet implements InputSet {
+    type: InputTypes;
+    default?: number;
+    constructor(opts?: InputSet) {
+        if (opts) {
+            Object.assign(this, opts);
+        }
+        this.default = this.default || 0;
+        this.type = 'primary';
+    }
+}

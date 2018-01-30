@@ -50,27 +50,6 @@ export class DataInputerComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (!this.dataDrive) {
-      return;
-    }
-    const myForm: any = {};
-    this.inputTypeList = this.columns.map(c => {
-      let def;
-      if (this.changeIdx > -1) {
-        const data = this.dataDrive.tableData && this.dataDrive.tableData.data[this.changeIdx];
-        if (data) {
-          const target = data.find(d => d.property === c.property);
-          if (target) {
-            def = target.value;
-          }
-        }
-      }
-      def = def || c.type.InputOpts.default;
-      myForm[c.property] = [def];
-      return Object.assign({ label: c.value }, c.type.InputOpts);
-    });
-    console.log(myForm);
-
-    this.validateForm = this.fb.group(myForm);
+    
   }
 }

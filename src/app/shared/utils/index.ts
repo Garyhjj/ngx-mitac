@@ -36,7 +36,7 @@ export const throttle = (method: any, context: Object, args: any[] = [], during:
 export const replaceQuery = (url: string, query: any) => {
   if (url && query) {
     for (let prop in query) {
-      url = url.replace(`{${prop}}`, query[prop])
+      url = url.replace(`{${prop}}`, query[prop]?query[prop]:'')
     }
     url = url.replace(/\{\w+\}/g, '');
   }

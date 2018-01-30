@@ -9,7 +9,7 @@
           </nz-collapse>
     </ng-container>
     <nz-collapse [nzTitle]="'檢索'" *ngIf="dataDrive.tableData && dataDrive.tableData.searchable && dataDrive.searchSets && dataDrive.searchSets.length > 0">
-        <app-data-inputer [opts]="dataDrive" [type]="2" *ngIf="dataDrive && dataDrive.tableData && dataDrive.tableData.data"></app-data-inputer>
+        <app-data-inputer [opts]="dataDrive" [type]="2" *ngIf="dataDrive && dataDrive.tableData"></app-data-inputer>
       </nz-collapse>
   </nz-collapseset>
 </div>
