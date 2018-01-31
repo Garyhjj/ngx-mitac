@@ -41,6 +41,7 @@ export interface TabelViewSetMore {
         enable: boolean;
         content: string;
     };
+    showAction?: boolean 
 }
 export class TabelViewSet implements DataViewSet {
     type: DataViewType;

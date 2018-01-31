@@ -57,6 +57,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   addItem() {
+    if(!this.dataDrive.isDataAddable()) return;
     const subscription = this.modalService.open({
       title          : '新增',
       content        : DataUpdateComponent,

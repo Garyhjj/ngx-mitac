@@ -1,3 +1,6 @@
+import { DataUpdateComponent } from './../../data-inputer/data-update/data-update.component';
+import { NzModalService } from 'ng-zorro-antd';
+import { DataDriveService } from './../../core/services/data-drive.service';
 import { TabelViewSetMore, TabelViewSet } from './../../../data-drive/shared/models/viewer/table';
 import { Subscription } from 'rxjs/Rx';
 import { TableData } from '../../../data-drive/shared/models/index';
@@ -25,13 +28,17 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   private sub1: Subscription;
   private sub2: Subscription;
   private sub3: Subscription;
+  private pipes:any = {};
   @Input()
   set opts(opts: DataDrive) {
     this.tableSet = opts.dataViewSet as TabelViewSet;
+    this.calAdditionalColNum();
     this.setDetail = this.tableSet.more;
     this.tableData = Object.assign({}, opts.tableData);
     this.tableData.data = [];
     this._dataDrive = opts;
+    this.getPipes();
+    this.bindTableData();
     this.subjectHideList();
     this.subjectIsGettingData();
   }
@@ -44,9 +51,21 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   _scrollInterval: number;
   _loopScroll: boolean;
 
+  additionalColNum = 0;
   styleCache = new StyleCache();
-  constructor(private ref: ChangeDetectorRef) {
+  constructor(
+    private ref: ChangeDetectorRef,
+    private dataDriveService: DataDriveService,
+    private modalService: NzModalService
+  ) {
 
+  }
+
+  get canEdit() {
+    return this._dataDrive.isDataAddable;
+  }
+  get canDelete() {
+    return this._dataDrive.isDataDeletable;
   }
 
   cacalScrollHeight() {
@@ -70,6 +89,68 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
         this.hideLists = ls;
         this.updateFilterColumns();
       });
+    }
+  }
+
+  bindTableData() {
+    this._dataDrive.afterDataInit(() => {
+      this.tableData.data = this._dataDrive.tableData.data;
+    })
+  }
+
+  getPipes() {
+    this._dataDrive.tableData.columns.filter(c => c.more && c.more.pipe).forEach(f => {
+      this.pipes[f.property] = f.more.pipe;
+    })
+  }
+
+  toDelete(idx) {
+    if(!this.canDelete) return;
+    const deleteFn = () => {
+      const data = this._dataDrive.getData();
+      if (!data[idx]) return;
+      this.dataDriveService.deleteData(this._dataDrive, data[idx]).subscribe(r => {
+        this.dataDriveService.updateViewData(this._dataDrive);
+      })
+    }
+    this.modalService.confirm({
+      title: '您確定要刪除這一條目嗎？',
+      onOk() {
+        deleteFn()
+      },
+      onCancel() {
+      }
+    });
+    return false;
+  }
+
+  toUpdate(idx) {
+    if(!this.canEdit) return;
+    if (!this._dataDrive.isDataAddable()) return false;
+    const subscription = this.modalService.open({
+      title: '新增',
+      content: DataUpdateComponent,
+      onOk() {
+      },
+      onCancel() {
+
+      },
+      footer: false,
+      componentParams: {
+        opts: this._dataDrive,
+        changeIdx: idx
+      }
+    });
+    subscription.subscribe(result => {
+      // console.log(result);
+    })
+    return false;
+  }
+
+  calAdditionalColNum() {
+    this.additionalColNum = 0;
+    if (this.tableSet.more && this.tableSet.more.showAction) {
+      this.additionalColNum++;
     }
   }
 
@@ -101,6 +182,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   dataChange() {
     setTimeout(() => this.initAutoScroll(), 50);
   }
+
   initAutoScroll() {
     let autoScroll;
     if (this.setDetail && this.setDetail.fixedHeader && (autoScroll = this.setDetail.fixedHeader.autoScroll)) {
@@ -143,12 +225,12 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     }[]
   }, type: string) {
     const cache = this.styleCache;
-    if(cache.idx === dataIdx) {
+    if (cache.idx === dataIdx) {
       const styeCache = cache.getCache(type);
-      if(styeCache) {
+      if (styeCache) {
         return styeCache;
       }
-    }else {
+    } else {
       cache.reset(dataIdx);
     }
     const test = () => {
@@ -158,7 +240,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
         textSize?: string;
         bgColor?: string;
       }[];
-      
+
       const target = this._dataDrive.tableData.data && this._dataDrive.tableData.data[dataIdx];
       if (!(rules = body.rules) || !target) {
         return body[type];
@@ -200,7 +282,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     const res = test();
     cache.setCache(type, res);
     return res;
-    
+
   }
   clearTimeEvent() {
     clearTimeout(this.timeEvent1);
@@ -246,7 +328,7 @@ class StyleCache {
 
   }
 
-  reset(idx:number) {
+  reset(idx: number) {
     this.idx = idx;
     this.bgColor = '';
     this.textSize = '';
@@ -254,7 +336,7 @@ class StyleCache {
   }
 
   getCache(type: string) {
-    if(type && this[type]) {
+    if (type && this[type]) {
       return this[type];
     }
   }

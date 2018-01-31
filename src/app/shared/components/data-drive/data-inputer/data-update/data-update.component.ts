@@ -1,5 +1,7 @@
+import { Subscription } from 'rxjs/Subscription';
+import { UtilService } from './../../../../../core/services/util.service';
 import { DataDrive, TableDataColumn } from './../../shared/models/index';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -17,7 +19,7 @@ import { DataDriveService } from '../../core/services/data-drive.service';
   templateUrl: './data-update.component.html',
   styleUrls: ['./data-update.component.css']
 })
-export class DataUpdateComponent implements OnInit {
+export class DataUpdateComponent implements OnInit, OnDestroy {
 
 
   dataDrive: DataDrive;
@@ -30,6 +32,8 @@ export class DataUpdateComponent implements OnInit {
   primaryKey: string;
   primaryValue: number;
   formLayout = 'horizontal';
+  globalErr;
+  sub1: Subscription
   @Input()
   set opts(opts: DataDrive) {
     if (!opts) {
@@ -64,11 +68,13 @@ export class DataUpdateComponent implements OnInit {
     private fb: FormBuilder,
     private subject1: NzModalSubject,
     private validExd: NgxValidatorExtendService,
-    private dataDriveService: DataDriveService
+    private dataDriveService: DataDriveService,
+    private util: UtilService
   ) {
   }
 
   submitForm() {
+    if(!this.dataDrive.runBeforeUpdate()) return;
     const value = this.validateForm.value;
     const cascaderProps = this.inputTypeList.filter(i => i.type === 'cascader').map(t => t.label);
     cascaderProps.forEach(c => {
@@ -76,14 +82,23 @@ export class DataUpdateComponent implements OnInit {
       cascaderProp && Object.assign(value, cascaderProp);
       delete value[c];
     })
-    setTimeout(() => this.subject1.destroy(), 500);
     if (this.primaryKey) {
       value[this.primaryKey] = this.primaryValue;
     }
-    console.log(value);
-    this.dataDriveService.updateData(this.dataDrive, value).subscribe(c => console.log(c))
+    this.dataDriveService.updateData(this.dataDrive, value).subscribe(c => {
+      this.dataDriveService.updateViewData(this.dataDrive);
+      this.util.showGlobalSucMes(this.changeIdx < 0?'插入成功': '更新成功');
+      setTimeout(() => this.subject1.destroy(), 500);
+    })
   }
 
+  subscribeGlErr() {
+    this.sub1 = this.dataDrive.observeGlobalUpdateErr().subscribe((err) => this.globalErr = err);
+  }
+
+  ngOnDestroy() {
+    this.sub1 && this.sub1.unsubscribe();
+  }
   ngOnInit() {
     if (!this.dataDrive) {
       return;
@@ -96,7 +111,10 @@ export class DataUpdateComponent implements OnInit {
         if (data) {
           const target = data.find(d => d.property === s.property);
           if (target) {
-            this.primaryValue = target[this.primaryKey];
+             const primary = data.find(d => d.property === this.primaryKey);
+             if(primary) {
+               this.primaryValue = +primary.value;
+             }
             def = target.value;
           }
         }
@@ -122,6 +140,7 @@ export class DataUpdateComponent implements OnInit {
     //   console.log(fg.value);
     // })
     this.validateForm = this.fb.group(myForm);
+    this.subscribeGlErr();
     this.dataDrive.updateFormGroupInited(this.validateForm);
   }
 

@@ -1,10 +1,11 @@
 export const DataDriveStore = {
     examQuestions: {
         id: 3,
-        APIs: { 
+        APIs: {
             search: 'EXAM/GetExamQuestions?title={title}&type={type}',
-            update: 'EXAM/UpdateQuestions'
-         },
+            update: 'EXAM/UpdateQuestions',
+            delete: 'EXAM/DeleteQuestion?id={id}'
+        },
         additionalFn: {
             filterColumn: true,
             changeBodyFontSize: true,
@@ -14,7 +15,10 @@ export const DataDriveStore = {
             addItem: true
         },
         dataViewSet: {
-            title: '测试题目'
+            title: '測試題目',
+            more: {
+                showAction: true
+            }
         },
         updateSets: [
             {
@@ -27,16 +31,25 @@ export const DataDriveStore = {
             {
                 property: 'TITLE',
                 InputOpts: {
-                    placeHolder: '请输入题目'
+                    type: 'textarea',
+                    placeHolder: '請輸入題目',
+                    match: {
+                        regexp: '\\w+',
+                        err: '不能為空'
+                    }
                 }
             },
             {
                 property: 'TYPE',
                 InputOpts: {
                     type: 'select',
-                    placeHolder: '请选择类别',
+                    placeHolder: '請選擇類別',
+                    match: {
+                        regexp: '\\w+',
+                        err: '不能為空'
+                    },
                     more: {
-                        options: [{ property: 'RADIO', value: '单选' }, { property: 'CHECKBOX', value: '多选' }, { property: 'TF', value: '判断' }]
+                        options: [{ property: 'RADIO', value: '單選' }, { property: 'CHECKBOX', value: '多選' }, { property: 'TF', value: '判斷' }]
                     }
                 }
             },
@@ -75,15 +88,18 @@ export const DataDriveStore = {
                 InputOpts: {
                     type: 'checkbox',
                     placeHolder: '请选择正確答案',
-                    default:'A',
+                    match: {
+                        regexp: '\\w+',
+                        err: '不能為空'
+                    },
                     more: {
                         options: [
-                            { property: 'A', value: '选项1' }, 
-                            { property: 'B', value: '选项2' }, 
-                            { property: 'C', value: '选项3' },
-                            { property: 'D', value: '选项4' }, 
-                            { property: 'E', value: '选项5' },
-                            { property: 'Y', value: '正確' }, 
+                            { property: 'A', value: '選項A' },
+                            { property: 'B', value: '選項B' },
+                            { property: 'C', value: '選項C' },
+                            { property: 'D', value: '選項D' },
+                            { property: 'E', value: '選項E' },
+                            { property: 'Y', value: '正確' },
                         ]
                     }
                 }
@@ -94,7 +110,7 @@ export const DataDriveStore = {
                 property: 'TITLE',
                 apiProperty: 'title',
                 InputOpts: {
-                    placeHolder: '请输入题目'
+                    placeHolder: '請輸入題目'
                 }
             },
             {
@@ -102,39 +118,45 @@ export const DataDriveStore = {
                 apiProperty: 'type',
                 InputOpts: {
                     type: 'select',
-                    placeHolder: '请选择类别',
+                    placeHolder: '請選擇類別',
                     more: {
-                        options: [{ property: 'RADIO', value: '单选' }, { property: 'CHECKBOX', value: '多选' }, { property: 'TF', value: '判断' }]
+                        options: [{ property: 'RADIO', value: '單選' }, { property: 'CHECKBOX', value: '多選' }, { property: 'TF', value: '判斷' }]
                     }
                 }
             }
         ],
         tableData: {
             searchable: true,
+            addable: true,
             columns: [
                 {
-                    property: 'TITLE', value: '题目', type: {}
+                    property: 'TITLE', value: '題目'
                 },
                 {
-                    property: 'TYPE', value: '类别', type: {}
+                    property: 'TYPE', value: '類別',more:{
+                        pipe:{
+                            name:'replace',
+                            parmas: [{TF:'判斷題',RADIO:'單選題',CHECKBOX:'多選題'}]
+                        }
+                    }
                 },
                 {
-                    property: 'OPTION_A', value: '选项1', type: {}
+                    property: 'OPTION_A', value: '選項A'
                 },
                 {
-                    property: 'OPTION_B', value: '选项2', type: {}
+                    property: 'OPTION_B', value: '選項B'
                 },
                 {
-                    property: 'OPTION_C', value: '选项3', type: {}
+                    property: 'OPTION_C', value: '選項C'
                 },
                 {
-                    property: 'OPTION_D', value: '选项4', type: {}
+                    property: 'OPTION_D', value: '選項D'
                 },
                 {
-                    property: 'OPTION_E', value: '选项5', type: {}
+                    property: 'OPTION_E', value: '選項E'
                 },
                 {
-                    property: 'RIGHT_ANSWER', value: '正确答案', type: {}
+                    property: 'RIGHT_ANSWER', value: '正確答案'
                 }
             ]
         }
@@ -322,40 +344,40 @@ export const DataDriveStore = {
             searchable: true,
             columns: [
                 {
-                    property: 'LOT_NO', value: 'LOT_NO', type: {}
+                    property: 'LOT_NO', value: 'LOT_NO'
                 },
                 {
-                    property: 'CONTAINER_NO', value: '進口柜號', type: {}
+                    property: 'CONTAINER_NO', value: '進口柜號'
                 },
                 {
-                    property: 'CUSTOMS_TIME', value: '報關時間', type: {}
+                    property: 'CUSTOMS_TIME', value: '報關時間'
                 },
                 {
-                    property: 'ATA_MSL_TIME', value: '回廠時間', type: {}
+                    property: 'ATA_MSL_TIME', value: '回廠時間'
                 },
                 {
-                    property: 'WO_NO', value: '工單', type: {}
+                    property: 'WO_NO', value: '工單'
                 },
                 {
-                    property: 'PART_NO', value: '料號', type: {}
+                    property: 'PART_NO', value: '料號'
                 },
                 {
-                    property: 'SHORTAGE_QUANTITY', value: '數量', type: {}
+                    property: 'SHORTAGE_QUANTITY', value: '數量'
                 },
                 {
-                    property: 'SIC_NAME', value: '對應庫別', type: {}
+                    property: 'SIC_NAME', value: '對應庫別'
                 },
                 {
-                    property: 'RECEIVE_TIME', value: '收料時間', type: {}
+                    property: 'RECEIVE_TIME', value: '收料時間'
                 },
                 {
-                    property: 'IQC_TIME', value: '送檢時間', type: {}
+                    property: 'IQC_TIME', value: '送檢時間'
                 },
                 {
-                    property: 'INPUT_DATE', value: '緊急時間', type: {}
+                    property: 'INPUT_DATE', value: '緊急時間'
                 },
                 {
-                    property: 'IQC_FINISHED_TIME', value: '送檢完成時間', type: {}
+                    property: 'IQC_FINISHED_TIME', value: '送檢完成時間'
                 }
             ]
         }
@@ -410,40 +432,40 @@ export const DataDriveStore = {
         tableData: {
             columns: [
                 {
-                    property: 'LOT_NO', value: 'LOT_NO', type: {}
+                    property: 'LOT_NO', value: 'LOT_NO'
                 },
                 {
-                    property: 'CONTAINER_NO', value: '進口柜號', type: {}
+                    property: 'CONTAINER_NO', value: '進口柜號'
                 },
                 {
-                    property: 'CUSTOMS_TIME', value: '報關時間', type: {}
+                    property: 'CUSTOMS_TIME', value: '報關時間'
                 },
                 {
-                    property: 'ATA_MSL_TIME', value: '回廠時間', type: {}
+                    property: 'ATA_MSL_TIME', value: '回廠時間'
                 },
                 {
-                    property: 'WO_NO', value: '工單', type: {}
+                    property: 'WO_NO', value: '工單'
                 },
                 {
-                    property: 'PART_NO', value: '料號', type: {}
+                    property: 'PART_NO', value: '料號'
                 },
                 {
-                    property: 'SHORTAGE_QUANTITY', value: '數量', type: {}
+                    property: 'SHORTAGE_QUANTITY', value: '數量'
                 },
                 {
-                    property: 'SIC_NAME', value: '對應庫別', type: {}
+                    property: 'SIC_NAME', value: '對應庫別'
                 },
                 {
-                    property: 'RECEIVE_TIME', value: '收料時間', type: {}
+                    property: 'RECEIVE_TIME', value: '收料時間'
                 },
                 {
-                    property: 'IQC_TIME', value: '送檢時間', type: {}
+                    property: 'IQC_TIME', value: '送檢時間'
                 },
                 {
-                    property: 'INPUT_DATE', value: '緊急時間', type: {}
+                    property: 'INPUT_DATE', value: '緊急時間'
                 },
                 {
-                    property: 'IQC_FINISHED_TIME', value: '送檢完成時間', type: {}
+                    property: 'IQC_FINISHED_TIME', value: '送檢完成時間'
                 }
             ]
         }

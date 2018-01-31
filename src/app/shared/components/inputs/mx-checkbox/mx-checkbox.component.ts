@@ -15,9 +15,16 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 })
 export class MxCheckboxComponent implements OnInit {
   private propagateChange = (_: any) => { };
-  _value;
-  @Input() options= [];
+  _value = [];
+  @Input() options = [];
   @Input() myPlaceHolder;
+  _pickerFormat = 'string'
+  @Input()
+  set pickerFormat(v: string) {
+    if (['string', 'array'].indexOf(v) > -1) {
+      this._pickerFormat = v;
+    }
+  }
 
   constructor() { }
 
@@ -26,9 +33,22 @@ export class MxCheckboxComponent implements OnInit {
    * 
    * @param {*} value 
    */
-  writeValue(value: string | number) {
+  writeValue(value: any) {
     if (value !== void (0)) {
-      this._value = [value];
+      if ((typeof value === 'string') && value) {
+        if(this._pickerFormat === 'string') {
+          this._value = value.split(',');
+        }else {
+          this._value = [value];
+        }
+      } else if (typeof value === 'number') {
+        this._value = [value];
+      } else if (Object.prototype.toString.call(value) === '[object Array]') {
+        this._value = value;
+      }
+    }
+    if(this._value.length > 0) {
+      setTimeout(() => this.change(), 50);
     }
   }
 
@@ -48,11 +68,17 @@ export class MxCheckboxComponent implements OnInit {
   registerOnTouched(fn: any) { }
 
   change() {
-    this.propagateChange(this._value);
+    let out;
+    if (this._pickerFormat === 'string') {
+      out = this._value.join(',')
+    } else {
+      out = this._value;
+    }
+    this.propagateChange(out);
   }
 
   ngOnInit() {
-    console.log(this.options)
+ 
   }
 
 }

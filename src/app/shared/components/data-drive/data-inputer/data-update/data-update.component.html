@@ -75,7 +75,8 @@
     </ng-container>
   
     <div nz-form-item nz-row [style.display] = "'block'">
-      <button nz-button nz-col [nzOffset]="6" [nzSpan]="12" type="submit" [nzType]="'primary'" [nzSize]="'large'" [disabled]="!validateForm.valid"
+      <button nz-button nz-col [nzOffset]="6" [nzSpan]="12" type="submit" [nzType]="'primary'" [nzSize]="'large'" [disabled]="!validateForm.valid || globalErr"
       >確定</button>
     </div>
+    <div class="global-err">{{globalErr}}</div>
   </form>

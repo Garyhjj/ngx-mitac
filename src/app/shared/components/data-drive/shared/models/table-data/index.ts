@@ -1,14 +1,17 @@
-import { InputSet } from '../input/index';
-import { InputSetFactory } from '../input';
-
 export interface TableDataColumn {
     property: string;
     value: string;
-    type: DataType;
+    more?: {
+        pipe?:{
+            name:string,
+            params:any[]
+        }
+    };
 }
 export interface TableInsideData {
     property: string;
     value: string;
+    hide?: boolean;
 }
 export interface TableData {
     editable?: boolean;
@@ -25,23 +28,15 @@ export class TableDataModel implements TableData {
     addable: boolean;
     deletable: boolean;
     visible: boolean;
-    columns: { property: string, value: string, type: DataType }[];
-    data?: { property: string, value: string }[][];
+    columns: TableDataColumn[];
+    data?: TableInsideData[][];
     private inputSetFactory;
-    constructor(opts: TableData, inputSetFactory = InputSetFactory) {
-        this.inputSetFactory = inputSetFactory;
+    constructor(opts: TableData) {
         this.editable = false;
         this.deletable = false;
         this.addable = false;
         this.visible = true;
         Object.assign(this, opts);
-        this.columns = this.columns.map(c => {
-            c.type = c.type || {};
-            c.type.InputOpts = new this.inputSetFactory(c.type.InputOpts);
-            return c;
-        });
     }
 }
-export interface DataType {
-    InputOpts?: InputSet;
-}
+

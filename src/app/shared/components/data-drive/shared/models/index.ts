@@ -41,6 +41,7 @@ export class DataDrive implements DataDriveOptions {
     private isGetingDataSubject = new BehaviorSubject<boolean>(false);
     private isShowModalSubject = new BehaviorSubject<boolean>(false);
     private updateFormGroup: FormGroup
+    private globalUpdateErrSubject = new Subject<string>();
     eventSubject = new Subject<string>();
     eventsQueue = {};
     id: number;
@@ -105,6 +106,23 @@ export class DataDrive implements DataDriveOptions {
         this._selfHideLists = this.selfStoreSet.getSetByUserAndId(this.user, this.id);
         this.combineHideLists();
     }
+    isDataAddable() {
+        return !!this.tableData.addable;
+    }
+    isDataEdditable() {
+        return !!this.tableData.editable;
+    }
+    isDataDeletable() {
+        return !!this.tableData.deletable;
+    }
+
+    getData() {
+        if (this.tableData.data && this.tableData.data.length > 0) {
+            return this.tableData.data
+        } else {
+            return []
+        }
+    }
     observeHideLists() {
         return this.hideListSubject.asObservable();
     }
@@ -114,15 +132,45 @@ export class DataDrive implements DataDriveOptions {
     observeIsShowModal() {
         return this.isShowModalSubject.asObservable();
     }
-    onUpdateFormShow(cb: (fg:FormGroup) => void) {
+    observeGlobalUpdateErr() {
+        return this.globalUpdateErrSubject.asObservable();
+    }
+    onUpdateFormShow(cb: (fg: FormGroup, sub: Subject<string>) => void) {
         this.on('updateFormShow', cb);
     }
+    beforeUpdate(cb: (fg: FormGroup, sub: Subject<string>) => void) {
+        this.on('beforeUpdate', cb);
+    }
+
+    afterDataInit(cb: () => void) {
+        this.on('afterDataInit', cb);
+    }
+
+    emitAfterDataInit() {
+        this.eventSubject.next('afterDataInit');
+    }
+
     on(eventType: string, cb: Function): void {
         if (this.eventsQueue[eventType]) {
             this.eventsQueue[eventType].push(cb);
         } else {
             this.eventsQueue[eventType] = [cb];
         }
+    }
+    runBeforeUpdate() {
+        const eventQueue: Array<Function> = this.eventsQueue['beforeUpdate'] || [];
+        let canContinue = true;
+        if (this.updateFormGroup) {
+            for (let i = 0; i < eventQueue.length; i++) {
+                const cb = eventQueue[i]
+                if(cb) {
+                    if(cb(this.updateFormGroup, this.globalUpdateErrSubject) === false) {
+                        canContinue = false;
+                    }
+                }
+            }
+        }
+        return canContinue;
     }
 
     private subscribeEvent() {
@@ -132,7 +180,7 @@ export class DataDrive implements DataDriveOptions {
                 case 'updateFormShow':
                     eventQueue.forEach(cb => {
                         if (cb && this.updateFormGroup) {
-                            cb(this.updateFormGroup);
+                            cb(this.updateFormGroup, this.globalUpdateErrSubject);
                         }
                     });
                     break;
@@ -145,6 +193,8 @@ export class DataDrive implements DataDriveOptions {
             }
         })
     }
+
+
 
     updateFormGroupInited(fg: FormGroup) {
         this.updateFormGroup = fg;

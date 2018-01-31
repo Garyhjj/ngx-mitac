@@ -65,7 +65,6 @@ export class DataSearchComponent implements OnInit {
       send[s.apiProperty?s.apiProperty:s.property] = value[s.property];
     })
     this.dataDriveService.searchData(this.dataDrive, send).subscribe((c:any[]) => this.dataDriveService.initTableData(this.dataDrive, c));
-    console.log(value);
   }
 
   get isHorizontal() {
@@ -93,8 +92,6 @@ export class DataSearchComponent implements OnInit {
       myForm[s.property] = [def,valid];
       return Object.assign({ label: mapColumn?mapColumn.value:s.property }, s.InputOpts);
     });
-    console.log(this.inputTypeList);
-
     this.validateForm = this.fb.group(myForm);
   }
 

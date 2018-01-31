@@ -2,7 +2,7 @@
 <nz-table *ngIf="_dataDrive && setDetail"
     #nzTable
     [nzScroll]="setDetail.fixedHeader?.enable?{ y: setDetail.fixedHeader.scrollHeight>0?setDetail.fixedHeader.scrollHeight: 300 }:null"
-    [nzDataSource]="_dataDrive.tableData.data?_dataDrive.tableData.data:[]"
+    [nzDataSource]="tableData.data?tableData.data:[]"
     [nzPageSize]="setDetail.pageSet.count"
     [nzBordered]="setDetail.border_y.enable"
     [nzLoading]="_loading"
@@ -20,7 +20,14 @@
               [style.backgroundColor]="setDetail.header?setDetail.header.bgColor:''"
               [style.color]= "setDetail.header?setDetail.header.textColor:''"
               [style.fontSize]= "setDetail.header?setDetail.header.textSize:''"
-              *ngFor="let item of tableData.columns;let i = index" [nzWidth]="setDetail.fixedHeader?.enable &&setDetail.fixedHeader?.width && setDetail.fixedHeader?.width[i]?setDetail.fixedHeader?.width[i]:(100/tableData.columns.length) + '%'"><span>{{item.value}}</span></th>
+              *ngFor="let item of tableData.columns;let i = index" [nzWidth]="setDetail.fixedHeader?.enable &&setDetail.fixedHeader?.width && setDetail.fixedHeader?.width[i]?setDetail.fixedHeader?.width[i]:!setDetail.fixedHeader?'':(100/(tableData.columns.length+additionalColNum)) + '%'"><span>{{item.value}}</span></th>
+              <th nz-th 
+                [style.backgroundColor]="setDetail.header?setDetail.header.bgColor:''"
+                [style.color]= "setDetail.header?setDetail.header.textColor:''"
+                [style.fontSize]= "setDetail.header?setDetail.header.textSize:''"
+                [nzWidth]="setDetail.fixedHeader?.enable &&setDetail.fixedHeader?.width && setDetail.fixedHeader?.width[i]?setDetail.fixedHeader?.width[i]:!setDetail.fixedHeader?'':(100/(tableData.columns.length+additionalColNum)) + '%'"
+                *ngIf="setDetail.showAction"
+                ><span>action</span></th>
             </tr>
           </thead>
     </ng-template>
@@ -28,11 +35,23 @@
     (mouseenter)="mouseEnter()"
     (mouseleave)="mouseLeave()">
         <tr nz-tbody-tr *ngFor="let data of nzTable.data;let i = index">
+          <ng-container *ngFor="let item of data">
+              <td 
+              [style.backgroundColor]="setDetail.body?runRegExp(i, setDetail.body, 'bgColor'):''"
+              [style.fontSize]= "setDetail.body?runRegExp(i, setDetail.body, 'textSize'):''"
+              [style.color]= "setDetail.body?runRegExp(i, setDetail.body, 'textColor'):''"
+              nz-td *ngIf="!item.hide">{{item.value | myFlex: pipes && pipes[item.property]?pipes[item.property]:'' }}</td>
+          </ng-container>
           <td 
-          [style.backgroundColor]="setDetail.body && setDetail.body.rules?runRegExp(i, setDetail.body, 'bgColor'):''"
-          [style.fontSize]= "setDetail.body && setDetail.body.rules?runRegExp(i, setDetail.body, 'textSize'):''"
-          [style.color]= "setDetail.body && setDetail.body.rules?runRegExp(i, setDetail.body, 'textColor'):''"
-          nz-td *ngFor="let item of data">{{item.value}}</td>
+              [style.backgroundColor]="setDetail.body?runRegExp(i, setDetail.body, 'bgColor'):''"
+              [style.fontSize]= "setDetail.body?runRegExp(i, setDetail.body, 'textSize'):''"
+              [style.color]= "setDetail.body?runRegExp(i, setDetail.body, 'textColor'):''"
+              nz-td
+              *ngIf="setDetail.showAction"
+              > <span>
+                  <a href="#" *ngIf="canEdit" (click)="toUpdate(i)">修改</a>
+                  <span nz-table-divider></span>
+                  <a href="#" *ngIf="canDelete" (click)="toDelete(i)">刪除</a></span></td>
         </tr>
       </tbody>
     <span nz-table-footer>{{setDetail.footer.content}}</span>
