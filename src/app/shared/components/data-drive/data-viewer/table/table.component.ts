@@ -94,7 +94,8 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
 
   bindTableData() {
     this._dataDrive.afterDataInit(() => {
-      this.tableData.data = this._dataDrive.tableData.data;
+      // this.tableData.data = this._dataDrive.tableData.data;
+      this.updateFilterColumns();
     })
   }
 

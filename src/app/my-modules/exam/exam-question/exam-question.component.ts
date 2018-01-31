@@ -65,6 +65,10 @@ export class ExamQuestionComponent implements OnInit {
         } catch (e) {
 
         }
+        if(['Y', 'N'].indexOf(value['RIGHT_ANSWER']) < 0) {
+          sub.next('判斷題答案只能是正確或者錯誤');
+          return false;
+        }
       } else if (value.TYPE === 'RADIO') {
         if (!value['OPTION_A'] || !value['OPTION_B']) {
           sub.next('前两选项不能为空');

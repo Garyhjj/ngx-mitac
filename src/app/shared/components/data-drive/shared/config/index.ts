@@ -100,6 +100,7 @@ export const DataDriveStore = {
                             { property: 'D', value: '選項D' },
                             { property: 'E', value: '選項E' },
                             { property: 'Y', value: '正確' },
+                            { property: 'N', value: '錯誤' },
                         ]
                     }
                 }
