@@ -89,7 +89,7 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
       this.dataDriveService.updateViewData(this.dataDrive);
       this.util.showGlobalSucMes(this.changeIdx < 0?'插入成功': '更新成功');
       setTimeout(() => this.subject1.destroy(), 500);
-    })
+    },(err) => this.util.errDeal(err))
   }
 
   subscribeGlErr() {

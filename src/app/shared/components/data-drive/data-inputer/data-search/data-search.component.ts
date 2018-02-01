@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { NgxValidatorExtendService } from '../../../../../core/services/ngx-validator-extend.service';
 import { DataDriveService } from '../../core/services/data-drive.service';
+import { UtilService } from '../../../../../core/services/util.service';
 
 @Component({
   selector: 'app-data-search',
@@ -16,13 +17,13 @@ import { DataDriveService } from '../../core/services/data-drive.service';
 })
 export class DataSearchComponent implements OnInit {
 
-  
+
   dataDrive: DataDrive;
   columns: TableDataColumn[];
   searchSets: SearchItemSet[];
   columnNameStrings: string[];
   inputTypeList: any[];
-  errMes:any = {};
+  errMes: any = {};
 
   formLayout = 'inline';
   @Input()
@@ -43,7 +44,8 @@ export class DataSearchComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private validExd: NgxValidatorExtendService,
-    private dataDriveService: DataDriveService
+    private dataDriveService: DataDriveService,
+    private util: UtilService
   ) {
   }
 
@@ -60,11 +62,13 @@ export class DataSearchComponent implements OnInit {
       delete value[c];
     })
 
-    const send:any = {};
+    const send: any = {};
     this.searchSets.forEach(s => {
-      send[s.apiProperty?s.apiProperty:s.property] = value[s.property];
+      send[s.apiProperty ? s.apiProperty : s.property] = value[s.property];
     })
-    this.dataDriveService.searchData(this.dataDrive, send).subscribe((c:any[]) => this.dataDriveService.initTableData(this.dataDrive, c));
+    this.dataDriveService.searchData(this.dataDrive, send).subscribe((c: any[]) => this.dataDriveService.initTableData(this.dataDrive, c)
+      , (err) => this.util.errDeal(err)
+    );
   }
 
   get isHorizontal() {
@@ -81,16 +85,16 @@ export class DataSearchComponent implements OnInit {
       const mapColumn = this.columns.find(c => c.property === s.property);
       const match = s.InputOpts.match;
       let valid = null;
-      if(match) {
-        if(match.err) {
+      if (match) {
+        if (match.err) {
           this.errMes[s.property] = match.err;
         }
-        if(match.regexp) {
+        if (match.regexp) {
           valid = this.validExd.regex(match.regexp);
         }
       }
-      myForm[s.property] = [def,valid];
-      return Object.assign({ label: mapColumn?mapColumn.value:s.property }, s.InputOpts);
+      myForm[s.property] = [def, valid];
+      return Object.assign({ label: mapColumn ? mapColumn.value : s.property }, s.InputOpts);
     });
     this.validateForm = this.fb.group(myForm);
   }
