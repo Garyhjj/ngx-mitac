@@ -56,7 +56,12 @@
               > <span>
                   <a href="#" *ngIf="canEdit" (click)="toUpdate(i)">修改</a>
                   <span nz-table-divider></span>
-                  <a href="#" *ngIf="canDelete" (click)="toDelete(i)">刪除</a></span></td>
+                  <a href="#" *ngIf="canDelete" (click)="toDelete(i)">刪除</a>
+                  <ng-container *ngIf="setDetail.paramsOut">
+                      <span nz-table-divider></span>
+                      <a href="#"  (click)="paramsOut(setDetail.paramsOut.params,i)">{{setDetail.paramsOut.name}}</a>
+                  </ng-container>
+                </span></td>
         </tr>
       </tbody>
     <span nz-table-footer>{{setDetail.footer.content}}</span>

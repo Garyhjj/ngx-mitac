@@ -5,13 +5,16 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ExamComponent } from './exam.component';
 import { ExamQuestionComponent } from './exam-question/exam-question.component';
+import { ExamUnitComponent } from './exam-unit/exam-unit.component';
 
 @NgModule({
   imports: [
     CommonModule, SharedModule, ExamRoutingModule, DataDriveModule
   ],
-  declarations: [ExamComponent,
-    ExamQuestionComponent
+  declarations: [
+    ExamComponent,
+    ExamQuestionComponent,
+    ExamUnitComponent
 ]
 })
 export class ExamModule { }

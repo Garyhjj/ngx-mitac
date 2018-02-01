@@ -79,10 +79,10 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
       const target_b = b.find(p => p.property === name).value || '';
       const a_value = target_a || target_a.value || '';
       const b_value = target_b || target_b.value || '';
-      if(typeof by !== 'object') return 0;
+      if (typeof by !== 'object') return 0;
       const byWhat = sortUtils[by.name];
       const params = by.params || [];
-      return typeof byWhat === 'function' ? byWhat(a_value, b_value, isAscend,...params) : 0;
+      return typeof byWhat === 'function' ? byWhat(a_value, b_value, isAscend, ...params) : 0;
     }).slice();
   }
 
@@ -190,7 +190,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     const filter = c => ls.indexOf(c.property) < 0;
     const filterColumns = this._dataDrive.tableData.columns.slice().filter(filter);
     const originData = this._dataDrive.tableData.data && this._dataDrive.tableData.data.slice();
-    let filterData;
+    let filterData = [];
     if (originData && originData.length > 0) {
       filterData = originData.map((trs) => trs.filter(filter));
     }
@@ -232,6 +232,23 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
       this.timeEvent1 = setTimeout(() => this.autoScroll(++idx), this._scrollInterval);
     }
 
+  }
+
+  paramsOut(p: string[], idx: number) {
+    if (isArray(p)) {
+      idx = (this.pageIndex - 1) * this.pageCount + idx;
+      const data = this._dataDrive.getData()[idx];
+      if (data) {
+        const out: any = {};
+        data.forEach(d => {
+          if (p.indexOf(d.property) > -1) {
+            out[d.property] = d.value;
+          }
+        })
+        this._dataDrive.emitParamsOut(out);
+      }
+    }
+    return false;
   }
 
   runRegExp(dataIdx: number, body: {

@@ -138,6 +138,9 @@ export class DataDrive implements DataDriveOptions {
     onUpdateFormShow(cb: (fg: FormGroup, sub: Subject<string>) => void) {
         this.on('updateFormShow', cb);
     }
+    onParamsOut(cb: (data) => void) {
+        this.on('paramsOut', cb);
+    }
     beforeUpdate(cb: (fg: FormGroup, sub: Subject<string>) => void) {
         this.on('beforeUpdate', cb);
     }
@@ -148,6 +151,23 @@ export class DataDrive implements DataDriveOptions {
 
     emitAfterDataInit() {
         this.eventSubject.next('afterDataInit');
+    }
+    emitParamsOut(data) {
+        this.emitEvent('paramsOut',data)
+    }
+
+    emitEvent(name:string,...p) {
+        const eventQueue: Array<Function> = this.eventsQueue[name] || [];
+        let canContinue = true;
+        for (let i = 0; i < eventQueue.length; i++) {
+            const cb = eventQueue[i]
+            if(cb) {
+                if(cb(...p) === false) {
+                    canContinue = false;
+                }
+            }
+        }
+        return canContinue;
     }
 
     on(eventType: string, cb: Function): void {

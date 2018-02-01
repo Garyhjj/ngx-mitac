@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ExamComponent } from './exam.component';
 import { ExamQuestionComponent } from './exam-question/exam-question.component';
+import { ExamUnitComponent } from './exam-unit/exam-unit.component';
 
 
 const bRoutes: Routes = [
@@ -15,6 +16,10 @@ const bRoutes: Routes = [
             {
                 path: 'question',
                 component: ExamQuestionComponent
+            },
+            {
+                path: 'unit',
+                component: ExamUnitComponent
             }
         ]
     }

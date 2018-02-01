@@ -52,7 +52,9 @@ export const isArray = (ar) => {
 export const isDate = (date) => {
   return moment(date).isValid();
 }
-
+export const isNumber = (num) => {
+  return !Number.isNaN(Number(num));
+}
 export const sortUtils = {
   byCharCode: (a: string, b: string, isAscend = true) => {
     if (typeof a !== 'string' || typeof b !== 'string') return 0;
@@ -64,6 +66,11 @@ export const sortUtils = {
     const toDateB = moment(b, format)
     if (!toDateA.isValid() || !toDateB.isValid()) return 0;
     const res = toDateA.toDate().getTime() - toDateB.toDate().getTime();
+    return isAscend ? res : -res;
+  },
+  byNumber: (a: number, b: number, isAscend = true) => {
+    if(!isNumber(a) || !isNumber(b)) return 0;
+    const res = Number(a) -Number(b);
     return isAscend ? res : -res;
   }
 }

@@ -16,10 +16,17 @@
             <nz-input [formControlName]="item" [nzPlaceHolder]="inputTypeList[i].placeHolder" *ngIf="inputTypeList[i]?.type === 'textarea'" 
             nzType="textarea" [nzAutosize]="'1'"></nz-input>
 
-            <nz-select [formControlName]="item" [nzSize]="'large'" [nzPlaceHolder]="inputTypeList[i].placeHolder" *ngIf="inputTypeList[i]?.type === 'select'"
+            <!-- <nz-select [formControlName]="item" [nzSize]="'large'" [nzPlaceHolder]="inputTypeList[i].placeHolder" *ngIf="inputTypeList[i]?.type === 'select'"
               [style.minWidth]="'100px'">
               <nz-option [nzLabel]="item.value" [nzValue]="item.property" *ngFor="let item of inputTypeList[i]?.more?.options"></nz-option>
-            </nz-select>
+            </nz-select> -->
+
+            <app-mx-select
+              [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'select'"
+              [myPlaceHolder]="inputTypeList[i].placeHolder"
+              [options]="inputTypeList[i]?.more?.options"
+              [lazyAPI]="inputTypeList[i]?.more?.lazyAPI"
+              ></app-mx-select>
 
             <!-- <nz-datepicker [formControlName]="item" [nzSize]="'large'" *ngIf="inputTypeList[i]?.type === 'datepicker'" nzShowTime="'hh:mm'" [nzFormat]="'YYYY-MM-DD hh:mm'">
             </nz-datepicker> -->

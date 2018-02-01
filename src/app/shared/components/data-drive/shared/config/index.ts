@@ -1,9 +1,192 @@
 export const DataDriveStore = {
+    examUnits: {
+        id: 4,
+        APIs: {
+            search: 'EXAM/GetExams?title={title}&ref_dept={ref_dept}&code={code}&version={version}&company_id={company_id}',
+            update: 'EXAM/UpdateExam',
+            delete: 'EXAM/DeleteExam?id={id}'
+        },
+        additionalFn: {
+            changeBodyFontSize: true,
+            changeHeaderFontSize: true,
+            menu: true,
+            toExcel: true,
+            addItem: true
+        },
+        dataViewSet: {
+            title: '考卷',
+            more: {
+                showAction: true,
+                paramsOut: {
+                    name: '配置考卷',
+                    params: ['ID']
+                }
+            }
+        },
+        searchSets: [
+            {
+                property: 'TITLE',
+                apiProperty: 'title',
+                InputOpts: {
+                    type: 'textarea',
+                    placeHolder: '請輸入考試名稱',
+                }
+            },
+            {
+                property: 'REF_DEPT',
+                apiProperty: 'ref_dept',
+                InputOpts: {
+                    type: 'select',
+                    placeHolder: '請選擇類別',
+                    more: {
+                        lazyAPI: 'GUID/GetDeptNameBySite?site=MSL'
+                    }
+                }
+            },
+            {
+                property: 'CODE',
+                apiProperty: 'code',
+                InputOpts: {
+                    placeHolder: '請輸入考試代號',
+                }
+            },
+            {
+                property: 'VERSION',
+                apiProperty: 'version',
+                InputOpts: {
+                    placeHolder: '請輸入考試版本',
+                }
+            }
+        ],
+        updateSets: [
+            {
+                property: 'ID',
+                InputOpts: {
+                    type: 'primary',
+                    default: 0
+                }
+            },
+            {
+                property: 'TITLE',
+                InputOpts: {
+                    type: 'textarea',
+                    placeHolder: '請輸入考試名稱',
+                    match: {
+                        fns: [{ name: 'required' }],
+                        err: '不能為空'
+                    }
+                }
+            },
+            {
+                property: 'REF_DEPT',
+                InputOpts: {
+                    type: 'select',
+                    placeHolder: '請選擇類別',
+                    match: {
+                        fns: [{ name: 'required' }],
+                        err: '不能為空'
+                    },
+                    more: {
+                        lazyAPI: 'GUID/GetDeptNameBySite?site=MSL'
+                    }
+                }
+            },
+            {
+                property: 'CODE',
+                InputOpts: {
+                    placeHolder: '請輸入考試代號',
+                    match: {
+                        fns: [{ name: 'required' }],
+                        err: '不能為空'
+                    }
+                }
+            },
+            {
+                property: 'VERSION',
+                InputOpts: {
+                    placeHolder: '請輸入考試版本',
+                    match: {
+                        fns: [{ name: 'required' }],
+                        err: '不能為空'
+                    }
+                }
+            },
+            {
+                property: 'TIME',
+                InputOpts: {
+                    type: 'number',
+                    placeHolder: '請輸入考試時長',
+                    match: {
+                        fns: [{ name: 'required' }],
+                        err: '不能為空'
+                    },
+                    more: {
+                        min: 1
+                    }
+                }
+            },
+            {
+                property: 'PASS_SCORE',
+                InputOpts: {
+                    type: 'number',
+                    placeHolder: '請輸入考試及格分數',
+                    match: {
+                        fns: [{ name: 'required' }],
+                        err: '不能為空'
+                    },
+                    more: {
+                        min: 0,
+                        max: 100
+                    }
+                }
+            }
+
+        ],
+        tableData: {
+            searchable: true,
+            addable: true,
+            deletable: true,
+            columns: [
+                {
+                    property: 'TITLE', value: '考試名稱'
+                },
+                {
+                    property: 'REF_DEPT', value: '所屬部門'
+                    ,more:{
+                        pipe:{
+                            name:'lazyLoad',
+                            parmas: ['GUID/GetDeptNameBySite?site=MSL']
+                        }
+                    }
+                },
+                {
+                    property: 'CODE', value: '代碼'
+                },
+                {
+                    property: 'VERSION', value: '版本'
+                },
+                {
+                    property: 'TIME', value: '考試時長(分鐘)',more: {
+                        sortBy: {
+                            name: 'byNumber'
+                        }
+                    }
+                },
+                {
+                    property: 'PASS_SCORE', value: '及格分數(分)',more: {
+                        sortBy: {
+                            name: 'byNumber'
+                        }
+                    }
+                }
+            ]
+        }
+    },
     examQuestions: {
         id: 3,
         APIs: {
             search: 'EXAM/GetExamQuestions?title={title}&type={type}',
-            update: 'EXAM/UpdateQuestions',
+            update: 'EXAM/UpdateQuestion',
             delete: 'EXAM/DeleteQuestion?id={id}'
         },
         additionalFn: {
@@ -34,7 +217,7 @@ export const DataDriveStore = {
                     type: 'textarea',
                     placeHolder: '請輸入題目',
                     match: {
-                        fns: [{name: 'required'}],
+                        fns: [{ name: 'required' }],
                         err: '不能為空'
                     }
                 }
@@ -45,7 +228,7 @@ export const DataDriveStore = {
                     type: 'select',
                     placeHolder: '請選擇類別',
                     match: {
-                        fns: [{name: 'required'}],
+                        fns: [{ name: 'required' }],
                         err: '不能為空'
                     },
                     more: {
@@ -90,7 +273,7 @@ export const DataDriveStore = {
                     type: 'checkbox',
                     placeHolder: '请选择正確答案',
                     match: {
-                        fns: [{name: 'required'}],
+                        fns: [{ name: 'required' }],
                         err: '不能為空'
                     },
                     more: {
@@ -130,15 +313,16 @@ export const DataDriveStore = {
         tableData: {
             searchable: true,
             addable: true,
+            deletable: true,
             columns: [
                 {
                     property: 'TITLE', value: '題目'
                 },
                 {
-                    property: 'TYPE', value: '類別',more:{
-                        pipe:{
-                            name:'replace',
-                            parmas: [{TF:'判斷題',RADIO:'單選題',CHECKBOX:'多選題'}]
+                    property: 'TYPE', value: '類別', more: {
+                        pipe: {
+                            name: 'replace',
+                            parmas: [{ TF: '判斷題', RADIO: '單選題', CHECKBOX: '多選題' }]
                         }
                     }
                 },
