@@ -1,38 +1,61 @@
 :host ::ng-deep .logo {
-    width: 159px;
-    height:31px;
-    border-radius: 6px;
-    margin: 16px 28px 16px 0;
-    float: left;
+  width: 159px;
+  height: 31px;
+  border-radius: 6px;
+  margin: 16px 28px 16px 0;
+  float: left;
 }
 
-
-.header-title{
-    color:#ffffff;
-    font-size: 21px;
-    font-weight: bold;
-    height: 50px;
-    margin-right: 16px;
-    float: left;
+.header-title {
+  color: #ffffff;
+  font-size: 21px;
+  font-weight: bold;
+  height: 50px;
+  margin-right: 16px;
+  float: left;
 }
-.header{
-    margin-bottom: 10px;
+
+.header {
+  margin-bottom: 10px;
 }
 
 .ant-layout-header {
-    background: #20A0ff;
-    font-size: 0.9rem;
-}
-.menu {
-    float: right;
+  background: #20A0ff;
+  font-size: 0.9rem;
 }
 
-.ant-menu-dark, .ant-menu-dark .ant-menu-sub {
-    color: rgba(255, 255, 255, 0.67);
-    background: #20A0ff;
-    font-size: 12px;
+.menu {
+  float: right;
+  line-height: 63px;
 }
+
+.ant-menu-dark,
+.ant-menu-dark .ant-menu-sub {
+  color: rgba(255, 255, 255, 0.67);
+  background: #20A0ff;
+  font-size: 12px;
+}
+
 .ant-menu-dark.ant-menu-horizontal {
-    background: #20A0ff;
-    border-bottom-color: #20A0ff;
+  background: #20A0ff;
+  border-bottom-color: #20A0ff;
+}
+
+.ul-dropdown {
+  display: none;
+}
+
+.ul-dropdown a {
+  color: #fff;
+  font-size: 2.0rem;
+  line-height: 2.0rem;
+}
+
+@media all and (max-width:870px) {
+  .ul-horizontal {
+    display: none;
+  }
+  .ul-dropdown {
+    display: inline-block;
+  }
 }
