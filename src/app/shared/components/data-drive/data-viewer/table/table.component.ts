@@ -28,7 +28,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   private sub1: Subscription;
   private sub2: Subscription;
   private sub3: Subscription;
-  private pipes:any = {};
+  private pipes: any = {};
   @Input()
   set opts(opts: DataDrive) {
     this.tableSet = opts.dataViewSet as TabelViewSet;
@@ -37,6 +37,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     this.tableData = Object.assign({}, opts.tableData);
     this.tableData.data = [];
     this._dataDrive = opts;
+    this.pageCount = this.setDetail.pageSet.count;
     this.getPipes();
     this.bindTableData();
     this.subjectHideList();
@@ -53,6 +54,8 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
 
   additionalColNum = 0;
   styleCache = new StyleCache();
+  pageIndex;
+  pageCount;
   constructor(
     private ref: ChangeDetectorRef,
     private dataDriveService: DataDriveService,
@@ -106,7 +109,8 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   }
 
   toDelete(idx) {
-    if(!this.canDelete) return;
+    if (!this.canDelete) return;
+    idx = (this.pageIndex - 1)*this.pageCount + idx;
     const deleteFn = () => {
       const data = this._dataDrive.getData();
       if (!data[idx]) return;
@@ -126,7 +130,8 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   }
 
   toUpdate(idx) {
-    if(!this.canEdit) return;
+    if (!this.canEdit) return;
+    idx = (this.pageIndex - 1)*this.pageCount + idx;
     if (!this._dataDrive.isDataAddable()) return false;
     const subscription = this.modalService.open({
       title: '新增',

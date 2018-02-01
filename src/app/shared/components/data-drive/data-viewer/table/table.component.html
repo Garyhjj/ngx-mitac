@@ -11,6 +11,8 @@
     [nzShowTitle]="setDetail.title.enable && !isModal"
     [nzSize]="setDetail.size"
     (nzDataChange)="dataChange()"
+    [(nzPageIndex)]="pageIndex"
+    [nzShowTotal]="1"
     >
     <span nz-table-title>{{tableSet.title}}</span>
     <ng-template #nzFixedHeader [ngIf]="_header&&!setDetail.fixedHeader?.enable&&tableData">
