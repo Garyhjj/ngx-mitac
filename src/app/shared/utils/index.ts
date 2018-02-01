@@ -43,3 +43,7 @@ export const replaceQuery = (url: string, query: any) => {
 
   return url;
 }
+
+export const isArray = (ar) => {
+  return Object.prototype.toString.call(ar) === '[object Array]';
+}

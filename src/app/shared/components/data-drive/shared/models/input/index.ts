@@ -172,7 +172,8 @@ export class SelectInputSet implements InputSet {
     placeHolder?: string;
     default?: string | boolean | number;
     more?: {
-        options?: { property: string, value: string | number }[]
+        options?: { property: string, value: string | number }[];
+        lazyAPI?: string
     }
     constructor(opts?: InputSet) {
         opts && Object.assign(this, opts);

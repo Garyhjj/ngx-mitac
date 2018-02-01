@@ -117,4 +117,8 @@ export class DataDriveService {
         this.utilSerive.toExcel(name, excelHeader, excelData)
     }
 
+    lazyLoad(api) {
+        return this.http.get(api);
+    }
+
 }
