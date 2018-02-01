@@ -118,7 +118,7 @@ export class DataDriveService {
     }
 
     lazyLoad(api) {
-        return this.http.get(api);
+        return this.http.get(APPConfig.baseUrl + api);
     }
 
 }

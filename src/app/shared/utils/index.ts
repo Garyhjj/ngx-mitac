@@ -1,3 +1,5 @@
+import * as moment from 'moment';
+
 /**
    * 对能改变数组的方法添加钩子函数
    * 
@@ -36,7 +38,7 @@ export const throttle = (method: any, context: Object, args: any[] = [], during:
 export const replaceQuery = (url: string, query: any) => {
   if (url && query) {
     for (let prop in query) {
-      url = url.replace(`{${prop}}`, query[prop]?query[prop]:'')
+      url = url.replace(`{${prop}}`, query[prop] ? query[prop] : '')
     }
     url = url.replace(/\{\w+\}/g, '');
   }
@@ -46,4 +48,22 @@ export const replaceQuery = (url: string, query: any) => {
 
 export const isArray = (ar) => {
   return Object.prototype.toString.call(ar) === '[object Array]';
+}
+export const isDate = (date) => {
+  return moment(date).isValid();
+}
+
+export const sortUtils = {
+  byCharCode: (a: string, b: string, isAscend = true) => {
+    if (typeof a !== 'string' || typeof b !== 'string') return 0;
+    const res = a.charCodeAt(0) - b.charCodeAt(0);
+    return isAscend ? res : -res;
+  },
+  byDate: (a: string, b: string, isAscend = true, format?: string) => {
+    const toDateA = moment(a, format);
+    const toDateB = moment(b, format)
+    if (!toDateA.isValid() || !toDateB.isValid()) return 0;
+    const res = toDateA.toDate().getTime() - toDateB.toDate().getTime();
+    return isAscend ? res : -res;
+  }
 }

@@ -22,7 +22,10 @@
               [style.backgroundColor]="setDetail.header?setDetail.header.bgColor:''"
               [style.color]= "setDetail.header?setDetail.header.textColor:''"
               [style.fontSize]= "setDetail.header?setDetail.header.textSize:''"
-              *ngFor="let item of tableData.columns;let i = index" [nzWidth]="setDetail.fixedHeader?.enable &&setDetail.fixedHeader?.width && setDetail.fixedHeader?.width[i]?setDetail.fixedHeader?.width[i]:!setDetail.fixedHeader?'':(100/(tableData.columns.length+additionalColNum)) + '%'"><span>{{item.value}}</span></th>
+              *ngFor="let item of tableData.columns;let i = index" [nzWidth]="setDetail.fixedHeader?.enable &&setDetail.fixedHeader?.width && setDetail.fixedHeader?.width[i]?setDetail.fixedHeader?.width[i]:!setDetail.fixedHeader?'':(100/(tableData.columns.length+additionalColNum)) + '%'">
+              <span>{{item.value}}</span>
+              <nz-table-sort (nzValueChange)="sort(item.property, $event, item.more.sortBy)" *ngIf="item.more && item.more.sortBy"></nz-table-sort>
+            </th>
               <th nz-th 
                 [style.backgroundColor]="setDetail.header?setDetail.header.bgColor:''"
                 [style.color]= "setDetail.header?setDetail.header.textColor:''"

@@ -5,6 +5,10 @@ export interface TableDataColumn {
         pipe?:{
             name:string,
             params:any[]
+        },
+        sortBy?:{
+            name: string,
+            params: any[]
         }
     };
 }

@@ -34,7 +34,7 @@ export const DataDriveStore = {
                     type: 'textarea',
                     placeHolder: '請輸入題目',
                     match: {
-                        regexp: '\\w+',
+                        fns: [{name: 'required'}],
                         err: '不能為空'
                     }
                 }
@@ -45,11 +45,12 @@ export const DataDriveStore = {
                     type: 'select',
                     placeHolder: '請選擇類別',
                     match: {
-                        regexp: '\\w+',
+                        fns: [{name: 'required'}],
                         err: '不能為空'
                     },
                     more: {
-                        options: [{ property: 'RADIO', value: '單選' }, { property: 'CHECKBOX', value: '多選' }, { property: 'TF', value: '判斷' }]
+                        options: [{ property: 'RADIO', value: '單選' }, { property: 'CHECKBOX', value: '多選' }, { property: 'TF', value: '判斷' }],
+                        // lazyAPI: 'GUID/GetDeptNameBySite?site=MSL'
                     }
                 }
             },
@@ -89,7 +90,7 @@ export const DataDriveStore = {
                     type: 'checkbox',
                     placeHolder: '请选择正確答案',
                     match: {
-                        regexp: '\\w+',
+                        fns: [{name: 'required'}],
                         err: '不能為空'
                     },
                     more: {
@@ -158,6 +159,9 @@ export const DataDriveStore = {
                 },
                 {
                     property: 'RIGHT_ANSWER', value: '正確答案'
+                    // ,more: {
+                    //     sortBy: {name: 'byCharCode'}
+                    // }
                 }
             ]
         }

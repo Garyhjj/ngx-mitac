@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs/Rx';
 import { TableData } from '../../../data-drive/shared/models/index';
 import { Component, OnInit, Input, AfterViewInit, OnDestroy, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { DataDrive } from '../../../data-drive/shared/models/index';
-import { throttle } from '../../../../utils/index';
+import { throttle, isArray, sortUtils } from '../../../../utils/index';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
@@ -70,6 +70,21 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   get canDelete() {
     return this._dataDrive.isDataDeletable;
   }
+  sort(name: string, v: string, by: { name: string, params: any[] }) {
+    console.log(name, v);
+    const isAscend = v === 'ascend';
+    this.tableData.data = this.tableData.data.sort((a: any, b: any) => {
+      if (!isArray(a) || !isArray(b)) return 0;
+      const target_a = a.find(p => p.property === name).value || '';
+      const target_b = b.find(p => p.property === name).value || '';
+      const a_value = target_a || target_a.value || '';
+      const b_value = target_b || target_b.value || '';
+      if(typeof by !== 'object') return 0;
+      const byWhat = sortUtils[by.name];
+      const params = by.params || [];
+      return typeof byWhat === 'function' ? byWhat(a_value, b_value, isAscend,...params) : 0;
+    }).slice();
+  }
 
   cacalScrollHeight() {
     if (this.setDetail && this.setDetail.fixedHeader && this.setDetail.fixedHeader.scrollHeight === 'auto') {
@@ -110,7 +125,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
 
   toDelete(idx) {
     if (!this.canDelete) return;
-    idx = (this.pageIndex - 1)*this.pageCount + idx;
+    idx = (this.pageIndex - 1) * this.pageCount + idx;
     const deleteFn = () => {
       const data = this._dataDrive.getData();
       if (!data[idx]) return;
@@ -131,7 +146,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
 
   toUpdate(idx) {
     if (!this.canEdit) return;
-    idx = (this.pageIndex - 1)*this.pageCount + idx;
+    idx = (this.pageIndex - 1) * this.pageCount + idx;
     if (!this._dataDrive.isDataAddable()) return false;
     const subscription = this.modalService.open({
       title: '新增',

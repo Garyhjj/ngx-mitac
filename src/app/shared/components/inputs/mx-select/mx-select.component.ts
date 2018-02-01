@@ -69,14 +69,21 @@ export class MxSelectComponent implements OnInit {
 
   lazyLoad() {
     if (this.lazyAPI) {
-      this.dataDriveService.lazyLoad(this.lazyLoad).subscribe((r: any[]) => {
+      this.dataDriveService.lazyLoad(this.lazyAPI).subscribe((r: any[]) => {
         if (isArray(r)) {
           this._options = r.filter(f => f).map(d => {
-            if(isArray(d)) {
-              if(d.length === 1) {
-                return {property:d[0], value: d[0]}
-              }else if(d.length > 1) {
-                return {property:d[0], value: d[1]}
+            if (isArray(d)) {
+              if (d.length === 1) {
+                return { property: d[0], value: d[0] }
+              } else if (d.length > 1) {
+                return { property: d[0], value: d[1] }
+              }
+            }else if (typeof d === 'object') {
+              const keys = Object.keys(d);
+              if (keys.length === 1) {
+                return { property: d[keys[0]], value: d[keys[0]] }
+              } else if (keys.length > 1) {
+                return { property: d[keys[0]], value: d[keys[1]] }
               }
             }
           })

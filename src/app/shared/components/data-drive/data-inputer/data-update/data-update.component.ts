@@ -11,6 +11,7 @@ import { NzModalSubject } from 'ng-zorro-antd';
 import { SearchItemSet } from '../../shared/models/searcher/index';
 import { NgxValidatorExtendService } from '../../../../../core/services/ngx-validator-extend.service';
 import { DataDriveService } from '../../core/services/data-drive.service';
+import { isArray } from '../../../../utils/index';
 
 
 
@@ -128,8 +129,13 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
         if (match.err) {
           this.errMes[s.property] = match.err;
         }
-        if (match.regexp) {
-          valid = this.validExd.regex(match.regexp);
+        if (isArray(match.fns)) {
+          valid = [];
+          match.fns.forEach(f => {
+            const validFn = this.validExd[f.name];
+            const validParmas = f.parmas || [];
+            validFn && valid.push(validFn(...validParmas));
+          })
         }
       }
       myForm[s.property] = [def, valid];

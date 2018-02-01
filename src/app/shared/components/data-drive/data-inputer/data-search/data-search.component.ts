@@ -9,6 +9,7 @@ import {
 import { NgxValidatorExtendService } from '../../../../../core/services/ngx-validator-extend.service';
 import { DataDriveService } from '../../core/services/data-drive.service';
 import { UtilService } from '../../../../../core/services/util.service';
+import { isArray } from '../../../../utils/index';
 
 @Component({
   selector: 'app-data-search',
@@ -89,8 +90,13 @@ export class DataSearchComponent implements OnInit {
         if (match.err) {
           this.errMes[s.property] = match.err;
         }
-        if (match.regexp) {
-          valid = this.validExd.regex(match.regexp);
+        if (isArray(match.fns)) {
+          valid = [];
+          match.fns.forEach(f => {
+            const validFn = this.validExd[f.name];
+            const validParmas = f.parmas || [];
+            validFn && valid.push(validFn(...validParmas));
+          })
         }
       }
       myForm[s.property] = [def, valid];

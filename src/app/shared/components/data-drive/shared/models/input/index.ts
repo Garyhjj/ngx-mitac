@@ -4,7 +4,7 @@ export interface InputSet {
     placeHolder?: string;
     default?: string | boolean | number;
     match?: {
-        regexp: string,
+        fns:{name:string,parmas:any[]}[]
         err: string
     };
     more?: any;
@@ -245,9 +245,9 @@ export class TextInputSet implements InputSet {
     placeHolder?: string;
     default?: string | boolean | number;
     match?: {
-        regexp: string,
+        fns:{name:string,parmas:any[]}[]
         err: string
-    }
+    };
     constructor(opts?: InputSet) {
         if (opts) {
             Object.assign(this, opts);
@@ -261,9 +261,9 @@ export class TextareaInputSet implements InputSet {
     placeHolder?: string;
     default?: string | boolean | number;
     match?: {
-        regexp: string,
+        fns:{name:string,parmas:any[]}[]
         err: string
-    }
+    };
     constructor(opts?: InputSet) {
         if (opts) {
             Object.assign(this, opts);
