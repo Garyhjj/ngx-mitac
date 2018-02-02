@@ -198,7 +198,10 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     if (filterData) {
       this.tableData.data = filterData;
     }
-    this.ref.detectChanges();
+    try{
+      this.ref.detectChanges();
+    }catch(err){
+    }
   }
   dataChange() {
     setTimeout(() => this.initAutoScroll(), 50);
@@ -235,9 +238,9 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   }
 
   paramsOut(p: string[], idx: number) {
+    idx = (this.pageIndex - 1) * this.pageCount + idx;
+    const data = this._dataDrive.getData()[idx];
     if (isArray(p)) {
-      idx = (this.pageIndex - 1) * this.pageCount + idx;
-      const data = this._dataDrive.getData()[idx];
       if (data) {
         const out: any = {};
         data.forEach(d => {
@@ -247,6 +250,12 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
         })
         this._dataDrive.emitParamsOut(out);
       }
+    } else {
+      const out: any = {};
+      data.forEach(d => {
+        out[d.property] = d.value;
+      })
+      this._dataDrive.emitParamsOut(out);
     }
     return false;
   }
@@ -341,6 +350,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     if (!this.isModal) {
       this.sub3 = this._dataDrive.observeIsShowModal().subscribe(s => this.canScroll = !s);
     }
+    this.updateFilterColumns();
   }
 
   ngOnDestroy() {

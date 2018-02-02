@@ -1,7 +1,6 @@
 import { Component, OnInit, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-
 @Component({
   selector: 'app-true-or-false',
   templateUrl: './true-or-false.component.html',
@@ -46,6 +45,8 @@ export class TrueOrFalseComponent implements OnInit {
   @Input() titlePrefix = '';
 
 
+  @Input() question;
+
   constructor() { }
 
   /**
@@ -80,6 +81,7 @@ export class TrueOrFalseComponent implements OnInit {
 
   ngOnInit() {
     this.checkResult();
+
   }
 
   checkResult() {
@@ -90,6 +92,8 @@ export class TrueOrFalseComponent implements OnInit {
           this.radioValue = result.trueAnswer;
         }
       }
+    }else {
+      setTimeout(() => this.radioValue = 'N',1000)
     }
   }
 

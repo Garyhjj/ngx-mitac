@@ -1,4 +1,110 @@
 export const DataDriveStore = {
+    examMapping: {
+        id: 5,
+        APIs: {
+            search: 'EXAM/GetExamMappings?exam_id={exam_id}&company_id={company_id}',
+            update: 'EXAM/UpdateMapping',
+            delete: 'EXAM/DeleteMapping?id={id}'
+        },
+        additionalFn: {
+            filterColumn: true,
+            changeBodyFontSize: true,
+            changeHeaderFontSize: true,
+            menu: true,
+            toExcel: true,
+            switchViewType: ['exam','table']
+        },
+        dataViewSet: {
+            title: '考卷内容',
+            more: {
+                showAction: true
+            }
+        },
+        updateSets: [
+            {
+                property: 'ID',
+                InputOpts: {
+                    type: 'primary',
+                    default: 0
+                }
+            },
+            {
+                property: 'EXAM_ID',
+                InputOpts: {
+                    placeHolder: '',
+                }
+            },
+            {
+                property: 'TITLE',
+                InputOpts: {
+                    type: 'textarea',
+                    editable: false,
+                    placeHolder: '',
+                }
+            },
+            {
+                property: 'NUM',
+                InputOpts: {
+                    type: 'number',
+                    placeHolder: '請输入序号',
+                }
+            },
+            {
+                property: 'SCORE',
+                InputOpts: {
+                    type: 'number',
+                    placeHolder: '請输入分值',
+                    more: {
+                        min: 0,
+                        max: 100
+                    }
+                }
+            }
+        ],
+        tableData: {
+            searchable: true,
+            addable: true,
+            deletable: true,
+            isCompanyLimited: true,
+            columns: [
+                {
+                    property: 'NUM', value: '序号'
+                },
+                {
+                    property: 'SCORE', value: '分值(分)'
+                },
+                {
+                    property: 'TITLE', value: '題目'
+                },
+                {
+                    property: 'TYPE', value: '類別', more: {
+                        pipe: {
+                            name: 'replace',
+                            parmas: [{ TF: '判斷題', RADIO: '單選題', CHECKBOX: '多選題' }]
+                        }
+                    }
+                },
+                {
+                    property: 'OPTION_A', value: '選項A'
+                },
+                {
+                    property: 'OPTION_B', value: '選項B'
+                },
+                {
+                    property: 'OPTION_C', value: '選項C'
+                },
+                {
+                    property: 'OPTION_D', value: '選項D'
+                },
+                {
+                    property: 'OPTION_E', value: '選項E'
+                },
+                {
+                    property: 'RIGHT_ANSWER', value: '正確答案'
+                }
+            ]
+        }
+    },
     examUnits: {
         id: 4,
         APIs: {
@@ -18,8 +124,7 @@ export const DataDriveStore = {
             more: {
                 showAction: true,
                 paramsOut: {
-                    name: '配置考卷',
-                    params: ['ID']
+                    name: '配置考卷'
                 }
             }
         },
@@ -146,6 +251,7 @@ export const DataDriveStore = {
             searchable: true,
             addable: true,
             deletable: true,
+            isCompanyLimited: true,
             columns: [
                 {
                     property: 'TITLE', value: '考試名稱'

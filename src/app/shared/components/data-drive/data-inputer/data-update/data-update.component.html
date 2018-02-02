@@ -8,11 +8,13 @@
   
   
         <div nz-form-control nz-col [nzSpan]="isHorizontal?16:16">
-            <nz-input [formControlName]="item" [nzPlaceHolder]="inputTypeList[i].placeHolder" [nzSize]="'large'" *ngIf="inputTypeList[i]?.type === 'text'">
+            <nz-input [formControlName]="item" [nzPlaceHolder]="inputTypeList[i].placeHolder" [nzSize]="'large'" *ngIf="inputTypeList[i]?.type === 'text'"
+            [nzReadonly]="!inputTypeList[i]?.editable"
+            >
               </nz-input>
   
               <nz-input [formControlName]="item" [nzPlaceHolder]="inputTypeList[i].placeHolder" *ngIf="inputTypeList[i]?.type === 'textarea'" 
-              nzType="textarea" [nzAutosize]="'1'"></nz-input>
+              nzType="textarea" [nzAutosize]="'1'" [nzReadonly]="!inputTypeList[i]?.editable"></nz-input>
   
               <!-- <nz-select [formControlName]="item" [nzSize]="'large'" [nzPlaceHolder]="inputTypeList[i].placeHolder" *ngIf="inputTypeList[i]?.type === 'select'"
                 [style.minWidth]="'100px'">

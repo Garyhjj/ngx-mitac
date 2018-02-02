@@ -2,7 +2,7 @@ import { FormGroup } from '@angular/forms';
 import { AdditionalFn } from './additionalFn/index';
 import { TableDataModel, TableData } from './table-data/index';
 import { SearchItemSet } from './searcher';
-import { DataViewSet } from './viewer/index';
+import { DataViewSet, TabelViewSetMore, DataViewType } from './viewer/index';
 import { BehaviorSubject } from 'rxjs/Rx';
 import { bindEventForArray } from '../../../../utils/index';
 import { DataViewSetFactory } from './viewer/index';
@@ -115,6 +115,9 @@ export class DataDrive implements DataDriveOptions {
     isDataDeletable() {
         return !!this.tableData.deletable;
     }
+    isCompanyLimited() {
+        return !!this.tableData.isCompanyLimited;
+    }
 
     getData() {
         if (this.tableData.data && this.tableData.data.length > 0) {
@@ -145,6 +148,10 @@ export class DataDrive implements DataDriveOptions {
         this.on('beforeUpdate', cb);
     }
 
+    beforeSearch(cb: (data: any) => any) {
+        this.on('beforeSearch', cb);
+    }
+
     afterDataInit(cb: () => void) {
         this.on('afterDataInit', cb);
     }
@@ -153,16 +160,16 @@ export class DataDrive implements DataDriveOptions {
         this.eventSubject.next('afterDataInit');
     }
     emitParamsOut(data) {
-        this.emitEvent('paramsOut',data)
+        this.emitEvent('paramsOut', data)
     }
 
-    emitEvent(name:string,...p) {
+    emitEvent(name: string, ...p) {
         const eventQueue: Array<Function> = this.eventsQueue[name] || [];
         let canContinue = true;
         for (let i = 0; i < eventQueue.length; i++) {
             const cb = eventQueue[i]
-            if(cb) {
-                if(cb(...p) === false) {
+            if (cb) {
+                if (cb(...p) === false) {
                     canContinue = false;
                 }
             }
@@ -177,14 +184,29 @@ export class DataDrive implements DataDriveOptions {
             this.eventsQueue[eventType] = [cb];
         }
     }
+    runBeforeSearch(data: any) {
+        const eventQueue: Array<Function> = this.eventsQueue['beforeSearch'] || [];
+        if (typeof data !== 'object') return data;
+        for (let i = 0; i < eventQueue.length; i++) {
+            const cb = eventQueue[i]
+            if (cb) {
+                const res = cb(Object.assign({}, data));
+                if (typeof res === 'object') {
+                    data = Object.assign({}, data, res);
+                }
+            }
+        }
+        return data;
+    }
+
     runBeforeUpdate() {
         const eventQueue: Array<Function> = this.eventsQueue['beforeUpdate'] || [];
         let canContinue = true;
         if (this.updateFormGroup) {
             for (let i = 0; i < eventQueue.length; i++) {
                 const cb = eventQueue[i]
-                if(cb) {
-                    if(cb(this.updateFormGroup, this.globalUpdateErrSubject) === false) {
+                if (cb) {
+                    if (cb(this.updateFormGroup, this.globalUpdateErrSubject) === false) {
                         canContinue = false;
                     }
                 }
@@ -219,6 +241,21 @@ export class DataDrive implements DataDriveOptions {
     updateFormGroupInited(fg: FormGroup) {
         this.updateFormGroup = fg;
         this.eventSubject.next('updateFormShow');
+    }
+
+    setParamsOut(name: string, params?: string[]) {
+        if (this.dataViewSet.type === 'table') {
+            const more: TabelViewSetMore = this.dataViewSet.more || {};
+            more.paramsOut = {
+                name: name,
+                params: params
+            }
+        }
+    }
+
+    switchViewType(type:DataViewType) {
+        this.dataViewSet.type = type;
+        this.initDataViewSet();
     }
 
     private init() {

@@ -43,6 +43,10 @@ export class DataDriveService {
         if (typeof params !== 'object') {
             params = {};
         }
+        if(dataDrive.isCompanyLimited()) {
+            params = this.addCompanyID(params);
+        }
+        params = dataDrive.runBeforeSearch(params) || params;
         return this.http.get(replaceQuery(APPConfig.baseUrl + dataDrive.APIs.search, params));
     }
     getDriveOption(name: string) {
@@ -83,6 +87,9 @@ export class DataDriveService {
             throw new Error('沒有找到更新的api配置信息');
         }
         const url = dataDrive.APIs.update;
+        if(dataDrive.isCompanyLimited()) {
+            ds = this.addCompanyID(ds);
+        }
         return this.http.post(APPConfig.baseUrl + url, ds);
     }
 
@@ -115,6 +122,15 @@ export class DataDriveService {
             excelData = data.map(c => c.filter(s => !s.hide).map(d => d.value));
         }
         this.utilSerive.toExcel(name, excelHeader, excelData)
+    }
+
+    addCompanyID(send:any) {
+        if(typeof send === 'object' && this.user) {
+            const out = Object.assign({}, send, {company_id: this.user.COMPANY_ID});
+            return out;
+        }else {
+            return send;
+        }
     }
 
     lazyLoad(api) {

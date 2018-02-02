@@ -20,41 +20,36 @@
   </nz-row>
 </nz-alert>
 
-<nz-card>
+<nz-card *ngIf="TFList?.length > 0">
   <ng-template #title>
     {{subTitlePrefixs[0]}}、 判斷題,總分
     <span>30</span>分,每題
     <span>10</span>分
   </ng-template>
   <ng-template #body>
-    <app-true-or-false [titlePrefix]="'1. '" class="question-item"></app-true-or-false>
-    <app-true-or-false [titlePrefix]="'2. '" class="question-item"></app-true-or-false>
-    <app-true-or-false [titlePrefix]="'3. '" class="question-item"></app-true-or-false>
+    <app-true-or-false [titlePrefix]="i+1 +'. '" class="question-item" *ngFor="let item of TFList;let i = index" [question]="item"></app-true-or-false>
   </ng-template>
 </nz-card>
 
-<nz-card>
+<nz-card *ngIf="radioList?.length > 0">
   <ng-template #title>
     {{subTitlePrefixs[1]}}、 選擇題,總分
     <span>30</span>分,每題
     <span>10</span>分
   </ng-template>
   <ng-template #body>
-    <app-radio-question [titlePrefix]="'1. '" class="question-item"></app-radio-question>
-    <app-radio-question [titlePrefix]="'2. '" class="question-item"></app-radio-question>
-    <app-radio-question [titlePrefix]="'3. '" class="question-item"></app-radio-question>
+    <app-radio-question [titlePrefix]="i+1 +'. '" class="question-item" *ngFor="let item of radioList;let i = index"></app-radio-question>
   </ng-template>
 </nz-card>
 
-<nz-card>
+<nz-card *ngIf="checkboxList?.length > 0">
   <ng-template #title>
     {{subTitlePrefixs[2]}}、 多選題,總分
     <span>30</span>分,每題
     <span>10</span>分
   </ng-template>
   <ng-template #body>
-    <app-checkbox-question [titlePrefix]="'1. '" class="question-item"></app-checkbox-question>
-    <app-checkbox-question [titlePrefix]="'2. '" class="question-item"></app-checkbox-question>
-    <app-checkbox-question [titlePrefix]="'3. '" class="question-item"></app-checkbox-question>
+    <app-checkbox-question [titlePrefix]="i+1 +'. '" class="question-item" *ngFor="let item of checkboxList;let i = index"></app-checkbox-question>
   </ng-template>
 </nz-card>
+

@@ -1,3 +1,4 @@
+import { ExamService } from './shared/services/exam.service';
 import { DataDriveModule } from './../../shared/components/data-drive/data-drive.module';
 import { ExamRoutingModule } from './exam-routing.module';
 import { SharedModule } from './../../shared/shared.module';
@@ -15,6 +16,7 @@ import { ExamUnitComponent } from './exam-unit/exam-unit.component';
     ExamComponent,
     ExamQuestionComponent,
     ExamUnitComponent
-]
+  ],
+  providers: [ExamService]
 })
 export class ExamModule { }

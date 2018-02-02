@@ -1,13 +1,14 @@
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { NzMessageService } from 'ng-zorro-antd';
+import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 
 @Injectable()
 export class UtilService {
 
     constructor(
         private router: Router,
-        private _message: NzMessageService
+        private _message: NzMessageService,
+        private modalService: NzModalService
     ) { }
 
     errDeal(err) {
@@ -57,6 +58,20 @@ export class UtilService {
 
     showGlobalErrMes(mes) {
         this._message.error(mes, { nzDuration: 3000 });
+    }
+
+    showGlobalWarningMes(mes) {
+        this._message.warning(mes, { nzDuration: 3000 });
+    }
+
+    showWarningConfirm(set:{title:string,content:string,okText?:string},cb?: () => void) {
+        set.okText = set.okText || '收到';
+        this.modalService.warning({
+            title: set.title,
+            content: set.content,
+            okText: set.okText,
+            onOk: cb
+          });
     }
 
 }

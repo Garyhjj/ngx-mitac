@@ -1,3 +1,5 @@
+import { isNumber } from "../../../../../utils/index";
+
 export interface InputSet {
     type?: InputTypes;
     editable?: boolean;
@@ -284,8 +286,8 @@ export class NumberInputSet extends TextInputSet {
         super(opts);
         this.more = this.more || {};
         this.more.step = this.more.step || 1;
-        this.more.max = this.more.max || Infinity;
-        this.more.min = this.more.min || -Infinity
+        this.more.max = isNumber(this.more.max)? this.more.max : Infinity;
+        this.more.min = isNumber(this.more.min)? this.more.min : -Infinity
         this.type = 'number';
         this.default = Number(this.default);
     }

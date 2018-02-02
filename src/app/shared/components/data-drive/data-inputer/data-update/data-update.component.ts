@@ -138,10 +138,10 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
           })
         }
       }
+      console.log(s.InputOpts.editable)
       myForm[s.property] = [def, valid];
       return Object.assign({ label: mapColumn ? mapColumn.value : s.property }, s.InputOpts);
     });
-    // console.log(this.inputTypeList);
     // this.dataDrive.onUpdateFormShow((fg) => {
     //   console.log(fg.value);
     // })

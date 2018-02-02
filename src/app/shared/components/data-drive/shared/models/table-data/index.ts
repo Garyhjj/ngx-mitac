@@ -23,6 +23,7 @@ export interface TableData {
     deletable?: boolean;
     visible?: boolean;
     searchable?: boolean;
+    isCompanyLimited?: boolean;
     columns: TableDataColumn[];
     data?: TableInsideData[][];
 }
@@ -32,6 +33,7 @@ export class TableDataModel implements TableData {
     addable: boolean;
     deletable: boolean;
     visible: boolean;
+    isCompanyLimited?: boolean;
     columns: TableDataColumn[];
     data?: TableInsideData[][];
     private inputSetFactory;

@@ -1,15 +1,33 @@
-
-<nz-tabset>
-    <nz-tab >
-      <ng-template #nzTabHeading>
-        維護考卷頭
-      </ng-template>
-      <app-data-drive [name]= "'examUnits'" (dataDriveInit)="getDrive($event)"></app-data-drive>
-    </nz-tab>
-    <nz-tab >
-        <ng-template #nzTabHeading>
-          維護考內容
-        </ng-template>
-        fghfghf
-      </nz-tab>
-  </nz-tabset>
+<nz-tabset [(nzSelectedIndex)]="tabIdx" (nzSelectedIndexChange)="tabChange($event)">
+  <nz-tab>
+    <ng-template #nzTabHeading>
+      維護考卷頭
+    </ng-template>
+    <app-data-drive [name]="'examUnits'" (dataDriveInit)="getHeaderDrive($event)"></app-data-drive>
+  </nz-tab>
+  <nz-tab>
+    <ng-template #nzTabHeading>
+      維護考卷內容
+      <span *ngIf="targetExam">({{targetExam.TITLE}})</span>
+    </ng-template>
+    <nz-row [nzType]="'flex'">
+      <nz-col [style.width.%]="isAddingQuestion?50:100" [style.marginRight.%]="isAddingQuestion?1:0">
+        <div class="align-right" *ngIf="!isAddingQuestion">
+          <button nz-button [nzType]="'primary'" (click)="isAddingQuestion = true">
+            <i class="anticon anticon-menu-fold"></i>
+            <span>插入問題</span>
+          </button>
+        </div>
+        <app-data-drive [name]="'examMapping'" (dataDriveInit)="getContentDrive($event)"></app-data-drive>
+      </nz-col>
+      <nz-col class="middle-padding" [class.hide]="!isAddingQuestion">
+        <button nz-button [nzType]="'primary'" [nzShape]="'circle'" (click)="isAddingQuestion = false">
+          <i class="anticon anticon-menu-unfold"></i>
+        </button>
+      </nz-col>
+      <nz-col [style.width.%]="45" [class.hide]="!isAddingQuestion">
+        <app-data-drive [name]="'examQuestions'" (dataDriveInit)="getQuestionsDrive($event)"></app-data-drive>
+      </nz-col>
+    </nz-row>
+  </nz-tab>
+</nz-tabset>
