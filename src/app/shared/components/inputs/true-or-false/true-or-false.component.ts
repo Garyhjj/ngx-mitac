@@ -34,13 +34,10 @@ export class TrueOrFalseComponent implements OnInit {
 
   @Input() fontSize: string = '1.6rem';
 
-  @Input() result:{
+  @Input() result: {
     trueAnswer: any,
     yourAnswer: any
-  } = {
-    trueAnswer:'Y',
-    yourAnswer:'Y'
-  }
+  };
 
   @Input() titlePrefix = '';
 
@@ -55,7 +52,7 @@ export class TrueOrFalseComponent implements OnInit {
    * @param {*} value 
    */
   writeValue(value: string) {
-    if([this._myFalseFormat, this._myTrueFormat].indexOf(value) > -1) {
+    if ([this._myFalseFormat, this._myTrueFormat].indexOf(value) > -1) {
       this.radioValue = value;
     }
   }
@@ -81,19 +78,16 @@ export class TrueOrFalseComponent implements OnInit {
 
   ngOnInit() {
     this.checkResult();
-
   }
 
   checkResult() {
     const result = this.result;
-    if(result) {
-      if(result.hasOwnProperty('trueAnswer')) {
-        if([this._myFalseFormat, this._myTrueFormat].indexOf(result.trueAnswer) > -1) {
+    if (result) {
+      if (result.hasOwnProperty('trueAnswer')) {
+        if ([this._myFalseFormat, this._myTrueFormat].indexOf(result.trueAnswer) > -1) {
           this.radioValue = result.trueAnswer;
         }
       }
-    }else {
-      setTimeout(() => this.radioValue = 'N',1000)
     }
   }
 

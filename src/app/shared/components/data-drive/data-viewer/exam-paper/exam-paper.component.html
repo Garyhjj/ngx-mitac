@@ -38,7 +38,8 @@
     <span>10</span>分
   </ng-template>
   <ng-template #body>
-    <app-radio-question [titlePrefix]="i+1 +'. '" class="question-item" *ngFor="let item of radioList;let i = index"></app-radio-question>
+    <app-radio-question [titlePrefix]="i+1 +'. '" class="question-item" *ngFor="let item of radioList;let i = index" 
+    [question]="item" [radios]="item.optionList"></app-radio-question>
   </ng-template>
 </nz-card>
 

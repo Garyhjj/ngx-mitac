@@ -25,7 +25,6 @@ export class ExamPaperComponent implements OnInit {
     this.beginTime = new Date();
     this.checkLeftTime();
     if (this.opts) {
-      console.log(this.opts.tableData)
       const data = this.opts.tableData.data;
       if (data && data.length > 0) {
         const allQ = data.map(d => {
@@ -36,9 +35,18 @@ export class ExamPaperComponent implements OnInit {
           return out;
         });
         this.TFList = allQ.filter(a => a.TYPE === 'TF');
-        this.radioList = allQ.filter(a => a.TYPE === 'RADIO');
+        this.radioList = allQ.filter(a => a.TYPE === 'RADIO').map(c => {
+          if (c) {
+            c.optionList = [];
+            const pre = 'OPTION_';
+            ['A', 'B', 'C', 'D', 'E'].forEach(b => {
+              const val = c[pre + b];
+              val && c.optionList.push([b, val]);
+            });
+          }
+          return c;
+        });
         this.checkboxList = allQ.filter(a => a.TYPE === 'CHECKBOX');
-        console.log(this.TFList,this.radioList,this.checkboxList)
       }
     }
   }

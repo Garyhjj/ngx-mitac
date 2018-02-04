@@ -14,16 +14,15 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ]
 })
 export class RadioQuestionComponent implements OnInit {
-  radios = [[1,'5分鐘'],[2,'10分鐘'],[3,'15分鐘'],[4,'20分鐘']];
+  @Input() radios = [[1,'5分鐘'],[2,'10分鐘'],[3,'15分鐘'],[4,'20分鐘']];
   title = '工作時間員工中途出廠再進廠不超過（）不會產生門禁異常';
+
+  @Input() question;
   @Input() fontSize: string = '1.6rem';
   @Input() titlePrefix: string = '';
   @Input() result:{
     trueAnswer: any,
     yourAnswer: any
-  } = {
-    trueAnswer:1,
-    yourAnswer:1
   }
   radioValue;
   yourAnswerString;
