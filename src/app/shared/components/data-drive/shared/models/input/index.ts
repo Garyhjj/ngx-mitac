@@ -52,6 +52,8 @@ export class Switch implements InputSet {
     constructor(opts?: any) {
         opts && Object.assign(this, opts);
         this.type = 'switch';
+        this.falseFormat = this.falseFormat || 'N';
+        this.trueFormat = this.trueFormat || 'Y';
     }
 
 }

@@ -15,3 +15,8 @@ interface ExportJsonExcelOptions {
     sheetHeader:(string | number)[]
   }[]
 }
+
+declare class AraleQRCode {
+  constructor(opts:{text:string, size: number});
+  toDataURL(type,p);
+}

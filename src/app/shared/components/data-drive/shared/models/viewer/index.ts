@@ -7,6 +7,7 @@ export interface DataViewSet {
     subType?: string;
     title?: string;
     hideLists?: string[];
+    tempAddition?: any;
     more?: any;
     changeHeaderFontSize?: Function;
     changeBodyFontSize?: Function;

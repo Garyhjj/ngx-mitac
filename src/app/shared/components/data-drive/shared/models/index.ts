@@ -258,6 +258,10 @@ export class DataDrive implements DataDriveOptions {
         this.initDataViewSet();
     }
 
+    setViewTempAddtion(a) {
+        this.dataViewSet.tempAddition = a;
+    }
+
     private init() {
         this.initDataViewSet();
         this.initSearchSets();

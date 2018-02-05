@@ -4,6 +4,7 @@ import { DataDriveService } from './../../../shared/components/data-drive/core/s
 import { UtilService } from './../../../core/services/util.service';
 import { Component, OnInit } from '@angular/core';
 import { DataDrive } from '../../../shared/components/data-drive/shared/models/index';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-exam-unit',
@@ -19,11 +20,21 @@ export class ExamUnitComponent implements OnInit {
   questionsDrive: DataDrive;
   tabIdx;
   isAddingQuestion;
-  targetExam;
+  _targetExam;
+  set targetExam(t) {
+    this._targetExam = t;
+    this.contentDataDrive.setViewTempAddtion({
+      title: t.TITLE,
+      name: this.auth.user.NICK_NAME,
+      passScore: t.PASS_SCORE,
+      time: t.TIME
+    })
+  };
   constructor(
     private util: UtilService,
     private dataDriveService: DataDriveService,
     private examService: ExamService,
+    private auth: AuthService
   ) { }
 
   ngOnInit() {
@@ -46,7 +57,7 @@ export class ExamUnitComponent implements OnInit {
       console.log(d);
       const send: ExamMapping = {
         ID:0,
-        EXAM_ID: this.targetExam.ID,
+        EXAM_ID: this._targetExam.ID,
         QUESTION_ID: d.ID,
         NUM: 0,
         SCORE: 1,
@@ -61,7 +72,7 @@ export class ExamUnitComponent implements OnInit {
 
   changeContentSearch() {
     this.contentDataDrive.beforeSearch((data) => {
-      return Object.assign(data, {exam_id: this.targetExam.ID});
+      return Object.assign(data, {exam_id: this._targetExam.ID});
     })
   }
 
@@ -75,7 +86,7 @@ export class ExamUnitComponent implements OnInit {
 
   tabChange(idx) {
     if(idx === 1) {
-      if(!this.targetExam) {
+      if(!this._targetExam) {
         this.util.showWarningConfirm({title:'您還沒有選擇要維護的考卷',content: '將返回到考卷頭維護處'},() => {
           this.tabIdx = 0;
         })

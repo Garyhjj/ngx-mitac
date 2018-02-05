@@ -6,5 +6,9 @@ export interface AdditionalFn {
     menu?: boolean;
     toExcel?: boolean,
     addItem?: boolean,
-    switchViewType?: string[]
+    switchViewType?: string[],
+    LinkToPhone?: {
+        name: string,
+        url: string
+    }
 }

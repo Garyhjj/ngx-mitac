@@ -1,20 +1,20 @@
-<div class="exam-title">4645654</div>
+<div class="exam-title">{{_header.title}}</div>
 <nz-alert [nzType]="'info'">
   <nz-row alert-body [nzType]="'flex'" [nzJustify]="'space-around'">
     <nz-col>
-      <span>考試科目：XXXXX</span>
+      <span>姓名：{{_header.name}}</span>
     </nz-col>
     <nz-col>
-      <span>姓名：XXXXX</span>
+      <span>限時：{{_header.time}}分鐘</span>
     </nz-col>
     <nz-col>
-      <span>限時：{{examTime}}分鐘</span>
+      <span>合格分數：{{_header.passScore}}分</span>
     </nz-col>
-    <nz-col>
+    <nz-col *ngIf="status === 3">
       剩餘時間：
       <span>{{leftTime}}</span>
     </nz-col>
-    <nz-col>
+    <nz-col *ngIf="status === 4">
       <span>得分：90</span>
     </nz-col>
   </nz-row>
@@ -22,9 +22,9 @@
 
 <nz-card *ngIf="TFList?.length > 0">
   <ng-template #title>
-    {{subTitlePrefixs[0]}}、 判斷題,總分
-    <span>30</span>分,每題
-    <span>10</span>分
+    {{prefixMain['TF']}}、 判斷題,總分
+    <span>{{markSets?.TF?.total}}</span>分,每題
+    <span>{{markSets?.TF?.average}}</span>分
   </ng-template>
   <ng-template #body>
     <app-true-or-false [titlePrefix]="i+1 +'. '" class="question-item" *ngFor="let item of TFList;let i = index" [question]="item"></app-true-or-false>
@@ -33,9 +33,9 @@
 
 <nz-card *ngIf="radioList?.length > 0">
   <ng-template #title>
-    {{subTitlePrefixs[1]}}、 選擇題,總分
-    <span>30</span>分,每題
-    <span>10</span>分
+    {{prefixMain['radio']}}、 選擇題,總分
+    <span>{{markSets?.radio?.total}}</span>分,每題
+    <span>{{markSets?.radio?.average}}</span>分
   </ng-template>
   <ng-template #body>
     <app-radio-question [titlePrefix]="i+1 +'. '" class="question-item" *ngFor="let item of radioList;let i = index" 
@@ -45,9 +45,9 @@
 
 <nz-card *ngIf="checkboxList?.length > 0">
   <ng-template #title>
-    {{subTitlePrefixs[2]}}、 多選題,總分
-    <span>30</span>分,每題
-    <span>10</span>分
+    {{prefixMain['checkbox']}}、 多選題,總分
+    <span>{{markSets?.checkbox?.total}}</span>分,每題
+    <span>{{markSets?.checkbox?.average}}</span>分
   </ng-template>
   <ng-template #body>
     <app-checkbox-question [titlePrefix]="i+1 +'. '" class="question-item" *ngFor="let item of checkboxList;let i = index"></app-checkbox-question>

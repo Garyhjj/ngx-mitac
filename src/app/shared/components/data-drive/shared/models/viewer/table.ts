@@ -45,6 +45,10 @@ export interface TabelViewSetMore {
     paramsOut?: {
         name: string,
         params?: string[]
+    };
+    linkToPhone?: {
+        name: string,
+        url: string
     }
 }
 export class TabelViewSet implements DataViewSet {

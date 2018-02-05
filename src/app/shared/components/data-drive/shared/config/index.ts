@@ -12,6 +12,7 @@ export const DataDriveStore = {
             changeHeaderFontSize: true,
             menu: true,
             toExcel: true,
+            fullScreen: true,
             switchViewType: ['exam','table']
         },
         dataViewSet: {
@@ -108,7 +109,7 @@ export const DataDriveStore = {
     examUnits: {
         id: 4,
         APIs: {
-            search: 'EXAM/GetExams?title={title}&ref_dept={ref_dept}&code={code}&version={version}&company_id={company_id}',
+            search: 'EXAM/GetExams?id={id}&title={title}&ref_dept={ref_dept}&code={code}&version={version}&company_id={company_id}',
             update: 'EXAM/UpdateExam',
             delete: 'EXAM/DeleteExam?id={id}'
         },
@@ -125,6 +126,10 @@ export const DataDriveStore = {
                 showAction: true,
                 paramsOut: {
                     name: '配置考卷'
+                },
+                linkToPhone: {
+                    name: '手機版考試',
+                    url: 'http://10.86.16.74:8100/#/exam?examId={ID}'
                 }
             }
         },
@@ -244,6 +249,12 @@ export const DataDriveStore = {
                         max: 100
                     }
                 }
+            },
+            {
+                property: 'FLAG',
+                InputOpts: {
+                    type: 'switch'
+                }
             }
 
         ],
@@ -284,6 +295,9 @@ export const DataDriveStore = {
                             name: 'byNumber'
                         }
                     }
+                },
+                {
+                    property: 'FLAG', value: '啟動'
                 }
             ]
         }

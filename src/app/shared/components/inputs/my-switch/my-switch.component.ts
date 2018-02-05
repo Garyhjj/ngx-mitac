@@ -17,8 +17,8 @@ export class MySwitchComponent implements OnInit {
 
   private propagateChange = (_: any) => { };
   _value: boolean;
-  @Input() myTrueFormat: string | number;
-  @Input() myFalseFormat: string | number;
+  @Input() myTrueFormat: string | number = 'Y';
+  @Input() myFalseFormat: string | number = 'N';
 
   constructor() { }
 
@@ -31,14 +31,11 @@ export class MySwitchComponent implements OnInit {
    * @param {*} value 
    */
   writeValue(value: string | number) {
-    if(this.myTrueFormat === void(0)) {
-      this._value = !!value;
-    }else {
-      if (value === this.myTrueFormat) {
-        this._value = true;
-      }else {
-        this._value = false;
-      }
+    if (value === this.myTrueFormat) {
+      this._value = true;
+    } else {
+      this._value = false;
+      setTimeout(() => this.change(this._value),50);
     }
   }
 
@@ -55,16 +52,15 @@ export class MySwitchComponent implements OnInit {
    * 也是一样注册,当 touched 然后调用
    * @param {*} fn 
    */
-  registerOnTouched(fn:any) { }
+  registerOnTouched(fn: any) { }
 
   change(value) {
-    let out:any;
-    if(value) {
-      out = this.myTrueFormat === void(0)? true: this.myTrueFormat;
-    }else {
-      out = this.myFalseFormat === void(0)? false: this.myFalseFormat;
+    let out: any;
+    if (value) {
+      out = this.myTrueFormat === void (0) ? true : this.myTrueFormat;
+    } else {
+      out = this.myFalseFormat === void (0) ? false : this.myFalseFormat;
     }
     this.propagateChange(out);
   }
-
 }

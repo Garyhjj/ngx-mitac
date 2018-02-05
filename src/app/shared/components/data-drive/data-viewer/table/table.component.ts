@@ -1,3 +1,4 @@
+import { QRComponent } from '../../../QR/QR.component';
 import { DataUpdateComponent } from './../../data-inputer/data-update/data-update.component';
 import { NzModalService } from 'ng-zorro-antd';
 import { DataDriveService } from './../../core/services/data-drive.service';
@@ -125,7 +126,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
 
   toDelete(idx) {
     if (!this.canDelete) return;
-    idx = (this.pageIndex - 1) * this.pageCount + idx;
+    idx = this.calIdx(idx);
     const deleteFn = () => {
       const data = this._dataDrive.getData();
       if (!data[idx]) return;
@@ -146,7 +147,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
 
   toUpdate(idx) {
     if (!this.canEdit) return;
-    idx = (this.pageIndex - 1) * this.pageCount + idx;
+    idx = this.calIdx(idx);
     if (!this._dataDrive.isDataAddable()) return false;
     const subscription = this.modalService.open({
       title: '新增',
@@ -198,9 +199,9 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     if (filterData) {
       this.tableData.data = filterData;
     }
-    try{
+    try {
       this.ref.detectChanges();
-    }catch(err){
+    } catch (err) {
     }
   }
   dataChange() {
@@ -238,7 +239,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   }
 
   paramsOut(p: string[], idx: number) {
-    idx = (this.pageIndex - 1) * this.pageCount + idx;
+    idx = this.calIdx(idx);
     const data = this._dataDrive.getData()[idx];
     if (isArray(p)) {
       if (data) {
@@ -258,6 +259,39 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
       this._dataDrive.emitParamsOut(out);
     }
     return false;
+  }
+
+  linkToPhone(url: string, idx: number) {
+    if (typeof url === 'string') {
+      idx = this.calIdx(idx);
+      const data = this._dataDrive.getData()[idx];
+      const reg = /(\{(\w+)\})/;
+      while(reg.exec(url)) {
+        const target = data.find(d => d.property === RegExp.$2);
+        url = url.replace(new RegExp(RegExp.$1,'g'),target? target.value: '');
+      }
+      console.log(url);
+      const subscription = this.modalService.open({
+        title          : '鏈接二維碼',
+        content        : QRComponent,
+        onOk() {
+        },
+        onCancel() {
+  
+        },
+        footer         : false,
+        componentParams: {
+          url: url
+        }
+      });
+      subscription.subscribe(result => {
+        // console.log(result);
+      })
+    }
+  }
+
+  calIdx(idx) {
+    return (this.pageIndex - 1) * this.pageCount + idx;
   }
 
   runRegExp(dataIdx: number, body: {
