@@ -50,15 +50,16 @@ export function userReducer(state = initialState, action: user.UserActions): Use
             return {};
         case user.USER_UPDATE_PRIVILEGE:
             let module = action.payload;
-            state.privilege = state.privilege || [];
-            let idx = state.privilege.findIndex((l) => l.moduleID === module.moduleID);
-            if (idx > -1) {
-                state.privilege[idx] = module;
-            } else {
-                state.privilege.push(module);
-            }
-            localStorage.setItem('currentUser', JSON.stringify(state));
-            return Object.assign({}, state);
+            // state.privilege = state.privilege || [];
+            // let idx = state.privilege.findIndex((l) => l.moduleID === module.moduleID);
+            // if (idx > -1) {
+            //     state.privilege[idx] = module;
+            // } else {
+            //     state.privilege.push(module);
+            // }
+            const user1 = Object.assign({}, state, {privilege: module});
+            localStorage.setItem('currentUser', JSON.stringify(user1));
+            return user1;
         case user.USER_UPDATE_MODULE:
             let _module = action.payload;
             state = updateModule(state, _module);

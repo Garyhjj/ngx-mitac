@@ -33,11 +33,21 @@ export class TrueOrFalseComponent implements OnInit {
   };
 
   @Input() fontSize: string = '1.6rem';
-
-  @Input() result: {
+  _result;
+  
+  @Input() 
+  set result(r: {
     trueAnswer: any,
     yourAnswer: any
+  }) {
+    if(typeof r ==='object') {
+      this._result = r;
+      this.checkResult();
+    }
   };
+  get result() {
+    return this._result;
+  }
 
   @Input() titlePrefix = '';
 
@@ -77,7 +87,7 @@ export class TrueOrFalseComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.checkResult();
+
   }
 
   checkResult() {

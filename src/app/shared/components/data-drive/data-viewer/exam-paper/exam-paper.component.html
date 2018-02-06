@@ -19,38 +19,43 @@
     </nz-col>
   </nz-row>
 </nz-alert>
+<form [formGroup]="myForm">
+  <nz-card *ngIf="TFList?.length > 0">
+    <ng-template #title>
+      {{prefixMain['TF']}}、 判斷題,總分
+      <span>{{markSets?.TF?.total}}</span>分,每題
+      <span>{{markSets?.TF?.average}}</span>分
+    </ng-template>
+    <ng-template #body>
+      <app-true-or-false [titlePrefix]="i+1 +'. '" class="question-item" *ngFor="let item of TFList;let i = index" [question]="item"
+        [result]="item.result"
+        [formControlName]="item.ID"></app-true-or-false>
+    </ng-template>
+  </nz-card>
 
-<nz-card *ngIf="TFList?.length > 0">
-  <ng-template #title>
-    {{prefixMain['TF']}}、 判斷題,總分
-    <span>{{markSets?.TF?.total}}</span>分,每題
-    <span>{{markSets?.TF?.average}}</span>分
-  </ng-template>
-  <ng-template #body>
-    <app-true-or-false [titlePrefix]="i+1 +'. '" class="question-item" *ngFor="let item of TFList;let i = index" [question]="item"></app-true-or-false>
-  </ng-template>
-</nz-card>
+  <nz-card *ngIf="radioList?.length > 0">
+    <ng-template #title>
+      {{prefixMain['radio']}}、 選擇題,總分
+      <span>{{markSets?.radio?.total}}</span>分,每題
+      <span>{{markSets?.radio?.average}}</span>分
+    </ng-template>
+    <ng-template #body>
+      <app-radio-question [titlePrefix]="i+1 +'. '" class="question-item" *ngFor="let item of radioList;let i = index" [question]="item"
+        [radios]="item.optionList" [formControlName]="item.ID"></app-radio-question>
+    </ng-template>
+  </nz-card>
 
-<nz-card *ngIf="radioList?.length > 0">
-  <ng-template #title>
-    {{prefixMain['radio']}}、 選擇題,總分
-    <span>{{markSets?.radio?.total}}</span>分,每題
-    <span>{{markSets?.radio?.average}}</span>分
-  </ng-template>
-  <ng-template #body>
-    <app-radio-question [titlePrefix]="i+1 +'. '" class="question-item" *ngFor="let item of radioList;let i = index" 
-    [question]="item" [radios]="item.optionList"></app-radio-question>
-  </ng-template>
-</nz-card>
-
-<nz-card *ngIf="checkboxList?.length > 0">
-  <ng-template #title>
-    {{prefixMain['checkbox']}}、 多選題,總分
-    <span>{{markSets?.checkbox?.total}}</span>分,每題
-    <span>{{markSets?.checkbox?.average}}</span>分
-  </ng-template>
-  <ng-template #body>
-    <app-checkbox-question [titlePrefix]="i+1 +'. '" class="question-item" *ngFor="let item of checkboxList;let i = index"></app-checkbox-question>
-  </ng-template>
-</nz-card>
-
+  <nz-card *ngIf="checkboxList?.length > 0">
+    <ng-template #title>
+      {{prefixMain['checkbox']}}、 多選題,總分
+      <span>{{markSets?.checkbox?.total}}</span>分,每題
+      <span>{{markSets?.checkbox?.average}}</span>分
+    </ng-template>
+    <ng-template #body>
+      <app-checkbox-question [titlePrefix]="i+1 +'. '" class="question-item" *ngFor="let item of checkboxList;let i = index" [formControlName]="item.ID"></app-checkbox-question>
+    </ng-template>
+  </nz-card>
+</form>
+<div nz-row [style.display]="'block'" [style.margin]="'20px 0'" *ngIf="status === 3">
+  <button nz-button nz-col [nzOffset]="6" [nzSpan]="12" type="submit" [nzType]="'primary'" [nzSize]="'large'" (click)="finish()">交卷</button>
+</div>

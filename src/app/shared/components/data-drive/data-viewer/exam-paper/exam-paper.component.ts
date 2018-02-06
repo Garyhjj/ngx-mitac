@@ -1,5 +1,8 @@
+import { FormGroup } from '@angular/forms';
+import { isArray } from './../../../../utils/index';
 import { DataDrive } from './../../shared/models/index';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-exam-paper',
@@ -9,6 +12,9 @@ import { Component, OnInit, Input } from '@angular/core';
 export class ExamPaperComponent implements OnInit {
 
   @Input() opts: DataDrive;
+
+  @Input() content: any[];
+
   @Input() isModal;
 
   _header: { title: string, name: string, time: number, passScore: number };
@@ -16,12 +22,23 @@ export class ExamPaperComponent implements OnInit {
   set header(f) {
     if (typeof f === 'object') {
       this._header = f;
+      this.examTime = f.time || 30;
     }
   };
+  _status: number//1 配置中，2 考試前，3 考試中，4.考試后
 
-  status: number//1 配置中，2 考試前，3 考試中，4.考試后
+  @Input()
+  set status(s) {
+    this._status = s;
+    if (s === 3) {
+      this.checkLeftTime();
+    }
+  };
+  get status() {
+    return this._status;
+  }
   beginTime: Date;
-  examTime: number = 25;
+  examTime: number;
   leftTime: string;
   TFList = [];
   radioList = [];
@@ -29,11 +46,15 @@ export class ExamPaperComponent implements OnInit {
   prefixMain: any = {};
   subTitlePrefixs = ['一', '二', '三', '四'];
   markSets: any = {};
-  constructor() { }
+  timeEvent;
+
+  myForm: FormGroup
+
+  @Output() getResult = new EventEmitter();
+  lastMark;
+  constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
-    this.beginTime = new Date();
-    this.checkLeftTime();
     if (this.opts) {
       this.status = 1;
       this.opts.afterDataInit(() => {
@@ -41,22 +62,45 @@ export class ExamPaperComponent implements OnInit {
       })
       const transform = () => {
         const data = this.opts.tableData.data;
-        if (data && data.length > 0) {
-          const allQ = data.map(d => {
-            const out: any = {};
-            d.forEach(c => {
-              out[c.property] = c.value;
-            })
-            return out;
-          });
-          this.bindView(allQ);
-        }
+        this.alterContent(data);
       }
       transform();
     } else {
       this.status = 2;
+      if (isArray(this.content)) {
+        this.alterContent(this.content);
+        this.initForm(this.content);
+        setTimeout(() => {
+          this.beginTime = new Date();
+          this.status = 3
+        }, 2000);
+      }
     }
     this.subTitlePrefixs = ['一', '二', '三', '四'];
+  }
+
+  initForm(q: { ID: number }[]) {
+    const form: any = {};
+    q.forEach(c => {
+      form[c.ID] = [''];
+    })
+    this.myForm = this.fb.group(form);
+  }
+
+  alterContent(data) {
+    if (data && data.length > 0) {
+      const allQ = data.map(d => {
+        if (isArray(d)) {
+          const out: any = {};
+          d.forEach(c => {
+            out[c.property] = c.value;
+          })
+          return out;
+        }
+        return d;
+      });
+      this.bindView(allQ);
+    }
   }
 
   bindView(allQ) {
@@ -97,7 +141,42 @@ export class ExamPaperComponent implements OnInit {
       const second = ~~((left - minute * 1000 * 60) / 1000);
       const secondString = second < 10 ? '0' + second : second;
       this.leftTime = `${minuteString}:${secondString}`;
+      this.timeEvent = setTimeout(() => this.checkLeftTime(), 1000);
     }
-    setTimeout(() => this.checkLeftTime(), 1000)
   }
+
+  finish() {
+    const val = this.myForm.value;
+    this.lastMark = 0;
+    const answerList = this.content.map(c => {
+      if (c.RIGHT_ANSWER === val[c.ID]) {
+        this.lastMark += +c.SCORE || 0;
+      }
+      return {
+        EXAM_ID: c.EXAM_ID,
+        QUESTION_ID: c.QUESTION_ID,
+        ANSWERS: val[c.ID]
+      }
+    })
+    console.log(this.myForm.value);
+    this.getResult.emit({
+      answerList,
+      lastMark: this.lastMark
+    })
+  }
+
+  showResult() {
+    if (this.myForm && this.content) {
+      const val = this.myForm.value;
+      this.content = this.content.map(c => {
+        c.result = {
+          trueAnswer: c.RIGHT_ANSWER,
+          yourAnswer: val[c.ID]
+        };
+        return c;
+      });
+      this.alterContent(this.content);
+    }
+  }
+}
 }

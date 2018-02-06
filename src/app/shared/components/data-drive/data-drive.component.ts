@@ -41,6 +41,7 @@ export class DataDriveComponent implements OnInit {
     if (!this.dataDrive) {
       return;
     }
+    this.dataDriveInit.emit(this.dataDrive);
     this.tableData = this.dataDrive.tableData;
     this.dataDrive.isGetingData = true;
     this.isShowModal = this.dataDrive.observeIsShowModal();
@@ -49,7 +50,5 @@ export class DataDriveComponent implements OnInit {
       this.dataDriveService.initTableData(this.dataDrive, ds);
       final();
     }, (err) => { this.utilService.errDeal(err); final(); });
-
-    this.dataDriveInit.emit(this.dataDrive);
   }
 }
