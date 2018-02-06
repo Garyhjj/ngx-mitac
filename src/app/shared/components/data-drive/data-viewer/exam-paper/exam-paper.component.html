@@ -15,7 +15,7 @@
       <span>{{leftTime}}</span>
     </nz-col>
     <nz-col *ngIf="status === 4">
-      <span>得分：90</span>
+      <span>得分：{{lastMark}}</span>
     </nz-col>
   </nz-row>
 </nz-alert>
@@ -40,8 +40,8 @@
       <span>{{markSets?.radio?.average}}</span>分
     </ng-template>
     <ng-template #body>
-      <app-radio-question [titlePrefix]="i+1 +'. '" class="question-item" *ngFor="let item of radioList;let i = index" [question]="item"
-        [radios]="item.optionList" [formControlName]="item.ID"></app-radio-question>
+      <app-radio-question [titlePrefix]="i+1 +'. '" class="question-item" *ngFor="let item of radioList;let i = index" [title]="item.TITLE"
+        [radios]="item.optionList" [formControlName]="item.ID" [result]="item.result"></app-radio-question>
     </ng-template>
   </nz-card>
 
@@ -52,7 +52,11 @@
       <span>{{markSets?.checkbox?.average}}</span>分
     </ng-template>
     <ng-template #body>
-      <app-checkbox-question [titlePrefix]="i+1 +'. '" class="question-item" *ngFor="let item of checkboxList;let i = index" [formControlName]="item.ID"></app-checkbox-question>
+      <app-checkbox-question [titlePrefix]="i+1 +'. '" class="question-item" *ngFor="let item of checkboxList;let i = index"
+      [checkOptions]="item.optionList"
+      [title]= "item.TITLE"
+      [result]="item.result"
+      [formControlName]="item.ID"></app-checkbox-question>
     </ng-template>
   </nz-card>
 </form>

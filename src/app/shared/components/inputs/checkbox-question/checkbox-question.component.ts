@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { isArray } from '../../../utils/index';
 
 @Component({
   selector: 'app-checkbox-question',
@@ -15,17 +16,31 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 })
 export class CheckboxQuestionComponent implements OnInit, AfterViewInit {
 
-  checkOptionsOne = [
-    { label: 'Apple', value: 'Apple', checked: true },
-    { label: 'Pear', value: 'Pear', checked: false },
-    { label: 'Orange', value: 'Orange', checked: false },
+  @Input() checkOptions: { label: string, value: string, checked: boolean }[] = [
   ];
-  title = '工作時間員工中途出廠再進廠不超過（）不會產生門禁異常';
+  @Input() title = '';
   @Input() fontSize: string = '1.6rem';
   @Input() titlePrefix = '';
   @ViewChild('checkbox')
   checkbox: any;
   private propagateChange = (_: any) => { };
+  _result;
+
+  @Input()
+  set result(r: {
+    trueAnswer: any,
+    yourAnswer: any
+  }) {
+    if (typeof r === 'object') {
+      this._result = r;
+      this.checkResult();
+    }
+  };
+  get result() {
+    return this._result;
+  }
+
+  yourAnswerString = '';
 
   constructor() { }
 
@@ -34,9 +49,9 @@ export class CheckboxQuestionComponent implements OnInit, AfterViewInit {
    * 
    * @param {*} value 
    */
-  writeValue(value: any[]) {
-    if(Object.prototype.toString.call(value) === '[object Array]') {
-      this.checkOptionsOne = value;
+  writeValue(value: any) {
+    if (Object.prototype.toString.call(value) === '[object Array]') {
+      this.checkOptions = value;
     }
   }
 
@@ -56,18 +71,44 @@ export class CheckboxQuestionComponent implements OnInit, AfterViewInit {
   registerOnTouched(fn: any) { }
 
   updateSingleChecked() {
-    this.propagateChange(this.checkOptionsOne.map(c => c.value).join(','));
+    this.propagateChange(this.checkOptions.filter(c => c.checked).map(a => a.value).join(','));
   }
 
   ngOnInit() {
+
   }
   ngAfterViewInit() {
     setTimeout(() => {
       const labels = this.checkbox._el.querySelectorAll('label');
       Array.prototype.forEach.call(labels, (l) => {
         l.style.fontSize = this.fontSize;
-      })
-    }, 50)
+      });
+    }, 50);
+  }
+
+  checkResult() {
+    const result = this.result;
+    if (result) {
+      if (result.hasOwnProperty('trueAnswer')) {
+        const trueAnswer: string[] = result.trueAnswer ? result.trueAnswer.split(',') : [];
+        let yourAnswer = [];
+        if (result.hasOwnProperty('yourAnswer')) {
+          yourAnswer = result.yourAnswer ? result.yourAnswer.split(',') : [];
+          this.yourAnswerString = '';
+        }
+        this.checkOptions = this.checkOptions.map(c => {
+          if (trueAnswer.indexOf(c.value) > -1) {
+            c.checked = true;
+          } else {
+            c.checked = false;
+          }
+          if (yourAnswer.indexOf(c.value) > -1) {
+            this.yourAnswerString += this.yourAnswerString ? '; ' + c.label : c.label;
+          }
+          return c;
+        });
+      }
+    }
   }
 
 }

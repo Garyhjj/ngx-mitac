@@ -32,8 +32,10 @@ export class ExamPaperComponent implements OnInit {
     this._status = s;
     if (s === 3) {
       this.checkLeftTime();
+    } else if (s === 4) {
+      this.showResult();
     }
-  };
+  }
   get status() {
     return this._status;
   }
@@ -69,7 +71,6 @@ export class ExamPaperComponent implements OnInit {
       this.status = 2;
       if (isArray(this.content)) {
         this.alterContent(this.content);
-        this.initForm(this.content);
         setTimeout(() => {
           this.beginTime = new Date();
           this.status = 3
@@ -100,6 +101,7 @@ export class ExamPaperComponent implements OnInit {
         return d;
       });
       this.bindView(allQ);
+      this.initForm(allQ);
     }
   }
 
@@ -128,7 +130,17 @@ export class ExamPaperComponent implements OnInit {
       return c;
     });
     alter('radio');
-    this.checkboxList = allQ.filter(a => a.TYPE === 'CHECKBOX');
+    this.checkboxList = allQ.filter(a => a.TYPE === 'CHECKBOX').map(c => {
+      if (c) {
+        c.optionList = [];
+        const pre = 'OPTION_';
+        ['A', 'B', 'C', 'D', 'E'].forEach(b => {
+          const val = c[pre + b];
+          val && c.optionList.push({ label: val, value: b, checked: false });
+        });
+      }
+      return c;
+    });
     alter('checkbox');
   }
 
@@ -178,5 +190,4 @@ export class ExamPaperComponent implements OnInit {
       this.alterContent(this.content);
     }
   }
-}
 }

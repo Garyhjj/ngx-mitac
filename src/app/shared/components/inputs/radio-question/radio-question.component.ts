@@ -14,15 +14,25 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ]
 })
 export class RadioQuestionComponent implements OnInit {
-  @Input() radios = [[1,'5分鐘'],[2,'10分鐘'],[3,'15分鐘'],[4,'20分鐘']];
-  title = '工作時間員工中途出廠再進廠不超過（）不會產生門禁異常';
+  @Input() radios = [];
 
-  @Input() question;
+  @Input() title;
   @Input() fontSize: string = '1.6rem';
   @Input() titlePrefix: string = '';
-  @Input() result:{
+  _result;
+
+  @Input()
+  set result(r: {
     trueAnswer: any,
     yourAnswer: any
+  }) {
+    if (typeof r === 'object') {
+      this._result = r;
+      this.checkResult();
+    }
+  };
+  get result() {
+    return this._result;
   }
   radioValue;
   yourAnswerString;
@@ -36,7 +46,7 @@ export class RadioQuestionComponent implements OnInit {
    * @param {*} value 
    */
   writeValue(value: string) {
-    if(value) {
+    if (value) {
       this.radioValue = value;
     }
   }
@@ -60,17 +70,18 @@ export class RadioQuestionComponent implements OnInit {
     this.propagateChange(val);
   }
   ngOnInit() {
-    this.checkResult();
+
   }
 
   checkResult() {
     const result = this.result;
-    if(result) {
-      if(result.hasOwnProperty('trueAnswer')) {
+    if (result) {
+      if (result.hasOwnProperty('trueAnswer')) {
         this.radioValue = result.trueAnswer;
       }
-      if(result.hasOwnProperty('yourAnswer')) {
-        this.yourAnswerString = this.radios.filter(r => r[0] === result.yourAnswer)[0][1];
+      if (result.hasOwnProperty('yourAnswer')) {
+        const yourAnswer = this.radios.filter(r => r[0] === result.yourAnswer);
+        this.yourAnswerString = yourAnswer.length > 0 ? yourAnswer[0][1] : '空';
       }
     }
   }
