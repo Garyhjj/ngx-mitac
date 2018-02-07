@@ -1,3 +1,4 @@
+import { UtilService } from './../../../../../core/services/util.service';
 import { QRComponent } from '../../../QR/QR.component';
 import { DataUpdateComponent } from './../../data-inputer/data-update/data-update.component';
 import { NzModalService } from 'ng-zorro-antd';
@@ -60,7 +61,8 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   constructor(
     private ref: ChangeDetectorRef,
     private dataDriveService: DataDriveService,
-    private modalService: NzModalService
+    private modalService: NzModalService,
+    private util: UtilService
   ) {
 
   }
@@ -131,7 +133,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
       if (!data[idx]) return;
       this.dataDriveService.deleteData(this._dataDrive, data[idx]).subscribe(r => {
         this.dataDriveService.updateViewData(this._dataDrive);
-      })
+      },(err) => this.util.errDeal(err));
     }
     this.modalService.confirm({
       title: '您確定要刪除這一條目嗎？',
