@@ -37,6 +37,12 @@
               <span>新增數據</span>
             </span>
           </li>
+          <li nz-menu-item *ngIf="dataDrive.additionalFn.filterColumn" (click)="changeMenuDetail('filterColumn')">
+            <span title>
+              <i class="anticon anticon-plus-circle-o"></i>
+              <span>挑選列</span>
+            </span>
+          </li>
           <li nz-menu-item *ngIf="dataDrive.additionalFn.fullScreen" (click)="showModal()">
             <span title>
               <i class="anticon anticon-play-circle-o"></i>
@@ -79,6 +85,8 @@
           <nz-slider nz-col [nzMin]="10" [nzMax]="60" [nzSpan]="12" [(ngModel)]="bodyFontSize" (nzOnAfterChange)="changeBodySize()"></nz-slider>
         </nz-row>
       </ng-container>
+
+      <app-filter-column [opts]="dataDrive" *ngIf="menuDetail === 'filterColumn'"></app-filter-column>
     </nz-col>
   </nz-row>
 </div>

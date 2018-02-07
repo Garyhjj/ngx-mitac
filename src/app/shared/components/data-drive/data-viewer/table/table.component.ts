@@ -72,7 +72,6 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     return this._dataDrive.isDataDeletable;
   }
   sort(name: string, v: string, by: { name: string, params: any[] }) {
-    console.log(name, v);
     const isAscend = v === 'ascend';
     this.tableData.data = this.tableData.data.sort((a: any, b: any) => {
       if (!isArray(a) || !isArray(b)) return 0;
@@ -330,7 +329,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
         bgColor?: string;
       }[];
 
-      const target = this._dataDrive.tableData.data && this._dataDrive.tableData.data[dataIdx];
+      const target = this.tableData.data && this.tableData.data[dataIdx];
       if (!(rules = body.rules) || !target) {
         return body[type];
       } else {
