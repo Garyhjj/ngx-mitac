@@ -1,4 +1,85 @@
 export const DataDriveStore = {
+    examResults: {
+        id: 6,
+        APIs: {
+            search: 'EXAM/GetExamResults?id={id}&date={date}'
+        },
+        additionalFn: {
+            filterColumn: true,
+            changeBodyFontSize: true,
+            changeHeaderFontSize: true,
+            menu: true,
+            toExcel: true
+        },
+        dataViewSet: {
+            title: '考試結果',
+        },
+        searchSets: [
+            {
+                property: '科目',
+                apiProperty: 'id',
+                InputOpts: {
+                    type: 'select',
+                    placeHolder: '請選擇科別',
+                    more: {
+                        lazyAPI: 'EXAM/GetExams?id=&title=&ref_dept={ref_dept}&code=&version=&company_id={company_id}',
+                        lazyParams: ['ID', 'TITLE'],
+                        lazyAPIUserMes: {
+                            ref_dept: '',
+                            company_id: 'COMPANY_ID'
+                        }
+                    }
+                }
+            },
+            {
+                property: 'IDATE',
+                apiProperty: 'date',
+                InputOpts: {
+                    type: 'datePicker',
+                    more: {
+                        pickerFormat: 'YYYY/MM/DD'
+                    }
+                }
+            },
+        ],
+        tableData: {
+            searchable: true,
+            columns: [
+                {
+                    property: 'EMPNO', value: '工號'
+                },
+                {
+                    property: 'NICK_NAME', value: '姓名'
+                },
+                {
+                    property: 'IDATE', value: '日期'
+                },
+                {
+                    property: 'TIME', value: '完成時間', more: {
+                        sortBy: {
+                            name: 'byTime'
+                        }
+                    }
+                },
+                {
+                    property: 'TITLE', value: '考試科別'
+                },
+                {
+                    property: 'RESULT', value: '分數', more: {
+                        sortBy: {
+                            name: 'byNumber'
+                        }
+                    }
+                },
+                {
+                    property: 'WRONG_QUESTION', value: '錯題代號'
+                },
+                {
+                    property: 'RESIT', value: '是否補考'
+                },
+            ]
+        }
+    },
     examMapping: {
         id: 5,
         APIs: {
@@ -13,7 +94,7 @@ export const DataDriveStore = {
             menu: true,
             toExcel: true,
             fullScreen: true,
-            switchViewType: ['exam','table']
+            switchViewType: ['exam', 'table']
         },
         dataViewSet: {
             title: '考卷内容',
@@ -269,9 +350,9 @@ export const DataDriveStore = {
                 },
                 {
                     property: 'REF_DEPT', value: '所屬部門'
-                    ,more:{
-                        pipe:{
-                            name:'lazyLoad',
+                    , more: {
+                        pipe: {
+                            name: 'lazyLoad',
                             parmas: ['GUID/GetDeptNameBySite?site=MSL']
                         }
                     }
@@ -283,14 +364,14 @@ export const DataDriveStore = {
                     property: 'VERSION', value: '版本'
                 },
                 {
-                    property: 'TIME', value: '考試時長(分鐘)',more: {
+                    property: 'TIME', value: '考試時長(分鐘)', more: {
                         sortBy: {
                             name: 'byNumber'
                         }
                     }
                 },
                 {
-                    property: 'PASS_SCORE', value: '及格分數(分)',more: {
+                    property: 'PASS_SCORE', value: '及格分數(分)', more: {
                         sortBy: {
                             name: 'byNumber'
                         }
@@ -443,6 +524,9 @@ export const DataDriveStore = {
                         pipe: {
                             name: 'replace',
                             parmas: [{ TF: '判斷題', RADIO: '單選題', CHECKBOX: '多選題' }]
+                        },
+                        sortBy: {
+                            name: 'byCharCode'
                         }
                     }
                 },

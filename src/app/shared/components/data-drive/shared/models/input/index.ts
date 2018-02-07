@@ -177,7 +177,9 @@ export class SelectInputSet implements InputSet {
     default?: string | boolean | number;
     more?: {
         options?: { property: string, value: string | number }[];
-        lazyAPI?: string
+        lazyAPI?: string,
+        lazyParams?: string[],
+        lazyAPIUserMes?: any;
     }
     constructor(opts?: InputSet) {
         opts && Object.assign(this, opts);

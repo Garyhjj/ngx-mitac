@@ -1,3 +1,4 @@
+import { NzModalService } from 'ng-zorro-antd';
 import { FormGroup } from '@angular/forms';
 import { isArray } from './../../../../utils/index';
 import { DataDrive } from './../../shared/models/index';
@@ -34,6 +35,7 @@ export class ExamPaperComponent implements OnInit {
       this.checkLeftTime();
     } else if (s === 4) {
       this.showResult();
+      clearTimeout(this.timeEvent)
     }
   }
   get status() {
@@ -54,7 +56,7 @@ export class ExamPaperComponent implements OnInit {
 
   @Output() getResult = new EventEmitter();
   lastMark;
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private confirmServ: NzModalService) { }
 
   ngOnInit() {
     if (this.opts) {
@@ -154,6 +156,12 @@ export class ExamPaperComponent implements OnInit {
       const secondString = second < 10 ? '0' + second : second;
       this.leftTime = `${minuteString}:${secondString}`;
       this.timeEvent = setTimeout(() => this.checkLeftTime(), 1000);
+    }else {
+      this.finish();
+      this.confirmServ.info({
+        title: '考試時間結束',
+        content: '已自動提交試卷'
+      });
     }
   }
 
@@ -188,6 +196,19 @@ export class ExamPaperComponent implements OnInit {
         return c;
       });
       this.alterContent(this.content);
+      setTimeout(() => {
+        if(this.lastMark < this._header.passScore) {
+          this.confirmServ.error({
+            title: `最後得分:  ${this.lastMark}`,
+            content: '考試不及格'
+          });
+        } else {
+          this.confirmServ.success({
+            title: `最後得分:  ${this.lastMark}`,
+            content: '考試通過'
+          });
+        }
+      }, 100);
     }
   }
 }

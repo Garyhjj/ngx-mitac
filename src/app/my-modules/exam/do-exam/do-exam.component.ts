@@ -1,3 +1,4 @@
+import { UtilService } from './../../../core/services/util.service';
 import { NzModalService } from 'ng-zorro-antd';
 import { ExamService, ExamResult } from './../shared/services/exam.service';
 import { Component, OnInit } from '@angular/core';
@@ -18,18 +19,19 @@ export class DoExamComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private examService: ExamService,
-    private confirmServ: NzModalService
+    private confirmServ: NzModalService,
+    private util: UtilService
   ) { }
 
   ngOnInit() {
     this.route.params.concatMap(params => this.examService.getExamHeader(params.id))
       .subscribe((d: any[]) => {
+        const goBack = () => this.router.navigate(['/']);
         if (d && d.length > 0 && (d[0].FLAG === 'Y')) {
           const header = d[0];
           this.examHeader = { title: header.TITLE, name: this.examService.user.NICK_NAME, time: header.TIME, passScore: header.PASS_SCORE };
           this.examService.getExamPaper(d[0].ID).subscribe(c => {
             const setContent = () => this.examContent = c;
-            const goBack = () => this.router.navigate(['/']);
             this.confirmServ.confirm({
               title: '考卷已準備好',
               content: '<b>是否馬上考試</b>',
@@ -42,8 +44,16 @@ export class DoExamComponent implements OnInit {
             });
 
           });
+        }else {
+          this.confirmServ.error({
+            title: '該考卷不可用！',
+            content: '請找管理員確認',
+            onOk() {
+              goBack();
+            },
+          });
         }
-      })
+      }, (err) => this.util.errDeal(err))
   }
 
 

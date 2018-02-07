@@ -10,6 +10,7 @@ import { ExamComponent } from './exam.component';
 import { ExamQuestionComponent } from './exam-question/exam-question.component';
 import { ExamUnitComponent } from './exam-unit/exam-unit.component';
 import { DoExamComponent } from './do-exam/do-exam.component';
+import { ExamResultComponent } from './exam-result/exam-result.component';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { DoExamComponent } from './do-exam/do-exam.component';
     ExamComponent,
     ExamQuestionComponent,
     ExamUnitComponent,
-    DoExamComponent
+    DoExamComponent,
+    ExamResultComponent
 ],
   providers: [ExamService, ExamGuard]
 })

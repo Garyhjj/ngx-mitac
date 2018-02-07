@@ -25,6 +25,8 @@
               [myPlaceHolder]="inputTypeList[i].placeHolder"
               [options]="inputTypeList[i]?.more?.options"
               [lazyAPI]="inputTypeList[i]?.more?.lazyAPI"
+              [lazyParams]="inputTypeList[i]?.more?.lazyParams"
+              [lazyAPIUserMes]="inputTypeList[i]?.more?.lazyAPIUserMes"
               ></app-mx-select>
 
               <app-mx-checkbox [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'checkbox'"

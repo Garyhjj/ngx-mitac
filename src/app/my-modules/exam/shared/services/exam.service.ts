@@ -48,7 +48,7 @@ export class ExamService {
     }
 
     updateExamResult(res: ExamResult) {
-        const add = {COMPANY_ID: this.user.COMPANY_ID, USER_ID: this.user.USER_NAME};
+        const add = {COMPANY_ID: this.user.COMPANY_ID, USER_ID: this.user.ID};
         Object.assign(res, add);
         return this.http.post(examConfig.updateExamResult, res);
     }

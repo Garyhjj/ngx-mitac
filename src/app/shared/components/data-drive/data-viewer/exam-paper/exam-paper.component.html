@@ -1,5 +1,5 @@
 <div class="exam-title">{{_header.title}}</div>
-<nz-alert [nzType]="'info'">
+<nz-alert [nzType]="'info'" class="exam-header">
   <nz-row alert-body [nzType]="'flex'" [nzJustify]="'space-around'">
     <nz-col>
       <span>姓名：{{_header.name}}</span>
@@ -12,10 +12,10 @@
     </nz-col>
     <nz-col *ngIf="status === 3">
       剩餘時間：
-      <span>{{leftTime}}</span>
+      <span class="left-time">{{leftTime}}</span>
     </nz-col>
     <nz-col *ngIf="status === 4">
-      <span>得分：{{lastMark}}</span>
+      得分：<span [style.color]="lastMark < _header.passScore? 'red': 'green'" [style.fontSize.rem]="2.0">{{lastMark}}</span>
     </nz-col>
   </nz-row>
 </nz-alert>

@@ -49,7 +49,7 @@ export class ExamUnitComponent implements OnInit {
   }
 
   alterHeaderByRole() {
-    if(this.examService.role === 3) {
+    if(this.examService.role === 2) {
       const depNo = this.auth.user.DEPTNO;
       this.headerDataDrive.updateSets = this.headerDataDrive.updateSets.filter(c => c.property !== 'REF_DEPT');
       this.headerDataDrive.onUpdateFormShow((fg) => {

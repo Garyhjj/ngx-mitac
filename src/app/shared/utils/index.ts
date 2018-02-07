@@ -38,7 +38,7 @@ export const throttle = (method: any, context: Object, args: any[] = [], during:
 export const replaceQuery = (url: string, query: any) => {
   if (url && query) {
     for (let prop in query) {
-      url = url.replace(`{${prop}}`, query[prop] ? query[prop] : '')
+      url = url.replace(`{${prop}}`, query[prop] || query[prop] ===0 ? query[prop] : '')
     }
     url = url.replace(/\{\w+\}/g, '');
   }
@@ -68,9 +68,16 @@ export const sortUtils = {
     const res = toDateA.toDate().getTime() - toDateB.toDate().getTime();
     return isAscend ? res : -res;
   },
+  byTime: (a: string, b: string, isAscend = true, format: string = 'HH:mm:ss') => {
+    const toDateA = moment('2018-01-01T '+ a, 'YYYY-MM-DDT ' + format);
+    const toDateB = moment('2018-01-01T '+ b, 'YYYY-MM-DDT ' + format)
+    if (!toDateA.isValid() || !toDateB.isValid()) return 0;
+    const res = toDateA.toDate().getTime() - toDateB.toDate().getTime();
+    return isAscend ? res : -res;
+  },
   byNumber: (a: number, b: number, isAscend = true) => {
-    if(!isNumber(a) || !isNumber(b)) return 0;
-    const res = Number(a) -Number(b);
+    if (!isNumber(a) || !isNumber(b)) return 0;
+    const res = Number(a) - Number(b);
     return isAscend ? res : -res;
   }
 }

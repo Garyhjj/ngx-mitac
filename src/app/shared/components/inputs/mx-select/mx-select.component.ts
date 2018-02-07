@@ -1,7 +1,8 @@
+import { isArray } from './../../../utils/index';
 import { Component, OnInit, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { isArray } from '../../../utils';
 import { DataDriveService } from '../../data-drive/core/services/data-drive.service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-mx-select',
@@ -27,10 +28,13 @@ export class MxSelectComponent implements OnInit {
     }
   }
   @Input() myPlaceHolder;
-  @Input() lazyAPI;
+  @Input() lazyAPI: string;
+  @Input() lazyParams: string[];
+  @Input() lazyAPIUserMes;
 
   constructor(
-    private dataDriveService: DataDriveService
+    private dataDriveService: DataDriveService,
+    private auth: AuthService
   ) { }
 
   /**
@@ -69,6 +73,14 @@ export class MxSelectComponent implements OnInit {
 
   lazyLoad() {
     if (this.lazyAPI) {
+      const lazyAPIUserMes = this.lazyAPIUserMes;
+      if (typeof lazyAPIUserMes === 'object') {
+        const user = this.auth.user;
+        for (let prop in lazyAPIUserMes) {
+          const replaceMes = user[lazyAPIUserMes[prop]]
+          this.lazyAPI = this.lazyAPI.replace(`{${prop}}`, replaceMes ? replaceMes : '');
+        }
+      }
       this.dataDriveService.lazyLoad(this.lazyAPI).subscribe((r: any[]) => {
         if (isArray(r)) {
           this._options = r.filter(f => f).map(d => {
@@ -78,7 +90,15 @@ export class MxSelectComponent implements OnInit {
               } else if (d.length > 1) {
                 return { property: d[0], value: d[1] }
               }
-            }else if (typeof d === 'object') {
+            } else if (typeof d === 'object') {
+              const params = this.lazyParams;
+              if (isArray(params)) {
+                if (params.length === 1) {
+                  return { property: params[0], value: params[0] }
+                } else if (d.length > 1) {
+                  return { property: params[0], value: params[1] }
+                }
+              }
               const keys = Object.keys(d);
               if (keys.length === 1) {
                 return { property: d[keys[0]], value: d[keys[0]] }

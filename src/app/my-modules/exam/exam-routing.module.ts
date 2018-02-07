@@ -6,6 +6,7 @@ import { ExamComponent } from './exam.component';
 import { ExamQuestionComponent } from './exam-question/exam-question.component';
 import { ExamUnitComponent } from './exam-unit/exam-unit.component';
 import { DoExamComponent } from './do-exam/do-exam.component';
+import { ExamResultComponent } from './exam-result/exam-result.component';
 
 
 const bRoutes: Routes = [
@@ -28,6 +29,11 @@ const bRoutes: Routes = [
             {
                 path: 'do/:id',
                 component: DoExamComponent
+            },
+            {
+                canActivate: [ExamGuard],
+                path: 'result',
+                component: ExamResultComponent
             }
         ]
     }
