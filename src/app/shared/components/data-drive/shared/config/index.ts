@@ -1,4 +1,6 @@
+import { esdConfig } from './esd.config';
 export const DataDriveStore = {
+    esd: esdConfig,
     examResults: {
         id: 6,
         APIs: {
@@ -228,7 +230,7 @@ export const DataDriveStore = {
                 },
                 linkToPhone: {
                     name: '考試連接',
-                    url: 'http://10.86.16.74:8100/#/exam?examId={ID}',
+                    url: 'http://218.13.31.15:8881/#/exam?examId={ID}',
                     local: '/exam/do/{ID}'
                 }
             }

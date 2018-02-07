@@ -4,6 +4,7 @@ import { AuthGuard } from './../../route/auth-guard.service';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { UrgentMaterialComponent } from './urgent-material/urgent-material.component';
+import { EsdComponent } from './esd/esd.component';
 
 
 const bRoutes: Routes = [
@@ -20,6 +21,10 @@ const bRoutes: Routes = [
             {
                 path: 'urgentNo',
                 component: UrgentNoComponent
+            },
+            {
+                path: 'esd',
+                component: EsdComponent
             }
         ]
     }

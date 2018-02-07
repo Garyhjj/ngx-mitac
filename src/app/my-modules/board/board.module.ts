@@ -6,13 +6,15 @@ import { CommonModule } from '@angular/common';
 import { BoardRoutingModule } from './board-routing.module';
 import { UrgentMaterialComponent } from './urgent-material/urgent-material.component';
 import { UrgentNoComponent } from './urgent-no/urgent-no.component';
+import { EsdComponent } from './esd/esd.component';
 
 @NgModule({
   imports: [CommonModule, BoardRoutingModule, SharedModule, DataDriveModule],
   declarations: [
     BoardComponent,
     UrgentMaterialComponent,
-    UrgentNoComponent
+    UrgentNoComponent,
+    EsdComponent
 ],
   providers: []
 })
