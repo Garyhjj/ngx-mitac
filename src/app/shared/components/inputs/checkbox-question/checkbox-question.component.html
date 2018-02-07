@@ -1,6 +1,6 @@
 <div>
-  <div class="title" [style.fontSize]="fontSize" *ngIf="!result || result.trueAnswer === result.yourAnswer">{{titlePrefix}}{{title}}</div>
-  <nz-alert [nzType]="'error'" *ngIf="result && result.trueAnswer !== result.yourAnswer">
+  <div class="title" [style.fontSize]="fontSize" *ngIf="!result || isTrueAnswer()">{{titlePrefix}}{{title}}</div>
+  <nz-alert [nzType]="'error'" *ngIf="result && !isTrueAnswer()">
     <span alert-body [style.fontSize]="fontSize">
       {{titlePrefix}}{{title}} ({{'提交答案: ' + yourAnswerString }})
     </span>

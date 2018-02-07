@@ -209,8 +209,9 @@ export const DataDriveStore = {
                     name: '配置考卷'
                 },
                 linkToPhone: {
-                    name: '手機版考試',
-                    url: 'http://10.86.16.74:8100/#/exam?examId={ID}'
+                    name: '考試連接',
+                    url: 'http://10.86.16.74:8100/#/exam?examId={ID}',
+                    local: '/exam/do/{ID}'
                 }
             }
         },

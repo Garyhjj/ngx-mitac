@@ -9,7 +9,7 @@ import { replaceQuery } from '../../../../shared/utils';
 export class ExamService {
 
     user: UserState;
-    role: number = 1;
+    role: number = 3;
     constructor(
         private http: HttpClient,
         private auth: AuthService

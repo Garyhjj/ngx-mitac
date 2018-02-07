@@ -48,7 +48,8 @@ export interface TabelViewSetMore {
     };
     linkToPhone?: {
         name: string,
-        url: string
+        url: string,
+        local?: string
     }
 }
 export class TabelViewSet implements DataViewSet {

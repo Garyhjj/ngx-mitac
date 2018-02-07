@@ -103,12 +103,31 @@ export class CheckboxQuestionComponent implements OnInit, AfterViewInit {
             c.checked = false;
           }
           if (yourAnswer.indexOf(c.value) > -1) {
-            this.yourAnswerString += this.yourAnswerString ? '; ' + c.label : c.label;
+            this.yourAnswerString += this.yourAnswerString ? '; ' + c.value : c.value;
           }
           return c;
         });
       }
     }
+  }
+
+  isTrueAnswer() {
+    const result = this.result;
+    if (result) {
+      if (result.hasOwnProperty('trueAnswer')) {
+        const trueAnswer: string[] = result.trueAnswer ? result.trueAnswer.split(',') : [];
+        let yourAnswer = [];
+        if (result.hasOwnProperty('yourAnswer')) {
+          yourAnswer = result.yourAnswer ? result.yourAnswer.split(',') : [];
+        }
+        if(yourAnswer.length === trueAnswer.length) {
+          if(new Set([...trueAnswer,...yourAnswer]).size === trueAnswer.length) {
+            return true
+          }
+        }
+      }
+    }
+    return false
   }
 
 }

@@ -2,15 +2,16 @@ import { NzModalService } from 'ng-zorro-antd';
 import { FormGroup } from '@angular/forms';
 import { isArray } from './../../../../utils/index';
 import { DataDrive } from './../../shared/models/index';
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { AuthService } from '../../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-exam-paper',
   templateUrl: './exam-paper.component.html',
   styleUrls: ['./exam-paper.component.css']
 })
-export class ExamPaperComponent implements OnInit {
+export class ExamPaperComponent implements OnInit, OnDestroy {
 
   @Input() opts: DataDrive;
 
@@ -51,14 +52,15 @@ export class ExamPaperComponent implements OnInit {
   subTitlePrefixs = ['一', '二', '三', '四'];
   markSets: any = {};
   timeEvent;
-
+  timeEvent2
   myForm: FormGroup
 
   @Output() getResult = new EventEmitter();
   lastMark;
-  constructor(private fb: FormBuilder, private confirmServ: NzModalService) { }
+  constructor(private fb: FormBuilder, private confirmServ: NzModalService, private auth: AuthService) { }
 
   ngOnInit() {
+    this.keepLogin();
     if (this.opts) {
       this.status = 1;
       this.opts.afterDataInit(() => {
@@ -80,6 +82,11 @@ export class ExamPaperComponent implements OnInit {
       }
     }
     this.subTitlePrefixs = ['一', '二', '三', '四'];
+  }
+
+  ngOnDestroy() {
+    clearTimeout(this.timeEvent);
+    clearTimeout(this.timeEvent2);
   }
 
   initForm(q: { ID: number }[]) {
@@ -126,7 +133,7 @@ export class ExamPaperComponent implements OnInit {
         const pre = 'OPTION_';
         ['A', 'B', 'C', 'D', 'E'].forEach(b => {
           const val = c[pre + b];
-          val && c.optionList.push([b, val]);
+          val && c.optionList.push([b, b+'、 '+ val]);
         });
       }
       return c;
@@ -138,12 +145,19 @@ export class ExamPaperComponent implements OnInit {
         const pre = 'OPTION_';
         ['A', 'B', 'C', 'D', 'E'].forEach(b => {
           const val = c[pre + b];
-          val && c.optionList.push({ label: val, value: b, checked: false });
+          val && c.optionList.push({ label: b+'、 '+ val, value: b, checked: false });
         });
       }
       return c;
     });
     alter('checkbox');
+  }
+
+  keepLogin() {
+    if(this.status === 3) {
+      this.auth.updateToken();
+    }
+    this.timeEvent2 = setTimeout(() => this.keepLogin(), 60*1000);
   }
 
   checkLeftTime() {
@@ -169,7 +183,17 @@ export class ExamPaperComponent implements OnInit {
     const val = this.myForm.value;
     this.lastMark = 0;
     const answerList = this.content.map(c => {
-      if (c.RIGHT_ANSWER === val[c.ID]) {
+      if(c.TYPE === 'CHECKBOX') {
+        const yourAnswer = val[c.ID] || '';
+        const trueAnswer = c.RIGHT_ANSWER || '';
+        const list1 = yourAnswer.split(',') || [];
+        const list2 = trueAnswer.split(',') || [];
+        if(list1.length === list2.length) {
+          if(new Set([...list1,...list2]).size === list2.length) {
+            this.lastMark += +c.SCORE || 0;
+          }
+        }
+      }else if (c.RIGHT_ANSWER === val[c.ID]) {
         this.lastMark += +c.SCORE || 0;
       }
       return {
@@ -178,7 +202,6 @@ export class ExamPaperComponent implements OnInit {
         ANSWERS: val[c.ID]
       }
     })
-    console.log(this.myForm.value);
     this.getResult.emit({
       answerList,
       lastMark: this.lastMark

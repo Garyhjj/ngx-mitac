@@ -83,7 +83,7 @@ export class ExamUnitComponent implements OnInit {
       this.examService.UpdateMapping(send).subscribe(a => {
         console.log(a);
         this.dataDriveService.updateViewData(this.contentDataDrive);
-      })
+      }, (err) =>  this.util.errDeal(err))
     })
   }
 

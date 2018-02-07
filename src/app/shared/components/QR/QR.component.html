@@ -1,6 +1,7 @@
 <div class="container">
   <div class="qrcode">
     <img [src]="imgUrl" alt="">
-    <div><a [href]="url" target="_blank">瀏覽器打開</a></div>
+    <div [style.marginTop]="'10px'"><a [href]="url" target="_blank">瀏覽器打開</a></div>
+    <div *ngIf="router" [style.marginTop]="'10px'"><a  (click)="getUrl()">獲取電腦版考試連接</a></div>
   </div>
 </div>

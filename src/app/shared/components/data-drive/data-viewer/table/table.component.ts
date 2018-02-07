@@ -150,7 +150,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     idx = this.calIdx(idx);
     if (!this._dataDrive.isDataAddable()) return false;
     const subscription = this.modalService.open({
-      title: '新增',
+      title: '更新',
       content: DataUpdateComponent,
       onOk() {
       },
@@ -261,7 +261,9 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     return false;
   }
 
-  linkToPhone(url: string, idx: number) {
+  linkToPhone(params: {url:string, local:string}, idx: number) {
+    let url = params.url;
+    let router = params.local;
     if (typeof url === 'string') {
       idx = this.calIdx(idx);
       const data = this._dataDrive.getData()[idx];
@@ -270,7 +272,12 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
         const target = data.find(d => d.property === RegExp.$2);
         url = url.replace(new RegExp(RegExp.$1,'g'),target? target.value: '');
       }
-      console.log(url);
+      if(typeof router === 'string') {
+        while(reg.exec(router)) {
+          const target = data.find(d => d.property === RegExp.$2);
+          router = router.replace(new RegExp(RegExp.$1,'g'),target? target.value: '');
+        }
+      }
       const subscription = this.modalService.open({
         title          : '鏈接二維碼',
         content        : QRComponent,
@@ -281,7 +288,8 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
         },
         footer         : false,
         componentParams: {
-          url: url
+          url: url,
+          router: router
         }
       });
       subscription.subscribe(result => {

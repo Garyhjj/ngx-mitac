@@ -81,7 +81,7 @@ export class RadioQuestionComponent implements OnInit {
       }
       if (result.hasOwnProperty('yourAnswer')) {
         const yourAnswer = this.radios.filter(r => r[0] === result.yourAnswer);
-        this.yourAnswerString = yourAnswer.length > 0 ? yourAnswer[0][1] : '空';
+        this.yourAnswerString = yourAnswer.length > 0 ? yourAnswer[0][0] : '空';
       }
     }
   }

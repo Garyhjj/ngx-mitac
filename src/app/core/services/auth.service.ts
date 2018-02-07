@@ -15,6 +15,7 @@ import 'rxjs/add/operator/do';
 
 import { BehaviorSubject } from 'rxjs/Rx';
 import { replaceQuery, isArray } from '../../shared/utils/index';
+import { UtilService } from './util.service';
 
 @Injectable()
 export class AuthService {
@@ -28,7 +29,8 @@ export class AuthService {
     constructor(
         private http: HttpClient,
         private encryptUtilService: EncryptUtilService,
-        private store$: Store<myStore>
+        private store$: Store<myStore>,
+        private util: UtilService
     ) {
         this.updateAuth(this.checkAuth());
         reqObserve.subscribe((a) => this.updateToken());
@@ -70,7 +72,7 @@ export class AuthService {
                 const send = { moduleID: '' };
                 this.http.get(replaceQuery(APIGlobalConfig.getSelfPrivilege, send)).subscribe((p: Privilege[])=> {
                     this.store$.dispatch(new User_Update_Privilege(p));
-                });
+                }, (err) => this.util.errDeal(err));
             }
         })
     }

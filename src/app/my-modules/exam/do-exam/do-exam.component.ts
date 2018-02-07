@@ -75,9 +75,8 @@ export class DoExamComponent implements OnInit {
           return a;
         })
         return this.examService.updateExamAnswer(answerList)}).subscribe(res => {
-        console.log(res);
         this.status = 4;
-      })
+      }, (err) => this.util.errDeal(err))
     }
     
   }
