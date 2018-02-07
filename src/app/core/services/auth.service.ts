@@ -1,7 +1,8 @@
+import { APIGlobalConfig } from './../../shared/config/api-global.config';
 import { reqObserve } from './../interceptors/http-header.interceptor';
-import { User_Login } from './../actions/user.action';
+import { User_Login, User_Update_Privilege } from './../actions/user.action';
 import { Store } from '@ngrx/store';
-import { UserState, myStore } from './../store';
+import { UserState, myStore, Privilege } from './../store';
 import { EncryptUtilService } from './encryptUtil.service';
 import { LoginConfig } from './../../login/shared/config/login.config';
 import { Injectable } from '@angular/core';
@@ -13,6 +14,7 @@ import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/do';
 
 import { BehaviorSubject } from 'rxjs/Rx';
+import { replaceQuery, isArray } from '../../shared/utils/index';
 
 @Injectable()
 export class AuthService {
@@ -21,16 +23,17 @@ export class AuthService {
     authSubject = new BehaviorSubject<boolean>(false);
     tokenStoreName: string = 'tokenMes';
     loginPageSubject = new BehaviorSubject<boolean>(false);
-    user:UserState;
-    tokenEffectTime: number = 1000*60*20;
+    user: UserState;
+    tokenEffectTime: number = 1000 * 60 * 20;
     constructor(
         private http: HttpClient,
         private encryptUtilService: EncryptUtilService,
         private store$: Store<myStore>
-    ) { 
+    ) {
         this.updateAuth(this.checkAuth());
         reqObserve.subscribe((a) => this.updateToken());
         this.store$.select(s => s.userReducer).subscribe(u => this.user = u);
+        this.getSelfPrivilege();
     }
 
     login(data: any) {
@@ -42,7 +45,7 @@ export class AuthService {
             user.rememberPWD = data.remember;
             let expires = d.Expires;
             this.tokenEffectTime = expires - new Date().getTime();
-            this.updateTokenMes(expires,d.Token);
+            this.updateTokenMes(expires, d.Token);
             this.auth = true;
             this.updateAuth(true);
             this.store$.dispatch(new User_Login(user));
@@ -51,14 +54,33 @@ export class AuthService {
 
     updateToken() {
         let tokenMes = this.getTokenMes();
-        if(tokenMes) {
+        if (tokenMes) {
             let expires = tokenMes.expires;
             let time = new Date().getTime();
-            if((expires > time) && expires < time + this.tokenEffectTime*0.5) {
+            if ((expires > time) && expires < time + this.tokenEffectTime * 0.5) {
                 let user = this.user;
-                this.login({userName:user.USER_NAME,password:user.password,remember:user.rememberPWD}).subscribe();
+                this.login({ userName: user.USER_NAME, password: user.password, remember: user.rememberPWD }).subscribe();
             }
         }
+    }
+
+    getSelfPrivilege() {
+        this.authSubject.subscribe((a) => {
+            if (a) {
+                const send = { moduleID: '' };
+                this.http.get(replaceQuery(APIGlobalConfig.getSelfPrivilege, send)).subscribe((p: Privilege[])=> {
+                    this.store$.dispatch(new User_Update_Privilege(p));
+                });
+            }
+        })
+    }
+
+    hasPrivilege(module: string, fn: string) {
+        const privilege = this.user.privilege;
+        if(isArray(privilege)) {
+            return !! privilege.filter(m => m.ROLE_NAME.indexOf(module) > -1).find(p => p.FUNCTION_URL === fn);
+        }
+        return false;
     }
 
     checkAuth() {
@@ -66,16 +88,16 @@ export class AuthService {
         // return tokenMes && (tokenMes.expires> new Date().getTime());
         return true;
     }
-    updateTokenMes(expires:number, token:string) {
-        let tokenMes: TokenMes ={expires, token};
+    updateTokenMes(expires: number, token: string) {
+        let tokenMes: TokenMes = { expires, token };
         localStorage.setItem(this.tokenStoreName, JSON.stringify(tokenMes));
     }
 
     getTokenMes() {
         let tokenStr = localStorage.getItem(this.tokenStoreName);
-        if(tokenStr) {
-            let tokenMes:TokenMes = JSON.parse(tokenStr);
-            if(typeof tokenMes === 'object') {
+        if (tokenStr) {
+            let tokenMes: TokenMes = JSON.parse(tokenStr);
+            if (typeof tokenMes === 'object') {
                 return tokenMes;
             }
         }
@@ -92,7 +114,7 @@ export class AuthService {
         return { userName: enUsername, password: enPassword };
     }
 
-    updateAuth(auth:boolean) {
+    updateAuth(auth: boolean) {
         this.authSubject.next(auth);
     }
 }

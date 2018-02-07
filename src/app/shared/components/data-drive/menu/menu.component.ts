@@ -1,8 +1,9 @@
 import { DataUpdateComponent } from './../data-inputer/data-update/data-update.component';
-import { DataDrive } from './../shared/models/index';
+import { DataDrive, DataViewType } from './../shared/models/index';
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { DataDriveService } from '../core/services/data-drive.service';
+import { isArray } from '../../../utils/index';
 
 @Component({
   selector: 'app-menu',
@@ -18,6 +19,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   bodyFontSize = 16;
   viewerType: string;
   menuDetail: string;
+  currentViewIdx = -1;
   @Input()
   set opts(opts: DataDrive) {
     this.dataDrive = opts;
@@ -57,6 +59,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   addItem() {
+    if(!this.dataDrive.isDataAddable()) return;
     const subscription = this.modalService.open({
       title          : '新增',
       content        : DataUpdateComponent,
@@ -82,6 +85,21 @@ export class MenuComponent implements OnInit, OnDestroy {
       window.addEventListener('keydown',
         this.attachFn = (e) => e.keyCode === 27 && (this.dataDrive.modalSataus = this.isShowModal = false));
     }
+  }
+
+  switchViewType(type:DataViewType[]) {
+    if(!isArray(type)) return;
+    if(this.currentViewIdx < 0) {
+      this.currentViewIdx = type.findIndex(t => t == this.dataDrive.dataViewSet.type);
+    }
+    if(this.currentViewIdx < 0) {
+      this.currentViewIdx = 0;
+    }
+    this.currentViewIdx++;
+    if(this.currentViewIdx > type.length-1) {
+      this.currentViewIdx = 0;
+    }
+    this.dataDrive.switchViewType(type[this.currentViewIdx])
   }
 
   toExcel() {

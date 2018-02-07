@@ -40,6 +40,5 @@ export interface MyModule {
 }
 
 export interface Privilege {
-    moduleID:number;
-    function:{FUNCTION_ID:string,FUNCTION_NAME:string,FUNCTION_URL:string,ROLE_ID:number,ROLE_NAME:string}[];
+    FUNCTION_ID:string,FUNCTION_NAME:string,FUNCTION_URL:string,ROLE_ID:number,ROLE_NAME:string;
 }

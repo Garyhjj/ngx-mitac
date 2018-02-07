@@ -1,0 +1,15 @@
+.align-right {
+    text-align: right;
+    margin-bottom: 10px;
+}
+
+.middle-padding {
+    width: 3%;
+    margin-right: 1%;
+    height: 100vh;
+    background-color: #ececec;
+    text-align: center;
+}
+.hide {
+    display: none;
+}

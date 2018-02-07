@@ -55,6 +55,12 @@
               <span>字體大小</span>
             </span>
           </li>
+          <li nz-menu-item *ngIf="dataDrive.additionalFn.switchViewType" (click)="switchViewType(dataDrive.additionalFn.switchViewType)">
+            <span title>
+              <i class="anticon anticon-setting"></i>
+              <span>切換視圖類型</span>
+            </span>
+          </li>
         </ul>
       </div>
     </nz-col>

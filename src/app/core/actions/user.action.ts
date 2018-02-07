@@ -36,8 +36,8 @@ export class User_Update_modules implements Action {
 
 export class User_Update_Privilege implements Action {
   readonly type = USER_UPDATE_PRIVILEGE;
-  payload: Privilege;
-  constructor(token: Privilege) {
+  payload: Privilege[];
+  constructor(token: Privilege[]) {
     this.payload = token;
   }
 }

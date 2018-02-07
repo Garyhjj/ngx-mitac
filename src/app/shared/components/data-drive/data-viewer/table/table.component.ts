@@ -1,9 +1,13 @@
+import { QRComponent } from '../../../QR/QR.component';
+import { DataUpdateComponent } from './../../data-inputer/data-update/data-update.component';
+import { NzModalService } from 'ng-zorro-antd';
+import { DataDriveService } from './../../core/services/data-drive.service';
 import { TabelViewSetMore, TabelViewSet } from './../../../data-drive/shared/models/viewer/table';
 import { Subscription } from 'rxjs/Rx';
 import { TableData } from '../../../data-drive/shared/models/index';
 import { Component, OnInit, Input, AfterViewInit, OnDestroy, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { DataDrive } from '../../../data-drive/shared/models/index';
-import { throttle } from '../../../../utils/index';
+import { throttle, isArray, sortUtils } from '../../../../utils/index';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
@@ -25,13 +29,18 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   private sub1: Subscription;
   private sub2: Subscription;
   private sub3: Subscription;
+  private pipes: any = {};
   @Input()
   set opts(opts: DataDrive) {
     this.tableSet = opts.dataViewSet as TabelViewSet;
+    this.calAdditionalColNum();
     this.setDetail = this.tableSet.more;
     this.tableData = Object.assign({}, opts.tableData);
     this.tableData.data = [];
     this._dataDrive = opts;
+    this.pageCount = this.setDetail.pageSet.count;
+    this.getPipes();
+    this.bindTableData();
     this.subjectHideList();
     this.subjectIsGettingData();
   }
@@ -44,9 +53,38 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   _scrollInterval: number;
   _loopScroll: boolean;
 
+  additionalColNum = 0;
   styleCache = new StyleCache();
-  constructor(private ref: ChangeDetectorRef) {
+  pageIndex;
+  pageCount;
+  constructor(
+    private ref: ChangeDetectorRef,
+    private dataDriveService: DataDriveService,
+    private modalService: NzModalService
+  ) {
 
+  }
+
+  get canEdit() {
+    return this._dataDrive.isDataAddable;
+  }
+  get canDelete() {
+    return this._dataDrive.isDataDeletable;
+  }
+  sort(name: string, v: string, by: { name: string, params: any[] }) {
+    console.log(name, v);
+    const isAscend = v === 'ascend';
+    this.tableData.data = this.tableData.data.sort((a: any, b: any) => {
+      if (!isArray(a) || !isArray(b)) return 0;
+      const target_a = a.find(p => p.property === name).value || '';
+      const target_b = b.find(p => p.property === name).value || '';
+      const a_value = target_a || target_a.value || '';
+      const b_value = target_b || target_b.value || '';
+      if (typeof by !== 'object') return 0;
+      const byWhat = sortUtils[by.name];
+      const params = by.params || [];
+      return typeof byWhat === 'function' ? byWhat(a_value, b_value, isAscend, ...params) : 0;
+    }).slice();
   }
 
   cacalScrollHeight() {
@@ -73,6 +111,71 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     }
   }
 
+  bindTableData() {
+    this._dataDrive.afterDataInit(() => {
+      // this.tableData.data = this._dataDrive.tableData.data;
+      this.updateFilterColumns();
+    })
+  }
+
+  getPipes() {
+    this._dataDrive.tableData.columns.filter(c => c.more && c.more.pipe).forEach(f => {
+      this.pipes[f.property] = f.more.pipe;
+    })
+  }
+
+  toDelete(idx) {
+    if (!this.canDelete) return;
+    idx = this.calIdx(idx);
+    const deleteFn = () => {
+      const data = this._dataDrive.getData();
+      if (!data[idx]) return;
+      this.dataDriveService.deleteData(this._dataDrive, data[idx]).subscribe(r => {
+        this.dataDriveService.updateViewData(this._dataDrive);
+      })
+    }
+    this.modalService.confirm({
+      title: '您確定要刪除這一條目嗎？',
+      onOk() {
+        deleteFn()
+      },
+      onCancel() {
+      }
+    });
+    return false;
+  }
+
+  toUpdate(idx) {
+    if (!this.canEdit) return;
+    idx = this.calIdx(idx);
+    if (!this._dataDrive.isDataAddable()) return false;
+    const subscription = this.modalService.open({
+      title: '新增',
+      content: DataUpdateComponent,
+      onOk() {
+      },
+      onCancel() {
+
+      },
+      footer: false,
+      componentParams: {
+        opts: this._dataDrive,
+        changeIdx: idx
+      }
+    });
+    subscription.subscribe(result => {
+      // console.log(result);
+    })
+    return false;
+  }
+
+  calAdditionalColNum() {
+    this.additionalColNum = 0;
+    if (this.tableSet.more && this.tableSet.more.showAction) {
+      this.additionalColNum++;
+    }
+  }
+
   subjectIsGettingData() {
     this.sub2 && this.sub2.unsubscribe();
     this.sub2 = this._dataDrive.observeIsGettingData().subscribe(s => {
@@ -88,7 +191,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     const filter = c => ls.indexOf(c.property) < 0;
     const filterColumns = this._dataDrive.tableData.columns.slice().filter(filter);
     const originData = this._dataDrive.tableData.data && this._dataDrive.tableData.data.slice();
-    let filterData;
+    let filterData = [];
     if (originData && originData.length > 0) {
       filterData = originData.map((trs) => trs.filter(filter));
     }
@@ -96,11 +199,15 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     if (filterData) {
       this.tableData.data = filterData;
     }
-    this.ref.detectChanges();
+    try {
+      this.ref.detectChanges();
+    } catch (err) {
+    }
   }
   dataChange() {
     setTimeout(() => this.initAutoScroll(), 50);
   }
+
   initAutoScroll() {
     let autoScroll;
     if (this.setDetail && this.setDetail.fixedHeader && (autoScroll = this.setDetail.fixedHeader.autoScroll)) {
@@ -131,6 +238,62 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
 
   }
 
+  paramsOut(p: string[], idx: number) {
+    idx = this.calIdx(idx);
+    const data = this._dataDrive.getData()[idx];
+    if (isArray(p)) {
+      if (data) {
+        const out: any = {};
+        data.forEach(d => {
+          if (p.indexOf(d.property) > -1) {
+            out[d.property] = d.value;
+          }
+        })
+        this._dataDrive.emitParamsOut(out);
+      }
+    } else {
+      const out: any = {};
+      data.forEach(d => {
+        out[d.property] = d.value;
+      })
+      this._dataDrive.emitParamsOut(out);
+    }
+    return false;
+  }
+
+  linkToPhone(url: string, idx: number) {
+    if (typeof url === 'string') {
+      idx = this.calIdx(idx);
+      const data = this._dataDrive.getData()[idx];
+      const reg = /(\{(\w+)\})/;
+      while(reg.exec(url)) {
+        const target = data.find(d => d.property === RegExp.$2);
+        url = url.replace(new RegExp(RegExp.$1,'g'),target? target.value: '');
+      }
+      console.log(url);
+      const subscription = this.modalService.open({
+        title          : '鏈接二維碼',
+        content        : QRComponent,
+        onOk() {
+        },
+        onCancel() {
+  
+        },
+        footer         : false,
+        componentParams: {
+          url: url
+        }
+      });
+      subscription.subscribe(result => {
+        // console.log(result);
+      })
+    }
+  }
+
+  calIdx(idx) {
+    return (this.pageIndex - 1) * this.pageCount + idx;
+  }
+
   runRegExp(dataIdx: number, body: {
     textColor?: string;
     textSize?: string;
@@ -143,12 +306,12 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     }[]
   }, type: string) {
     const cache = this.styleCache;
-    if(cache.idx === dataIdx) {
+    if (cache.idx === dataIdx) {
       const styeCache = cache.getCache(type);
-      if(styeCache) {
+      if (styeCache) {
         return styeCache;
       }
-    }else {
+    } else {
       cache.reset(dataIdx);
     }
     const test = () => {
@@ -158,7 +321,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
         textSize?: string;
         bgColor?: string;
       }[];
-      
+
       const target = this._dataDrive.tableData.data && this._dataDrive.tableData.data[dataIdx];
       if (!(rules = body.rules) || !target) {
         return body[type];
@@ -200,7 +363,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     const res = test();
     cache.setCache(type, res);
     return res;
-    
+
   }
   clearTimeEvent() {
     clearTimeout(this.timeEvent1);
@@ -221,6 +384,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     if (!this.isModal) {
       this.sub3 = this._dataDrive.observeIsShowModal().subscribe(s => this.canScroll = !s);
     }
+    this.updateFilterColumns();
   }
 
   ngOnDestroy() {
@@ -246,7 +410,7 @@ class StyleCache {
 
   }
 
-  reset(idx:number) {
+  reset(idx: number) {
     this.idx = idx;
     this.bgColor = '';
     this.textSize = '';
@@ -254,7 +418,7 @@ class StyleCache {
   }
 
   getCache(type: string) {
-    if(type && this[type]) {
+    if (type && this[type]) {
       return this[type];
     }
   }

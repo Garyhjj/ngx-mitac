@@ -1,0 +1,12 @@
+.container {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.qrcode {
+  font-size: 16px;
+  text-align: center;
+}

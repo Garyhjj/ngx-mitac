@@ -1,7 +1,6 @@
 import { Component, OnInit, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-
 @Component({
   selector: 'app-true-or-false',
   templateUrl: './true-or-false.component.html',
@@ -34,17 +33,26 @@ export class TrueOrFalseComponent implements OnInit {
   };
 
   @Input() fontSize: string = '1.6rem';
-
-  @Input() result:{
+  _result;
+  
+  @Input() 
+  set result(r: {
     trueAnswer: any,
     yourAnswer: any
-  } = {
-    trueAnswer:'Y',
-    yourAnswer:'Y'
+  }) {
+    if(typeof r ==='object') {
+      this._result = r;
+      this.checkResult();
+    }
+  };
+  get result() {
+    return this._result;
   }
 
   @Input() titlePrefix = '';
 
+
+  @Input() question;
 
   constructor() { }
 
@@ -54,7 +62,7 @@ export class TrueOrFalseComponent implements OnInit {
    * @param {*} value 
    */
   writeValue(value: string) {
-    if([this._myFalseFormat, this._myTrueFormat].indexOf(value) > -1) {
+    if ([this._myFalseFormat, this._myTrueFormat].indexOf(value) > -1) {
       this.radioValue = value;
     }
   }
@@ -79,14 +87,14 @@ export class TrueOrFalseComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.checkResult();
+
   }
 
   checkResult() {
     const result = this.result;
-    if(result) {
-      if(result.hasOwnProperty('trueAnswer')) {
-        if([this._myFalseFormat, this._myTrueFormat].indexOf(result.trueAnswer) > -1) {
+    if (result) {
+      if (result.hasOwnProperty('trueAnswer')) {
+        if ([this._myFalseFormat, this._myTrueFormat].indexOf(result.trueAnswer) > -1) {
           this.radioValue = result.trueAnswer;
         }
       }

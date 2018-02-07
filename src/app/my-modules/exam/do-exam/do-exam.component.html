@@ -1,0 +1,1 @@
+<app-exam-paper [content]="examContent" [header]="examHeader" *ngIf="examHeader && examContent" (getResult)="sendResult($event)" [status]="status"></app-exam-paper>

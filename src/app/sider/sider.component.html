@@ -14,7 +14,15 @@
       <li nz-menu-item data-route="/board/urgentNo">急料工單看板</li>
     </ul>
   </li>
-  <!-- <li nz-submenu *ngIf="canSeeModule(61)">
+  <li nz-submenu *ngIf="canSeeModule(61)">
+      <span title><i class="anticon anticon-file-pdf"></i><span class="nav-text">訓練考試</span></span>
+      <ul>
+        <li nz-menu-item data-route="/exam/question">考試題目</li>
+        <li nz-menu-item data-route="/exam/unit">考卷</li>
+        <li nz-menu-item data-route="/exam/result">考試結果</li>
+      </ul>
+    </li>
+  <!-- <li nz-submenu *ngIf="canSeeModule(26025)">
       <span title><i class="anticon anticon-mail"></i><span class="nav-text">巡检</span></span>
       <ul>
         <li nz-menu-group>

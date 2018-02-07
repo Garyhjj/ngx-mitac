@@ -7,6 +7,9 @@ import {
   Validators
 } from '@angular/forms';
 import { NgxValidatorExtendService } from '../../../../../core/services/ngx-validator-extend.service';
+import { DataDriveService } from '../../core/services/data-drive.service';
+import { UtilService } from '../../../../../core/services/util.service';
+import { isArray } from '../../../../utils/index';
 
 @Component({
   selector: 'app-data-search',
@@ -15,13 +18,13 @@ import { NgxValidatorExtendService } from '../../../../../core/services/ngx-vali
 })
 export class DataSearchComponent implements OnInit {
 
-  
+
   dataDrive: DataDrive;
   columns: TableDataColumn[];
   searchSets: SearchItemSet[];
   columnNameStrings: string[];
   inputTypeList: any[];
-  errMes:any = {};
+  errMes: any = {};
 
   formLayout = 'inline';
   @Input()
@@ -39,6 +42,18 @@ export class DataSearchComponent implements OnInit {
 
   validateForm: FormGroup;
 
+  constructor(
+    private fb: FormBuilder,
+    private validExd: NgxValidatorExtendService,
+    private dataDriveService: DataDriveService,
+    private util: UtilService
+  ) {
+  }
+
+  reSet() {
+    this.validateForm.reset();
+  }
+
   submitForm() {
     const value = this.validateForm.value;
     const cascaderProps = this.inputTypeList.filter(i => i.type === 'cascader').map(t => t.label);
@@ -47,19 +62,18 @@ export class DataSearchComponent implements OnInit {
       cascaderProp && Object.assign(value, cascaderProp);
       delete value[c];
     })
-    console.log(value);
+
+    const send: any = {};
+    this.searchSets.forEach(s => {
+      send[s.apiProperty ? s.apiProperty : s.property] = value[s.property];
+    })
+    this.dataDriveService.searchData(this.dataDrive, send).subscribe((c: any[]) => this.dataDriveService.initTableData(this.dataDrive, c)
+      , (err) => this.util.errDeal(err)
+    );
   }
 
   get isHorizontal() {
     return this.formLayout === 'horizontal';
-  }
-
-
-
-  constructor(
-    private fb: FormBuilder,
-    private validExd: NgxValidatorExtendService
-  ) {
   }
 
   ngOnInit() {
@@ -72,19 +86,22 @@ export class DataSearchComponent implements OnInit {
       const mapColumn = this.columns.find(c => c.property === s.property);
       const match = s.InputOpts.match;
       let valid = null;
-      if(match) {
-        if(match.err) {
+      if (match) {
+        if (match.err) {
           this.errMes[s.property] = match.err;
         }
-        if(match.regexp) {
-          valid = this.validExd.regex(match.regexp);
+        if (isArray(match.fns)) {
+          valid = [];
+          match.fns.forEach(f => {
+            const validFn = this.validExd[f.name];
+            const validParmas = f.parmas || [];
+            validFn && valid.push(validFn(...validParmas));
+          })
         }
       }
-      myForm[s.property] = [def,valid];
-      return Object.assign({ label: mapColumn?mapColumn.value:s.property }, s.InputOpts);
+      myForm[s.property] = [def, valid];
+      return Object.assign({ label: mapColumn ? mapColumn.value : s.property }, s.InputOpts);
     });
-    console.log(this.inputTypeList);
-
     this.validateForm = this.fb.group(myForm);
   }
 

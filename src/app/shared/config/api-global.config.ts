@@ -9,5 +9,7 @@ export const APIGlobalConfig = {
      * 2017-09-30
      * @static
      */
-    uploadPicture: APPConfig.baseUrl + 'IPQA/UploadPicture'
+    uploadPicture: APPConfig.baseUrl + 'IPQA/UploadPicture',
+
+    getSelfPrivilege: APPConfig.baseUrl + 'Guid/GetUserFunctions?moduleID={moduleID}'
 }

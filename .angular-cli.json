@@ -22,7 +22,7 @@
       "styles": [
         "styles.css"
       ],
-      "scripts": ["../node_modules/JsonExportExcel/dist/JsonExportExcel.min.js"],
+      "scripts": ["../node_modules/JsonExportExcel/dist/JsonExportExcel.min.js", "assets/scripts/qr.js"],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",

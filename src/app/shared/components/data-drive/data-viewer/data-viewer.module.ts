@@ -1,3 +1,5 @@
+import { QRComponent } from '../../QR/QR.component';
+import { MyFlexPipe } from './../shared/pipes/my-flex.pipe';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataViewerComponent } from './data-viewer.component';
@@ -10,8 +12,8 @@ import { ExamPaperModule } from './exam-paper/exam-paper.module';
   imports: [
     CommonModule, SharedModule, ExamPaperModule
   ],
-  declarations: [DataViewerComponent, TableComponent, FilterColumnComponent],
-  exports: [DataViewerComponent, TableComponent, FilterColumnComponent],
-  entryComponents: [DataViewerComponent]
+  declarations: [DataViewerComponent, TableComponent, FilterColumnComponent, QRComponent, MyFlexPipe],
+  exports: [DataViewerComponent, TableComponent, FilterColumnComponent, MyFlexPipe],
+  entryComponents: [DataViewerComponent, QRComponent]
 })
 export class DataViewerModule { }

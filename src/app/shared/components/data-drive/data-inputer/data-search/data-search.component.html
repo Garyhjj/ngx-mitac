@@ -1,4 +1,4 @@
-<form nz-form [formGroup]="validateForm" [nzLayout]="formLayout" (ngSubmit)="submitForm()">
+<form nz-form [formGroup]="validateForm" [nzLayout]="formLayout">
   <nz-row>
     <ng-container *ngFor="let item of columnNameStrings;let i =index">
       <nz-col [nzSpan]="8">
@@ -16,10 +16,19 @@
             <nz-input [formControlName]="item" [nzPlaceHolder]="inputTypeList[i].placeHolder" *ngIf="inputTypeList[i]?.type === 'textarea'" 
             nzType="textarea" [nzAutosize]="'1'"></nz-input>
 
-            <nz-select [formControlName]="item" [nzSize]="'large'" [nzPlaceHolder]="inputTypeList[i].placeHolder" *ngIf="inputTypeList[i]?.type === 'select'"
+            <!-- <nz-select [formControlName]="item" [nzSize]="'large'" [nzPlaceHolder]="inputTypeList[i].placeHolder" *ngIf="inputTypeList[i]?.type === 'select'"
               [style.minWidth]="'100px'">
               <nz-option [nzLabel]="item.value" [nzValue]="item.property" *ngFor="let item of inputTypeList[i]?.more?.options"></nz-option>
-            </nz-select>
+            </nz-select> -->
+
+            <app-mx-select
+              [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'select'"
+              [myPlaceHolder]="inputTypeList[i].placeHolder"
+              [options]="inputTypeList[i]?.more?.options"
+              [lazyAPI]="inputTypeList[i]?.more?.lazyAPI"
+              [lazyParams]="inputTypeList[i]?.more?.lazyParams"
+              [lazyAPIUserMes]="inputTypeList[i]?.more?.lazyAPIUserMes"
+              ></app-mx-select>
 
             <!-- <nz-datepicker [formControlName]="item" [nzSize]="'large'" *ngIf="inputTypeList[i]?.type === 'datepicker'" nzShowTime="'hh:mm'" [nzFormat]="'YYYY-MM-DD hh:mm'">
             </nz-datepicker> -->
@@ -71,8 +80,14 @@
       </nz-col>
     </ng-container>
   </nz-row>
-  <div nz-form-item nz-row [style.display]="'block'">
-    <button nz-button nz-col [nzOffset]="8" [nzSpan]="8" type="submit" [nzType]="'primary'" [nzSize]="'large'" [disabled]="!validateForm.valid">
-      <i class="anticon anticon-search"></i>查询</button>
-  </div>
+  <nz-row [nzType]="'flex'" [nzJustify]="'center'">
+    <nz-col [nzSpan]="'6'">
+        <button nz-button nz-col type="submit" [nzType]="'primary'" [nzSize]="'large'" [disabled]="!validateForm.valid" (click)="submitForm()">
+            <i class="anticon anticon-search"></i>查询</button>
+    </nz-col>
+    <nz-col [nzSpan]="'6'">
+        <button nz-button nz-col [nzType]="'primary'" type="botton" [nzSize]="'large'" (click)="reSet()">
+            <i class="anticon anticon-reload"></i>重置</button>
+    </nz-col>
+  </nz-row>
 </form>

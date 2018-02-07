@@ -5,5 +5,10 @@ export interface AdditionalFn {
     changeHeaderFontSize?: boolean;
     menu?: boolean;
     toExcel?: boolean,
-    addItem?: boolean
+    addItem?: boolean,
+    switchViewType?: string[],
+    LinkToPhone?: {
+        name: string,
+        url: string
+    }
 }

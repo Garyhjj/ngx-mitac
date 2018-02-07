@@ -8,16 +8,31 @@
   
   
         <div nz-form-control nz-col [nzSpan]="isHorizontal?16:16">
-            <nz-input [formControlName]="item" [nzPlaceHolder]="inputTypeList[i].placeHolder" [nzSize]="'large'" *ngIf="inputTypeList[i]?.type === 'text'">
+            <nz-input [formControlName]="item" [nzPlaceHolder]="inputTypeList[i].placeHolder" [nzSize]="'large'" *ngIf="inputTypeList[i]?.type === 'text'"
+            [nzReadonly]="!inputTypeList[i]?.editable"
+            >
               </nz-input>
   
               <nz-input [formControlName]="item" [nzPlaceHolder]="inputTypeList[i].placeHolder" *ngIf="inputTypeList[i]?.type === 'textarea'" 
-              nzType="textarea" [nzAutosize]="'1'"></nz-input>
+              nzType="textarea" [nzAutosize]="'1'" [nzReadonly]="!inputTypeList[i]?.editable"></nz-input>
   
-              <nz-select [formControlName]="item" [nzSize]="'large'" [nzPlaceHolder]="inputTypeList[i].placeHolder" *ngIf="inputTypeList[i]?.type === 'select'"
+              <!-- <nz-select [formControlName]="item" [nzSize]="'large'" [nzPlaceHolder]="inputTypeList[i].placeHolder" *ngIf="inputTypeList[i]?.type === 'select'"
                 [style.minWidth]="'100px'">
                 <nz-option [nzLabel]="item.value" [nzValue]="item.property" *ngFor="let item of inputTypeList[i]?.more?.options"></nz-option>
-              </nz-select>
+              </nz-select> -->
+              <app-mx-select
+              [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'select'"
+              [myPlaceHolder]="inputTypeList[i].placeHolder"
+              [options]="inputTypeList[i]?.more?.options"
+              [lazyAPI]="inputTypeList[i]?.more?.lazyAPI"
+              [lazyParams]="inputTypeList[i]?.more?.lazyParams"
+              [lazyAPIUserMes]="inputTypeList[i]?.more?.lazyAPIUserMes"
+              ></app-mx-select>
+
+              <app-mx-checkbox [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'checkbox'"
+              [myPlaceHolder]="inputTypeList[i].placeHolder"
+              [options]="inputTypeList[i]?.more?.options"
+              ></app-mx-checkbox>
   
               <!-- <nz-datepicker [formControlName]="item" [nzSize]="'large'" *ngIf="inputTypeList[i]?.type === 'datepicker'" nzShowTime="'hh:mm'" [nzFormat]="'YYYY-MM-DD hh:mm'">
               </nz-datepicker> -->
@@ -70,7 +85,8 @@
     </ng-container>
   
     <div nz-form-item nz-row [style.display] = "'block'">
-      <button nz-button nz-col [nzOffset]="6" [nzSpan]="12" type="submit" [nzType]="'primary'" [nzSize]="'large'" [disabled]="!validateForm.valid"
-      >Submit</button>
+      <button nz-button nz-col [nzOffset]="6" [nzSpan]="12" type="submit" [nzType]="'primary'" [nzSize]="'large'" [disabled]="!validateForm.valid || globalErr"
+      >確定</button>
     </div>
+    <div class="global-err">{{globalErr}}</div>
   </form>

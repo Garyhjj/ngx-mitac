@@ -2,7 +2,7 @@
   <div class="title" [style.fontSize]="fontSize" *ngIf="!result || result.trueAnswer === result.yourAnswer">{{titlePrefix}}{{title}}</div>
   <nz-alert [nzType]="'error'" *ngIf="result && result.trueAnswer !== result.yourAnswer">
       <span alert-body [style.fontSize]="fontSize">
-        <pre>{{titlePrefix}}{{title}}  {{'提交答案:' + yourAnswerString }}</pre>
+        {{titlePrefix}}{{title}}  ({{'提交答案:  ' + yourAnswerString }})
       </span>
     </nz-alert>
     <nz-radio-group [(ngModel)]="radioValue" (ngModelChange)="change($event)">

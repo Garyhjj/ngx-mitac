@@ -1,10 +1,12 @@
+import { isNumber } from "../../../../../utils/index";
+
 export interface InputSet {
     type?: InputTypes;
     editable?: boolean;
     placeHolder?: string;
     default?: string | boolean | number;
     match?: {
-        regexp: string,
+        fns:{name:string,parmas:any[]}[]
         err: string
     };
     more?: any;
@@ -50,6 +52,8 @@ export class Switch implements InputSet {
     constructor(opts?: any) {
         opts && Object.assign(this, opts);
         this.type = 'switch';
+        this.falseFormat = this.falseFormat || 'N';
+        this.trueFormat = this.trueFormat || 'Y';
     }
 
 }
@@ -137,6 +141,34 @@ export class InputSetDefault implements InputSet {
         this.default = '';
     }
 }
+export class CheckboxInputSet implements InputSet {
+    type: InputTypes = 'checkbox';
+    editable?: boolean;
+    placeHolder?: string;
+    default?: string | boolean | number;
+    more?: {
+        options?: { property: string, value: string | number }[]
+    }
+    constructor(opts?: InputSet) {
+        opts && Object.assign(this, opts);
+        this.more = this.more || {};
+        this.more.options = this.more.options || [];
+        this.type = 'checkbox';
+    }
+    setOptions(options: any[]) {
+        const newOpts = [];
+        if (options && options.length > 0) {
+            options.forEach(o => {
+                if (typeof o === 'object') {
+                    newOpts.push(o);
+                } else if (typeof o === 'string' || typeof o === 'number') {
+                    newOpts.push({ property: o, value: o });
+                }
+            })
+        }
+        (newOpts.length > 0) && (this.more.options = newOpts);
+    }
+}
 
 export class SelectInputSet implements InputSet {
     type: InputTypes = 'select';
@@ -144,7 +176,10 @@ export class SelectInputSet implements InputSet {
     placeHolder?: string;
     default?: string | boolean | number;
     more?: {
-        options?: { property: string, value: string | number }[]
+        options?: { property: string, value: string | number }[];
+        lazyAPI?: string,
+        lazyParams?: string[],
+        lazyAPIUserMes?: any;
     }
     constructor(opts?: InputSet) {
         opts && Object.assign(this, opts);
@@ -179,6 +214,8 @@ export class InputSetFactory extends InputSetDefault {
                 return new NumberInputSet(opts);
             case 'select':
                 return new SelectInputSet(opts);
+            case 'checkbox':
+                return new CheckboxInputSet(opts);
             case 'datePicker':
                 return new DatePicker(opts);
             case 'timePicker':
@@ -192,7 +229,9 @@ export class InputSetFactory extends InputSetDefault {
             case 'photoUpload':
                 return new PhotoUpload(opts);
             case 'textarea':
-                return new TextareaInputSet(opts)
+                return new TextareaInputSet(opts);
+            case 'primary':
+                return new PrimaryInputSet(opts);
             case 'text':
             default:
                 return new TextInputSet(opts);
@@ -204,7 +243,7 @@ export class InputSetFactory extends InputSetDefault {
 export type InputTypes =
     'text' | 'number' | 'date' | 'rate' | 'select' | 'datePicker' |
     'timePicker' | 'cascader' | 'switch' | 'colleagueSearcher' |
-    'photoUpload' | 'textarea';
+    'photoUpload' | 'textarea' | 'primary' | 'checkbox';
 
 export class TextInputSet implements InputSet {
     type: InputTypes;
@@ -212,9 +251,9 @@ export class TextInputSet implements InputSet {
     placeHolder?: string;
     default?: string | boolean | number;
     match?: {
-        regexp: string,
+        fns:{name:string,parmas:any[]}[]
         err: string
-    }
+    };
     constructor(opts?: InputSet) {
         if (opts) {
             Object.assign(this, opts);
@@ -228,9 +267,9 @@ export class TextareaInputSet implements InputSet {
     placeHolder?: string;
     default?: string | boolean | number;
     match?: {
-        regexp: string,
+        fns:{name:string,parmas:any[]}[]
         err: string
-    }
+    };
     constructor(opts?: InputSet) {
         if (opts) {
             Object.assign(this, opts);
@@ -251,10 +290,21 @@ export class NumberInputSet extends TextInputSet {
         super(opts);
         this.more = this.more || {};
         this.more.step = this.more.step || 1;
-        this.more.max = this.more.max || Infinity;
-        this.more.min = this.more.min || -Infinity
+        this.more.max = isNumber(this.more.max)? this.more.max : Infinity;
+        this.more.min = isNumber(this.more.min)? this.more.min : -Infinity
         this.type = 'number';
         this.default = Number(this.default);
     }
 }
 
+export class PrimaryInputSet implements InputSet {
+    type: InputTypes;
+    default?: number;
+    constructor(opts?: InputSet) {
+        if (opts) {
+            Object.assign(this, opts);
+        }
+        this.default = this.default || 0;
+        this.type = 'primary';
+    }
+}
