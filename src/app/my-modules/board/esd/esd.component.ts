@@ -2,19 +2,20 @@ import { boardConfig } from './../shared/config/index';
 import { DataDrive } from './../../../shared/components/data-drive/shared/models/index';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import * as moment from 'moment';
 import { BoardService } from '../shared/services/board.service';
 import { UtilService } from '../../../core/services/util.service';
 import { APPConfig } from '../../../shared/config/app.config';
 import { isArray } from '../../../shared/utils/index';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-esd',
   templateUrl: './esd.component.html',
   styleUrls: ['./esd.component.css']
 })
-export class EsdComponent implements OnInit {
+export class EsdComponent implements OnInit, OnDestroy {
 
   date = moment(new Date()).format('YYYY-MM-DD')
 
@@ -33,6 +34,7 @@ export class EsdComponent implements OnInit {
 
   cacheName;
   targetSubList: string[] =[];
+  sub1: Subscription;
   constructor(private boardService: BoardService, private util: UtilService, private fb: FormBuilder) { }
 
   ngOnInit() {
@@ -42,6 +44,9 @@ export class EsdComponent implements OnInit {
       this.notPassQuantity = a[0] as number || 0;
       this.passQuantity = a[1] as number || 0;
     }, (err) => this.util.errDeal(err));
+  }
+  ngOnDestroy() {
+    this.sub1 && this.sub1.unsubscribe();
   }
 
   lazyChangeSubOptions() {
@@ -70,6 +75,8 @@ export class EsdComponent implements OnInit {
   }
   getDrive(d: DataDrive) {
     this.dataDrive = d;
+    this.dataDrive.canAutoUpdate = false;
+    this.sub1 = this.dataDrive.observeScrollToBottom().subscribe(() => this.submitForm());
   }
 
   submitForm() {

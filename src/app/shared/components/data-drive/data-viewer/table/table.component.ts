@@ -24,8 +24,10 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   tableData: TableData;
   dataViewList: any = [];
   canScroll = true;
+  informTime: Date;
   private timeEvent1;
   private timeEvent2;
+  private timeEvent3;
   private hideLists: string[];
   private sub1: Subscription;
   private sub2: Subscription;
@@ -133,7 +135,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
       if (!data[idx]) return;
       this.dataDriveService.deleteData(this._dataDrive, data[idx]).subscribe(r => {
         this.dataDriveService.updateViewData(this._dataDrive);
-      },(err) => this.util.errDeal(err));
+      }, (err) => this.util.errDeal(err));
     }
     this.modalService.confirm({
       title: '您確定要刪除這一條目嗎？',
@@ -206,7 +208,8 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     }
   }
   dataChange() {
-    setTimeout(() => this.initAutoScroll(), 50);
+    clearTimeout(this.timeEvent3);
+    this.timeEvent3 = setTimeout(() => this.initAutoScroll(), 50);
   }
 
   initAutoScroll() {
@@ -225,10 +228,29 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
       this._loopScroll = false;
     }
   }
+
+  hasScrolledToBottom() {
+    const nowTime = new Date();
+    const inform = () => {
+      this.informTime = nowTime;
+      this._dataDrive.hasScrolledToBottom();
+    }
+    if (this.informTime) {
+      if (nowTime.getTime() - this.informTime.getTime() > 1000 * 10) {
+        inform();
+      }
+    } else {
+      inform();
+    }
+  }
   autoScroll(idx: number = 0) {
     clearTimeout(this.timeEvent1);
-    if (idx >= this.dataViewList.length && this._loopScroll) { idx = 0; }
-    if (idx < this.dataViewList.length) {
+    const lg = this.dataViewList.length;
+    if (idx >= lg && this._loopScroll) {
+      this.hasScrolledToBottom();
+      idx = 0;
+    }
+    if (idx < lg) {
       if (this.canScroll) {
         this.dataViewList[idx].scrollIntoView();
       } else {
@@ -262,32 +284,32 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     return false;
   }
 
-  linkToPhone(params: {url:string, local:string}, idx: number) {
+  linkToPhone(params: { url: string, local: string }, idx: number) {
     let url = params.url;
     let router = params.local;
     if (typeof url === 'string') {
       idx = this.calIdx(idx);
       const data = this._dataDrive.getData()[idx];
       const reg = /(\{(\w+)\})/;
-      while(reg.exec(url)) {
+      while (reg.exec(url)) {
         const target = data.find(d => d.property === RegExp.$2);
-        url = url.replace(new RegExp(RegExp.$1,'g'),target? target.value: '');
+        url = url.replace(new RegExp(RegExp.$1, 'g'), target ? target.value : '');
       }
-      if(typeof router === 'string') {
-        while(reg.exec(router)) {
+      if (typeof router === 'string') {
+        while (reg.exec(router)) {
           const target = data.find(d => d.property === RegExp.$2);
-          router = router.replace(new RegExp(RegExp.$1,'g'),target? target.value: '');
+          router = router.replace(new RegExp(RegExp.$1, 'g'), target ? target.value : '');
         }
       }
       const subscription = this.modalService.open({
-        title          : '鏈接二維碼',
-        content        : QRComponent,
+        title: '鏈接二維碼',
+        content: QRComponent,
         onOk() {
         },
         onCancel() {
-  
+
         },
-        footer         : false,
+        footer: false,
         componentParams: {
           url: url,
           router: router

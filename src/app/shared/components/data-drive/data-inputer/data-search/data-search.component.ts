@@ -103,6 +103,7 @@ export class DataSearchComponent implements OnInit {
       return Object.assign({ label: mapColumn ? mapColumn.value : s.property }, s.InputOpts);
     });
     this.validateForm = this.fb.group(myForm);
+    this.dataDrive.observeScrollToBottom().subscribe(() => this.submitForm())
   }
 
 }

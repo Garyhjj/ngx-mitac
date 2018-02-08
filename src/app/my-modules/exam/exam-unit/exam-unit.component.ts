@@ -80,8 +80,7 @@ export class ExamUnitComponent implements OnInit {
         SCORE: 1,
         COMPANY_ID: ''
       }
-      this.examService.UpdateMapping(send).subscribe(a => {
-        console.log(a);
+      this.examService.updateMapping(send).subscribe(a => {
         this.dataDriveService.updateViewData(this.contentDataDrive);
       }, (err) =>  this.util.errDeal(err))
     })

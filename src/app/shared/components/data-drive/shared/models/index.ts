@@ -42,13 +42,15 @@ export class DataDrive implements DataDriveOptions {
     private isShowModalSubject = new BehaviorSubject<boolean>(false);
     private updateFormGroup: FormGroup
     private globalUpdateErrSubject = new Subject<string>();
-    private selfSearchData = new Subject<any[]>();
+    private selfSearchDataSubject = new Subject<any[]>();
+    private scrollToBottomSubject = new Subject<any>();
     eventSubject = new Subject<string>();
     eventsQueue = {};
     id: number;
     searchSets?: SearchItemSet[];
     updateSets?: SearchItemSet[];
     tableData: TableDataModel;
+    canAutoUpdate: boolean = true;
     additionalFn?: AdditionalFn;
     APIs: {
         search: string;
@@ -254,14 +256,22 @@ export class DataDrive implements DataDriveOptions {
         })
     }
 
+    hasScrolledToBottom() {
+        this.scrollToBottomSubject.next(1);
+    }
+
+    observeScrollToBottom() {
+        return this.scrollToBottomSubject.asObservable();
+    }
+
     selfUpdateTableData(data) {
         if(isArray(data)) {
-            this.selfSearchData.next(data);
+            this.selfSearchDataSubject.next(data);
         }
     }
 
     observeSelfUpdateTableData() {
-        return this.selfSearchData.asObservable();
+        return this.selfSearchDataSubject.asObservable();
     }
 
     updateFormGroupInited(fg: FormGroup) {

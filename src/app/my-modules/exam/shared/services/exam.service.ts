@@ -22,7 +22,7 @@ export class ExamService {
         // }
     }
 
-    UpdateMapping(data: ExamMapping) {
+    updateMapping(data: ExamMapping) {
         data.COMPANY_ID = this.user.COMPANY_ID;
         return this.http.post(examConfig.UpdateMapping, data);
     }
