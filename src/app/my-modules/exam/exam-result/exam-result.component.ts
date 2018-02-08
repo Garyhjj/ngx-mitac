@@ -1,6 +1,8 @@
 import { ExamService } from './../shared/services/exam.service';
 import { Component, OnInit } from '@angular/core';
 import { DataDrive } from '../../../shared/components/data-drive/shared/models/index';
+import { AuthService } from '../../../core/services/auth.service';
+import { isArray } from '../../../shared/utils/index';
 
 @Component({
   selector: 'app-exam-result',
@@ -10,8 +12,10 @@ import { DataDrive } from '../../../shared/components/data-drive/shared/models/i
 export class ExamResultComponent implements OnInit {
 
   dataDrive: DataDrive
+  user = this.auth.user;
   constructor(
-    private examService: ExamService
+    private examService: ExamService,
+    private auth: AuthService
   ) { }
 
   ngOnInit() {
@@ -24,15 +28,10 @@ export class ExamResultComponent implements OnInit {
 
   alterDriveByRole() {
     if(this.examService.role === 2) {
-      const selectSet = this.dataDrive.searchSets.find(c => c.InputOpts.type === 'select');
-      if(selectSet) {
-        const options = selectSet.InputOpts;
-        if(options.more && options.more.lazyAPIUserMes) {
-          options.more.lazyAPIUserMes.ref_dept = 'DEPTNO';
+      this.dataDrive.beforeInitTableData(data =>{
+        if(isArray(data)) {
+        return data.filter(d => d.ASSISTANT === this.auth.user.EMPNO);
         }
-      }
-      this.dataDrive.beforeSearch((d) => {
-        return Object.assign(d, {id: 0});
       })
     }
   }

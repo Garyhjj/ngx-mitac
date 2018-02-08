@@ -18,5 +18,6 @@
 <ng-content select=".my-data-viewer"></ng-content>
 
 <div class="my-modal" *ngIf="isShowModal | async">
+  <ng-content select=".my-full-screen-header"></ng-content>
   <app-data-viewer [opts]="dataDrive" [isModal]="true"></app-data-viewer>
 </div>

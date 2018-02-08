@@ -59,4 +59,21 @@
       </form>
     </nz-collapse>
   </nz-collapseset>
+
+  <nz-alert [nzType]="'info'" class="esd-header my-full-screen-header">
+    <nz-row alert-body [nzType]="'flex'" [nzJustify]="'space-around'">
+      <nz-col>
+        <span>日期：{{date}}</span>
+      </nz-col>
+      <nz-col>
+        <span>ESD總管控人數：{{passQuantity + notPassQuantity}}</span>
+      </nz-col>
+      <nz-col>
+        <span>測試人數：{{passQuantity}}</span>
+      </nz-col>
+      <nz-col>
+        <span>未通過人數：{{notPassQuantity}}</span>
+      </nz-col>
+    </nz-row>
+  </nz-alert>
 </app-data-drive>

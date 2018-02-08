@@ -60,8 +60,10 @@ export class DataDriveService {
 
     initTableData(dataDrive: DataDrive, ds: any[]) {
         let tableData = dataDrive.tableData;
-        const alterData = dataDrive.runBeforeInitTableData(tableData);
-        tableData = alterData ? alterData : dataDrive;
+        const alterData = dataDrive.runBeforeInitTableData(ds);
+        if(alterData) {
+            ds = alterData;
+        }
         if (ds.length && ds.length > 0) {
             const sortMes = Object.keys(ds[0]);
             // 根据返回的数据筛选已配置的列

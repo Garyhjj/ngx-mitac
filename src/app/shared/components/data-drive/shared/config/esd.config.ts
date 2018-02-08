@@ -47,17 +47,18 @@ export const esdConfig = {
     tableData: {
         columns: [
             {
-                property: 'EMPNO', value: 'EMPNO'
+                property: 'EMPNO', value: '工號'
             },
             {
-                property: 'NAME', value: 'NAME'
+                property: 'NAME', value: '姓名'
             },
             {
-                property: 'BOSS', value: 'BOSS'
+                property: 'BU_NAME', value: '部門名稱'
             },
             {
-                property: 'BU_NAME', value: 'BU_NAME'
+                property: 'BOSS', value: '主管名'
             }
+            
         ]
     }
 }

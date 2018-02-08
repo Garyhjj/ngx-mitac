@@ -29,7 +29,10 @@ export class EsdComponent implements OnInit {
   
   checkBoxOptions;
 
-  targetSubList: string[];
+  cache:any ={};
+
+  cacheName;
+  targetSubList: string[] =[];
   constructor(private boardService: BoardService, private util: UtilService, private fb: FormBuilder) { }
 
   ngOnInit() {
@@ -45,6 +48,7 @@ export class EsdComponent implements OnInit {
     this.validateForm.get('top').valueChanges.concatMap(c => {
       this.targetSubList = [];
       this.validateForm.get('sub').setValue('');
+      this.cacheName =c;
       return this.boardService.getSubDep(c)
     }).subscribe(a => {
       const list = a as any[];
@@ -52,7 +56,8 @@ export class EsdComponent implements OnInit {
         this.checkBoxOptions = list.map(d => {
           this.targetSubList.push(d.CHU_DEPTNO);
           return { value: d.CHU_NAME, property: d.CHU_DEPTNO};
-        })
+        });
+        this.cache[this.cacheName] = this.targetSubList.slice();
       }
     })
   }
@@ -68,11 +73,15 @@ export class EsdComponent implements OnInit {
   }
 
   submitForm() {
-    const list = this.validateForm.value['sub'];
+    const value = this.validateForm.value;
+    const list = value['sub'];
+    const top = value['top']
     if(list) {
       this.targetSubList = list.split(',');
+    }else {
+      this.targetSubList = this.cache[top];
     }
-    if(this.targetSubList.length > 0) {
+    if(this.targetSubList && this.targetSubList.length > 0) {
       let req = [];
       this.targetSubList.forEach(s => req.push(this.boardService.getEsdNotPassList(s)));
       Observable.forkJoin(...req).subscribe(res => {
@@ -84,11 +93,13 @@ export class EsdComponent implements OnInit {
         })
         this.dataDrive.selfUpdateTableData(all);
       })
-
+    }else {
+      this.boardService.getEsdNotPassList('').subscribe(d => this.dataDrive.selfUpdateTableData(d))
     }
   }
 
   reSet() {
+    this.targetSubList = [];
     this.validateForm && this.validateForm.reset()
   }
 }
