@@ -2,7 +2,7 @@
   <img src="assets/imgs/logo.png" alt="logo" class="logo">
   <div class="header-title">順達電腦辦公平台</div>
   <ul nz-menu [nzTheme]="'dark'" [nzMode]="'horizontal'" style="line-height: 64px;">
-    <li nz-menu-item class="ant-menu-item-selected">應用中心</li>
+    <li nz-menu-item class="ant-menu-item-selected" *ngIf="auth && !isLoginPage">應用中心</li>
     <!-- <li nz-menu-item>後台</li>
     <li nz-menu-item>其它</li> -->
     <div class="menu">
