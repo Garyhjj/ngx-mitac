@@ -9,17 +9,17 @@ import { replaceQuery } from '../../../../shared/utils';
 export class ExamService {
 
     user: UserState;
-    role: number = 2;
+    role: number = 3;
     constructor(
         private http: HttpClient,
         private auth: AuthService
     ) { 
         this.user = this.auth.user;
-        // if(this.checkPrivilege('admin')) {
-        //     this.role = 1;
-        // } else if(this.checkPrivilege('leader')){
-        //     this.role = 2;
-        // }
+        if(this.checkPrivilege('admin')) {
+            this.role = 1;
+        } else if(this.checkPrivilege('leader')){
+            this.role = 2;
+        }
     }
 
     updateMapping(data: ExamMapping) {
