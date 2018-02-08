@@ -1,5 +1,13 @@
+import { boardConfig } from './../shared/config/index';
+import { DataDrive } from './../../../shared/components/data-drive/shared/models/index';
+import { FormGroup, FormBuilder } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
 import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
+import { BoardService } from '../shared/services/board.service';
+import { UtilService } from '../../../core/services/util.service';
+import { APPConfig } from '../../../shared/config/app.config';
+import { isArray } from '../../../shared/utils/index';
 
 @Component({
   selector: 'app-esd',
@@ -8,9 +16,79 @@ import * as moment from 'moment';
 })
 export class EsdComponent implements OnInit {
 
-  constructor() { }
+  date = moment(new Date()).format('YYYY-MM-DD')
+
+  notPassQuantity: number = 0;
+  passQuantity: number = 0;
+
+  validateForm: FormGroup
+
+  dataDrive: DataDrive
+
+  lazyTopAPI = boardConfig.getTopDep.replace(APPConfig.baseUrl, '');
+  
+  checkBoxOptions;
+
+  targetSubList: string[];
+  constructor(private boardService: BoardService, private util: UtilService, private fb: FormBuilder) { }
 
   ngOnInit() {
+    this.initForm();
+    this.lazyChangeSubOptions();
+    Observable.forkJoin(this.boardService.getEsdQuantity('N'), this.boardService.getEsdQuantity('Y')).subscribe((a) => {
+      this.notPassQuantity = a[0] as number || 0;
+      this.passQuantity = a[1] as number || 0;
+    }, (err) => this.util.errDeal(err));
   }
 
+  lazyChangeSubOptions() {
+    this.validateForm.get('top').valueChanges.concatMap(c => {
+      this.targetSubList = [];
+      this.validateForm.get('sub').setValue('');
+      return this.boardService.getSubDep(c)
+    }).subscribe(a => {
+      const list = a as any[];
+      if(isArray(list)) {
+        this.checkBoxOptions = list.map(d => {
+          this.targetSubList.push(d.CHU_DEPTNO);
+          return { value: d.CHU_NAME, property: d.CHU_DEPTNO};
+        })
+      }
+    })
+  }
+
+  initForm() {
+    this.validateForm = this.fb.group({
+      top: [''],
+      sub: ['']
+    })
+  }
+  getDrive(d: DataDrive) {
+    this.dataDrive = d;
+  }
+
+  submitForm() {
+    const list = this.validateForm.value['sub'];
+    if(list) {
+      this.targetSubList = list.split(',');
+    }
+    if(this.targetSubList.length > 0) {
+      let req = [];
+      this.targetSubList.forEach(s => req.push(this.boardService.getEsdNotPassList(s)));
+      Observable.forkJoin(...req).subscribe(res => {
+        let all = [];
+        res.forEach(r => {
+          if(isArray(r)) {
+            all = all.concat(r);
+          }
+        })
+        this.dataDrive.selfUpdateTableData(all);
+      })
+
+    }
+  }
+
+  reSet() {
+    this.validateForm && this.validateForm.reset()
+  }
 }

@@ -50,5 +50,6 @@ export class DataDriveComponent implements OnInit {
       this.dataDriveService.initTableData(this.dataDrive, ds);
       final();
     }, (err) => { this.utilService.errDeal(err); final(); });
+    this.dataDrive.observeSelfUpdateTableData().subscribe(d => this.dataDriveService.initTableData(this.dataDrive, d));
   }
 }

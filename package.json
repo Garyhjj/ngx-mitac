@@ -10,8 +10,8 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "prod": "npm run build && node server.js",
-    "serve": "npm run build && pm2 start server.js --name='mitac-end'",
-    "update": "git pull && npm i && npm run build && pm2 reload mitac-end"
+    "serve": "npm run build && pm2 start server.js --name=mitacEnd",
+    "update": "git pull && npm i && npm run build && pm2 reload mitacEnd"
   },
   "private": true,
   "dependencies": {

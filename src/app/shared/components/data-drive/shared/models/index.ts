@@ -4,7 +4,7 @@ import { TableDataModel, TableData } from './table-data/index';
 import { SearchItemSet } from './searcher';
 import { DataViewSet, TabelViewSetMore, DataViewType } from './viewer/index';
 import { BehaviorSubject } from 'rxjs/Rx';
-import { bindEventForArray } from '../../../../utils/index';
+import { bindEventForArray, isArray } from '../../../../utils/index';
 import { DataViewSetFactory } from './viewer/index';
 import { SelfStoreSet, SelfStore } from './self-store/index';
 import { InputSetFactory } from './input/index';
@@ -42,6 +42,7 @@ export class DataDrive implements DataDriveOptions {
     private isShowModalSubject = new BehaviorSubject<boolean>(false);
     private updateFormGroup: FormGroup
     private globalUpdateErrSubject = new Subject<string>();
+    private selfSearchData = new Subject<any[]>();
     eventSubject = new Subject<string>();
     eventsQueue = {};
     id: number;
@@ -155,6 +156,9 @@ export class DataDrive implements DataDriveOptions {
     afterDataInit(cb: () => void) {
         this.on('afterDataInit', cb);
     }
+    beforeInitTableData(cb: (data: any[]) => any | void) {
+        this.on('beforeInitTableData', cb);
+    }
 
     emitAfterDataInit() {
         this.eventSubject.next('afterDataInit');
@@ -183,6 +187,20 @@ export class DataDrive implements DataDriveOptions {
         } else {
             this.eventsQueue[eventType] = [cb];
         }
+    }
+
+    runBeforeInitTableData(data) {
+        const eventQueue: Array<Function> = this.eventsQueue['beforeInitTableData'] || [];
+        for (let i = 0; i < eventQueue.length; i++) {
+            const cb = eventQueue[i]
+            if (cb) {
+                const res = cb(data);
+                if (typeof res === 'object') {
+                    data = res;
+                }
+            }
+        }
+        return data;
     }
     runBeforeSearch(data: any) {
         const eventQueue: Array<Function> = this.eventsQueue['beforeSearch'] || [];
@@ -236,7 +254,15 @@ export class DataDrive implements DataDriveOptions {
         })
     }
 
+    selfUpdateTableData(data) {
+        if(isArray(data)) {
+            this.selfSearchData.next(data);
+        }
+    }
 
+    observeSelfUpdateTableData() {
+        return this.selfSearchData.asObservable();
+    }
 
     updateFormGroupInited(fg: FormGroup) {
         this.updateFormGroup = fg;

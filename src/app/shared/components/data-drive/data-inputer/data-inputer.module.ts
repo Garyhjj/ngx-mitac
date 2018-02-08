@@ -25,9 +25,7 @@ import { DataUpdateComponent } from './data-update/data-update.component';
     MyCascaderComponent,
     MySwitchComponent,
     ColleagueSearcherComponent,
-    PhotoUploadComponent,
-    MxCheckboxComponent,
-    MxSelectComponent
+    PhotoUploadComponent
   ],
   exports: [DataInputerComponent],
   entryComponents: [DataUpdateComponent]

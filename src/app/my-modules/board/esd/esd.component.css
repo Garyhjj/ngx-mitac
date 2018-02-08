@@ -1,8 +1,8 @@
-esd-header {
-    margin-top: 15px;
+.esd-header {
+    margin: 15px 0;
 }
 
-.exam-header nz-row {
+.esd-header nz-row {
     font-size: 1.6rem;
     line-height: 2.5rem;
 }

@@ -15,13 +15,13 @@ export class DataDriveService {
         private http: HttpClient,
         private utilSerive: UtilService,
         private auth: AuthService
-    ) { 
+    ) {
         this.user = this.auth.user;
     }
 
     async initDataDrive(name: string) {
         let pureOption = this.getDriveOption(name);
-        let userName = this.user? this.user.USER_NAME: '';
+        let userName = this.user ? this.user.USER_NAME : '';
         if (typeof pureOption === 'string') {
             pureOption = await this.http.get(replaceQuery(APPConfig.baseUrl + pureOption, {})).toPromise().catch((err) => this.utilSerive.errDeal(err));
             if (pureOption) {
@@ -43,7 +43,7 @@ export class DataDriveService {
         if (typeof params !== 'object') {
             params = {};
         }
-        if(dataDrive.isCompanyLimited()) {
+        if (dataDrive.isCompanyLimited()) {
             params = this.addCompanyID(params);
         }
         params = dataDrive.runBeforeSearch(params) || params;
@@ -53,13 +53,15 @@ export class DataDriveService {
         return DataDriveStore[name];
     }
     updateViewData(dataDrive: DataDrive) {
-        this.getInitData(dataDrive).subscribe((c:any[]) => {
+        this.getInitData(dataDrive).subscribe((c: any[]) => {
             this.initTableData(dataDrive, c);
         });
     }
 
     initTableData(dataDrive: DataDrive, ds: any[]) {
-        const tableData = dataDrive.tableData;
+        let tableData = dataDrive.tableData;
+        const alterData = dataDrive.runBeforeInitTableData(tableData);
+        tableData = alterData ? alterData : dataDrive;
         if (ds.length && ds.length > 0) {
             const sortMes = Object.keys(ds[0]);
             // 根据返回的数据筛选已配置的列
@@ -70,40 +72,40 @@ export class DataDriveService {
                 const trs = [];
                 for (const prop in d) {
                     if (Object.prototype.hasOwnProperty.call(d, prop)) {
-                        trs.push({ property: prop, value: d[prop], hide: columnsPros.indexOf(prop) > -1? false: true});
+                        trs.push({ property: prop, value: d[prop], hide: columnsPros.indexOf(prop) > -1 ? false : true });
                     }
                 }
                 return trs;
             });
             tableData.data = data;
-        }else {
+        } else {
             tableData.data = [];
         }
         dataDrive.emitAfterDataInit();
     }
 
     updateData(dataDrive: DataDrive, ds: any) {
-        if(!dataDrive.APIs || !dataDrive.APIs.update) {
+        if (!dataDrive.APIs || !dataDrive.APIs.update) {
             throw new Error('沒有找到更新的api配置信息');
         }
         const url = dataDrive.APIs.update;
-        if(dataDrive.isCompanyLimited()) {
+        if (dataDrive.isCompanyLimited()) {
             ds = this.addCompanyID(ds);
         }
         return this.http.post(APPConfig.baseUrl + url, ds);
     }
 
     deleteData(dataDrive: DataDrive, ds: any[]) {
-        if(!dataDrive.APIs || !dataDrive.APIs.delete) {
+        if (!dataDrive.APIs || !dataDrive.APIs.delete) {
             throw new Error('沒有找到刪除的api配置信息');
         }
         const url = dataDrive.APIs.delete;
         let prop = 'ID';
         const target = ds.find(d => d.property === prop);
-        if(!target) {
-            throw new Error('沒有找到刪除的api所需的參數'+ prop.toLowerCase());
+        if (!target) {
+            throw new Error('沒有找到刪除的api所需的參數' + prop.toLowerCase());
         }
-        const send = {id: target.value};
+        const send = { id: target.value };
         return this.http.delete(replaceQuery(APPConfig.baseUrl + url, send));
     }
     toExcel(dataDrive: DataDrive) {
@@ -124,11 +126,11 @@ export class DataDriveService {
         this.utilSerive.toExcel(name, excelHeader, excelData)
     }
 
-    addCompanyID(send:any) {
-        if(typeof send === 'object' && this.user) {
-            const out = Object.assign({}, send, {company_id: this.user.COMPANY_ID});
+    addCompanyID(send: any) {
+        if (typeof send === 'object' && this.user) {
+            const out = Object.assign({}, send, { company_id: this.user.COMPANY_ID });
             return out;
-        }else {
+        } else {
             return send;
         }
     }

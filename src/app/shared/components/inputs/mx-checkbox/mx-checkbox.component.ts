@@ -35,7 +35,7 @@ export class MxCheckboxComponent implements OnInit {
    */
   writeValue(value: any) {
     if (value !== void (0)) {
-      if ((typeof value === 'string') && value) {
+      if ((typeof value === 'string')) {
         if(this._pickerFormat === 'string') {
           this._value = value.split(',');
         }else {
@@ -46,6 +46,9 @@ export class MxCheckboxComponent implements OnInit {
       } else if (Object.prototype.toString.call(value) === '[object Array]') {
         this._value = value;
       }
+    }
+    if(value === null) {
+      this._value = [];
     }
     if(this._value.length > 0) {
       setTimeout(() => this.change(), 50);

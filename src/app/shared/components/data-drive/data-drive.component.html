@@ -9,11 +9,13 @@
       <app-data-inputer [opts]="dataDrive" [type]="2" *ngIf="dataDrive && dataDrive.tableData"></app-data-inputer>
     </nz-collapse>
   </nz-collapseset>
+  <ng-content select=".my-data-searcher"></ng-content>
 </div>
 
 <!-- <app-data-inputer [opts]="dataDrive" [type]="1" [changeIdx]="2" *ngIf="dataDrive && dataDrive.tableData && dataDrive.tableData.data"></app-data-inputer> -->
 
 <app-data-viewer [opts]="dataDrive" class="main-view" *ngIf="dataDrive && dataDrive.tableData && dataDrive.tableData.visible"></app-data-viewer>
+<ng-content select=".my-data-viewer"></ng-content>
 
 <div class="my-modal" *ngIf="isShowModal | async">
   <app-data-viewer [opts]="dataDrive" [isModal]="true"></app-data-viewer>
