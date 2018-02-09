@@ -667,7 +667,7 @@ export const DataDriveStore = {
 
     urgentNo: {
         id: 2,
-        APIs: { search: 'UrgentMaterial/GetUrgentMaterial?wo={wo}' },
+        APIs: { search: 'UrgentMaterial/GetUrgentMaterial?wo=wo' },
         additionalFn: {
             filterColumn: true,
             fullScreen: true,
