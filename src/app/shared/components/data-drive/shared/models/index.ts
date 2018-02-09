@@ -119,7 +119,7 @@ export class DataDrive implements DataDriveOptions {
         return !!this.tableData.deletable;
     }
     isCompanyLimited() {
-        return !!this.tableData.isCompanyLimited;
+        return this.tableData.isCompanyLimited;
     }
 
     getData() {

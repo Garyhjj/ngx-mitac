@@ -1,4 +1,4 @@
-<ul nz-menu [nzMode]="isCollapsed?'vertical':'inline'" style="height:100%"  (click)="select($event)" [class.ant-layout-sider-collapsed]="isCollapsed">
+<ul nz-menu [nzMode]="isCollapsed?'vertical':'inline'" style="height:100%" (click)="select($event)" [class.ant-layout-sider-collapsed]="isCollapsed">
   <!-- <li nz-submenu>
     <span title><i class="anticon anticon-file-pdf"></i><span class="nav-text">eMPI</span></span>
     <ul>
@@ -8,7 +8,10 @@
     </ul>
   </li> -->
   <li nz-submenu nzOpen>
-    <span title><i class="anticon anticon-file-pdf"></i><span class="nav-text">看板</span></span>
+    <span title>
+      <i class="anticon anticon-file-pdf"></i>
+      <span class="nav-text">看板</span>
+    </span>
     <ul>
       <li nz-menu-item data-route="/board/urgentMaterial">急料看板</li>
       <li nz-menu-item data-route="/board/urgentNo">急料工單看板</li>
@@ -16,30 +19,41 @@
     </ul>
   </li>
   <li nz-submenu *ngIf="canSeeModule(26025)">
-      <span title><i class="anticon anticon-file-pdf"></i><span class="nav-text">訓練考試</span></span>
-      <ul>
-        <li nz-menu-item data-route="/exam/question">考試題目</li>
-        <li nz-menu-item data-route="/exam/unit">考卷維護</li>
-        <li nz-menu-item data-route="/exam/result">考試結果</li>
-      </ul>
-    </li>
-  <!-- <li nz-submenu *ngIf="canSeeModule(61)">
-      <span title><i class="anticon anticon-mail"></i><span class="nav-text">巡检</span></span>
-      <ul>
-        <li nz-menu-group>
-          <span title>主管巡检</span>
-          <ul>
-            <li nz-menu-item data-route="/login">巡检报告</li>
-            <li nz-menu-item>问题追踪</li>
-          </ul>
-        </li>
-        <li nz-menu-group>
-          <span title>设备巡检</span>
-          <ul>
-            <li nz-menu-item>巡检报告</li>
-            <li nz-menu-item>登记卡</li>
-          </ul>
-        </li>
-      </ul>
-    </li> -->
+    <span title>
+      <i class="anticon anticon-file-pdf"></i>
+      <span class="nav-text">訓練考試</span>
+    </span>
+    <ul>
+      <li nz-menu-item data-route="/exam/question">考試題目</li>
+      <li nz-menu-item data-route="/exam/unit">考卷維護</li>
+      <li nz-menu-item data-route="/exam/result">考試結果</li>
+    </ul>
+  </li>
+  <li nz-submenu *ngIf="canSeeModule(61)">
+    <span title>
+      <i class="anticon anticon-search"></i>
+      <span class="nav-text">巡检</span>
+    </span>
+    <ul>
+      <li nz-menu-group>
+        <span title>基本設置</span>
+        <ul>
+          <li nz-menu-item data-route="/inspection/basic/name">巡檢名稱</li>
+        </ul>
+      </li>
+      <li nz-menu-group>
+        <span title>主管巡检</span>
+        <ul>
+          <li nz-menu-item data-route="/inspection/boss/lines">问题追踪</li>
+        </ul>
+      </li>
+      <li nz-menu-group>
+        <span title>设备巡检</span>
+        <ul>
+          <li nz-menu-item>巡检报告</li>
+          <li nz-menu-item>登记卡</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
 </ul>

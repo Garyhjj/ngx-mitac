@@ -24,6 +24,7 @@
   align-items: center;
   position: relative;
   text-align: center;
+  flex-direction: column;
   top: -5%;
 }
 
@@ -52,4 +53,10 @@
 .showImg .image {
   max-width: 60vw;
   max-height: 60vh;
+}
+.tip{
+  text-align: center;
+  font-size: 1.8rem;
+  margin-top: 15px;
+  color: #fff;
 }

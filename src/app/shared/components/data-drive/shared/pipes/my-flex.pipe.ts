@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DataDriveService } from '../../core/services/data-drive.service';
 import { isArray } from '../../../../utils/index';
-
+import * as moment from 'moment';
 @Pipe({
   name: 'myFlex'
 })
@@ -70,6 +70,12 @@ export class MyFlexPipe implements PipeTransform {
     } else {
       this.outData = target;
     }
+  }
+
+  date(target: string, format: string, yourFromat?: string) {
+    const toDateA = moment(target, yourFromat);
+    if (!toDateA.isValid()) return;
+    this.outData = toDateA.format(format);
   }
 
 }

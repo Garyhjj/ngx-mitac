@@ -1,5 +1,9 @@
 import { esdConfig } from './esd.config';
+import { inspectionNameConfig } from './inspection-name.config';
+import { inspectionLineConfig } from './inspection-line.config';
 export const DataDriveStore = {
+    inspectionLine: inspectionLineConfig,
+    inspectionName: inspectionNameConfig,
     esd: esdConfig,
     examResults: {
         id: 6,
@@ -105,7 +109,7 @@ export const DataDriveStore = {
         APIs: {
             search: 'EXAM/GetExamMappings?exam_id={exam_id}&company_id={company_id}',
             update: 'EXAM/UpdateMapping',
-            delete: 'EXAM/DeleteMapping?id={id}'
+            delete: 'EXAM/DeleteMapping?id={ID}'
         },
         additionalFn: {
             filterColumn: true,
@@ -133,6 +137,7 @@ export const DataDriveStore = {
             {
                 property: 'EXAM_ID',
                 InputOpts: {
+                    editable: false,
                     placeHolder: '',
                 }
             },
@@ -167,6 +172,7 @@ export const DataDriveStore = {
             searchable: true,
             addable: true,
             deletable: true,
+            editable: true,
             isCompanyLimited: true,
             columns: [
                 {
@@ -212,7 +218,7 @@ export const DataDriveStore = {
         APIs: {
             search: 'EXAM/GetExams?id={id}&title={title}&ref_dept={ref_dept}&code={code}&version={version}&company_id={company_id}',
             update: 'EXAM/UpdateExam',
-            delete: 'EXAM/DeleteExam?id={id}'
+            delete: 'EXAM/DeleteExam?id={ID}'
         },
         additionalFn: {
             changeBodyFontSize: true,
@@ -364,6 +370,7 @@ export const DataDriveStore = {
             searchable: true,
             addable: true,
             deletable: true,
+            editable: true,
             isCompanyLimited: true,
             columns: [
                 {
@@ -409,7 +416,7 @@ export const DataDriveStore = {
         APIs: {
             search: 'EXAM/GetExamQuestions?title={title}&type={type}',
             update: 'EXAM/UpdateQuestion',
-            delete: 'EXAM/DeleteQuestion?id={id}'
+            delete: 'EXAM/DeleteQuestion?id={ID}'
         },
         additionalFn: {
             filterColumn: true,
@@ -536,6 +543,7 @@ export const DataDriveStore = {
             searchable: true,
             addable: true,
             deletable: true,
+            editable: true,
             columns: [
                 {
                     property: 'TITLE', value: '題目'

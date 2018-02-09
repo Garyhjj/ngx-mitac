@@ -43,10 +43,14 @@ export class DataDriveService {
         if (typeof params !== 'object') {
             params = {};
         }
-        if (dataDrive.isCompanyLimited()) {
-            params = this.addCompanyID(params);
+        const isCompanyLimited = dataDrive.isCompanyLimited() as any;
+        if (isCompanyLimited) {
+            params = this.addCompanyID(params, isCompanyLimited);
         }
         params = dataDrive.runBeforeSearch(params) || params;
+        const defaultSearchParams = dataDrive.tableData && dataDrive.tableData.defaultSearchParams || {};
+        const copyDefault = Object.assign({}, defaultSearchParams);
+        params = Object.assign(copyDefault, params);
         return this.http.get(replaceQuery(APPConfig.baseUrl + dataDrive.APIs.search, params));
     }
     getDriveOption(name: string) {
@@ -61,14 +65,15 @@ export class DataDriveService {
     initTableData(dataDrive: DataDrive, ds: any[]) {
         let tableData = dataDrive.tableData;
         const alterData = dataDrive.runBeforeInitTableData(ds);
-        if(alterData) {
+        if (alterData) {
             ds = alterData;
         }
         if (ds.length && ds.length > 0) {
             const sortMes = Object.keys(ds[0]);
             // 根据返回的数据筛选已配置的列
             tableData.columns = tableData.columns.filter(c => sortMes.indexOf(c.property) > -1);
-            tableData.columns.sort((a, b) => sortMes.indexOf(a.property) - sortMes.indexOf(b.property));
+            const mySort = tableData.columns.map(c => c.property);
+            // tableData.columns.sort((a, b) => sortMes.indexOf(a.property) - sortMes.indexOf(b.property));
             const columnsPros = tableData.columns.map(c => c.property);
             const data = ds.map(d => {
                 const trs = [];
@@ -77,7 +82,8 @@ export class DataDriveService {
                         trs.push({ property: prop, value: d[prop], hide: columnsPros.indexOf(prop) > -1 ? false : true });
                     }
                 }
-                return trs;
+                // 根據配置排序拿到的數據
+                return trs.sort((a, b) => mySort.indexOf(a.property) - mySort.indexOf(b.property));
             });
             tableData.data = data;
         } else {
@@ -91,8 +97,9 @@ export class DataDriveService {
             throw new Error('沒有找到更新的api配置信息');
         }
         const url = dataDrive.APIs.update;
-        if (dataDrive.isCompanyLimited()) {
-            ds = this.addCompanyID(ds);
+        const isCompanyLimited = dataDrive.isCompanyLimited() as any;
+        if (isCompanyLimited) {
+            ds = this.addCompanyID(ds, isCompanyLimited);
         }
         return this.http.post(APPConfig.baseUrl + url, ds);
     }
@@ -102,13 +109,11 @@ export class DataDriveService {
             throw new Error('沒有找到刪除的api配置信息');
         }
         const url = dataDrive.APIs.delete;
-        let prop = 'ID';
-        const target = ds.find(d => d.property === prop);
-        if (!target) {
-            throw new Error('沒有找到刪除的api所需的參數' + prop.toLowerCase());
-        }
-        const send = { id: target.value };
-        return this.http.delete(replaceQuery(APPConfig.baseUrl + url, send));
+        const out: any = {};
+        ds.forEach(d => {
+            out[d.property] = d.value;
+        })
+        return this.http.delete(replaceQuery(APPConfig.baseUrl + url, out));
     }
     toExcel(dataDrive: DataDrive) {
         if (!dataDrive) return;
@@ -128,9 +133,10 @@ export class DataDriveService {
         this.utilSerive.toExcel(name, excelHeader, excelData)
     }
 
-    addCompanyID(send: any) {
+    addCompanyID(send: any, otherName: string) {
         if (typeof send === 'object' && this.user) {
-            const out = Object.assign({}, send, { company_id: this.user.COMPANY_ID });
+            const name = typeof otherName === 'string' ? otherName : 'company_id'
+            const out = Object.assign({}, send, { [name]: this.user.COMPANY_ID });
             return out;
         } else {
             return send;

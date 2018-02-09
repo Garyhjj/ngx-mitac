@@ -24,13 +24,21 @@
     <tr nz-tbody-tr *ngFor="let data of nzTable.data;let i = index">
       <ng-container *ngFor="let item of data">
         <td [style.backgroundColor]="setDetail.body?runRegExp(i, setDetail.body, 'bgColor'):''" [style.fontSize]="setDetail.body?runRegExp(i, setDetail.body, 'textSize'):''"
-          [style.color]="setDetail.body?runRegExp(i, setDetail.body, 'textColor'):''" nz-td *ngIf="!item.hide">{{item.value | myFlex: pipes && pipes[item.property]?pipes[item.property]:'' }}</td>
+          [style.color]="setDetail.body?runRegExp(i, setDetail.body, 'textColor'):''" nz-td *ngIf="!item.hide">
+          <ng-container [ngSwitch]="types[item.property]">
+            <div *ngSwitchCase="'img'">
+              <button nz-button [nzType]="'primary'" *ngIf="item.value" (click)="scanImgs(item.value)">
+                <span>瀏覽圖片</span>
+              </button></div>
+            <span *ngSwitchDefault>{{item.value | myFlex: pipes && pipes[item.property]?pipes[item.property]:'' }}</span>
+          </ng-container>
+        </td>
       </ng-container>
       <td [style.backgroundColor]="setDetail.body?runRegExp(i, setDetail.body, 'bgColor'):''" [style.fontSize]="setDetail.body?runRegExp(i, setDetail.body, 'textSize'):''"
         [style.color]="setDetail.body?runRegExp(i, setDetail.body, 'textColor'):''" nz-td *ngIf="setDetail.showAction">
         <span>
           <a  *ngIf="canEdit" (click)="toUpdate(i)">修改</a>
-          <span nz-table-divider></span>
+          <span nz-table-divider *ngIf="canEdit && canDelete"></span>
           <a  *ngIf="canDelete" (click)="toDelete(i)">刪除</a>
           <ng-container *ngIf="setDetail.paramsOut">
             <span nz-table-divider></span>
@@ -46,3 +54,5 @@
   </tbody>
   <span nz-table-footer>{{setDetail.footer.content}}</span>
 </nz-table>
+
+<app-photo-viewer [imgList]="fileList" [myShowInformer]="showInformer"></app-photo-viewer>

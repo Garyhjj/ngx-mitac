@@ -21,6 +21,10 @@ const homeRoutes: Routes = [
             {
                 path: 'exam',
                 loadChildren: 'app/my-modules/exam/exam.module#ExamModule'
+            },
+            {
+                path: 'inspection',
+                loadChildren: 'app/my-modules/inspection/inspection.module#InspectionModule'
             }
         ]
     }

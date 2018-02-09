@@ -92,14 +92,7 @@ export class MxSelectComponent implements OnInit {
               }
             } else if (typeof d === 'object') {
               const params = this.lazyParams;
-              if (isArray(params)) {
-                if (params.length === 1) {
-                  return { property: params[0], value: params[0] }
-                } else if (d.length > 1) {
-                  return { property: params[0], value: params[1] }
-                }
-              }
-              const keys = Object.keys(d);
+              const keys = isArray(params) && params.length > 0?params: Object.keys(d);
               if (keys.length === 1) {
                 return { property: d[keys[0]], value: d[keys[0]] }
               } else if (keys.length > 1) {

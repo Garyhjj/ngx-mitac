@@ -10,6 +10,8 @@ import { Component, OnInit, Input, AfterViewInit, OnDestroy, AfterViewChecked, C
 import { DataDrive } from '../../../data-drive/shared/models/index';
 import { throttle, isArray, sortUtils } from '../../../../utils/index';
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { APPConfig } from '../../../../config/app.config';
 
 @Component({
   selector: 'app-table',
@@ -33,6 +35,9 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   private sub2: Subscription;
   private sub3: Subscription;
   private pipes: any = {};
+  private types: any = {};
+  showInformer = new Subject<any>();
+  fileList;
   @Input()
   set opts(opts: DataDrive) {
     this.tableSet = opts.dataViewSet as TabelViewSet;
@@ -43,6 +48,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     this._dataDrive = opts;
     this.pageCount = this.setDetail.pageSet.count;
     this.getPipes();
+    this.getTypes();
     this.bindTableData();
     this.subjectHideList();
     this.subjectIsGettingData();
@@ -70,10 +76,10 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   }
 
   get canEdit() {
-    return this._dataDrive.isDataAddable;
+    return this._dataDrive.isDataEdditable();
   }
   get canDelete() {
-    return this._dataDrive.isDataDeletable;
+    return this._dataDrive.isDataDeletable();
   }
   sort(name: string, v: string, by: { name: string, params: any[] }) {
     const isAscend = v === 'ascend';
@@ -126,6 +132,12 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
       this.pipes[f.property] = f.more.pipe;
     })
   }
+  getTypes() {
+    this._dataDrive.tableData.columns.filter(c => c.more && c.more.type).forEach(f => {
+      const type = f.more.type;
+      this.types[f.property] = type? type.name: 'text';
+    })
+  }
 
   toDelete(idx) {
     if (!this.canDelete) return;
@@ -151,7 +163,6 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   toUpdate(idx) {
     if (!this.canEdit) return;
     idx = this.calIdx(idx);
-    if (!this._dataDrive.isDataAddable()) return false;
     const subscription = this.modalService.open({
       title: '更新',
       content: DataUpdateComponent,
@@ -259,6 +270,14 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
       this.timeEvent1 = setTimeout(() => this.autoScroll(++idx), this._scrollInterval);
     }
 
+  }
+  scanImgs(imgs: string) {
+    if(imgs){
+      this.fileList = imgs.split(',').map(i => {
+        return {url: APPConfig.baseUrl + i}
+      });
+      this.showInformer.next(1);
+    }
   }
 
   paramsOut(p: string[], idx: number) {

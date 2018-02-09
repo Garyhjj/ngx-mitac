@@ -2,6 +2,10 @@ export interface TableDataColumn {
     property: string;
     value: string;
     more?: {
+        type?: {
+            name: string,
+            params?: any;
+        },
         pipe?:{
             name:string,
             params:any[]
@@ -23,7 +27,8 @@ export interface TableData {
     deletable?: boolean;
     visible?: boolean;
     searchable?: boolean;
-    isCompanyLimited?: boolean;
+    isCompanyLimited?: boolean | string;
+    defaultSearchParams?: any;
     columns: TableDataColumn[];
     data?: TableInsideData[][];
 }
@@ -33,7 +38,8 @@ export class TableDataModel implements TableData {
     addable: boolean;
     deletable: boolean;
     visible: boolean;
-    isCompanyLimited?: boolean;
+    isCompanyLimited?: boolean | string;
+    defaultSearchParams?: any;
     columns: TableDataColumn[];
     data?: TableInsideData[][];
     private inputSetFactory;

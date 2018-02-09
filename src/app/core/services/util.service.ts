@@ -18,7 +18,7 @@ export class UtilService {
                     this.tokenTimeOut();
                     return;
                 case 400:
-                    return this._message.error(err.body || '無效請求', { nzDuration: 3000 });
+                    return this._message.error(err.error || '無效請求', { nzDuration: 3000 });
                 case 404:
                     return this._message.error('没找到资源', { nzDuration: 3000 });
                 case 500:
