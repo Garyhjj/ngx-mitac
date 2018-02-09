@@ -230,7 +230,7 @@ export const DataDriveStore = {
                 },
                 linkToPhone: {
                     name: '考試連接',
-                    url: 'http://218.13.31.15:8881/#/exam?examId={ID}',
+                    url: 'http://miwebapi.mic.com.cn:8881/#/exam?examId={ID}',
                     local: '/exam/do/{ID}'
                 }
             }
