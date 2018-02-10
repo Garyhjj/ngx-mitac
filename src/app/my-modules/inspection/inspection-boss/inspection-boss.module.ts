@@ -1,3 +1,4 @@
+import { InspectionBossService } from './shared/services/inspection-boss.service';
 import { DataDriveModule } from './../../../shared/components/data-drive/data-drive.module';
 import { InspectionBossRoutingModule } from './inspection-boss-routing';
 import { SharedModule } from './../../../shared/shared.module';
@@ -15,6 +16,7 @@ import { InspectionBossReportComponent } from './inspection-boss-report/inspecti
     InspectionBossComponent,
     InspectionBossLinesComponent,
     InspectionBossReportComponent
-  ]
+  ],
+  providers: [InspectionBossService]
 })
 export class InspectionBossModule { }

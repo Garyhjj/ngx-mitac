@@ -1,3 +1,4 @@
+import { InspectionBossReportComponent } from './inspection-boss-report/inspection-boss-report.component';
 import { InspectionBossLinesComponent } from './inspection-boss-lines/inspection-boss-lines.component';
 import { InspectionBossComponent } from './inspection-boss.component';
 import { NgModule } from '@angular/core';
@@ -16,6 +17,10 @@ const bRoutes: Routes = [
             {
                 path: 'lines',
                 component: InspectionBossLinesComponent
+            },
+            {
+                path: 'report',
+                component: InspectionBossReportComponent
             }
         ]
     }
