@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { InspectionBossComponent } from './inspection-boss.component';
 import { InspectionBossLinesComponent } from './inspection-boss-lines/inspection-boss-lines.component';
 import { InspectionBossReportComponent } from './inspection-boss-report/inspection-boss-report.component';
+import { InspectionBossImprovementComponent } from './inspection-boss-improvement/inspection-boss-improvement.component';
 
 @NgModule({
   imports: [
@@ -15,8 +16,9 @@ import { InspectionBossReportComponent } from './inspection-boss-report/inspecti
   declarations: [
     InspectionBossComponent,
     InspectionBossLinesComponent,
-    InspectionBossReportComponent
-  ],
+    InspectionBossReportComponent,
+    InspectionBossImprovementComponent
+],
   providers: [InspectionBossService]
 })
 export class InspectionBossModule { }

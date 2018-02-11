@@ -1,9 +1,10 @@
-export const inspectionLineConfig = {
-    id: 9,
-    APIs: { 
-        search: 'IPQA/tracProblems?nameID={nameID}&dateFM={dateFM}&dateTO={dateTO}&company_name={company_name}&type={type}&status={status}',
+
+export const inspectionLineImprovementConfig = {
+    id: 11,
+    APIs: {
+        search: 'IPQA/ownUndoneReports?company_name={company_name}&type={type}&empno={empno}',
         update: 'IPQA/UpdateReportLines'
-     },
+    },
     additionalFn: {
         filterColumn: true,
         changeBodyFontSize: true,
@@ -26,69 +27,33 @@ export const inspectionLineConfig = {
             }
         },
         {
-            property: 'OWNER_EMPNO',
+            property: 'ACTION_DESC',
             InputOpts: {
-                type: 'colleagueSearcher'
-            }
-        },
-        {
-            property: 'PROBLEM_STATUS',
-            InputOpts: {
-                type: 'select',
-                placeHolder: '請選擇類別',
+                type: 'textarea',
                 match: {
                     fns: [{ name: 'required' }],
                     err: '不能為空'
                 },
-                more: {
-                    options:  [{ property: 'New', value: '待分配' }, { property: 'Waiting', value: '待處理' }
-                    , { property: 'Done', value: '已處理' }, { property: 'HighLight', value: 'HighLight' }]
-                }
-            }
-        }
-    ],
-    searchSets: [
-        {
-            property: '巡檢名稱',
-            apiProperty: 'nameID',
-            InputOpts: {
-                type: 'select',
-                placeHolder: '請選擇類別',
-                more: {
-                    lazyAPI: 'IPQA/GetMRIName?company_name={company_name}&type=boss',
-                    lazyParams: ['NAME_ID', 'INSPECT_NAME'],
-                    lazyAPIUserMes: {
-                        company_name: 'COMPANY_ID'
-                    }
-                }
             }
         },
         {
-            property: '問題狀態',
-            apiProperty: 'status',
+            property: 'ACTION_STATUS',
             InputOpts: {
-                type: 'select',
-                placeHolder: '問題狀態',
-                more: {
-                    options: [{ property: 'New', value: '待分配' }, { property: 'Waiting', value: '待處理' }
-                    , { property: 'Done', value: '已處理' }, { property: 'HighLight', value: 'HighLight' }]
-                }
+                type: 'textarea',
             }
         },
         {
-            property: '開始時間',
-            apiProperty: 'dateFM',
+            property: 'ACTION_PICTURES',
+            InputOpts: {
+                type: 'photoUpload'
+            }
+        },
+        {
+            property: 'ACTION_DATE',
             InputOpts: {
                 type: 'datePicker',
             }
         },
-        {
-            property: '結束時間',
-            apiProperty: 'dateTO',
-            InputOpts: {
-                type: 'datePicker',
-            }
-        }
     ],
     tableData: {
         searchable: true,

@@ -2,7 +2,9 @@ import { esdConfig } from './esd.config';
 import { inspectionNameConfig } from './inspection-name.config';
 import { inspectionLineConfig } from './inspection-line.config';
 import { inspectionReportLineConfig } from './inspection-report-line.config';
+import { inspectionLineImprovementConfig } from './inspection-line-improvement.config';
 export const DataDriveStore = {
+    inspectionLineImprovement: inspectionLineImprovementConfig,
     inspectionReportLine: inspectionReportLineConfig,
     inspectionLine: inspectionLineConfig,
     inspectionName: inspectionNameConfig,

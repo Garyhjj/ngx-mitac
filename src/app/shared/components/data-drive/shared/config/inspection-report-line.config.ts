@@ -125,19 +125,6 @@ export const inspectionReportLineConfig = {
                 property: 'OWNER_EMPNO', value: '處理人'
             },
             {
-                property: 'ACTION_DESC', value: '問題原因'
-            },
-            {
-                property: 'ACTION_STATUS', value: '糾正措施'
-            },
-            {
-                property: 'ACTION_PICTURES', value: '措施附圖', more: {
-                    type: {
-                        name: 'img'
-                    },
-                }
-            },
-            {
                 property: 'INSPECTOR_NAME', value: '巡檢人員'
             },
             {
