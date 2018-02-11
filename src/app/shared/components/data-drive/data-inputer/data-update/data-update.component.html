@@ -1,7 +1,7 @@
 <form nz-form [nzLayout]="formLayout" [formGroup]="validateForm" (ngSubmit)="submitForm()" *ngIf="validateForm">
     <ng-container *ngFor="let item of columnNameStrings;let i =index">
   
-      <div nz-form-item nz-row>
+      <div nz-form-item nz-row [class.hide]="inputTypeList[i].isHide">
         <div nz-form-label nz-col [nzSpan]="isHorizontal?6:8">
           <label>{{inputTypeList[i].label}}</label>
         </div>

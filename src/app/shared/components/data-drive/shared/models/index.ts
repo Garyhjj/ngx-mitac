@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs/Observable';
 import { FormGroup } from '@angular/forms';
 import { AdditionalFn } from './additionalFn/index';
 import { TableDataModel, TableData } from './table-data/index';
@@ -40,8 +41,6 @@ export class DataDrive implements DataDriveOptions {
     private hideListSubject = new BehaviorSubject<string[]>([]);
     private isGetingDataSubject = new BehaviorSubject<boolean>(false);
     private isShowModalSubject = new BehaviorSubject<boolean>(false);
-    private updateFormGroup: FormGroup
-    private globalUpdateErrSubject = new Subject<string>();
     private selfSearchDataSubject = new Subject<any[]>();
     private scrollToBottomSubject = new Subject<any>();
     eventSubject = new Subject<string>();
@@ -122,6 +121,13 @@ export class DataDrive implements DataDriveOptions {
         return this.tableData.isCompanyLimited;
     }
 
+    addDefaultSearchParams(p) {
+        if(typeof p === 'object') {
+            this.tableData.defaultSearchParams = this.tableData.defaultSearchParams || {};
+            Object.assign(this.tableData.defaultSearchParams, p);
+        }
+    }
+
     getData() {
         if (this.tableData.data && this.tableData.data.length > 0) {
             return this.tableData.data
@@ -138,17 +144,14 @@ export class DataDrive implements DataDriveOptions {
     observeIsShowModal() {
         return this.isShowModalSubject.asObservable();
     }
-    observeGlobalUpdateErr() {
-        return this.globalUpdateErrSubject.asObservable();
-    }
-    onUpdateFormShow(cb: (fg: FormGroup, sub: Subject<string>) => void) {
+    onUpdateFormShow(cb: (fg: FormGroup, sub: Subject<string>, InputList:any[]) => void) {
         this.on('updateFormShow', cb);
     }
     onParamsOut(cb: (data) => void) {
         this.on('paramsOut', cb);
     }
-    beforeUpdate(cb: (fg: FormGroup, sub: Subject<string>) => void) {
-        this.on('beforeUpdate', cb);
+    beforeUpdateSubmit(cb: (fg: FormGroup, sub: Subject<string>) => void) {
+        this.on('beforeUpdateSubmit', cb);
     }
 
     beforeSearch(cb: (data: any) => any) {
@@ -162,6 +165,28 @@ export class DataDrive implements DataDriveOptions {
         this.on('beforeInitTableData', cb);
     }
 
+    onUpdateData(cb: (data: any) => any | void) {
+        this.on('onUpdateData', cb);
+    }
+
+    runOnUpdateData(data) {
+        return this.onAlterData('onUpdateData', data);
+    }
+    changeUpdateWay(cb: (data: any) => Observable<any> | boolean) {
+        if (this.eventsQueue['changeUpdateWay']) {
+            this.eventsQueue[0] = cb;
+        } else {
+            this.eventsQueue['changeUpdateWay'] = [cb];
+        }
+    }
+
+    runChangeUpdateWay(data) {
+        const eventQueue: Array<Function> = this.eventsQueue['changeUpdateWay'] || [];
+        if(eventQueue.length > 0) {
+            return eventQueue[0](data);
+        }
+        return false;
+    }
     emitAfterDataInit() {
         this.eventSubject.next('afterDataInit');
     }
@@ -191,8 +216,8 @@ export class DataDrive implements DataDriveOptions {
         }
     }
 
-    runBeforeInitTableData(data) {
-        const eventQueue: Array<Function> = this.eventsQueue['beforeInitTableData'] || [];
+    onAlterData(eventName: string, data: any) {
+        const eventQueue: Array<Function> = this.eventsQueue[eventName] || [];
         for (let i = 0; i < eventQueue.length; i++) {
             const cb = eventQueue[i]
             if (cb) {
@@ -203,6 +228,10 @@ export class DataDrive implements DataDriveOptions {
             }
         }
         return data;
+    }
+
+    runBeforeInitTableData(data) {
+        return this.onAlterData('beforeInitTableData', data);
     }
     runBeforeSearch(data: any) {
         const eventQueue: Array<Function> = this.eventsQueue['beforeSearch'] || [];
@@ -219,33 +248,14 @@ export class DataDrive implements DataDriveOptions {
         return data;
     }
 
-    runBeforeUpdate() {
-        const eventQueue: Array<Function> = this.eventsQueue['beforeUpdate'] || [];
-        let canContinue = true;
-        if (this.updateFormGroup) {
-            for (let i = 0; i < eventQueue.length; i++) {
-                const cb = eventQueue[i]
-                if (cb) {
-                    if (cb(this.updateFormGroup, this.globalUpdateErrSubject) === false) {
-                        canContinue = false;
-                    }
-                }
-            }
-        }
-        return canContinue;
+    runBeforeUpdateSubmit(fg: FormGroup, globalUpdateErrSubject: Subject<string>) {
+        return this.emitEvent('beforeUpdateSubmit', fg, globalUpdateErrSubject)
     }
 
     private subscribeEvent() {
         this.eventSubject.subscribe(type => {
             const eventQueue: Array<Function> = this.eventsQueue[type] || [];
             switch (type) {
-                case 'updateFormShow':
-                    eventQueue.forEach(cb => {
-                        if (cb && this.updateFormGroup) {
-                            cb(this.updateFormGroup, this.globalUpdateErrSubject);
-                        }
-                    });
-                    break;
                 default:
                     eventQueue.forEach(cb => {
                         if (cb) {
@@ -274,9 +284,8 @@ export class DataDrive implements DataDriveOptions {
         return this.selfSearchDataSubject.asObservable();
     }
 
-    updateFormGroupInited(fg: FormGroup) {
-        this.updateFormGroup = fg;
-        this.eventSubject.next('updateFormShow');
+    updateFormGroupInited(fg: FormGroup, globalUpdateErrSubject: Subject<string>, inputTypeList) {
+        return this.emitEvent('updateFormShow', fg, globalUpdateErrSubject, inputTypeList)
     }
 
     setParamsOut(name: string, params?: string[]) {

@@ -55,7 +55,7 @@ export class ExamQuestionComponent implements OnInit {
   }
 
   beforeUpdate() {
-    this.dataDrive.beforeUpdate((fg, sub) => {
+    this.dataDrive.beforeUpdateSubmit((fg, sub) => {
       const value = fg.value;
       setTimeout(() => sub.next(''), 2000);
       if (value.TYPE === 'TF') {

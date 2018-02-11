@@ -16,6 +16,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 export class MxCheckboxComponent implements OnInit {
   private propagateChange = (_: any) => { };
   _value = [];
+  first = true;
   @Input() options = [];
   @Input() myPlaceHolder;
   _pickerFormat = 'string'
@@ -77,7 +78,14 @@ export class MxCheckboxComponent implements OnInit {
     } else {
       out = this._value;
     }
-    this.propagateChange(out);
+    if(this.first) {
+      if(out.length !== 0) {
+        this.propagateChange(out);
+      }
+    }else {
+      this.propagateChange(out);
+    }
+    this.first = false;
   }
 
   ngOnInit() {

@@ -44,6 +44,7 @@ export class MyTimePickerComponent implements OnInit {
         this.timeString = value;
       }
     }
+    setTimeout(() =>this.change(this._date), 50);
   }
 
   /**
@@ -62,7 +63,6 @@ export class MyTimePickerComponent implements OnInit {
   registerOnTouched(fn:any) { }
 
   change(val:Date) {
-    console.log(val)
     this.timeString = val ? moment(val).format(this.myPickerFormat) : '';
     this.propagateChange(this.timeString)//去触发外部监控的函数
   }

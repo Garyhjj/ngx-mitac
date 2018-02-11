@@ -116,7 +116,7 @@ export const inspectionNameConfig = {
                 property: 'ENABLED', value: '有效', more: {
                     pipe: {
                         name: 'replace',
-                        parmas: [{ Y: '有', N: '無' }]
+                        params: [{ Y: '有', N: '無' }]
                     },
                 }
             },
@@ -124,7 +124,7 @@ export const inspectionNameConfig = {
                 property: 'TYPE', value: '分類', more: {
                     pipe: {
                         name: 'replace',
-                        parmas: [{ IPQA: 'IPQA巡檢', boss: '主管巡檢', equip: '設備巡檢' }]
+                        params: [{ IPQA: 'IPQA巡檢', boss: '主管巡檢', equip: '設備巡檢' }]
                     },
                 }
             },
@@ -132,7 +132,7 @@ export const inspectionNameConfig = {
                 property: 'INSPECT_PERIOD', value: '巡檢頻率', more: {
                     pipe: {
                         name: 'replace',
-                        parmas: [{ weekly: '每週', daily: '每日', monthly: '每月' }]
+                        params: [{ weekly: '每週', daily: '每日', monthly: '每月' }]
                     },
                 }
             },

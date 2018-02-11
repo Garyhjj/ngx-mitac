@@ -1,3 +1,23 @@
-<p>
-  inspection-boss-report works!
-</p>
+<nz-tabset [(nzSelectedIndex)]="tabIdx" (nzSelectedIndexChange)="tabChange($event)">
+  <nz-tab *ngFor="let tab of scheduleList">
+    <ng-template #nzTabHeading>
+      {{tab.INSPECT_NAME}}
+    </ng-template>
+    <nz-alert [nzType]="'info'" class="header">
+      <nz-row alert-body [nzType]="'flex'" [nzJustify]="'space-around'">
+        <nz-col>
+          <span>巡檢日期：{{date}}</span>
+        </nz-col>
+        <nz-col>
+          <span>巡檢人員：{{tab.PERSON}}</span>
+        </nz-col>
+        <nz-col>
+          <span>發現事項：{{issueCount}}</span>
+        </nz-col>
+      </nz-row>
+    </nz-alert>
+  </nz-tab>
+</nz-tabset>
+
+
+<app-data-drive [name]="'inspectionReportLine'" (dataDriveInit)="getDataDrive($event)" *ngIf="scheduleList && tabIdx > -1"></app-data-drive>

@@ -1,7 +1,9 @@
 import { esdConfig } from './esd.config';
 import { inspectionNameConfig } from './inspection-name.config';
 import { inspectionLineConfig } from './inspection-line.config';
+import { inspectionReportLineConfig } from './inspection-report-line.config';
 export const DataDriveStore = {
+    inspectionReportLine: inspectionReportLineConfig,
     inspectionLine: inspectionLineConfig,
     inspectionName: inspectionNameConfig,
     esd: esdConfig,
@@ -188,7 +190,7 @@ export const DataDriveStore = {
                     property: 'TYPE', value: '類別', more: {
                         pipe: {
                             name: 'replace',
-                            parmas: [{ TF: '判斷題', RADIO: '單選題', CHECKBOX: '多選題' }]
+                            params: [{ TF: '判斷題', RADIO: '單選題', CHECKBOX: '多選題' }]
                         }
                     }
                 },
@@ -381,7 +383,7 @@ export const DataDriveStore = {
                     , more: {
                         pipe: {
                             name: 'lazyLoad',
-                            parmas: ['GUID/GetDeptNameBySite?site=MSL']
+                            params: ['GUID/GetDeptNameBySite?site=MSL']
                         }
                     }
                 },
@@ -552,7 +554,7 @@ export const DataDriveStore = {
                     property: 'TYPE', value: '類別', more: {
                         pipe: {
                             name: 'replace',
-                            parmas: [{ TF: '判斷題', RADIO: '單選題', CHECKBOX: '多選題' }]
+                            params: [{ TF: '判斷題', RADIO: '單選題', CHECKBOX: '多選題' }]
                         },
                         sortBy: {
                             name: 'byCharCode'

@@ -1,15 +1,17 @@
-export const inspectionLineConfig = {
-    id: 9,
+export const inspectionReportLineConfig = {
+    id: 10,
     APIs: { 
-        search: 'IPQA/tracProblems?nameID={nameID}&dateFM={dateFM}&dateTO={dateTO}&company_name={company_name}&type={type}&status={status}',
-        update: 'IPQA/UpdateReportLines'
+        search: 'IPQA/reportLines?header_id={header_id}',
+        update: 'IPQA/UpdateReportLines',
+        delete: 'IPQA/DeleteReportLines?line_id={LINE_ID}'
      },
     additionalFn: {
         filterColumn: true,
         changeBodyFontSize: true,
         changeHeaderFontSize: true,
         menu: true,
-        toExcel: true
+        toExcel: true,
+        addItem: true
     },
     dataViewSet: {
         title: '問題列表',
@@ -26,76 +28,61 @@ export const inspectionLineConfig = {
             }
         },
         {
+            property: 'INSPECT_TIME',
+            InputOpts: {
+                type: 'timePicker',
+                more: {
+                    pickerFormat: 'HH:mm',
+                    showFormat: 'HH:mm'
+                }
+            }
+        },
+        {
+            property: 'LOCATION',
+        },
+        {
+            property: 'PROBLEM_FLAG',
+            InputOpts: {
+                type: 'switch',
+            }
+        },
+        {
+            property: 'PROBLEM_TYPE',
+            InputOpts: {
+                type: 'select',
+                placeHolder: '請選擇類別',
+                more: {
+                    options:  [{ property: '安全問題', value: '安全問題' }, { property: '員工違紀問題', value: '員工違紀問題' }
+                    , { property: '其他7S問題', value: '其他7S問題' }]
+                }
+            }
+        },
+        {
+            property: 'PROBLEM_DESC',
+            InputOpts: {
+                type: 'textarea'
+            }
+        },
+        {
+            property: 'PROBLEM_PICTURES',
+            InputOpts: {
+                type: 'photoUpload'
+            }
+        },
+        {
             property: 'OWNER_EMPNO',
             InputOpts: {
                 type: 'colleagueSearcher'
             }
         },
-        {
-            property: 'PROBLEM_STATUS',
-            InputOpts: {
-                type: 'select',
-                placeHolder: '請選擇類別',
-                match: {
-                    fns: [{ name: 'required' }],
-                    err: '不能為空'
-                },
-                more: {
-                    options:  [{ property: 'New', value: '待分配' }, { property: 'Waiting', value: '待處理' }
-                    , { property: 'Done', value: '已處理' }, { property: 'HighLight', value: 'HighLight' }]
-                }
-            }
-        }
-    ],
-    searchSets: [
-        {
-            property: '巡檢名稱',
-            apiProperty: 'nameID',
-            InputOpts: {
-                type: 'select',
-                placeHolder: '請選擇類別',
-                more: {
-                    lazyAPI: 'IPQA/GetMRIName?company_name={company_name}&type=boss',
-                    lazyParams: ['NAME_ID', 'INSPECT_NAME'],
-                    lazyAPIUserMes: {
-                        company_name: 'COMPANY_ID'
-                    }
-                }
-            }
-        },
-        {
-            property: '問題狀態',
-            apiProperty: 'status',
-            InputOpts: {
-                type: 'select',
-                placeHolder: '問題狀態',
-                more: {
-                    options: [{ property: 'New', value: '待分配' }, { property: 'Waiting', value: '待處理' }
-                    , { property: 'Done', value: '已處理' }, { property: 'HighLight', value: 'HighLight' }]
-                }
-            }
-        },
-        {
-            property: '開始時間',
-            apiProperty: 'dateFM',
-            InputOpts: {
-                type: 'datePicker',
-            }
-        },
-        {
-            property: '結束時間',
-            apiProperty: 'dateTO',
-            InputOpts: {
-                type: 'datePicker',
-            }
-        }
     ],
     tableData: {
         searchable: true,
         editable: true,
-        isCompanyLimited: 'company_name',
+        addable: true,
+        deletable: true,
         defaultSearchParams: {
-            type: 'boss',
+           
         },
         columns: [
             {
@@ -103,6 +90,14 @@ export const inspectionLineConfig = {
             },
             {
                 property: 'LOCATION', value: '地點'
+            },
+            {
+                property: 'PROBLEM_FLAG', value: '存在問題', more: {
+                    pipe: {
+                        name: 'replace',
+                        params: [{Y: '是', N: '否'}]
+                    }
+                }
             },
             {
                 property: 'PROBLEM_TYPE', value: '問題分類'

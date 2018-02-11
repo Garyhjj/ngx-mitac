@@ -1,3 +1,4 @@
+import { BossScheduleResolver } from './boss-schedule-resolver.service';
 import { InspectionBossReportComponent } from './inspection-boss-report/inspection-boss-report.component';
 import { InspectionBossLinesComponent } from './inspection-boss-lines/inspection-boss-lines.component';
 import { InspectionBossComponent } from './inspection-boss.component';
@@ -20,7 +21,10 @@ const bRoutes: Routes = [
             },
             {
                 path: 'report',
-                component: InspectionBossReportComponent
+                component: InspectionBossReportComponent,
+                resolve: {
+                    schedule: BossScheduleResolver
+                }
             }
         ]
     }
@@ -32,6 +36,7 @@ const bRoutes: Routes = [
     ],
     exports: [
         RouterModule
-    ]
+    ],
+    providers: [BossScheduleResolver]
 })
 export class InspectionBossRoutingModule { }

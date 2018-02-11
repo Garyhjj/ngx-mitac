@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs/Observable';
 import { AuthService } from './../../../../../core/services/auth.service';
 import { myStore, UserState } from './../../../../../core/store';
 import { DataDrive } from './../../shared/models/index';
@@ -97,11 +98,13 @@ export class DataDriveService {
             throw new Error('沒有找到更新的api配置信息');
         }
         const url = dataDrive.APIs.update;
+        ds = dataDrive.runOnUpdateData(ds);
         const isCompanyLimited = dataDrive.isCompanyLimited() as any;
         if (isCompanyLimited) {
             ds = this.addCompanyID(ds, isCompanyLimited);
         }
-        return this.http.post(APPConfig.baseUrl + url, ds);
+        const newUpdateWay = dataDrive.runChangeUpdateWay(ds) as Observable<any>;
+        return newUpdateWay instanceof Observable? newUpdateWay : this.http.post(APPConfig.baseUrl + url, ds);
     }
 
     deleteData(dataDrive: DataDrive, ds: any[]) {

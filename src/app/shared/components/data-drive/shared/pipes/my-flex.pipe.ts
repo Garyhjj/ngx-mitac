@@ -13,11 +13,11 @@ export class MyFlexPipe implements PipeTransform {
 
   cachedData: { url: string, data: any }[];
   outData;
-  transform(value: any, args?: { name: string, parmas: any[] }): any {
+  transform(value: any, args?: { name: string, params: any[] }): any {
     if (args && this[args.name]) {
-      args.parmas = args.parmas || [];
+      args.params = args.params || [];
       this.outData = value;
-      this[args.name](value, ...args.parmas)
+      this[args.name](value, ...args.params)
       return this.outData;
     } else {
       return value;

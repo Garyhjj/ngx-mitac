@@ -12,6 +12,7 @@ import { SearchItemSet } from '../../shared/models/searcher/index';
 import { NgxValidatorExtendService } from '../../../../../core/services/ngx-validator-extend.service';
 import { DataDriveService } from '../../core/services/data-drive.service';
 import { isArray } from '../../../../utils/index';
+import { Subject } from 'rxjs/Subject';
 
 
 
@@ -34,7 +35,8 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
   primaryValue: number;
   formLayout = 'horizontal';
   globalErr;
-  sub1: Subscription
+  sub1: Subscription;
+  private globalUpdateErrSubject = new Subject<string>();
   @Input()
   set opts(opts: DataDrive) {
     if (!opts) {
@@ -75,7 +77,7 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
   }
 
   submitForm() {
-    if(!this.dataDrive.runBeforeUpdate()) return;
+    if(!this.dataDrive.runBeforeUpdateSubmit(this.validateForm, this.globalUpdateErrSubject)) return setTimeout(() => this.globalUpdateErrSubject.next(''), 3000);
     const value = this.validateForm.value;
     const cascaderProps = this.inputTypeList.filter(i => i.type === 'cascader').map(t => t.label);
     cascaderProps.forEach(c => {
@@ -94,7 +96,7 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
   }
 
   subscribeGlErr() {
-    this.sub1 = this.dataDrive.observeGlobalUpdateErr().subscribe((err) => this.globalErr = err);
+    this.sub1 = this.globalUpdateErrSubject.subscribe((err) => this.globalErr = err);
   }
 
   ngOnDestroy() {
@@ -138,16 +140,15 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
           })
         }
       }
-      console.log(s.InputOpts.editable)
       myForm[s.property] = [def, valid];
-      return Object.assign({ label: mapColumn ? mapColumn.value : s.property }, s.InputOpts);
+      return Object.assign({ label: mapColumn ? mapColumn.value : s.property, property: s.property}, s.InputOpts);
     });
     // this.dataDrive.onUpdateFormShow((fg) => {
     //   console.log(fg.value);
     // })
     this.validateForm = this.fb.group(myForm);
     this.subscribeGlErr();
-    this.dataDrive.updateFormGroupInited(this.validateForm);
+    this.dataDrive.updateFormGroupInited(this.validateForm, this.globalUpdateErrSubject, this.inputTypeList);
   }
 
 }
