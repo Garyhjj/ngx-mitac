@@ -1,3 +1,4 @@
+import { CacheService } from './services/cache.service';
 import { UtilService } from './services/util.service';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { NzMessageService } from 'ng-zorro-antd';
@@ -21,6 +22,7 @@ import { AppService } from './services/app.service';
         NzNotificationService,
         NzMessageService,
         AppService,
+        CacheService,
         AuthService,
         EncryptUtilService,
         UtilService,

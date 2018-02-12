@@ -1,0 +1,103 @@
+<nz-tabset>
+  <nz-tab>
+    <ng-template #nzTabHeading>
+      小夜班
+    </ng-template>
+    <app-data-drive [name]="'inspectionScheduleLine'" (dataDriveInit)="getDataDrive2($event)"></app-data-drive>
+  </nz-tab>
+  <nz-tab>
+    <ng-template #nzTabHeading>
+      安全值日官
+    </ng-template>
+    <app-data-drive [name]="'inspectionScheduleLine'" (dataDriveInit)="getDataDrive3($event)"></app-data-drive>
+  </nz-tab>
+  <nz-tab>
+    <ng-template #nzTabHeading>
+      7S
+    </ng-template>
+    <app-data-drive [name]="'inspectionScheduleLine4'" (dataDriveInit)="getDataDrive4($event)"></app-data-drive>
+  </nz-tab>
+</nz-tabset>
+
+<nz-modal [nzVisible]="isVisible" [nzTitle]="'第一个 Modal'" [nzContent]="modalContent" [nzFooter]="modalFooter" (nzOnCancel)="isVisible = false">
+  <ng-template #modalContent>
+    <form nz-form [nzLayout]="formLayout" (ngSubmit)="submitForm()" [formGroup]="scheduleForm" *ngIf="scheduleForm">
+      <ng-container>
+        <div nz-form-item nz-row>
+          <div nz-form-label nz-col [nzSpan]="6">
+            <label>*巡檢週次</label>
+          </div>
+          <div nz-form-control nz-col [nzSpan]="16">
+            <app-mx-select [myPlaceHolder]="'請選擇巡檢週次'" [lazyAPI]="'IPQA/GetMRIWeek?bweek=1&eweek=8'" [lazyParams]="['WEEK_ID', 'WEEK_DESC']"
+              formControlName="SCHEDULE_NAME"></app-mx-select>
+          </div>
+        </div>
+        <div nz-form-item nz-row>
+          <div nz-form-label nz-col [nzSpan]="6">
+            <label>*巡檢區域</label>
+          </div>
+          <div nz-form-control nz-col [nzSpan]="16">
+            <app-mx-select [myPlaceHolder]="'請選擇巡檢區域'" [lazyAPI]="'IPQA/GetMRILookup?lookup_type=7S_LOCATION'" [lazyParams]="['LOOKUP_CODE', 'LOOKUP_CODE']"
+              formControlName="AREA"></app-mx-select>
+          </div>
+        </div>
+      </ng-container>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSpan]="6">
+          <label>*值班日期</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="16">
+          <app-my-date-picker formControlName="FROM_DATE"></app-my-date-picker>
+        </div>
+      </div>
+
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSpan]="6">
+          <label>*開始時間</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="16">
+          <app-my-time-picker myPickerFormat="HH:mm" myFormat="HH:mm" formControlName="FROM_TIME"></app-my-time-picker>
+        </div>
+      </div>
+
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSpan]="6">
+          <label>*結束時間</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="16">
+          <app-my-time-picker myPickerFormat="HH:mm" myFormat="HH:mm" formControlName="TO_TIME"></app-my-time-picker>
+        </div>
+      </div>
+      <ng-container formArrayName="empnos">
+        <ng-container *ngFor="let ctrl of scheduleForm.controls['empnos'].controls; let i = index;">
+          <div nz-form-control nz-col [formGroupName]="i">
+            <div nz-form-label nz-col [nzSpan]="6">
+              <label>*值班人員{{i+1}}</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="16">
+              <app-colleague-searcher style="width: 60%; margin-right:8px;" formControlName="person">
+              </app-colleague-searcher>
+              <i class="anticon anticon-minus-circle-o dynamic-delete-button" (click)="cancleEmp(i)" *ngIf="i !==0"></i>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+
+      <div nz-form-item nz-row>
+        <div nz-form-control nz-col [nzOffset]="6">
+          <button nz-button [nzType]="'dashed'" [nzSize]="'large'" style="width:60%" (click)="addEmp()">
+            <i class="anticon anticon-plus"></i>
+            <span> 增加值班人員</span>
+          </button>
+        </div>
+      </div>
+
+      <div nz-form-item nz-row [style.display]="'block'">
+        <button nz-button nz-col [nzOffset]="6" [nzSpan]="12" type="submit" [nzType]="'primary'" [nzSize]="'large'">確定</button>
+      </div>
+    </form>
+  </ng-template>
+  <ng-template #modalFooter>
+
+  </ng-template>
+</nz-modal>

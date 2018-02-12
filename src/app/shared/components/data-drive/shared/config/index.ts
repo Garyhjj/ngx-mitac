@@ -1,9 +1,15 @@
+import { inspectionScheduleLine4Config } from './inspection-schedule-line4.config';
 import { esdConfig } from './esd.config';
 import { inspectionNameConfig } from './inspection-name.config';
 import { inspectionLineConfig } from './inspection-line.config';
 import { inspectionReportLineConfig } from './inspection-report-line.config';
 import { inspectionLineImprovementConfig } from './inspection-line-improvement.config';
+import { inspectionAttendanceConfig } from './inspection-attendance.config';
+import { inspectionScheduleLineConfig } from './inspection-schedule-line.config';
 export const DataDriveStore = {
+    inspectionScheduleLine4: inspectionScheduleLine4Config,
+    inspectionScheduleLine: inspectionScheduleLineConfig,
+    inspectionAttendance: inspectionAttendanceConfig,
     inspectionLineImprovement: inspectionLineImprovementConfig,
     inspectionReportLine: inspectionReportLineConfig,
     inspectionLine: inspectionLineConfig,

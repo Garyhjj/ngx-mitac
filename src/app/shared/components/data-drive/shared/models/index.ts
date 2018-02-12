@@ -122,7 +122,7 @@ export class DataDrive implements DataDriveOptions {
     }
 
     addDefaultSearchParams(p) {
-        if(typeof p === 'object') {
+        if (typeof p === 'object') {
             this.tableData.defaultSearchParams = this.tableData.defaultSearchParams || {};
             Object.assign(this.tableData.defaultSearchParams, p);
         }
@@ -144,7 +144,7 @@ export class DataDrive implements DataDriveOptions {
     observeIsShowModal() {
         return this.isShowModalSubject.asObservable();
     }
-    onUpdateFormShow(cb: (fg: FormGroup, sub: Subject<string>, InputList:any[]) => void) {
+    onUpdateFormShow(cb: (fg: FormGroup, sub: Subject<string>, InputList: any[]) => void) {
         this.on('updateFormShow', cb);
     }
     onParamsOut(cb: (data) => void) {
@@ -172,6 +172,28 @@ export class DataDrive implements DataDriveOptions {
     runOnUpdateData(data) {
         return this.onAlterData('onUpdateData', data);
     }
+
+    changeUpdateViewer(cb: (data: any) => void) {
+        if (this.eventsQueue['changeUpdateViewer']) {
+            this.eventsQueue[0] = cb;
+        } else {
+            this.eventsQueue['changeUpdateViewer'] = [cb];
+        }
+    }
+    runChangeUpdateViewer(idx?) {
+        const eventQueue: Array<Function> = this.eventsQueue['changeUpdateViewer'] || [];
+        if (eventQueue.length > 0) {
+            const data = this.getData()[idx];
+            const out: any = {};
+            data.forEach(d => {
+                out[d.property] = d.value;
+            })
+            eventQueue[0](out)
+            return true;
+        } else {
+            return false;
+        }
+    }
     changeUpdateWay(cb: (data: any) => Observable<any> | boolean) {
         if (this.eventsQueue['changeUpdateWay']) {
             this.eventsQueue[0] = cb;
@@ -179,10 +201,9 @@ export class DataDrive implements DataDriveOptions {
             this.eventsQueue['changeUpdateWay'] = [cb];
         }
     }
-
     runChangeUpdateWay(data) {
         const eventQueue: Array<Function> = this.eventsQueue['changeUpdateWay'] || [];
-        if(eventQueue.length > 0) {
+        if (eventQueue.length > 0) {
             return eventQueue[0](data);
         }
         return false;
@@ -275,7 +296,7 @@ export class DataDrive implements DataDriveOptions {
     }
 
     selfUpdateTableData(data) {
-        if(isArray(data)) {
+        if (isArray(data)) {
             this.selfSearchDataSubject.next(data);
         }
     }
@@ -298,7 +319,7 @@ export class DataDrive implements DataDriveOptions {
         }
     }
 
-    switchViewType(type:DataViewType) {
+    switchViewType(type: DataViewType) {
         this.dataViewSet.type = type;
         this.initDataViewSet();
     }

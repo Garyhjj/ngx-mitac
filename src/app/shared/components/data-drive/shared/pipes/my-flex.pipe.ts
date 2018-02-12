@@ -2,16 +2,33 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { DataDriveService } from '../../core/services/data-drive.service';
 import { isArray } from '../../../../utils/index';
 import * as moment from 'moment';
+import { CacheService } from '../../../../../core/services/cache.service';
 @Pipe({
   name: 'myFlex'
 })
 export class MyFlexPipe implements PipeTransform {
 
   constructor(
-    private dataDriveService: DataDriveService
-  ) { }
+    private dataDriveService: DataDriveService,
+    private cache: CacheService
+  ) { 
+    this._cachedData = this.cache.get(this.name, this.key);
+  }
 
-  cachedData: { url: string, data: any }[];
+  _cachedData: { url: string, data: any }[];
+
+  get cachedData() {
+    return this._cachedData;
+  }
+
+  set cachedData(c) {
+    this.cache.update(this.name, this.key ,c);
+    this._cachedData = c;
+  }
+
+  name = 'myFlexPipe';
+  key = 'lazyLoad'
+
   outData;
   transform(value: any, args?: { name: string, params: any[] }): any {
     if (args && this[args.name]) {

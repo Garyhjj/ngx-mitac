@@ -139,7 +139,7 @@ export class InspectionBossReportComponent implements OnInit {
         Header: reportHeader,
         Lines: [data]
       }
-      return this.inspectionService.uploadReport(report).do((id: number) => { this.scheduleList[this.tabIdx].REPORT_ID = id });
+      return this.inspectionService.uploadReport(report).do((id: number) => { this.scheduleList[this.tabIdx].REPORT_ID = id; this.dataDrive.addDefaultSearchParams({ header_id: id })});
     })
   }
 }

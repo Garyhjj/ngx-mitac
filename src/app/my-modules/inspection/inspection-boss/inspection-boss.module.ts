@@ -8,6 +8,8 @@ import { InspectionBossComponent } from './inspection-boss.component';
 import { InspectionBossLinesComponent } from './inspection-boss-lines/inspection-boss-lines.component';
 import { InspectionBossReportComponent } from './inspection-boss-report/inspection-boss-report.component';
 import { InspectionBossImprovementComponent } from './inspection-boss-improvement/inspection-boss-improvement.component';
+import { InspectionBossAttendanceComponent } from './inspection-boss-attendance/inspection-boss-attendance.component';
+import { InspectionBossScheduleComponent } from './inspection-boss-schedule/inspection-boss-schedule.component';
 
 @NgModule({
   imports: [
@@ -17,7 +19,9 @@ import { InspectionBossImprovementComponent } from './inspection-boss-improvemen
     InspectionBossComponent,
     InspectionBossLinesComponent,
     InspectionBossReportComponent,
-    InspectionBossImprovementComponent
+    InspectionBossImprovementComponent,
+    InspectionBossAttendanceComponent,
+    InspectionBossScheduleComponent
 ],
   providers: [InspectionBossService]
 })

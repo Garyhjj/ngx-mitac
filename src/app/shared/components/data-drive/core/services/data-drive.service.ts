@@ -94,17 +94,20 @@ export class DataDriveService {
     }
 
     updateData(dataDrive: DataDrive, ds: any) {
-        if (!dataDrive.APIs || !dataDrive.APIs.update) {
-            throw new Error('沒有找到更新的api配置信息');
-        }
-        const url = dataDrive.APIs.update;
         ds = dataDrive.runOnUpdateData(ds);
         const isCompanyLimited = dataDrive.isCompanyLimited() as any;
         if (isCompanyLimited) {
             ds = this.addCompanyID(ds, isCompanyLimited);
         }
         const newUpdateWay = dataDrive.runChangeUpdateWay(ds) as Observable<any>;
-        return newUpdateWay instanceof Observable? newUpdateWay : this.http.post(APPConfig.baseUrl + url, ds);
+        if(newUpdateWay instanceof Observable) {
+            return newUpdateWay;
+        }
+        if (!dataDrive.APIs || !dataDrive.APIs.update) {
+            throw new Error('沒有找到更新的api配置信息');
+        }
+        const url = dataDrive.APIs.update;
+        return this.http.post(APPConfig.baseUrl + url, ds);
     }
 
     deleteData(dataDrive: DataDrive, ds: any[]) {
