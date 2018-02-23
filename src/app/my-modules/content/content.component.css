@@ -1,0 +1,13 @@
+.container{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column; 
+    height:100%;
+}
+/* nz-content{
+    min-height: 200%;
+} */
+
+.ant-layout-footer {
+    padding: 12px 50px;
+}

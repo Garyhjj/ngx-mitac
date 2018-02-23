@@ -1,0 +1,8 @@
+<nz-layout class="sub-layout">
+    <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzBreakpoint]="'lg'">
+      <app-modules-sider [isCollapsed]="isCollapsed"></app-modules-sider>
+    </nz-sider>
+    <nz-layout style="padding:0 24px" class="content">
+      <app-content style="height:100%;"></app-content>
+    </nz-layout>
+    </nz-layout>
