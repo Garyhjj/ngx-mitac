@@ -1,10 +1,10 @@
-import { UtilService } from './../core/services/util.service';
-import { AuthService } from './../core/services/auth.service';
+import { UtilService } from './../../core/services/util.service';
+import { AuthService } from './../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
-import { myStore, UserState, MyModule } from './../core/store';
+import { myStore, UserState, MyModule } from './../../core/store';
 import { Store } from '@ngrx/store';
-import { BreadcrumbModel } from './../core/models/breadcrumb.model';
+import { BreadcrumbModel } from './../../core/models/breadcrumb.model';
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
 @Component({

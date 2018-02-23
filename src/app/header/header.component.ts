@@ -44,6 +44,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.mySub3 && this.mySub1.unsubscribe();
   }
 
+  canSeeEnd() {
+    const privilege = this.authService.user.privilege;
+    return privilege.find(p => p.FUNCTION_URL === 'User');
+  }
+
   confirm() {
     this.loginOut()
   }

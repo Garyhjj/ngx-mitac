@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.loading = true;
     let value = this.validateForm.value;
     this.authService.login(value).subscribe((user) => {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/']);
       this.loading = false;
       this._notification.create('success','登录成功',`您好：${user.User.NICK_NAME}`)
     },(err) => {this.loading = false;console.log(err)});

@@ -1,4 +1,4 @@
-import { myStore, BreadcrumbState } from './../core/store';
+import { myStore, BreadcrumbState } from './../../core/store';
 import { Store } from '@ngrx/store';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';

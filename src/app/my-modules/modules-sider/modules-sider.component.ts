@@ -54,7 +54,7 @@ export class ModulesSiderComponent implements OnInit,OnDestroy {
         breadcrumbModel.update(this.store$);
         let navRoute;
         if( navRoute = target.dataset.route) {
-          this.router.navigate([navRoute]);
+          this.router.navigate(['modules/' + navRoute]);
         }
       }catch(e) {
         console.log('路由位置獲取失敗');

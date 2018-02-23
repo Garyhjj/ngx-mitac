@@ -1,10 +1,10 @@
 <nz-header class="header">
   <img src="assets/imgs/logo.png" alt="logo" class="logo">
   <div class="header-title">順達電腦辦公平台</div>
-  <ul nz-menu [nzTheme]="'dark'" [nzMode]="'horizontal'" style="line-height: 64px;">
-    <li routerLink="/modules" nz-menu-item routerLinkActive="ant-menu-item-selected" *ngIf="auth && !isLoginPage">應用中心</li>
-    <!-- <li nz-menu-item>後台</li>
-    <li nz-menu-item>其它</li> -->
+  <ul nz-menu [nzTheme]="'dark'" [nzMode]="'horizontal'" style="line-height: 64px;" *ngIf="auth && !isLoginPage">
+    <li routerLink="/modules" nz-menu-item routerLinkActive="ant-menu-item-selected">應用中心</li>
+    <li nz-menu-item routerLink="/end" nz-menu-item routerLinkActive="ant-menu-item-selected" *ngIf="canSeeEnd()">後台</li>
+    <!-- <li nz-menu-item>其它</li> -->
     <div class="menu">
       <ul nz-menu [nzTheme]="'dark'" [nzMode]="'horizontal'" style="line-height: 63px;" *ngIf="auth && !isLoginPage" class="ul-horizontal">
         <li nz-menu-item>
