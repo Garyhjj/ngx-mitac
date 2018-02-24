@@ -1,4 +1,4 @@
-<nz-tabset>
+<nz-tabset [(nzSelectedIndex)]="tabIdx">
   <nz-tab>
     <ng-template #nzTabHeading>
       小夜班
@@ -21,14 +21,14 @@
 
 <nz-modal [nzVisible]="isVisible" [nzTitle]="'第一个 Modal'" [nzContent]="modalContent" [nzFooter]="modalFooter" (nzOnCancel)="isVisible = false">
   <ng-template #modalContent>
-    <form nz-form [nzLayout]="formLayout" (ngSubmit)="submitForm()" [formGroup]="scheduleForm" *ngIf="scheduleForm">
-      <ng-container>
+    <form nz-form [nzLayout]="formLayout" [formGroup]="scheduleForm" *ngIf="scheduleForm">
+      <ng-container *ngIf="tabIdx === 2">
         <div nz-form-item nz-row>
           <div nz-form-label nz-col [nzSpan]="6">
             <label>*巡檢週次</label>
           </div>
           <div nz-form-control nz-col [nzSpan]="16">
-            <app-mx-select [myPlaceHolder]="'請選擇巡檢週次'" [lazyAPI]="'IPQA/GetMRIWeek?bweek=1&eweek=8'" [lazyParams]="['WEEK_ID', 'WEEK_DESC']"
+            <app-mx-select [myPlaceHolder]="'請選擇巡檢週次'" [options]="weekOption"
               formControlName="SCHEDULE_NAME"></app-mx-select>
           </div>
         </div>
@@ -42,7 +42,7 @@
           </div>
         </div>
       </ng-container>
-      <div nz-form-item nz-row>
+      <div nz-form-item nz-row *ngIf="tabIdx !== 2">
         <div nz-form-label nz-col [nzSpan]="6">
           <label>*值班日期</label>
         </div>
@@ -66,6 +66,7 @@
         </div>
         <div nz-form-control nz-col [nzSpan]="16">
           <app-my-time-picker myPickerFormat="HH:mm" myFormat="HH:mm" formControlName="TO_TIME"></app-my-time-picker>
+          <div nz-form-explain class="has-error">{{timeErr}}</div>
         </div>
       </div>
       <ng-container formArrayName="empnos">
@@ -93,7 +94,7 @@
       </div>
 
       <div nz-form-item nz-row [style.display]="'block'">
-        <button nz-button nz-col [nzOffset]="6" [nzSpan]="12" type="submit" [nzType]="'primary'" [nzSize]="'large'">確定</button>
+        <button nz-button nz-col [nzOffset]="6" [nzSpan]="12" type="submit" [nzType]="'primary'" [nzSize]="'large'" (click)="submitForm()" [disabled]="!scheduleForm.valid">確定</button>
       </div>
     </form>
   </ng-template>

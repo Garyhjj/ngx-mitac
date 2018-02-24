@@ -21,5 +21,18 @@ export class InspectionBossService {
         return this.http.get(replaceQuery(inspectionBossConfig.getEmployeeSchedule, send));
     }
 
+    uploadSchedule(d) {
+        return this.http.post(inspectionBossConfig.uploadSchedule, d);
+    }
+
+    deleteScheduleLines(id) {
+        const send = {sechedule_line_id: id};
+        return this.http.delete(replaceQuery(inspectionBossConfig.deleteScheduleLines, send));
+    }
+
+    getMriWeek() {
+        return this.http.get(inspectionBossConfig.getMriWeek);
+    }
+
 }
 

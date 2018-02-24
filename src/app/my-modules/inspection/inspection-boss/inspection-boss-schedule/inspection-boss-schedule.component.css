@@ -6,3 +6,6 @@
     color: #999;
     transition: all .3s;
   }
+  .has-error {
+    color: red
+  }

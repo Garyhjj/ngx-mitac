@@ -185,7 +185,7 @@ export class DataDrive implements DataDriveOptions {
         if (eventQueue.length > 0) {
             const data = this.getData()[idx];
             const out: any = {};
-            data.forEach(d => {
+            data && data.forEach(d => {
                 out[d.property] = d.value;
             })
             eventQueue[0](out)

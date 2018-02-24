@@ -7,29 +7,33 @@ export const inspectionScheduleLine4Config = {
         changeBodyFontSize: true,
         changeHeaderFontSize: true,
         menu: true,
-        toExcel: true
+        toExcel: true,
+        addItem: true
     },
     dataViewSet: {
         title: '排班記錄',
+        more: {
+            showAction: true
+        }
     },
     searchSets: [
         {
-            property: '開始時間',
-            apiProperty: 'dateFM',
+            property: '巡檢週次',
+            apiProperty: 'week',
             InputOpts: {
-                type: 'datePicker',
+                type: 'select',
+                more: {
+                    lazyAPI: 'IPQA/GetMRIWeek?bweek=3&eweek=8',
+                    lazyParams: ['WEEK_ID', 'WEEK_DESC']
+                }
             }
         },
-        {
-            property: '結束時間',
-            apiProperty: 'dateTO',
-            InputOpts: {
-                type: 'datePicker',
-            }
-        }
     ],
     tableData: {
         searchable: true,
+        addable: true,
+        deletable: true,
+        editable: true,
         columns: [
             {
                 property: 'SCHEDULE_NAME', value: '巡檢週次'

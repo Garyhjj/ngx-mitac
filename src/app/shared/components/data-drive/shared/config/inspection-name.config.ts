@@ -101,6 +101,7 @@ export const inspectionNameConfig = {
         searchable: true,
         addable: true,
         deletable: true,
+        editable: true,
         isCompanyLimited: 'company_name',
         columns: [
             {
