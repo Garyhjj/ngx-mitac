@@ -1,0 +1,75 @@
+<app-data-drive [name]="'inspectionComment'" (dataDriveInit)="getDataDrive($event)"></app-data-drive>
+
+<nz-modal [nzVisible]="isVisible" [nzTitle]="'評分'" [nzContent]="modalContent" [nzFooter]="modalFooter" (nzOnCancel)="isVisible = false"
+  nzWidth="760px">
+  <ng-template #modalContent>
+    <form nz-form [nzLayout]="formLayout" [formGroup]="myForm" *ngIf="myForm">
+      <nz-collapseset formArrayName="list">
+        <nz-collapse [nzTitle]="'位置'+(i+1)" *ngFor="let ctrl of myForm.controls['list'].controls; let i = index;">
+          <div nz-form-control nz-col [formGroupName]="i">
+            <div nz-form-label nz-col [nzSpan]="6">
+              <label>時間</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="16">
+              <nz-input formControlName="INSPECT_TIME" [nzSize]="'large'" [nzReadonly]="true">
+              </nz-input>
+            </div>
+          </div>
+
+          <div nz-form-control nz-col [formGroupName]="i">
+            <div nz-form-label nz-col [nzSpan]="6">
+              <label>地點</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="16">
+              <nz-input formControlName="LOCATION" [nzSize]="'large'" [nzReadonly]="true">
+              </nz-input>
+            </div>
+          </div>
+
+          <div nz-form-control nz-col [formGroupName]="i">
+            <div nz-form-label nz-col [nzSpan]="6">
+              <label>問題詳述</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="16">
+              <nz-input formControlName="PROBLEM_DESC" [nzSize]="'large'" [nzReadonly]="true">
+              </nz-input>
+            </div>
+          </div>
+
+          <div nz-form-control nz-col [formGroupName]="i">
+            <div nz-form-label nz-col [nzSpan]="6">
+              <label>附圖</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="16">
+                <app-photo-upload formControlName="PROBLEM_PICTURES"
+                [maxCount]="9"
+                [removable]="false"
+                [addable]="false"
+                [scanable]="true"
+                ></app-photo-upload>
+            </div>
+          </div>
+
+          <div nz-form-control nz-col [formGroupName]="i">
+            <div nz-form-label nz-col [nzSpan]="6">
+              <label>負責人</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="16">
+                <app-colleague-searcher formControlName="OWNER_EMPNO">
+                </app-colleague-searcher>
+            </div>
+          </div>
+        </nz-collapse>
+      </nz-collapseset>
+
+
+      <div nz-form-item nz-row [style.display]="'block'">
+        <button nz-button nz-col [nzOffset]="6" [nzSpan]="12" type="submit" [nzType]="'primary'" [nzSize]="'large'" (click)="submitForm()"
+          [disabled]="!myForm.valid">確定</button>
+      </div>
+    </form>
+  </ng-template>
+  <ng-template #modalFooter>
+
+  </ng-template>
+</nz-modal>

@@ -19,7 +19,7 @@
   </nz-tab>
 </nz-tabset>
 
-<nz-modal [nzVisible]="isVisible" [nzTitle]="'第一个 Modal'" [nzContent]="modalContent" [nzFooter]="modalFooter" (nzOnCancel)="isVisible = false">
+<nz-modal [nzVisible]="isVisible" [nzTitle]="'排班'" [nzContent]="modalContent" [nzFooter]="modalFooter" (nzOnCancel)="isVisible = false">
   <ng-template #modalContent>
     <form nz-form [nzLayout]="formLayout" [formGroup]="scheduleForm" *ngIf="scheduleForm">
       <ng-container *ngIf="tabIdx === 2">

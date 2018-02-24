@@ -34,5 +34,10 @@ export class InspectionBossService {
         return this.http.get(inspectionBossConfig.getMriWeek);
     }
 
+    getReport(id) {
+        const send = {header_id: id};
+        return this.http.get(replaceQuery(inspectionBossConfig.getReport, send));
+    }
+
 }
 

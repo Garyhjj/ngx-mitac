@@ -1,3 +1,4 @@
+import { InspectionBossCommentComponent } from './inspection-boss-comment/inspection-boss-comment.component';
 import { InspectionBossScheduleComponent } from './inspection-boss-schedule/inspection-boss-schedule.component';
 import { InspectionBossAttendanceComponent } from './inspection-boss-attendance/inspection-boss-attendance.component';
 import { InspectionBossImprovementComponent } from './inspection-boss-improvement/inspection-boss-improvement.component';
@@ -40,6 +41,10 @@ const bRoutes: Routes = [
             {
                 path: 'schedule',
                 component: InspectionBossScheduleComponent
+            },
+            {
+                path: 'comment',
+                component: InspectionBossCommentComponent
             }
         ]
     }

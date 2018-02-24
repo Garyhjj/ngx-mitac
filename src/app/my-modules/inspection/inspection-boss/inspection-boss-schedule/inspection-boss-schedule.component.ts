@@ -81,6 +81,7 @@ export class InspectionBossScheduleComponent implements OnInit {
     });
     const fromTime = this.scheduleForm.get('FROM_TIME');
     const toTime = this.scheduleForm.get('TO_TIME');
+    // 核對時間的合法性
     Observable.merge(fromTime.valueChanges, toTime.valueChanges).subscribe(c => {
       const prefix = '2018-01-01 ';
       if(new Date(prefix+ fromTime.value).getTime() - new Date(prefix+ toTime.value).getTime() < 0) {
@@ -100,6 +101,7 @@ export class InspectionBossScheduleComponent implements OnInit {
     const val = empnos.controls[i].value;
     if(val && val.person) {
       const store = this.linesList.find(l => l.EMPNO === val.person);
+      // 刪除前對已在數據庫有的記錄進行詢問
       if(store) {
         const deleteFn = () => {
           this.inspectionBossService.deleteScheduleLines(store.SCHEDULE_LINE_ID).subscribe(() => {
@@ -131,12 +133,12 @@ export class InspectionBossScheduleComponent implements OnInit {
   }
 
   submitForm() {
-    console.log(this.scheduleForm.value);
     const val = this.scheduleForm.value;
     const user = this.auth.user;
     let weekDes = val.SCHEDULE_NAME? this.mriWeekList.find(m => m.WEEK_ID === val.SCHEDULE_NAME): {};
     weekDes = weekDes || {};
     let week, year;
+    // 7s有這些項目
     if(weekDes.WEEK_ID) {
       week = +weekDes.WEEK_ID.slice(4);
       year = +weekDes.WEEK_ID.slice(0, 4);
@@ -171,7 +173,6 @@ export class InspectionBossScheduleComponent implements OnInit {
         }
       })
     };
-    console.log([{ Header, Lines }]);
     this.inspectionBossService.uploadSchedule({ Schedules: [{ Header, Lines }] }).subscribe(r => {
       this.util.showGlobalSucMes(val.SCHEDULE_HEADER_ID < 0 ? '插入成功' : '更新成功');
       this.isVisible = false;

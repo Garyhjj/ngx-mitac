@@ -1,10 +1,10 @@
 export const inspectionReportLineConfig = {
     id: 10,
-    APIs: { 
+    APIs: {
         search: 'IPQA/reportLines?header_id={header_id}',
         update: 'IPQA/UpdateReportLines',
         delete: 'IPQA/DeleteReportLines?line_id={LINE_ID}'
-     },
+    },
     additionalFn: {
         filterColumn: true,
         changeBodyFontSize: true,
@@ -31,6 +31,10 @@ export const inspectionReportLineConfig = {
             property: 'INSPECT_TIME',
             InputOpts: {
                 type: 'timePicker',
+                match: {
+                    fns: [{ name: 'required' }],
+                    err: '不能為空'
+                },
                 more: {
                     pickerFormat: 'HH:mm',
                     showFormat: 'HH:mm'
@@ -39,6 +43,12 @@ export const inspectionReportLineConfig = {
         },
         {
             property: 'LOCATION',
+            InputOpts: {
+                match: {
+                    fns: [{ name: 'required' }],
+                    err: '不能為空'
+                }
+            },
         },
         {
             property: 'PROBLEM_FLAG',
@@ -52,8 +62,8 @@ export const inspectionReportLineConfig = {
                 type: 'select',
                 placeHolder: '請選擇類別',
                 more: {
-                    options:  [{ property: '安全問題', value: '安全問題' }, { property: '員工違紀問題', value: '員工違紀問題' }
-                    , { property: '其他7S問題', value: '其他7S問題' }]
+                    options: [{ property: '安全問題', value: '安全問題' }, { property: '員工違紀問題', value: '員工違紀問題' }
+                        , { property: '其他7S問題', value: '其他7S問題' }]
                 }
             }
         },
@@ -82,7 +92,7 @@ export const inspectionReportLineConfig = {
         addable: true,
         deletable: true,
         defaultSearchParams: {
-           
+
         },
         columns: [
             {
@@ -95,7 +105,7 @@ export const inspectionReportLineConfig = {
                 property: 'PROBLEM_FLAG', value: '存在問題', more: {
                     pipe: {
                         name: 'replace',
-                        params: [{Y: '是', N: '否'}]
+                        params: [{ Y: '是', N: '否' }]
                     }
                 }
             },

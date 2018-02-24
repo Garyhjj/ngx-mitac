@@ -41,11 +41,11 @@
           <span nz-table-divider *ngIf="canEdit && canDelete"></span>
           <a  *ngIf="canDelete" (click)="toDelete(i)">刪除</a>
           <ng-container *ngIf="setDetail.paramsOut">
-            <span nz-table-divider></span>
+            <span nz-table-divider *ngIf="canEdit || canDelete"></span>
             <a (click)="paramsOut(setDetail.paramsOut.params,i)">{{setDetail.paramsOut.name}}</a>
           </ng-container>
           <ng-container *ngIf="setDetail.linkToPhone">
-            <span nz-table-divider></span>
+            <span nz-table-divider *ngIf="canEdit || canDelete || setDetail.paramsOut"></span>
             <a (click)="linkToPhone(setDetail.linkToPhone,i)">{{setDetail.linkToPhone.name}}</a>
           </ng-container>
         </span>
