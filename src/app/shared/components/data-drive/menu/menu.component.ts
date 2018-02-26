@@ -23,7 +23,6 @@ export class MenuComponent implements OnInit, OnDestroy {
   @Input()
   set opts(opts: DataDrive) {
     this.dataDrive = opts;
-    this.viewerType = opts.dataViewSet.type;
   }
   constructor(
     private _message: NzMessageService,
@@ -39,6 +38,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   changeHeaderSize() {
+    this.viewerType = this.dataDrive.dataViewSet.type;
     switch (this.viewerType) {
       case 'table':
         this.dataDrive.dataViewSet.changeHeaderFontSize(this.headerFontSize + 'px');

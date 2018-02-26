@@ -63,7 +63,11 @@ export const inspectionAttendanceConfig = {
         },
         columns: [
             {
-                property: 'SCHEDULE_DATE', value: '巡檢日期'
+                property: 'SCHEDULE_DATE', value: '巡檢日期', more: {
+                    sortBy: {
+                        name: 'byTime'
+                    }
+                }
             },
             {
                 property: 'NAME', value: '巡檢人員'

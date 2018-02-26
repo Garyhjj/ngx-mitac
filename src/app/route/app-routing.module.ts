@@ -8,7 +8,8 @@ const routes: Routes = [
   pathMatch: 'full'},
   { path: 'modules', loadChildren: 'app/my-modules/my-modules.module#MyModulesModule'},
   { path: 'login', loadChildren: 'app/login/login.module#LoginModule'},
-  { path: '**', redirectTo: '',
+  { path: 'end', loadChildren: 'app/end/end.module#EndModule'},
+  { path: '**', redirectTo: 'modules',
   pathMatch: 'full'},
 ];
 

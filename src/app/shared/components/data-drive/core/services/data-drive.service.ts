@@ -22,6 +22,7 @@ export class DataDriveService {
 
     async initDataDrive(name: string) {
         let pureOption = this.getDriveOption(name);
+        typeof pureOption === 'object' && (pureOption = JSON.parse(JSON.stringify(pureOption)));
         let userName = this.user ? this.user.USER_NAME : '';
         if (typeof pureOption === 'string') {
             pureOption = await this.http.get(replaceQuery(APPConfig.baseUrl + pureOption, {})).toPromise().catch((err) => this.utilSerive.errDeal(err));

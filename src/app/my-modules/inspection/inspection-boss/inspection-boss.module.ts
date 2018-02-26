@@ -1,3 +1,4 @@
+import { BossGuard } from './boss-guard.service';
 import { InspectionBossService } from './shared/services/inspection-boss.service';
 import { DataDriveModule } from './../../../shared/components/data-drive/data-drive.module';
 import { InspectionBossRoutingModule } from './inspection-boss-routing';
@@ -25,6 +26,6 @@ import { InspectionBossCommentComponent } from './inspection-boss-comment/inspec
     InspectionBossScheduleComponent,
     InspectionBossCommentComponent
 ],
-  providers: [InspectionBossService]
+  providers: [InspectionBossService, BossGuard]
 })
 export class InspectionBossModule { }

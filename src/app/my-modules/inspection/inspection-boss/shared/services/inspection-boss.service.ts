@@ -7,13 +7,16 @@ import { replaceQuery } from '../../../../../shared/utils';
 
 @Injectable()
 export class InspectionBossService {
-
+    role = 3;
     user: UserState;
     constructor(
         private http: HttpClient,
         private auth: AuthService
     ) {
         this.user = this.auth.user;
+        if(this.user.privilege.find(m => m.FUNCTION_ID === 124)) {
+            this.role = 1;
+        }
     }
 
     getEmployeeSchedule() {
@@ -37,6 +40,10 @@ export class InspectionBossService {
     getReport(id) {
         const send = {header_id: id};
         return this.http.get(replaceQuery(inspectionBossConfig.getReport, send));
+    }
+
+    uploadReport(d) {
+        return this.http.post(inspectionBossConfig.uploadReport, d);
     }
 
 }

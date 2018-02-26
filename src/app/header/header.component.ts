@@ -46,7 +46,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   canSeeEnd() {
     const privilege = this.authService.user.privilege;
-    return privilege.find(p => p.FUNCTION_URL === 'User');
+    return privilege.find(p => p.FUNCTION_ID === 42);
   }
 
   confirm() {

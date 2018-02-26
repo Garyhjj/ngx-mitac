@@ -1,3 +1,4 @@
+import { BossGuard } from './boss-guard.service';
 import { InspectionBossCommentComponent } from './inspection-boss-comment/inspection-boss-comment.component';
 import { InspectionBossScheduleComponent } from './inspection-boss-schedule/inspection-boss-schedule.component';
 import { InspectionBossAttendanceComponent } from './inspection-boss-attendance/inspection-boss-attendance.component';
@@ -20,6 +21,7 @@ const bRoutes: Routes = [
         canActivateChild: [AuthGuard],
         children: [
             {
+                canActivate: [BossGuard],
                 path: 'lines',
                 component: InspectionBossLinesComponent
             },
@@ -35,14 +37,17 @@ const bRoutes: Routes = [
                 component: InspectionBossImprovementComponent
             },
             {
+                canActivate: [BossGuard],
                 path: 'attendance',
                 component: InspectionBossAttendanceComponent
             },
             {
+                canActivate: [BossGuard],
                 path: 'schedule',
                 component: InspectionBossScheduleComponent
             },
             {
+                canActivate: [BossGuard],
                 path: 'comment',
                 component: InspectionBossCommentComponent
             }

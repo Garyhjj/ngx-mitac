@@ -1,0 +1,8 @@
+.content{
+    min-height: calc(100vh - 74px)
+}
+
+:host ::ng-deep .ant-layout-sider-trigger.ng-star-inserted {
+    color: #000;
+    background: #fff;
+}

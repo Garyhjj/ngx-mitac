@@ -35,30 +35,30 @@
       <span class="nav-text">巡检</span>
     </span>
     <ul>
-      <li nz-menu-group>
+      <li nz-menu-group *ngIf="canSeeFunction(161)">
         <span title>基本設置</span>
         <ul>
           <li nz-menu-item data-route="/inspection/basic/name">巡檢名稱</li>
         </ul>
       </li>
-      <li nz-menu-group>
+      <li nz-menu-group *ngIf="canSeeFunction(5)">
         <span title>主管巡检</span>
         <ul>
-          <li nz-menu-item data-route="/inspection/boss/schedule">排班</li>
+          <li nz-menu-item data-route="/inspection/boss/schedule" *ngIf="canSeeFunction(124)">排班</li>
           <li nz-menu-item data-route="/inspection/boss/report">巡检报告</li>
           <li nz-menu-item data-route="/inspection/boss/improvement">改善措施</li>
-          <li nz-menu-item data-route="/inspection/boss/lines">问题追踪</li>
-          <li nz-menu-item data-route="/inspection/boss/attendance">考勤記錄</li>
-          <li nz-menu-item data-route="/inspection/boss/comment">巡檢報告評分</li>
+          <li nz-menu-item data-route="/inspection/boss/lines" *ngIf="canSeeFunction(103)">问题追踪</li>
+          <li nz-menu-item data-route="/inspection/boss/attendance" *ngIf="canSeeFunction(163)">考勤記錄</li>
+          <li nz-menu-item data-route="/inspection/boss/comment" *ngIf="canSeeFunction(164)">巡檢報告評分</li>
         </ul>
       </li>
-      <li nz-menu-group>
+      <!-- <li nz-menu-group>
         <span title>设备巡检</span>
         <ul>
           <li nz-menu-item>巡检报告</li>
           <li nz-menu-item>登记卡</li>
         </ul>
-      </li>
+      </li> -->
     </ul>
   </li>
 </ul>

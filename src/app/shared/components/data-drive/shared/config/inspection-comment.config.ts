@@ -50,13 +50,21 @@ export const inspectionCommentConfig = {
                 property: 'NAME', value: '姓名'
             },
             {
-                property: 'SCHEDULE_DATE', value: '巡檢時間'
+                property: 'SCHEDULE_DATE', value: '巡檢時間', more: {
+                    sortBy: {
+                        name: 'byTime'
+                    }
+                }
             },
             {
                 property: 'ADDITIONAL_SCORE', value: '附加分'
             },
             {
-                property: 'SCORE', value: '總分'
+                property: 'SCORE', value: '總分', more: {
+                    sortBy: {
+                        name: 'byNum'
+                    }
+                }
             }
         ]
     }

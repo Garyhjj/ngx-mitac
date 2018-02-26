@@ -1,8 +1,9 @@
 <nz-select
       style="width: 200px;"
       nzAllowClear
-      [nzPlaceHolder]="'請輸入英文名/工號/中文名'"
+      [nzPlaceHolder]="miPlaceHolder"
       [nzFilter]="false"
+      [nzDisabled]="miDisabled"
       [(ngModel)]="selectedOption"
       (ngModelChange)="change($event)"
       (nzSearchChange)="searchChange($event)"

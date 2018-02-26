@@ -4,9 +4,30 @@
   nzWidth="760px">
   <ng-template #modalContent>
     <form nz-form [nzLayout]="formLayout" [formGroup]="myForm" *ngIf="myForm">
-      <nz-collapseset formArrayName="list">
-        <nz-collapse [nzTitle]="'位置'+(i+1)" *ngFor="let ctrl of myForm.controls['list'].controls; let i = index;">
-          <div nz-form-control nz-col [formGroupName]="i">
+
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSpan]="6">
+          <label>總分</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="16">
+          <nz-input formControlName="SCORE" [nzSize]="'large'" [nzReadonly]="true">
+          </nz-input>
+        </div>
+      </div>
+
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSpan]="6">
+          <label>附加分</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="16">
+          <nz-input-number formControlName="ADDITIONAL_SCORE" [nzSize]="'large'" [nzMin]="0" [style.width]="'50%'"></nz-input-number>
+        </div>
+      </div>
+
+      <nz-collapseset formArrayName="list" nzAccordion>
+        <nz-collapse [nzActive]="i === 0" [nzTitle]="'位置'+(i+1) +': '+ (myForm.get('list')?.controls[i]?.value?.SCORE !== null? myForm.get('list').controls[i].value.SCORE+'分': '未評分')"
+          *ngFor="let ctrl of myForm.controls['list'].controls; let i = index;">
+          <div nz-form-item nz-row [formGroupName]="i">
             <div nz-form-label nz-col [nzSpan]="6">
               <label>時間</label>
             </div>
@@ -16,7 +37,7 @@
             </div>
           </div>
 
-          <div nz-form-control nz-col [formGroupName]="i">
+          <div nz-form-item nz-row [formGroupName]="i">
             <div nz-form-label nz-col [nzSpan]="6">
               <label>地點</label>
             </div>
@@ -26,7 +47,7 @@
             </div>
           </div>
 
-          <div nz-form-control nz-col [formGroupName]="i">
+          <div nz-form-item nz-row [formGroupName]="i">
             <div nz-form-label nz-col [nzSpan]="6">
               <label>問題詳述</label>
             </div>
@@ -36,27 +57,31 @@
             </div>
           </div>
 
-          <div nz-form-control nz-col [formGroupName]="i">
+          <div nz-form-item nz-row [formGroupName]="i" *ngIf="myForm.get('list')?.controls[i]?.value?.PROBLEM_PICTURES">
             <div nz-form-label nz-col [nzSpan]="6">
               <label>附圖</label>
             </div>
             <div nz-form-control nz-col [nzSpan]="16">
-                <app-photo-upload formControlName="PROBLEM_PICTURES"
-                [maxCount]="9"
-                [removable]="false"
-                [addable]="false"
-                [scanable]="true"
-                ></app-photo-upload>
+              <app-photo-upload formControlName="PROBLEM_PICTURES" [maxCount]="9" [removable]="false" [addable]="false" [scanable]="true"></app-photo-upload>
             </div>
           </div>
 
-          <div nz-form-control nz-col [formGroupName]="i">
+          <div nz-form-item nz-row [formGroupName]="i">
             <div nz-form-label nz-col [nzSpan]="6">
               <label>負責人</label>
             </div>
             <div nz-form-control nz-col [nzSpan]="16">
-                <app-colleague-searcher formControlName="OWNER_EMPNO">
-                </app-colleague-searcher>
+              <app-colleague-searcher formControlName="OWNER_EMPNO" [miDisabled]="true" [miPlaceHolder]="''">
+              </app-colleague-searcher>
+            </div>
+          </div>
+
+          <div nz-form-item nz-row [formGroupName]="i">
+            <div nz-form-label nz-col [nzSpan]="6">
+              <label>*评分</label>
+            </div>
+            <div nz-form-control nz-col [nzSpan]="16">
+              <nz-input-number formControlName="SCORE" [nzSize]="'large'" [nzMin]="0" [style.width]="'50%'"></nz-input-number>
             </div>
           </div>
         </nz-collapse>
@@ -64,7 +89,7 @@
 
 
       <div nz-form-item nz-row [style.display]="'block'">
-        <button nz-button nz-col [nzOffset]="6" [nzSpan]="12" type="submit" [nzType]="'primary'" [nzSize]="'large'" (click)="submitForm()"
+        <button nz-button nz-col [nzOffset]="6" [nzSpan]="12" type="button" [nzType]="'primary'" [nzSize]="'large'" (click)="submitForm()"
           [disabled]="!myForm.valid">確定</button>
       </div>
     </form>

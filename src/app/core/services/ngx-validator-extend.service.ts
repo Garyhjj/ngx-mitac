@@ -21,7 +21,7 @@ export class NgxValidatorExtendService {
   required(): ValidatorFn | any {
     return (ctrl: AbstractControl) => {
       let value = ctrl.value;
-      return value ? null : {
+      return value || value === 0? null : {
         'required': true
       }
     }

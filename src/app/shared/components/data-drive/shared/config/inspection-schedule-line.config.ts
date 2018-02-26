@@ -2,6 +2,7 @@ export const inspectionScheduleLineConfig = {
     id: 12,
     APIs: { 
         search: 'IPQA/GetScheduleList?nameID={nameID}&dateFM={dateFM}&dateTO={dateTO}&week={week}',
+        delete: 'IPQA/DeleteScheduleHeader?sechedule_header_id={SCHEDULE_HEADER_ID}'
      },
     additionalFn: {
         changeBodyFontSize: true,
@@ -45,7 +46,11 @@ export const inspectionScheduleLineConfig = {
                 property: 'NAME', value: '巡檢人員'
             },
             {
-                property: 'FROM_DATE', value: '開始日期'
+                property: 'FROM_DATE', value: '開始日期', more: {
+                    sortBy: {
+                        name: 'byTime'
+                    }
+                }
             },
             {
                 property: 'FROM_TIME', value: '開始時間'

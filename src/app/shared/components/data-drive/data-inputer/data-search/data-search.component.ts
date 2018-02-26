@@ -67,8 +67,10 @@ export class DataSearchComponent implements OnInit {
     this.searchSets.forEach(s => {
       send[s.apiProperty ? s.apiProperty : s.property] = value[s.property];
     })
-    this.dataDriveService.searchData(this.dataDrive, send).subscribe((c: any[]) => this.dataDriveService.initTableData(this.dataDrive, c)
-      , (err) => this.util.errDeal(err)
+    const id = this.util.showLoading();
+    const finalFn = (id) => this.util.dismissLoading(id);
+    this.dataDriveService.searchData(this.dataDrive, send).subscribe((c: any[]) => {this.dataDriveService.initTableData(this.dataDrive, c); finalFn(id)}
+      , (err) => {this.util.errDeal(err); finalFn(id)}
     );
   }
 

@@ -74,4 +74,12 @@ export class UtilService {
           });
     }
 
+    showLoading(){
+        return this._message.loading('正在執行中', {nzDuration: 0}).messageId;
+    }
+
+    dismissLoading(id: string) {
+        this._message.remove(id);
+    }
+
 }

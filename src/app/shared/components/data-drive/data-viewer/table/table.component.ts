@@ -83,7 +83,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   }
   sort(name: string, v: string, by: { name: string, params: any[] }) {
     const isAscend = v === 'ascend';
-    this.tableData.data = this.tableData.data.sort((a: any, b: any) => {
+    this._dataDrive.tableData.data = this.tableData.data = this.tableData.data.sort((a: any, b: any) => {
       if (!isArray(a) || !isArray(b)) return 0;
       const target_a = a.find(p => p.property === name).value || '';
       const target_b = b.find(p => p.property === name).value || '';
@@ -145,9 +145,12 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     const deleteFn = () => {
       const data = this._dataDrive.getData();
       if (!data[idx]) return;
+      const id = this.util.showLoading();
+      const finalFn = (id) => this.util.dismissLoading(id);
       this.dataDriveService.deleteData(this._dataDrive, data[idx]).subscribe(r => {
         this.dataDriveService.updateViewData(this._dataDrive);
-      }, (err) => this.util.errDeal(err));
+        finalFn(id);
+      }, (err) => {this.util.errDeal(err); finalFn(id)});
     }
     this.modalService.confirm({
       title: '您確定要刪除這一條目嗎？',

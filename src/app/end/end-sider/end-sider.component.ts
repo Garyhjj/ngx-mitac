@@ -8,11 +8,11 @@ import { BreadcrumbModel } from './../../core/models/breadcrumb.model';
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-modules-sider',
-  templateUrl: './modules-sider.component.html',
-  styleUrls: ['./modules-sider.component.css']
+  selector: 'app-end-sider',
+  templateUrl: './end-sider.component.html',
+  styleUrls: ['./end-sider.component.css']
 })
-export class ModulesSiderComponent implements OnInit,OnDestroy {
+export class EndSiderComponent implements OnInit,OnDestroy {
 
   myModules:MyModule[]
   mySub: Subscription;
@@ -28,7 +28,7 @@ export class ModulesSiderComponent implements OnInit,OnDestroy {
 
   ngOnInit() {
     this.mySub = this.store$.select(s => s.userReducer).subscribe(u => {this.myModules = u.modules; this.myPrivilege = u.privilege});
-    let breadcrumbModel = new BreadcrumbModel(['應用中心']);
+    let breadcrumbModel = new BreadcrumbModel(['後台']);
     breadcrumbModel.update(this.store$);
   }
   ngOnDestroy() {
@@ -57,12 +57,12 @@ export class ModulesSiderComponent implements OnInit,OnDestroy {
         }else {
           route = [top.querySelector('div span').innerText, target.innerText];
         }
-        route.unshift('應用中心')
+        route.unshift('後台')
         let breadcrumbModel = new BreadcrumbModel(route);
         breadcrumbModel.update(this.store$);
         let navRoute;
         if( navRoute = target.dataset.route) {
-          this.router.navigate(['modules/' + navRoute]);
+          this.router.navigate(['end/' + navRoute]);
         }
       }catch(e) {
         console.log('路由位置獲取失敗');

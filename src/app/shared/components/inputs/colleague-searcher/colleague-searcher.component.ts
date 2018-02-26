@@ -1,7 +1,7 @@
 import { UtilService } from './../../../../core/services/util.service';
 import { Subject } from 'rxjs/Rx';
 import { AppService } from './../../../../core/services/app.service';
-import { Component, OnInit, forwardRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, forwardRef, OnDestroy, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -22,6 +22,10 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
   selectedOption;
   searchOptions = [];
 
+  @Input()
+  miDisabled;
+
+  @Input() miPlaceHolder = '請輸入英文名/工號/中文名';
   searchTerms = new Subject<string>();
   mySub: Subscription
 
