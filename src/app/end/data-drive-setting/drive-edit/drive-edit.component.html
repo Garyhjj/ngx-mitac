@@ -3,7 +3,23 @@
     <ng-template #nzTabHeading>
       配置項
     </ng-template>
-    
+    <div>
+        <form nz-form [nzLayout]="formLayout" [formGroup]="setForm" *ngIf="setForm">
+        <nz-collapseset formGroupName="APIs">
+            <nz-collapse [nzTitle]="'API配置'" [nzActive]="1">
+                <div nz-form-item nz-row>
+                    <div nz-form-label nz-col [nzSpan]="4">
+                      <label>查詢API</label>
+                    </div>
+                    <div nz-form-control nz-col [nzSpan]="10">
+                      <nz-input formControlName="search" [nzSize]="'large'">
+                      </nz-input>
+                    </div>
+                  </div>
+            </nz-collapse>
+          </nz-collapseset>
+        </form>
+    </div>
   </nz-tab>
 
   <nz-tab>

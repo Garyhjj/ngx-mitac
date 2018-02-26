@@ -1,3 +1,5 @@
+import { NgxValidatorExtendService } from './../../../core/services/ngx-validator-extend.service';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -6,10 +8,21 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./drive-edit.component.css']
 })
 export class DriveEditComponent implements OnInit {
-
-  constructor() { }
+  formLayout = 'horizontal';
+  setForm: FormGroup
+  constructor(
+    private fb: FormBuilder,
+    private validatorExtendService: NgxValidatorExtendService
+  ) { }
 
   ngOnInit() {
+    this.setForm = this.fb.group({
+      APIs: this.fb.group({
+        search: ['', this.validatorExtendService.required()],
+        update: [''],
+        delete: ['']
+      })
+    })
   }
 
 }
