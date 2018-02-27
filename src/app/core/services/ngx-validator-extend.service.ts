@@ -27,6 +27,15 @@ export class NgxValidatorExtendService {
     }
   }
 
+  isNull(): ValidatorFn | any {
+    return (ctrl: AbstractControl) => {
+      let value = ctrl.value;
+      return !(value || value === 0)? null : {
+        'null': true
+      }
+    }
+  }
+
   /**
    * 字符串最小长度
    * @param  {number}   num 传入的长度要求

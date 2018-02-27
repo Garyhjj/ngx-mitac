@@ -1,5 +1,5 @@
-<div class="exam-title">{{_header.title}}</div>
-<nz-alert [nzType]="'info'" class="exam-header">
+<div class="exam-title" *ngIf="_header">{{_header.title}}</div>
+<nz-alert [nzType]="'info'" class="exam-header" *ngIf="_header">
   <nz-row alert-body [nzType]="'flex'" [nzJustify]="'space-around'">
     <nz-col>
       <span>姓名：{{_header.name}}</span>

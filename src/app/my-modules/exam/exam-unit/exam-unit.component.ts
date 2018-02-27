@@ -71,7 +71,6 @@ export class ExamUnitComponent implements OnInit {
     this.questionsDrive = d;
     this.questionsDrive.setParamsOut('加入考卷');
     this.questionsDrive.onParamsOut((d) => {
-      console.log(d);
       const send: ExamMapping = {
         ID:0,
         EXAM_ID: this._targetExam.ID,
@@ -94,7 +93,6 @@ export class ExamUnitComponent implements OnInit {
 
   toSetExamDetail() {
     this.headerDataDrive.onParamsOut((d) => {
-      console.log(d)
       this.targetExam = d;
       this.tabIdx = 1;
     })

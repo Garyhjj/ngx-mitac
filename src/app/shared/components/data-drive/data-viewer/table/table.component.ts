@@ -1,3 +1,4 @@
+import { NgxValidatorExtendService } from './../../../../../core/services/ngx-validator-extend.service';
 import { UtilService } from './../../../../../core/services/util.service';
 import { QRComponent } from '../../../QR/QR.component';
 import { DataUpdateComponent } from './../../data-inputer/data-update/data-update.component';
@@ -70,7 +71,8 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     private ref: ChangeDetectorRef,
     private dataDriveService: DataDriveService,
     private modalService: NzModalService,
-    private util: UtilService
+    private util: UtilService,
+    private validatorExtendService: NgxValidatorExtendService
   ) {
 
   }
@@ -360,6 +362,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     }[]
   }, type: string) {
     const cache = this.styleCache;
+    dataIdx = this.calIdx(dataIdx);
     if (cache.idx === dataIdx) {
       const styeCache = cache.getCache(type);
       if (styeCache) {
@@ -393,12 +396,18 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
                     result = false;
                     break;
                   } else {
-                    const t = target.find(s => s.property === match[0]);
+                    let params;
+                    if(match.length < 3) {
+                      params = [];
+                    }else {
+                      params = isArray(match[2])?match[2]: [match[2]];
+                    }
+                    const t = target.find(s => s.property === match[0]) as any;
                     if (!t) {
                       result = false;
                       break;
                     }
-                    if (!new RegExp(match[1]).test(t.value ? t.value : '')) {
+                    if (this.validatorExtendService[match[1]] && this.validatorExtendService[match[1]](...params)(t)) {
                       result = false;
                       break;
                     }

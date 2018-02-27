@@ -43,7 +43,7 @@ export const DataDriveStore = {
                     textSize: '1.6rem',
                     rules: [
                         {
-                            matches: [['RESIT', '^\是$']],
+                            matches: [['RESIT', 'regex','^\是$']],
                             textColor: 'red',
                         }
                     ]
@@ -138,6 +138,12 @@ export const DataDriveStore = {
                 showAction: true
             }
         },
+        otherDataViewSets: [
+            {
+                title: '考卷内容',
+                type: 'exam',  
+            }
+        ],
         updateSets: [
             {
                 property: 'ID',
@@ -623,11 +629,11 @@ export const DataDriveStore = {
                     textSize: '1.8rem',
                     rules: [
                         {
-                            matches: [['IQC_FINISHED_TIME', '^\\s*$'], ['ATA_MSL_TIME', '^\\s*$']],
+                            matches: [['IQC_FINISHED_TIME', 'isNull'], ['ATA_MSL_TIME', 'isNull']],
                             textColor: 'yellow',
                         },
                         {
-                            matches: [['IQC_FINISHED_TIME', '^\\s*$']],
+                            matches: [['IQC_FINISHED_TIME', 'isNull']],
                             textColor: 'red',
                         }
                     ]
@@ -712,11 +718,11 @@ export const DataDriveStore = {
                     textSize: '1.8rem',
                     rules: [
                         {
-                            matches: [['LOT_NO', '\\w+'], ['IQC_FINISHED_TIME', '^\\s*$']],
+                            matches: [['LOT_NO', 'required'], ['IQC_FINISHED_TIME', 'isNull']],
                             textColor: 'yellow',
                         },
                         {
-                            matches: [['LOT_NO', '\\w+']],
+                            matches: [['LOT_NO', 'required']],
                             textColor: 'green',
                         }
                     ]

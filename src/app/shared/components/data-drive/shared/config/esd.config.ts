@@ -25,11 +25,11 @@ export const esdConfig = {
                 textSize: '1.8rem',
                 rules: [
                     {
-                        matches: [['LOT_NO', '\\w+'], ['IQC_FINISHED_TIME', '^\\s*$']],
+                        matches: [['LOT_NO', 'required'], ['IQC_FINISHED_TIME', 'isNull']],
                         textColor: 'yellow',
                     },
                     {
-                        matches: [['LOT_NO', '\\w+']],
+                        matches: [['LOT_NO', 'required']],
                         textColor: 'green',
                     }
                 ]

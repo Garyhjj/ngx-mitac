@@ -28,6 +28,7 @@ export interface DataDriveOptions {
     };
     dataViewSet?: DataViewSet;
     selfHideLists?: string[];
+    otherDataViewSets?: DataViewSet[];
 }
 
 export class DataDrive implements DataDriveOptions {
@@ -59,6 +60,7 @@ export class DataDrive implements DataDriveOptions {
     };
     dataViewSet?: DataViewSet;
     allHideLists: string[];
+    otherDataViewSets?: DataViewSet[];
     constructor(
         opts: DataDriveOptions,
         user: string = 'default',
@@ -320,8 +322,17 @@ export class DataDrive implements DataDriveOptions {
     }
 
     switchViewType(type: DataViewType) {
-        this.dataViewSet.type = type;
-        this.initDataViewSet();
+        const currentView = this.dataViewSet;
+        if(this.otherDataViewSets) {
+            const targetIdx = this.otherDataViewSets.findIndex(c => c.type === type);
+            if(targetIdx > -1) {
+                const target = this.otherDataViewSets.splice(targetIdx, 1)[0];
+                this.otherDataViewSets.push(currentView);
+                target.tempAddition = currentView.tempAddition;
+                this.dataViewSet = target;
+                this.initDataViewSet();
+            }
+        }
     }
 
     setViewTempAddtion(a) {

@@ -16,7 +16,7 @@ export interface TabelViewSetMore {
         textSize?: string;
         bgColor?: string;
         rules?: {
-            matches: string[][];
+            matches: any[][];
             textColor?: string;
             textSize?: string;
             bgColor?: string;
@@ -56,7 +56,7 @@ export class TabelViewSet implements DataViewSet {
     type: DataViewType;
     title?: string;
     more: TabelViewSetMore;
-
+    hasInited?: boolean;
     constructor(opts: DataViewSet = {}) {
         if (opts) {
             Object.assign(this, opts);
@@ -68,6 +68,7 @@ export class TabelViewSet implements DataViewSet {
         this.more.size = this.more.size || 'default';
         this.more.footer = this.more.footer || { enable: false, content: '' };
         this.type = 'table';
+        this.hasInited = true;
     }
     changeHeaderFontSize(size: string) {
         this.more = this.more || {};

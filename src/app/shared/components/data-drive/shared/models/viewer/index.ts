@@ -11,10 +11,14 @@ export interface DataViewSet {
     more?: any;
     changeHeaderFontSize?: Function;
     changeBodyFontSize?: Function;
+    hasInited?: boolean;
 }
 
 export class DataViewSetFactory {
     constructor(opts: DataViewSet = { type: 'table' }) {
+        if(opts && opts.hasInited) {
+            return opts;
+        }
         switch (opts.type) {
             case 'exam':
                 return new ExamViewSet(opts);
