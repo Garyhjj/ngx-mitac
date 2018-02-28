@@ -49,7 +49,7 @@ export class MyFlexPipe implements PipeTransform {
     }
     this.outData = target;
   }
-  lazyLoad(target: string, api: string) {
+  lazyLoad(target: string, api: string, lazyParams?: string[]) {
     if (api) {
       const bind = (obList) => {
         const ob = obList.find(c => c.property == target)
@@ -72,6 +72,9 @@ export class MyFlexPipe implements PipeTransform {
               } else if (typeof d === 'object') {
                 const keys = Object.keys(d);
                 if (keys.length > 1) {
+                  if(isArray(lazyParams) && lazyParams.length > 1) {
+                    return { property: d[lazyParams[0]], value: d[lazyParams[1]] }
+                  }
                   return { property: d[keys[0]], value: d[keys[1]] }
                 }
               }

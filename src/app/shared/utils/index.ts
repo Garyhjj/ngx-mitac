@@ -45,7 +45,27 @@ export const replaceQuery = (url: string, query: any) => {
 
   return url;
 }
-
+export const stringify = (d) => {
+  if (typeof d === 'object') {
+    return JSON.stringify(d);
+  } else {
+    return d;
+  }
+}
+export const parse = (d) => {
+  if (typeof d === 'string') {
+    return JSON.parse(d);
+  } else {
+    return d;
+  }
+}
+export const deepClone = (d) => {
+  if (typeof d === 'object') {
+    return JSON.parse(JSON.stringify(d));
+  } else {
+    return d;
+  }
+}
 export const isArray = (ar) => {
   return Object.prototype.toString.call(ar) === '[object Array]';
 }

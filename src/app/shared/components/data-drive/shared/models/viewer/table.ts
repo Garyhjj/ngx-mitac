@@ -65,6 +65,7 @@ export class TabelViewSet implements DataViewSet {
         this.more.title = this.more.title || { enable: true };
         this.more.border_y = this.more.border_y || { enable: false };
         this.more.pageSet = this.more.pageSet || { enable: true, count: 10 };
+        this.more.pageSet.count = this.more.pageSet.count || 10;
         this.more.size = this.more.size || 'default';
         this.more.footer = this.more.footer || { enable: false, content: '' };
         this.type = 'table';

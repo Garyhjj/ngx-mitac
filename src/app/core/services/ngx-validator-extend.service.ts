@@ -44,7 +44,8 @@ export class NgxValidatorExtendService {
   minLength(num: number): ValidatorFn {
     return (ctrl: AbstractControl) => {
       let value = ctrl.value;
-      if(!value) return null;
+      if(value === void(0) || value === null) return null;
+      value = value + '';
       let valueL = value.length;
       return !value || (valueL >= num) ? null : {
         'minlength': {
@@ -63,7 +64,8 @@ export class NgxValidatorExtendService {
   maxLength(num: number): ValidatorFn {
     return (ctrl: AbstractControl) => {
       let value = ctrl.value;
-      if(!value) return null;
+      if(value === void(0) || value === null) return null;
+      value = value + '';
       let valueL = value.length;
       return !value || (valueL <= num) ? null : {
         'maxlength': {

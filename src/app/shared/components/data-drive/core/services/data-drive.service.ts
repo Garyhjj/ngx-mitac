@@ -56,6 +56,9 @@ export class DataDriveService {
         return this.http.get(replaceQuery(APPConfig.baseUrl + dataDrive.APIs.search, params));
     }
     getDriveOption(name: string) {
+        if(typeof name === 'object') {
+            return name;
+        }
         return DataDriveStore[name];
     }
     updateViewData(dataDrive: DataDrive) {
@@ -150,8 +153,11 @@ export class DataDriveService {
         }
     }
 
-    lazyLoad(api) {
-        return this.http.get(APPConfig.baseUrl + api);
+    lazyLoad(api: string) {
+        if(!api) {
+            throw new Error('無API');
+        }
+        return this.http.get((api.indexOf('https:') > -1|| api.indexOf('http:')> -1)?api:APPConfig.baseUrl + api);
     }
 
 }

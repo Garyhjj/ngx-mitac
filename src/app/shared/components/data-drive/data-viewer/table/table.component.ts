@@ -347,7 +347,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   }
 
   calIdx(idx) {
-    return (this.pageIndex - 1) * this.pageCount + idx;
+    return this.pageIndex > -1? (this.pageIndex - 1) * this.pageCount + idx: idx;
   }
 
   runRegExp(dataIdx: number, body: {
