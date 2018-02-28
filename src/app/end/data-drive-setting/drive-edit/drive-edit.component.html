@@ -311,19 +311,19 @@
                   </div>
                 </div>
               </nz-col>
-              
+
 
               <nz-col [nzSpan]="8">
-                  <div nz-form-item nz-row>
-                    <div nz-form-label nz-col [nzSpan]="12">
-                      <label>查詢默認參數</label>
-                    </div>
-                    <div nz-form-control nz-col [nzSpan]="12">
-                      <nz-input formControlName="defaultSearchParams" [nzSize]="'large'" nzType="textarea" [nzAutosize]="'1'">
-                      </nz-input>
-                    </div>
+                <div nz-form-item nz-row>
+                  <div nz-form-label nz-col [nzSpan]="12">
+                    <label>查詢默認參數</label>
                   </div>
-                </nz-col>
+                  <div nz-form-control nz-col [nzSpan]="12">
+                    <nz-input formControlName="defaultSearchParams" [nzSize]="'large'" nzType="textarea" [nzAutosize]="'1'">
+                    </nz-input>
+                  </div>
+                </div>
+              </nz-col>
             </div>
 
             <nz-tabset [nzType]="'card'" [nzTabBarExtraTemplate]="nzTabBarExtraContentTable" formArrayName="columns">
@@ -383,26 +383,26 @@
                   </nz-col>
 
                   <nz-col [nzSpan]="12">
-                      <div nz-form-item nz-row>
-                        <div nz-form-label nz-col [nzSpan]="4">
-                          <label>管道方法</label>
-                        </div>
-                        <div nz-form-control nz-col [nzSpan]="14">
-                          <app-mx-select formControlName="pipeName" myPlaceHolder="可添加管道轉換" [options]="pipeOptions"></app-mx-select>
-                        </div>
+                    <div nz-form-item nz-row>
+                      <div nz-form-label nz-col [nzSpan]="4">
+                        <label>管道方法</label>
                       </div>
-                    </nz-col>
-                    <nz-col [nzSpan]="12">
-                      <div nz-form-item nz-row>
-                        <div nz-form-label nz-col [nzSpan]="4">
-                          <label>管道額外參數</label>
-                        </div>
-                        <div nz-form-control nz-col [nzSpan]="14">
-                          <nz-input formControlName="pipeParams" [nzSize]="'large'" nzType="textarea" [nzAutosize]="'1'" nzPlaceHolder="選擇管道后為必填">
-                          </nz-input>
-                        </div>
+                      <div nz-form-control nz-col [nzSpan]="14">
+                        <app-mx-select formControlName="pipeName" myPlaceHolder="可添加管道轉換" [options]="pipeOptions"></app-mx-select>
                       </div>
-                    </nz-col>
+                    </div>
+                  </nz-col>
+                  <nz-col [nzSpan]="12">
+                    <div nz-form-item nz-row>
+                      <div nz-form-label nz-col [nzSpan]="4">
+                        <label>管道額外參數</label>
+                      </div>
+                      <div nz-form-control nz-col [nzSpan]="14">
+                        <nz-input formControlName="pipeParams" [nzSize]="'large'" nzType="textarea" [nzAutosize]="'1'" nzPlaceHolder="選擇管道后為必填">
+                        </nz-input>
+                      </div>
+                    </div>
+                  </nz-col>
                 </div>
 
               </nz-tab>
@@ -419,43 +419,76 @@
           </nz-collapse>
 
           <nz-collapse nzTitle="更新及插入配置">
-              <nz-tabset [nzType]="'card'" [nzTabBarExtraTemplate]="nzTabBarExtraContentUpdateSets">
-                  <nz-tab *ngFor="let updateSet of setForm.controls['updateSets'].controls; let i = index;">
-                    <ng-template #nzTabHeading>
-                      <div>
-                        欄位{{i+1}}
-                        <i class="anticon anticon-cross" (click)="closeTab(setForm.get('updateSets'),i)"></i>
+            <nz-tabset [nzType]="'card'" [nzTabBarExtraTemplate]="nzTabBarExtraContentUpdateSets">
+              <nz-tab *ngFor="let updateSet of setForm.controls['updateSets'].controls; let i = index;">
+                <ng-template #nzTabHeading>
+                  <div>
+                    欄位{{i+1}}
+                    <i class="anticon anticon-cross" (click)="closeTab(setForm.get('updateSets'),i)"></i>
+                  </div>
+                </ng-template>
+                <ng-container [formGroup]="updateSet">
+                  <div nz-form-item nz-row>
+                    <div nz-form-label nz-col [nzSpan]="4">
+                      <label>屬性名</label>
+                    </div>
+                    <div nz-form-control nz-col [nzSpan]="14">
+                      <nz-input formControlName="property" [nzSize]="'large'" nzPlaceHolder="請與API的屬性名一致，若數據配置中有描述，會自動替換顯示">
+                      </nz-input>
+                    </div>
+                  </div>
+                  <ng-container formGroupName="InputOpts">
+                    <div nz-form-item nz-row>
+                      <div nz-form-label nz-col [nzSpan]="4">
+                        <label>類型</label>
                       </div>
-                    </ng-template>
-                    <ng-container [formGroup]="updateSet">
-                        <div nz-form-item nz-row>
-                            <div nz-form-label nz-col [nzSpan]="4">
-                              <label>屬性名</label>
-                            </div>
-                            <div nz-form-control nz-col [nzSpan]="14">
-                              <nz-input formControlName="property" [nzSize]="'large'" nzPlaceHolder="請與API的屬性名一致，若數據配置中有描述，會自動替換顯示">
-                              </nz-input>
-                            </div>
-                          </div>
-                    <ng-container formGroupName="InputOpts">
-                        <div nz-form-item nz-row>
-                            <div nz-form-label nz-col [nzSpan]="4">
-                              <label>類型</label>
-                            </div>
-                            <div nz-form-control nz-col [nzSpan]="14">
-                              <app-mx-select formControlName="type" myPlaceHolder="輸入框類型" [options]="viewTypeOptions"></app-mx-select>
-                            </div>
-                          </div>
-                    </ng-container>
-                        
-                    </ng-container>
-                  </nz-tab>
-                  <ng-template #nzTabBarExtraContentUpdateSets>
-                    <i class="ant-tabs-new-tab anticon anticon-plus" (click)="newUpdateSetTab(setForm.get('updateSets'))"></i>
-                  </ng-template>
-                </nz-tabset>
-                
-            </nz-collapse>
+                      <div nz-form-control nz-col [nzSpan]="14">
+                        <app-mx-select formControlName="type" myPlaceHolder="輸入框類型" [options]="inputTypeOptions"></app-mx-select>
+                      </div>
+                    </div>
+                    <div nz-form-item nz-row>
+                      <div nz-form-label nz-col [nzSpan]="4">
+                        <label>提示placeHolder</label>
+                      </div>
+                      <div nz-form-control nz-col [nzSpan]="14">
+                        <nz-input formControlName="placeHolder" [nzSize]="'large'" nzPlaceHolder="">
+                        </nz-input>
+                      </div>
+                    </div>
+                    <div nz-form-item nz-row>
+                      <div nz-form-label nz-col [nzSpan]="4">
+                        <label>驗證器</label>
+                      </div>
+                      <div nz-form-control nz-col [nzSpan]="14">
+                        <nz-input formControlName="match" [nzSize]="'large'" nzType="textarea" [nzAutosize]="'1'" nzPlaceHolder="
+                              {
+                                fns: { name: string, params?: any[]}[],
+                                err: string
+                              }">
+                        </nz-input>
+                      </div>
+                    </div>
+
+                    <div nz-form-item nz-row>
+                      <div nz-form-label nz-col [nzSpan]="4">
+                        <label>其他設置</label>
+                      </div>
+                      <div nz-form-control nz-col [nzSpan]="14">
+                        <nz-input formControlName="more" [nzSize]="'large'" nzType="textarea" [nzRows]="8" [nzPlaceHolder]="
+                        updateSet.get('InputOpts').myTips">
+                        </nz-input>
+                      </div>
+                    </div>
+                  </ng-container>
+
+                </ng-container>
+              </nz-tab>
+              <ng-template #nzTabBarExtraContentUpdateSets>
+                <i class="ant-tabs-new-tab anticon anticon-plus" (click)="newUpdateSetTab(setForm.get('updateSets'))"></i>
+              </ng-template>
+            </nz-tabset>
+
+          </nz-collapse>
         </nz-collapseset>
 
 

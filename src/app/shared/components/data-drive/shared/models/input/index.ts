@@ -241,7 +241,7 @@ export class InputSetFactory extends InputSetDefault {
 
 
 export type InputTypes =
-    'text' | 'number' | 'date' | 'rate' | 'select' | 'datePicker' |
+    'text' | 'number' | 'rate' | 'select' | 'datePicker' |
     'timePicker' | 'cascader' | 'switch' | 'colleagueSearcher' |
     'photoUpload' | 'textarea' | 'primary' | 'checkbox';
 
