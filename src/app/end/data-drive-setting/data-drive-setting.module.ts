@@ -1,3 +1,4 @@
+import { DataDriveSettingService } from './shared/services/data-drive-setting.service';
 import { DataDriveModule } from './../../shared/components/data-drive/data-drive.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -17,6 +18,7 @@ import { DriveEditComponent } from './drive-edit/drive-edit.component';
   declarations: [DataDriveSettingComponent,
     DriveListComponent,
     DriveEditComponent
-]
+],
+providers: [DataDriveSettingService]
 })
 export class DataDriveSettingModule { }

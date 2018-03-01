@@ -46,6 +46,7 @@ export class DataDrive implements DataDriveOptions {
     private scrollToBottomSubject = new Subject<any>();
     eventSubject = new Subject<string>();
     eventsQueue = {};
+    lastestSearchParams;
     id: number;
     searchSets?: SearchItemSet[];
     updateSets?: SearchItemSet[];

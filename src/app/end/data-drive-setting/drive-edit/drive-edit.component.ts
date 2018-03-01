@@ -1,3 +1,6 @@
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { UtilService } from './../../../core/services/util.service';
+import { DataDriveSettingService } from './../shared/services/data-drive-setting.service';
 import { stringify, sortUtils, parse } from './../../../shared/utils/index';
 import { TableData } from './../../../shared/components/data-drive/shared/models/table-data/index';
 import { DataDriveOptions, DataDrive } from './../../../shared/components/data-drive/shared/models/index';
@@ -5,7 +8,6 @@ import { AdditionalFn } from './../../../shared/components/data-drive/shared/mod
 import { NgxValidatorExtendService } from './../../../core/services/ngx-validator-extend.service';
 import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { DataDriveStore } from '../../../shared/components/data-drive/shared/config';
 import { isArray, deepClone } from '../../../shared/utils';
 
 @Component({
@@ -16,19 +18,24 @@ import { isArray, deepClone } from '../../../shared/utils';
 export class DriveEditComponent implements OnInit {
 
   @ViewChild('styleForm') styleForm: TemplateRef<void>;
+  @ViewChild('inputSetForm') inputSetForm: TemplateRef<void>;
+  @ViewChild('nzTabBarExtraContentSearchSets') nzTabBarExtraContentSearchSets: TemplateRef<void>;
   @ViewChild('nzTabBarExtraContentUpdateSets') nzTabBarExtraContentUpdateSets: TemplateRef<void>;
+
   @ViewChild('nzTabBarExtraContentRule') nzTabBarExtraContentRule: TemplateRef<void>;
   @ViewChild('nzTabBarExtraContentView') nzTabBarExtraContentView: TemplateRef<void>;
   @ViewChild('nzTabBarExtraContentTable') nzTabBarExtraContentTable: TemplateRef<void>
   preViewSetting;
   formLayout = 'horizontal';
   setForm: FormGroup;
-
+  columnIdx;
   otherInputSetTip;
+
+  // InputOpts里more的各種配置placeHolder
   otherInputSetTipList = {
     primary: '無',
-    text: '{"editable": true}',
-    textarea: '{"editable": true}',
+    text: '{"editable": true}// 是否只讀，不能編輯',
+    textarea: '{"editable": true} // 是否只讀，不能編輯',
     select: `
     {
       "options": [{ "property": "IPQA", value: "IPQA巡檢" }],
@@ -80,6 +87,10 @@ export class DriveEditComponent implements OnInit {
     `
 
   };
+  typeNameOptions = [
+    { property: '', value: '不設置' },
+    { property: 'img', value: '圖片' }
+  ]
   sortWayOptions = ((d) => {
     let options = [{ property: '-1', value: '不設置' }];
     for (let prop in d) {
@@ -121,19 +132,41 @@ export class DriveEditComponent implements OnInit {
     { property: 'exam', value: '考卷' }
   ]
 
-  example: any = DataDriveStore.examQuestions;
   constructor(
     private fb: FormBuilder,
-    private validatorExtendService: NgxValidatorExtendService
+    private validatorExtendService: NgxValidatorExtendService,
+    private dataDriveSettingService: DataDriveSettingService,
+    private util: UtilService,
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit() {
-    let e = JSON.parse(JSON.stringify(this.example));
-    this.initForm(new DataDrive(e));
+    this.route.params.subscribe((params: Params) => {
+      const id = params.id;
+      if (id > 0) {
+        const loading = this.util.showLoading();
+        const final = (loading) => this.util.dismissLoading(loading);
+        this.dataDriveSettingService.getSetting(id).subscribe(d => {
+          final(loading);
+          const drive: any = new DataDrive(d);
+          drive.des = d.description;
+          this.initForm(drive);
+
+        }, err => { this.util.errDeal(err); final(loading) })
+      } else {
+        this.initForm();
+      }
+    });
   }
 
+  /**
+   * 預覽頁與配置頁的轉換時對preViewSetting的操作
+   * 
+   * @param {umber} i 
+   * @memberof DriveEditComponent
+   */
   indexChange(i) {
-    console.log(i);
     if (i === 0) {
       this.preViewSetting = null;
     } else if (i === 1) {
@@ -145,6 +178,13 @@ export class DriveEditComponent implements OnInit {
 
     }
   }
+  /**
+   * 將定義的配置轉換成對表單良好的格式
+   * 
+   * @param {any} e 
+   * @returns 
+   * @memberof DriveEditComponent
+   */
   settingConvertToForm(e) {
     if (typeof e === 'object') {
       if (e.additionalFn) {
@@ -167,11 +207,17 @@ export class DriveEditComponent implements OnInit {
 
       e.dataViewSetList = [];
       e.dataViewSet && e.dataViewSetList.push(e.dataViewSet);
-      e.otherDataViewSets && e.dataViewSetList.concat(e.otherDataViewSets);
+      e.otherDataViewSets && (e.dataViewSetList = e.dataViewSetList.concat(e.otherDataViewSets));
       return e;
     }
     return null;
   }
+  /**
+   * 總表初始化入口
+   * 
+   * @param {DataDrive} [setting] 
+   * @memberof DriveEditComponent
+   */
   initForm(setting?) {
     const formData = this.settingConvertToForm(setting) || {};
     const tableData = formData.tableData || {};
@@ -183,6 +229,8 @@ export class DriveEditComponent implements OnInit {
       } else {
         columnFormList.push(this.initColumnForm());
       }
+    } else {
+      columnFormList.push(this.initColumnForm())
     }
     const updateSetsFormList = [];
     if (isArray(formData.updateSets)) {
@@ -191,8 +239,24 @@ export class DriveEditComponent implements OnInit {
         updateSetsFormList.push(this.initUpdateSetForm(c));
       });
     }
+    const searchSetsFormList = [];
+    if (isArray(formData.searchSets)) {
+      const searchSets = formData.searchSets;
+      searchSets.forEach(c => {
+        searchSetsFormList.push(this.initUpdateSetForm(c));
+      });
+    }
+
+    const viewSetFormList = [];
+    if (isArray(formData.dataViewSetList)) {
+      const viewSet = formData.dataViewSetList;
+      viewSet.forEach(c => {
+        viewSetFormList.push(this.initViewSetForm(c));
+      });
+    }
     this.setForm = this.fb.group({
       id: [formData.id],
+      des: [formData.des],
       APIs: this.fb.group({
         search: [formData.APIs && formData.APIs.search, this.validatorExtendService.required()],
         update: [formData.APIs && formData.APIs.update],
@@ -202,7 +266,7 @@ export class DriveEditComponent implements OnInit {
         switchViewType: [formData.additionalFn && formData.additionalFn.switchViewType],
         others: [formData.additionalFn && formData.additionalFn.others]
       }),
-      dataViewSetList: new FormArray([this.initViewSetForm(formData.dataViewSetList && formData.dataViewSetList[0])]),
+      dataViewSetList: new FormArray(viewSetFormList),
       tableData: this.fb.group({
         searchable: [tableData.searchable],
         addable: [tableData.addable],
@@ -212,9 +276,11 @@ export class DriveEditComponent implements OnInit {
         defaultSearchParams: [stringify(tableData.defaultSearchParams)],
         columns: new FormArray(columnFormList)
       }),
-      updateSets: new FormArray(updateSetsFormList)
+      updateSets: new FormArray(updateSetsFormList),
+      searchSets: new FormArray(searchSetsFormList)
     });
     const tableDataForm = this.setForm.get('tableData') as FormGroup;
+    // 判斷是否需要公司綁定別名
     tableDataForm.get('isCompanyLimited').valueChanges.subscribe(v => {
       if (v) {
         tableDataForm.addControl('companyBindName', new FormControl(''));
@@ -222,15 +288,24 @@ export class DriveEditComponent implements OnInit {
         tableDataForm.removeControl('companyBindName');
       }
     });
-    tableData.isCompanyLimited && tableDataForm.get('isCompanyLimited').setValue(true)
-      && tableDataForm.get('companyBindName').setValue(tableData.isCompanyLimited);
+    if (tableData.isCompanyLimited) {
+      tableDataForm.get('isCompanyLimited').setValue(true);
+      tableDataForm.get('companyBindName').setValue(typeof tableData.isCompanyLimited === 'string' ? tableData.isCompanyLimited : '');
+    }
   }
-
+  /**
+   * 初始化更新欄位配置的表單
+   * 
+   * @param {*} [d={}] 
+   * @returns 
+   * @memberof DriveEditComponent
+   */
   initUpdateSetForm(d: any = {}) {
     const form = this.fb.group({
-      property: [d.property],
+      property: [d.property, this.validatorExtendService.required()],
+      apiProperty: [d.apiProperty],
       InputOpts: this.fb.group({
-        type: [d.InputOpts && d.InputOpts.type],
+        type: [d.InputOpts && d.InputOpts.type, this.validatorExtendService.required()],
         placeHolder: [d.InputOpts && d.InputOpts.placeHolder],
         match: [d.InputOpts && d.InputOpts.match && stringify(d.InputOpts.match)],
         more: [d.InputOpts && d.InputOpts.more && stringify(d.InputOpts.more)]
@@ -247,11 +322,18 @@ export class DriveEditComponent implements OnInit {
   newUpdateSetTab(fa: FormArray) {
     fa.push(this.initUpdateSetForm());
   }
-
+  /**
+   * 初始化數據列的配置表單
+   * 
+   * @param {*} [d={}] 
+   * @returns 
+   * @memberof DriveEditComponent
+   */
   initColumnForm(d: any = {}) {
     const form = this.fb.group({
-      property: [d.property],
-      value: [d.value],
+      property: [d.property, this.validatorExtendService.required()],
+      value: [d.value, this.validatorExtendService.required()],
+      typeName: [d.more && d.more.type && d.more.type.name],
       sortByName: [d.more && d.more.sortBy && d.more.sortBy.name],
       sortByParams: [d.more && d.more.sortBy && stringify(d.more.sortBy.params)],
       pipeName: [d.more && d.more.pipe && d.more.pipe.name],
@@ -269,7 +351,13 @@ export class DriveEditComponent implements OnInit {
   newColumnTab(fa: FormArray) {
     fa.push(this.initColumnForm())
   }
-
+  /**
+   * 初始化視圖配置的表單
+   * 
+   * @param {*} [viewSet={}] 
+   * @returns 
+   * @memberof DriveEditComponent
+   */
   initViewSetForm(viewSet: any = {}) {
     const form = this.fb.group({
       type: ['', this.validatorExtendService.required()],
@@ -281,6 +369,7 @@ export class DriveEditComponent implements OnInit {
           form.removeControl(prop)
         }
       }
+      // 根據視圖的種類修改表單的結構
       switch (t) {
         case 'table':
           this.initTableViewSetForm(form, viewSet);
@@ -299,7 +388,13 @@ export class DriveEditComponent implements OnInit {
     const dataViewSetList = this.setForm.get('dataViewSetList') as FormArray;
     dataViewSetList.push(this.initViewSetForm());
   }
-
+  /**
+   * 初始化表格的配置的表單
+   * 
+   * @param {FormGroup} fg 
+   * @param {*} [d={}] 
+   * @memberof DriveEditComponent
+   */
   initTableViewSetForm(fg: FormGroup, d: any = {}) {
     const more = d.more || {};
     fg.addControl('showAction', new FormControl(more.showAction || false));
@@ -311,6 +406,7 @@ export class DriveEditComponent implements OnInit {
       bgColor: [more.header && more.header.bgColor],
       textSize: [more.header && more.header.textSize]
     }));
+    // 分頁
     if (more.pageSet && more.pageSet.enable) {
       fg.get('pageSet').setValue(true);
       fg.addControl('pageCount', new FormControl(more.pageSet.count));
@@ -322,6 +418,7 @@ export class DriveEditComponent implements OnInit {
         fg.removeControl('pageCount');
       }
     })
+    // 樣式規則
     let ruleFormList = []
     if (more.body && isArray(more.body.rules) && more.body.rules.length > 0) {
       const rules = more.body.rules;
@@ -331,6 +428,7 @@ export class DriveEditComponent implements OnInit {
     } else {
       ruleFormList.push(this.initRuleForm())
     }
+    // 數據樣式
     const body = this.fb.group({
       textColor: [more.body && more.body.textColor],
       bgColor: [more.body && more.body.bgColor],
@@ -342,6 +440,7 @@ export class DriveEditComponent implements OnInit {
       enable: [false]
     })
     const fixedHeaderData = more.fixedHeader || {};
+    // 滾動條
     fixedHeader.get('enable').valueChanges.subscribe(v => {
       if (v) {
         fixedHeader.addControl('scrollHeight', new FormControl(fixedHeaderData.scrollHeight || 'auto', this.validatorExtendService.required()));
@@ -374,7 +473,13 @@ export class DriveEditComponent implements OnInit {
   newRuleTab(rules: FormArray) {
     rules.push(this.initRuleForm())
   }
-
+  /**
+   * 初始化樣式規則的表單
+   * 
+   * @param {*} [d={}] 
+   * @returns 
+   * @memberof DriveEditComponent
+   */
   initRuleForm(d: any = {}) {
     return this.fb.group({
       matches: [d.matches && JSON.stringify(d.matches)],
@@ -383,30 +488,74 @@ export class DriveEditComponent implements OnInit {
       textSize: [d.textSize]
     })
   }
-  submitForm() {
-    window['aaa'] = this.setForm;
-    console.log(this.setForm.value, this.setForm);
+  submitForm(another = false) {
     const val = this.setForm.value;
     const send = new DataDriveSetting(val);
-    console.log(send, this.example);
+    if (another) send.id = 0;
+    const loading = this.util.showLoading();
+    const final = (loading) => this.util.dismissLoading(loading);
+    this.dataDriveSettingService.uploadSetting(send).subscribe(id => {
+      this.util.showGlobalSucMes('提交成功');
+      final(loading);
+      this.router.navigate(['/end/dataDrive/edit', id]);
+    }, err => { this.util.errDeal(err); final(loading) })
+  }
+  saveToAnother() {
+    this.submitForm(true)
   }
 
 }
 
+// 從表單的value轉換成dataDriveOption
 class DataDriveSetting {
   id;
   APIs;
   additionalFn;
   dataViewSet;
   tableData;
+  updateSets;
+  searchSets;
+  otherDataViewSets;
+  description;
   constructor(d) {
     d = JSON.parse(JSON.stringify(d));
     this.id = d.id;
+    this.description = d.des || '';
     this.getAPiIs(d);
     this.getAdditionalFn(d);
     this.getDataViewSet(d);
     this.getTableData(d);
+    this.getUpdateSets(d);
+    this.getSearchSets(d);
+    this.getOtherDataViewSets(d);
     this.clearNull(this);
+  }
+
+  getUpdateSets(d) {
+    const before = d.updateSets;
+    if (isArray(before)) {
+      before.forEach(b => this.alterInputOpts(b && b.InputOpts));
+      this.updateSets = before;
+    }
+  }
+
+  getSearchSets(d) {
+    const before = d.searchSets;
+    if (isArray(before)) {
+      before.forEach(b => this.alterInputOpts(b && b.InputOpts));
+      this.searchSets = before;
+    }
+  }
+
+  alterInputOpts(opt) {
+    if (typeof opt === 'object') {
+      if (opt.match) {
+        opt.match = parse(opt.match);
+      }
+      if (opt.more) {
+        opt.more = parse(opt.more);
+      }
+    }
   }
 
   getTableData(d) {
@@ -441,61 +590,98 @@ class DataDriveSetting {
             delete c.pipeName;
             delete c.pipeParams;
           }
+          if (c.typeName) {
+            c.more = c.more || {};
+            c.more.type = {
+              name: c.typeName + '',
+            }
+            delete c.typeName;
+          }
         });
       }
     }
   }
 
+  getOtherDataViewSets(d) {
+    if (isArray(d.dataViewSetList) && d.dataViewSetList.length > 1) {
+      const before = d.dataViewSetList.slice(1);
+      this.otherDataViewSets = [];
+      before.forEach(c => {
+        if (typeof c !== 'object') return;
+        this.otherDataViewSets.push(this.alterViewSet(c));
+      })
+    }
+  }
   getDataViewSet(d) {
     if (isArray(d.dataViewSetList) && d.dataViewSetList.length > 0) {
       const before = d.dataViewSetList[0];
       if (typeof before !== 'object') return;
-      this.dataViewSet = this.dataViewSet || {};
-      this.dataViewSet.title = before.title + '';
-      this.dataViewSet.type = before.type + '';
-      this.dataViewSet.more = before;
-      const more = this.dataViewSet.more;
-      delete more.type;
-      delete more.title;
-      if (more.pageSet) {
-        more.pageSet = { enable: true, count: more.pageCount ? more.pageCount : 10 };
-        delete more.pageCount;
-      } else {
-        delete more.pageSet;
-      }
-      if (more.border_y) {
-        more.border_y = { enable: true };
-      } else {
-        delete more.border_y;
-      }
-      if (more.body) {
-        if (isArray(more.body.rules)) {
-          const rules = more.body.rules;
-          rules.forEach(r => {
-            if (r.matches) {
-              r.matches = JSON.parse(r.matches);
-            }
-          })
-        }
-      }
-      if (more.fixedHeader) {
-        if (!more.fixedHeader.enable) {
-          delete more.fixedHeader.enable;
-          return;
-        }
-        more.pageSet = { enable: false }
-        if (more.fixedHeader.autoScroll) {
-          more.fixedHeader.autoScroll = {};
-          const autoScroll = more.fixedHeader.autoScroll;
-          autoScroll.interval = more.fixedHeader.interval ? more.fixedHeader.interval : 2000;
-          autoScroll.loop = more.fixedHeader.loop ? true : false;
-          delete more.fixedHeader.interval;
-          delete more.fixedHeader.loop;
-        }
-      }
+      this.dataViewSet = this.alterViewSet(before);
     }
   }
 
+  alterViewSet(before) {
+    if (typeof before !== 'object') return;
+    switch (before.type) {
+      case 'table':
+        return this.alterTableViewSet(before);
+      default: return before;
+    }
+  }
+
+  alterTableViewSet(before) {
+    const out: any = {};
+    out.title = before.title + '';
+    out.type = before.type + '';
+    out.more = before;
+    const more = out.more;
+    delete more.type;
+    delete more.title;
+    if (more.pageSet) {
+      more.pageSet = { enable: true, count: more.pageCount ? more.pageCount : 10 };
+      delete more.pageCount;
+    } else {
+      delete more.pageSet;
+    }
+    if (more.border_y) {
+      more.border_y = { enable: true };
+    } else {
+      delete more.border_y;
+    }
+    if (more.body) {
+      if (isArray(more.body.rules)) {
+        const rules = more.body.rules;
+        rules.forEach(r => {
+          if (r.matches) {
+            r.matches = JSON.parse(r.matches);
+          }
+        })
+      }
+    }
+    if (more.fixedHeader) {
+      if (!more.fixedHeader.enable) {
+        delete more.fixedHeader.enable;
+        return out;
+      }
+      more.pageSet = { enable: false }
+      if (more.fixedHeader.autoScroll) {
+        more.fixedHeader.autoScroll = {};
+        const autoScroll = more.fixedHeader.autoScroll;
+        autoScroll.interval = more.fixedHeader.interval ? more.fixedHeader.interval : 2000;
+        autoScroll.loop = more.fixedHeader.loop ? true : false;
+        delete more.fixedHeader.interval;
+        delete more.fixedHeader.loop;
+      }
+    }
+    return out;
+  }
+  /**
+   * 消除空值，空數組，空對象
+   * 
+   * @param {Object} o 
+   * @param {Object} [parent] 
+   * @memberof DataDriveSetting
+   */
   clearNull(o, parent?) {
     if (isArray(o)) {
       if (o.length > 0) {

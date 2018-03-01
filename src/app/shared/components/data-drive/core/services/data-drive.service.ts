@@ -1,3 +1,4 @@
+import { isArray, parse } from './../../../../utils/index';
 import { Observable } from 'rxjs/Observable';
 import { AuthService } from './../../../../../core/services/auth.service';
 import { myStore, UserState } from './../../../../../core/store';
@@ -8,6 +9,7 @@ import { DataDriveStore } from './../../shared/config/index';
 import { Injectable } from '@angular/core';
 import { UtilService } from '../../../../../core/services/util.service';
 import { replaceQuery } from '../../../../utils/index';
+import { DataDriveSettingConfig } from '../../../../../end/data-drive-setting/shared/config';
 
 @Injectable()
 export class DataDriveService {
@@ -24,11 +26,9 @@ export class DataDriveService {
         let pureOption = this.getDriveOption(name);
         typeof pureOption === 'object' && (pureOption = JSON.parse(JSON.stringify(pureOption)));
         let userName = this.user ? this.user.USER_NAME : '';
-        if (typeof pureOption === 'string') {
-            pureOption = await this.http.get(replaceQuery(APPConfig.baseUrl + pureOption, {})).toPromise().catch((err) => this.utilSerive.errDeal(err));
-            if (pureOption) {
-                pureOption = JSON.parse(pureOption);
-            }
+        if (typeof pureOption === 'number') {
+            pureOption = await this.getSettingByNet(pureOption).toPromise().catch((err) => {this.utilSerive.errDeal(err)});
+            pureOption = pureOption || '';
         }
         if (typeof pureOption === 'object') {
             return new DataDrive(pureOption, userName);
@@ -37,13 +37,35 @@ export class DataDriveService {
         }
     }
 
+    getSettingByNet(id) {
+        return this.http.get(replaceQuery(DataDriveSettingConfig.getSetting,{id})).map((d: any[]) => {
+            if(isArray(d) && d.length === 1) {
+                const opts:any = {};
+                const target = d[0];
+                opts.tableData = parse(target.TABLE_DATA);
+                opts.updateSets = parse(target.UPDATE_SETS);
+                opts.searchSets = parse(target.SEARCH_SETS);
+                if(target.MAIN_SET) {
+                    Object.assign(opts, parse(target.MAIN_SET));
+                }
+                opts.id = target.ID;
+                opts.description = target.DESCRIPTION;
+                return opts;
+            }else {
+                return null;
+            }
+        })
+    }
+
     getInitData(dataDrive: DataDrive) {
         return this.searchData(dataDrive);
     }
 
     searchData(dataDrive: DataDrive, params: any = {}) {
-        if (typeof params !== 'object') {
-            params = {};
+        if (Object.keys(params).length === 0) {
+            params = dataDrive.lastestSearchParams? dataDrive.lastestSearchParams: {};
+        }else {
+            dataDrive.lastestSearchParams = params;
         }
         const isCompanyLimited = dataDrive.isCompanyLimited() as any;
         if (isCompanyLimited) {

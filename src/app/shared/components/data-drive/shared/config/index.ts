@@ -8,16 +8,17 @@ import { inspectionAttendanceConfig } from './inspection-attendance.config';
 import { inspectionScheduleLineConfig } from './inspection-schedule-line.config';
 import { inspectionCommentConfig } from './inspection-comment.config';
 export const DataDriveStore = {
-    inspectionComment: inspectionCommentConfig,
-    inspectionScheduleLine4: inspectionScheduleLine4Config,
-    inspectionScheduleLine: inspectionScheduleLineConfig,
-    inspectionAttendance: inspectionAttendanceConfig,
-    inspectionLineImprovement: inspectionLineImprovementConfig,
-    inspectionReportLine: inspectionReportLineConfig,
-    inspectionLine: inspectionLineConfig,
-    inspectionName: inspectionNameConfig,
-    esd: esdConfig,
-    examResults: {
+    dataDriveSetting: 27,
+    inspectionComment: 13 || inspectionCommentConfig,
+    inspectionScheduleLine4: 14 || inspectionScheduleLine4Config,
+    inspectionScheduleLine: 15 || inspectionScheduleLineConfig,
+    inspectionAttendance: 16 || inspectionAttendanceConfig,
+    inspectionLineImprovement: 12 || inspectionLineImprovementConfig,
+    inspectionReportLine: 17 || inspectionReportLineConfig,
+    inspectionLine: 18 || inspectionLineConfig,
+    inspectionName: 19 || inspectionNameConfig,
+    esd: 20 || esdConfig,
+    examResults: 21 || {
         id: 6,
         APIs: {
             search: 'EXAM/GetExamResults?id={id}&date={date}'
@@ -116,7 +117,7 @@ export const DataDriveStore = {
             ]
         }
     },
-    examMapping: {
+    examMapping: 22 || {
         id: 5,
         APIs: {
             search: 'EXAM/GetExamMappings?exam_id={exam_id}&company_id={company_id}',
@@ -231,7 +232,7 @@ export const DataDriveStore = {
             ]
         }
     },
-    examUnits: {
+    examUnits: 23 || {
         id: 4,
         APIs: {
             search: 'EXAM/GetExams?id={id}&title={title}&ref_dept={ref_dept}&code={code}&version={version}&company_id={company_id}',
@@ -429,7 +430,7 @@ export const DataDriveStore = {
             ]
         }
     },
-    examQuestions: {
+    examQuestions: 24 || {
         id: 3,
         APIs: {
             search: 'EXAM/GetExamQuestions?title={title}&type={type}',
@@ -601,7 +602,7 @@ export const DataDriveStore = {
             ]
         }
     },
-    urgentMaterial: {
+    urgentMaterial: 25 || {
         id: 1,
         APIs: { search: 'UrgentMaterial/GetUrgentMaterial?wo=' },
         additionalFn: {
@@ -691,7 +692,7 @@ export const DataDriveStore = {
         }
     },
 
-    urgentNo: {
+    urgentNo: 26 || {
         id: 2,
         APIs: { search: 'UrgentMaterial/GetUrgentMaterial?wo=wo' },
         additionalFn: {

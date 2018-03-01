@@ -21,6 +21,10 @@ const dRoutes: Routes = [
             {
                 path: 'edit',
                 component: DriveEditComponent
+            },
+            {
+                path: 'edit/:id',
+                component: DriveEditComponent
             }
         ]
     }
