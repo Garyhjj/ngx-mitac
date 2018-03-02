@@ -73,9 +73,18 @@ export class DataDriveService {
         }
         params = dataDrive.runBeforeSearch(params) || params;
         const defaultSearchParams = dataDrive.tableData && dataDrive.tableData.defaultSearchParams || {};
-        const copyDefault = Object.assign({}, defaultSearchParams);
+        const copyDefault = Object.assign({}, this.bindUserMesFordefaultSearchParams(defaultSearchParams));
         params = Object.assign(copyDefault, params);
         return this.http.get(replaceQuery(APPConfig.baseUrl + dataDrive.APIs.search, params));
+    }
+    bindUserMesFordefaultSearchParams(p) {
+        for(const prop in p) {
+            const val = p[prop];
+            if(typeof val ==='string') {
+                p[prop] = replaceQuery(p[prop], this.user)
+            }
+        }
+        return p;
     }
     getDriveOption(name: string) {
         if(typeof name === 'object') {
@@ -179,7 +188,7 @@ export class DataDriveService {
         if(!api) {
             throw new Error('無API');
         }
-        return this.http.get((api.indexOf('https:') > -1|| api.indexOf('http:')> -1)?api:APPConfig.baseUrl + api);
+        return this.http.get(replaceQuery((api.indexOf('https:') > -1|| api.indexOf('http:')> -1)?api:APPConfig.baseUrl + api,{}));
     }
 
 }

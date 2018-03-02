@@ -406,6 +406,11 @@ export class DriveEditComponent implements OnInit {
       bgColor: [more.header && more.header.bgColor],
       textSize: [more.header && more.header.textSize]
     }));
+    fg.addControl('linkToPhone', this.fb.group({
+      name: [more.linkToPhone && more.linkToPhone.name],
+      url: [more.linkToPhone && more.linkToPhone.url],
+      local: [more.linkToPhone && more.linkToPhone.local]
+    }))
     // 分頁
     if (more.pageSet && more.pageSet.enable) {
       fg.get('pageSet').setValue(true);

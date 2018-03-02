@@ -62,7 +62,7 @@ export const inspectionCommentConfig = {
             {
                 property: 'SCORE', value: '總分', more: {
                     sortBy: {
-                        name: 'byNum'
+                        name: 'byNumber'
                     }
                 }
             }

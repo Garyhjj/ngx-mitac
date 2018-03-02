@@ -244,6 +244,49 @@
                     </div>
                   </nz-collapse>
                 </nz-collapseset>
+
+                <nz-collapseset *ngIf="ctrl.get('linkToPhone')">
+                  <nz-collapse nzTitle="二维码跳转其它网址配置" formGroupName="linkToPhone">
+                      <div nz-row>
+                          <nz-col [nzSpan]="8">
+                            <div nz-form-item nz-row>
+                              <div nz-form-label nz-col [nzSpan]="4">
+                                <label>名稱</label>
+                              </div>
+                              <div nz-form-control nz-col [nzSpan]="14">
+                                <nz-input formControlName="name" [nzSize]="'large'">
+                                </nz-input>
+                              </div>
+                            </div>
+                          </nz-col>
+                      
+                          <nz-col [nzSpan]="8">
+                            <div nz-form-item nz-row>
+                              <div nz-form-label nz-col [nzSpan]="4">
+                                <label>跳轉地址</label>
+                              </div>
+                              <div nz-form-control nz-col [nzSpan]="14">
+                                <nz-input formControlName="url" [nzSize]="'large'" nzPlaceHolder="可以增加綁定參數，注意同樣地與數據庫返回的屬性一致">
+                                </nz-input>
+                              </div>
+                            </div>
+                          </nz-col>
+                      
+                          <nz-col [nzSpan]="8">
+                            <div nz-form-item nz-row>
+                              <div nz-form-label nz-col [nzSpan]="4">
+                                <label>本地地址</label>
+                              </div>
+                              <div nz-form-control nz-col [nzSpan]="14">
+                                <nz-input formControlName="local" [nzSize]="'large'" nzPlaceHolder="可選">
+                                </nz-input>
+                              </div>
+                            </div>
+                          </nz-col>
+                        </div>
+                    </nz-collapse>
+                    </nz-collapseset>
+                    
               </nz-tab>
               <ng-template #nzTabBarExtraContentView>
                 <i class="ant-tabs-new-tab anticon anticon-plus" (click)="newViewSetTab(); viewIdx=setForm.get('dataViewSetList').controls.length-1"></i>增加切換視圖
@@ -328,7 +371,7 @@
                     <label>查詢默認參數</label>
                   </div>
                   <div nz-form-control nz-col [nzSpan]="12">
-                    <nz-input formControlName="defaultSearchParams" [nzSize]="'large'" nzType="textarea" [nzAutosize]="'1'">
+                    <nz-input formControlName="defaultSearchParams" [nzSize]="'large'" nzType="textarea" [nzAutosize]="'1'" nzPlaceHolder="JSON格式，使用大括號包住的可自動綁定個人信息（如：{empno:'{EMPNO}'}）">
                     </nz-input>
                   </div>
                 </div>
@@ -485,7 +528,7 @@
     </div>
   </nz-tab>
 
-  <nz-tab *ngIf="setForm.valid">
+  <nz-tab *ngIf="setForm?.valid">
     <ng-template #nzTabHeading>
       預覽
     </ng-template>
