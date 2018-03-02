@@ -27,7 +27,7 @@
     "@ngrx/core": "^1.2.0",
     "@ngrx/effects": "^4.1.1",
     "@ngrx/store": "^4.1.1",
-    "JsonExportExcel": "https://github.com/cuikangjie/JsonExportExcel",
+    "JsonExportExcel": "git@github.com:cuikangjie/JsonExportExcel.git",
     "compression": "^1.7.1",
     "core-js": "^2.4.1",
     "crypto-js": "^3.1.9-1",
