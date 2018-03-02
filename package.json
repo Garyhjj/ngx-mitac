@@ -11,7 +11,8 @@
     "e2e": "ng e2e",
     "prod": "npm run build && node server.js",
     "serve": "npm run build && pm2 start server.js --name=mitacEnd",
-    "update": "git pull origin master && npm i && npm run build && pm2 reload mitacEnd"
+    "update": "git pull && npm i && npm run build && pm2 reload mitacEnd",
+    "update1": "git pull origin master && npm i && npm run build && pm2 reload mitacEnd"
   },
   "private": true,
   "dependencies": {
@@ -27,7 +28,7 @@
     "@ngrx/core": "^1.2.0",
     "@ngrx/effects": "^4.1.1",
     "@ngrx/store": "^4.1.1",
-    "JsonExportExcel": "git@github.com:Garyhjj/JsonExportExcel.git",
+    "JsonExportExcel": "https://github.com/cuikangjie/JsonExportExcel",
     "compression": "^1.7.1",
     "core-js": "^2.4.1",
     "crypto-js": "^3.1.9-1",

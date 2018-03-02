@@ -29,6 +29,10 @@ export class DriveEditComponent implements OnInit {
   formLayout = 'horizontal';
   setForm: FormGroup;
   columnIdx;
+  viewIdx;
+  rulesIdx;
+  SearchIdx;
+  updateIdx;
   otherInputSetTip;
 
   // InputOpts里more的各種配置placeHolder
