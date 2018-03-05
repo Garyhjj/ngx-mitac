@@ -12,8 +12,7 @@
     "prod": "npm run build && node server.js",
     "serve": "npm run build && pm2 start server.js --name=mitacEnd",
     "reServe": "npm run build && pm2 reload mitacEnd",
-    "update": "git pull && npm i && npm run build && pm2 reload mitacEnd",
-    "update1": "git pull origin master && npm i && npm run build && pm2 reload mitacEnd"
+    "update": "git pull && npm i && npm run build && pm2 reload mitacEnd"
   },
   "private": true,
   "dependencies": {

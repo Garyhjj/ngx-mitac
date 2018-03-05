@@ -44,6 +44,7 @@ export class ExamUnitComponent implements OnInit {
 
   getHeaderDrive(d: DataDrive) {
     this.headerDataDrive = d;
+    d.setParamsOut('配置考卷');
     this.alterHeaderByRole();
     this.toSetExamDetail();
   }
