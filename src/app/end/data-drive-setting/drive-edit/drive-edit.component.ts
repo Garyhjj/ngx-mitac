@@ -153,10 +153,13 @@ export class DriveEditComponent implements OnInit {
         const final = (loading) => this.util.dismissLoading(loading);
         this.dataDriveSettingService.getSetting(id).subscribe(d => {
           final(loading);
-          const drive: any = new DataDrive(d);
-          drive.des = d.description;
-          this.initForm(drive);
-
+          if (d) {
+            const drive: any = new DataDrive(d);
+            drive.des = d.description;
+            this.initForm(drive);
+          }else {
+            this.initForm();
+          }
         }, err => { this.util.errDeal(err); final(loading) })
       } else {
         this.initForm();

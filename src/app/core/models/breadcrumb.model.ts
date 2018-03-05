@@ -1,21 +1,22 @@
 import { Store } from '@ngrx/store';
 
-import { Breadcrumb_Update } from './../actions/breadcrumb.action';
+import { Breadcrumb_Update, Breadcrumb_Clear } from './../actions/breadcrumb.action';
 import { BreadcrumbState, myStore } from './../store';
 
 export class BreadcrumbModel{
     breadcrumb:BreadcrumbState[];
-    constructor(route:string[]){
-        if(route.length>0) {
+    constructor(route:any[]){
+        if(route.length>1) {
             this.breadcrumb = [];
-            route.forEach(r => {
-                let b: BreadcrumbState={routeName:''};
-                b.routeName = r;
-                this.breadcrumb.push(b);
-            })
+            let b: BreadcrumbState={routeName:route[0], routeUrl: route[1], active: !!route[2]};
+            this.breadcrumb.push(b);
         }
     }
     update(store$: Store<myStore>) {
         store$.dispatch(new Breadcrumb_Update(this.breadcrumb));
+    }
+
+    static clear(store$: Store<myStore>) {
+        store$.dispatch(new Breadcrumb_Clear());
     }
 }

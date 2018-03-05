@@ -28,8 +28,7 @@ export class ModulesSiderComponent implements OnInit,OnDestroy {
 
   ngOnInit() {
     this.mySub = this.store$.select(s => s.userReducer).subscribe(u => {this.myModules = u.modules; this.myPrivilege = u.privilege});
-    let breadcrumbModel = new BreadcrumbModel(['應用中心']);
-    breadcrumbModel.update(this.store$);
+    BreadcrumbModel.clear(this.store$);
   }
   ngOnDestroy() {
     this.mySub && this.mySub.unsubscribe();
@@ -50,19 +49,20 @@ export class ModulesSiderComponent implements OnInit,OnDestroy {
     if(target.nodeName.toLowerCase() === 'li') {
       try{
         let top = target.parentNode.parentNode.parentNode
-        let route:string[] = [];
+        let routeName:string[] = [];
         if(top.className === 'ant-menu-item-group') {
-          route.push(top.querySelector('div span').innerText);
-          route = route.concat([top.parentNode.parentNode.parentNode.querySelector('div span').innerText, target.innerText])
+          routeName.push(top.querySelector('div span').innerText);
+          routeName = routeName.concat([top.parentNode.parentNode.parentNode.querySelector('div span').innerText, target.innerText])
         }else {
-          route = [top.querySelector('div span').innerText, target.innerText];
+          routeName = [top.querySelector('div span').innerText, target.innerText];
         }
-        route.unshift('應用中心')
-        let breadcrumbModel = new BreadcrumbModel(route);
-        breadcrumbModel.update(this.store$);
+        routeName.unshift('應用中心')
         let navRoute;
         if( navRoute = target.dataset.route) {
-          this.router.navigate(['modules/' + navRoute]);
+          const url = 'modules' + navRoute;
+          this.router.navigate([url]);
+          let breadcrumbModel = new BreadcrumbModel([routeName, url, 1]);
+          breadcrumbModel.update(this.store$);
         }
       }catch(e) {
         console.log('路由位置獲取失敗');

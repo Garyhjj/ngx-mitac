@@ -5,7 +5,9 @@ export class myStore{
 }
 
 export interface BreadcrumbState{
-    routeName:string
+    routeName: string,
+    routeUrl: string,
+    active?: boolean
 }
 
 export interface UserState{

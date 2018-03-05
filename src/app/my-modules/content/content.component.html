@@ -1,7 +1,17 @@
 <div class="container">
-  <nz-breadcrumb style="margin:12px 0;">
+  <!-- <nz-breadcrumb style="margin:12px 0;">
     <nz-breadcrumb-item *ngFor="let item of breadcrumb | async">{{item.routeName}}</nz-breadcrumb-item>
-  </nz-breadcrumb>
+  </nz-breadcrumb> -->
+  <nz-tabset [nzType]="'card'" *ngIf="breadcrumb?.length > 0" [nzSelectedIndex]="tabIdx" (nzSelectedIndexChange)="tabIdxChange($event)">
+    <nz-tab *ngFor="let tab of breadcrumb; let i = index">
+      <ng-template #nzTabHeading>
+        <div>
+          {{tab?.routeName[tab?.routeName?.length -1]}}
+          <i class="anticon anticon-cross" (click)="closeTab(tab)"></i>
+        </div>
+      </ng-template>
+    </nz-tab>
+  </nz-tabset>
   <nz-content style="background:#fff; padding: 3px;height:100%">
       <router-outlet></router-outlet>
   </nz-content>
