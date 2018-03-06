@@ -23,7 +23,7 @@ export class DriveListComponent implements OnInit {
   getDataDrive(d: DataDrive) {
     d.setParamsOut('查看詳細');
     d.onParamsOut((d) => {
-      let breadcrumbModel = new BreadcrumbModel([['配置詳細'+d.ID], '/end/dataDrive/edit/'+ d.ID, 1]);
+      let breadcrumbModel = new BreadcrumbModel([['詳細配置'+d.ID], '/end/dataDrive/edit/'+ d.ID, 1]);
       breadcrumbModel.update(this.store$)
       // this.router.navigate(['/end/dataDrive/edit', d.ID])
     }
