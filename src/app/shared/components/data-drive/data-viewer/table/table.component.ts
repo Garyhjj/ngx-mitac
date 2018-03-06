@@ -443,6 +443,10 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   mouseLeave() {
     this.canScroll = true;
   }
+
+  trackByIndex(index, item){
+    return index;
+  }
   ngOnInit() {
     if (!this.isModal) {
       this.sub3 = this._dataDrive.observeIsShowModal().subscribe(s => this.canScroll = !s);

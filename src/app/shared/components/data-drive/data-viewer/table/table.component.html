@@ -21,7 +21,7 @@
     </thead>
   </ng-template>
   <tbody nz-tbody (mouseenter)="mouseEnter()" (mouseleave)="mouseLeave()">
-    <tr nz-tbody-tr *ngFor="let data of nzTable.data;let i = index">
+    <tr nz-tbody-tr *ngFor="let data of nzTable.data;let i = index; trackBy: trackByIndex">
       <ng-container *ngFor="let item of data">
         <td [style.backgroundColor]="setDetail.body?runRegExp(i, setDetail.body, 'bgColor'):''" [style.fontSize]="setDetail.body?runRegExp(i, setDetail.body, 'textSize'):''"
           [style.color]="setDetail.body?runRegExp(i, setDetail.body, 'textColor'):''" nz-td *ngIf="!item.hide">
