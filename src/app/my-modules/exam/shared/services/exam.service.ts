@@ -1,7 +1,8 @@
+import { EXAM_CONFIG } from './../tokens/exam.tokens';
 import { UserState } from './../../../../core/store';
-import { examConfig, ExamMapping } from './../config/index';
+import { ExamMapping } from './../config/index';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { AuthService } from '../../../../core/services/auth.service';
 import { replaceQuery } from '../../../../shared/utils';
 
@@ -21,14 +22,21 @@ export class ExamService {
 
     constructor(
         private http: HttpClient,
-        private auth: AuthService
+        private auth: AuthService,
+        @Inject(EXAM_CONFIG) private examConfig: {
+            UpdateMapping: string,
+            getExamPaper: string,
+            getExamHeader: string,
+            updateExamResult: string,
+            updateExamAnswer: string
+            }
     ) { 
         this.user = this.auth.user;
     }
 
     updateMapping(data: ExamMapping) {
         data.COMPANY_ID = this.user.COMPANY_ID;
-        return this.http.post(examConfig.UpdateMapping, data);
+        return this.http.post(this.examConfig.UpdateMapping, data);
     }
 
     checkPrivilege(role: string) {
@@ -40,7 +48,7 @@ export class ExamService {
             exam_id: id,
             company_id: this.user.COMPANY_ID
         }
-        return this.http.get(replaceQuery(examConfig.getExamPaper,send))
+        return this.http.get(replaceQuery(this.examConfig.getExamPaper,send))
     }
 
     getExamHeader(id: number) {
@@ -48,17 +56,17 @@ export class ExamService {
             id: id,
             company_id: this.user.COMPANY_ID
         }
-        return this.http.get(replaceQuery(examConfig.getExamHeader,send))
+        return this.http.get(replaceQuery(this.examConfig.getExamHeader,send))
     }
 
     updateExamResult(res: ExamResult) {
         const add = {COMPANY_ID: this.user.COMPANY_ID, USER_ID: this.user.ID};
         Object.assign(res, add);
-        return this.http.post(examConfig.updateExamResult, res);
+        return this.http.post(this.examConfig.updateExamResult, res);
     }
 
     updateExamAnswer(res: ExamAnswer[]) {
-        return this.http.post(examConfig.updateExamAnswer, res);
+        return this.http.post(this.examConfig.updateExamAnswer, res);
     }
 
 }
