@@ -30,7 +30,7 @@
               <button nz-button [nzType]="'primary'" *ngIf="item.value" (click)="scanImgs(item.value)">
                 <span>瀏覽圖片</span>
               </button></div>
-            <span *ngSwitchDefault>{{item.value | myFlex: pipes && pipes[item.property]?pipes[item.property]:'' }}</span>
+            <span *ngSwitchDefault>{{item.value | myFlex: (pipes && pipes[item.property]?pipes[item.property]:'') | async }}</span>
           </ng-container>
         </td>
       </ng-container>

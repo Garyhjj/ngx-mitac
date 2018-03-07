@@ -1,3 +1,4 @@
+import { deepClone } from './../../../../utils/index';
 import { SearchItemSet } from './../../shared/models/searcher/index';
 import { DataDrive, TableDataColumn } from './../../shared/models/index';
 import { Component, OnInit, Input } from '@angular/core';
@@ -55,7 +56,7 @@ export class DataSearchComponent implements OnInit {
   }
 
   submitForm() {
-    const value = this.validateForm.value;
+    const value = deepClone(this.validateForm.value);
     const cascaderProps = this.inputTypeList.filter(i => i.type === 'cascader').map(t => t.label);
     cascaderProps.forEach(c => {
       const cascaderProp = value[c];
@@ -63,9 +64,9 @@ export class DataSearchComponent implements OnInit {
       delete value[c];
     })
 
-    const send: any = {};
+    const send: any = Object.assign({},value);
     this.searchSets.forEach(s => {
-      send[s.apiProperty ? s.apiProperty : s.property] = value[s.property];
+      value[s.property] && (send[s.apiProperty ? s.apiProperty : s.property] = value[s.property]);
     })
     const id = this.util.showLoading();
     const finalFn = (id) => this.util.dismissLoading(id);

@@ -75,7 +75,7 @@ export class DataDriveService {
         const defaultSearchParams = dataDrive.tableData && dataDrive.tableData.defaultSearchParams || {};
         const copyDefault = Object.assign({}, this.bindUserMesFordefaultSearchParams(defaultSearchParams));
         params = Object.assign(copyDefault, params);
-        return this.http.get(replaceQuery(APPConfig.baseUrl + dataDrive.APIs.search, params));
+        return this.http.get(replaceQuery(APPConfig.baseUrl + dataDrive.APIs.search, params, this.user));
     }
     bindUserMesFordefaultSearchParams(p) {
         for(const prop in p) {
@@ -154,7 +154,7 @@ export class DataDriveService {
         ds.forEach(d => {
             out[d.property] = d.value;
         })
-        return this.http.delete(replaceQuery(APPConfig.baseUrl + url, out));
+        return this.http.delete(replaceQuery(APPConfig.baseUrl + url, out, this.user));
     }
     toExcel(dataDrive: DataDrive) {
         if (!dataDrive) return;
@@ -188,7 +188,7 @@ export class DataDriveService {
         if(!api) {
             throw new Error('無API');
         }
-        return this.http.get(replaceQuery((api.indexOf('https:') > -1|| api.indexOf('http:')> -1)?api:APPConfig.baseUrl + api,{}));
+        return this.http.get(replaceQuery((api.indexOf('https:') > -1|| api.indexOf('http:')> -1)?api:APPConfig.baseUrl + api,{}, this.user));
     }
 
 }

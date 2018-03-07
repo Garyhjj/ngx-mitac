@@ -6,7 +6,7 @@ export interface InputSet {
     placeHolder?: string;
     default?: string | boolean | number;
     match?: {
-        fns:{name:string,parmas:any[]}[]
+        fns: { name: string, parmas: any[] }[]
         err: string
     };
     more?: any;
@@ -67,24 +67,24 @@ export interface CascaderLazySet {
     value: string | number,
     lazyLayer: number,
     isLeaf?: boolean,
-    api?: string,
-    apiName?: string,
+    API?: string,
+    params?: string[]
 }
 export class Cascader implements InputSet {
     type: InputTypes;
-    cascaderLazySets?: CascaderLazySet[];
     placeHolder?: string;
-    properties: string[];
-    options: CascaderOption[]
     more?: {
-
+        cascaderLazySets?: CascaderLazySet[];
+        properties: string[];
+        options?: CascaderOption[];
     }
     constructor(opts?: any) {
         opts && Object.assign(this, opts);
-        const lazySet = this.cascaderLazySets;
+        const lazySet = this.more && this.more.cascaderLazySets;
         if (lazySet && lazySet.length > 0) {
             lazySet.sort((a, b) => -a.lazyLayer + b.lazyLayer);
             lazySet[0].isLeaf = true;
+            lazySet.reverse();
         }
         this.type = 'cascader';
     }
@@ -136,7 +136,9 @@ export class TimePicker implements InputSet {
 export class InputSetDefault implements InputSet {
     editable: boolean;
     default?: string | boolean | number;
+    more?: any;
     constructor() {
+        this.more = {editable: true};
         this.editable = true;
         this.default = '';
     }
@@ -247,11 +249,10 @@ export type InputTypes =
 
 export class TextInputSet implements InputSet {
     type: InputTypes;
-    editable?: boolean;
     placeHolder?: string;
     default?: string | boolean | number;
     match?: {
-        fns:{name:string,parmas:any[]}[]
+        fns: { name: string, parmas: any[] }[]
         err: string
     };
     constructor(opts?: InputSet) {
@@ -267,7 +268,7 @@ export class TextareaInputSet implements InputSet {
     placeHolder?: string;
     default?: string | boolean | number;
     match?: {
-        fns:{name:string,parmas:any[]}[]
+        fns: { name: string, parmas: any[] }[]
         err: string
     };
     constructor(opts?: InputSet) {
@@ -290,8 +291,8 @@ export class NumberInputSet extends TextInputSet {
         super(opts);
         this.more = this.more || {};
         this.more.step = this.more.step || 1;
-        this.more.max = isNumber(this.more.max)? this.more.max : Infinity;
-        this.more.min = isNumber(this.more.min)? this.more.min : -Infinity
+        this.more.max = isNumber(this.more.max) ? this.more.max : Infinity;
+        this.more.min = isNumber(this.more.min) ? this.more.min : -Infinity
         this.type = 'number';
         this.default = Number(this.default);
     }

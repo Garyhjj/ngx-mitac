@@ -1,8 +1,10 @@
+import { Observable } from 'rxjs/Observable';
 import { Pipe, PipeTransform } from '@angular/core';
 import { DataDriveService } from '../../core/services/data-drive.service';
 import { isArray } from '../../../../utils/index';
 import * as moment from 'moment';
 import { CacheService } from '../../../../../core/services/cache.service';
+import { AppService } from '../../../../../core/services/app.service';
 @Pipe({
   name: 'myFlex'
 })
@@ -10,8 +12,9 @@ export class MyFlexPipe implements PipeTransform {
 
   constructor(
     private dataDriveService: DataDriveService,
-    private cache: CacheService
-  ) { 
+    private cache: CacheService,
+    private appService: AppService
+  ) {
     this._cachedData = this.cache.get(this.name, this.key);
   }
 
@@ -22,22 +25,23 @@ export class MyFlexPipe implements PipeTransform {
   }
 
   set cachedData(c) {
-    this.cache.update(this.name, this.key ,c);
+    this.cache.update(this.name, this.key, c);
     this._cachedData = c;
   }
 
   name = 'myFlexPipe';
   key = 'lazyLoad'
 
+  empCacheKey = 'empCacheKey'
+
   outData;
   transform(value: any, args?: { name: string, params: any[] }): any {
     if (args && this[args.name]) {
       args.params = args.params || [];
-      this.outData = value;
-      this[args.name](value, ...args.params)
-      return this.outData;
+      const res = this[args.name](value, ...args.params);
+      return res instanceof Observable ? res : Observable.of(res);
     } else {
-      return value;
+      return Observable.of(value);
     }
   }
 
@@ -47,20 +51,20 @@ export class MyFlexPipe implements PipeTransform {
         target = target.replace(prop, o[prop]);
       }
     }
-    this.outData = target;
+    return target;
   }
   lazyLoad(target: string, api: string, lazyParams?: string[]) {
     if (api) {
       const bind = (obList) => {
         const ob = obList.find(c => c.property == target)
-        if (!ob) return this.outData = target;
-        this.outData = ob.value;
+        if (!ob) return target;
+        return ob.value;
       }
       const cache = this.cachedData && this.cachedData.find(c => c.url === api);
       if (cache) {
-        bind(cache.data);
-      }else {
-        this.dataDriveService.lazyLoad(api).subscribe((r: any[]) => {
+        return bind(cache.data);
+      } else {
+        return this.dataDriveService.lazyLoad(api).map((r: any[]) => {
           if (isArray(r)) {
             const obList = r.filter(f => f).map(d => {
               if (isArray(d)) {
@@ -72,7 +76,7 @@ export class MyFlexPipe implements PipeTransform {
               } else if (typeof d === 'object') {
                 const keys = Object.keys(d);
                 if (keys.length > 1) {
-                  if(isArray(lazyParams) && lazyParams.length > 1) {
+                  if (isArray(lazyParams) && lazyParams.length > 1) {
                     return { property: d[lazyParams[0]], value: d[lazyParams[1]] }
                   }
                   return { property: d[keys[0]], value: d[keys[1]] }
@@ -80,22 +84,60 @@ export class MyFlexPipe implements PipeTransform {
               }
             });
             this.cachedData = this.cachedData || [];
-            this.cachedData.push({ url: api, data: obList });
-            bind(obList);
+            this.cachedData = this.cachedData.concat([{ url: api, data: obList }]);
+            return bind(obList);
           } else {
-            this.outData = target;
+            return target;
           }
-        })
+        }).catch((err => Observable.of(target)));
       }
     } else {
-      this.outData = target;
+      return target;
     }
   }
 
   date(target: string, format: string, yourFromat?: string) {
     const toDateA = moment(target, yourFromat);
     if (!toDateA.isValid()) return;
-    this.outData = toDateA.format(format);
+    return toDateA.format(format);
+  }
+  /**
+   * 
+   * 
+   * @param {string} target 
+   * @param {string} format NO工号，CH中文名，EN英文名 如 NO-CH-EN
+   * @returns 
+   * @memberof MyFlexPipe
+   */
+  empno(target: string, format?: string) {
+    const cache = this.cachedData && this.cachedData.find(c => c.url === this.empCacheKey);
+    const tranform = (val:string, format:string) => {
+      const mesList = val.split(',');
+      const lg = mesList.length;
+      const last = lg > 2? format.replace(/NO/g,mesList[0]).replace(/CH/g,mesList[1]).replace(/EN/g,mesList[2]): format.replace(/NO/g,mesList[0]).replace(/EN/g,mesList[1]).replace(/CH/g, '');
+      return last;
+    } 
+    if (cache && cache.data && cache.data[target]) {
+      const val = cache.data[target];
+      return typeof format === 'string' ? tranform(val, format): val;
+    } else {
+      return this.appService.getColleague(target).map((data: any) => {
+        if (data.length === 1) {
+          const val = data[0];
+          this._cachedData = this._cachedData || [];
+          const cache = this.cachedData && this.cachedData.find(c => c.url === this.empCacheKey);
+          if (cache && cache.data) {
+            cache.data[target] = val;
+            this.cachedData = this.cachedData;
+          } else {
+            this.cachedData = this._cachedData.concat([{ url: this.empCacheKey, data: { [target]: val } }]);
+          }
+          return typeof format === 'string' ? tranform(val, format): val;
+        } else {
+          return target;
+        }
+      }).catch((err => Observable.of(target)));
+    }
   }
 
 }

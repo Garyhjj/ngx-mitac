@@ -1,4 +1,5 @@
 import * as moment from 'moment';
+import { UserState } from '../../core/store';
 
 /**
    * 对能改变数组的方法添加钩子函数
@@ -35,10 +36,18 @@ export const throttle = (method: any, context: Object, args: any[] = [], during:
   return method.tId;
 }
 
-export const replaceQuery = (url: string, query: any) => {
+export const replaceQuery = (url: string, query: any, user?: UserState) => {
+  const prefix = '*';
   if (url && query) {
     for (let prop in query) {
-      url = url.replace(`{${prop}}`, query[prop] || query[prop] === 0 ? query[prop] : '')
+      const queryVal = query[prop];
+      url = url.replace(`{${prop}}`, queryVal || queryVal === 0 ? queryVal : '')
+    }
+    if(user) {
+      for (let prop in user) {
+        const userVal = user[prop];
+        url = url.replace(`{${prefix+prop}}`, userVal || userVal === 0 ? userVal : '')
+      }
     }
     url = url.replace(/\{\w+\}/g, '');
   }

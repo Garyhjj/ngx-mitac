@@ -21,7 +21,7 @@
                 <label>查詢API</label>
               </div>
               <div nz-form-control nz-col [nzSpan]="10">
-                <nz-input formControlName="search" [nzSize]="'large'" nzPlaceHolder="大括號內的是將被替換的參數，返回的參數有此屬性則會自動替換">
+                <nz-input formControlName="search" [nzSize]="'large'" nzPlaceHolder="大括號內的是將被替換的參數, 返回的參數有此屬性則會自動替換, 或参数前加*则会绑定用户信息">
                 </nz-input>
               </div>
             </div>
@@ -39,7 +39,7 @@
                 <label>删除API</label>
               </div>
               <div nz-form-control nz-col [nzSpan]="10">
-                <nz-input formControlName="delete" [nzSize]="'large'" nzPlaceHolder="大括號內的是將被替換的參數，請與返回的對應參數一致">
+                <nz-input formControlName="delete" [nzSize]="'large'" nzPlaceHolder="大括號內的是將被替換的參數, 請與返回的對應參數一致, 或参数前加*则会绑定用户信息">
                 </nz-input>
               </div>
             </div>
@@ -450,7 +450,7 @@
                         <label>管道額外參數</label>
                       </div>
                       <div nz-form-control nz-col [nzSpan]="14">
-                        <nz-input formControlName="pipeParams" [nzSize]="'large'" nzType="textarea" [nzAutosize]="'1'" nzPlaceHolder="選擇管道后為必填">
+                        <nz-input formControlName="pipeParams" [nzSize]="'large'" nzType="textarea" [nzAutosize]="'1'" nzPlaceHolder="選擇管道后可选填">
                         </nz-input>
                       </div>
                     </div>

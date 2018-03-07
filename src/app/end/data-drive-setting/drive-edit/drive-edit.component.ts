@@ -88,8 +88,29 @@ export class DriveEditComponent implements OnInit {
       addable: true, //是否可刪除圖片
       scanable: true //是否可放大瀏覽圖片
     }
-    `
+    `,
+    cascader: `
+    {
+      options: CascaderOption, //直接提供选项，有的话会忽略对应的cascaderLazySets
+      cascaderLazySets: {
+        lazyLayer: number, //懒加载的层，从1开始
+        isLeaf?: boolean, //是否没下级
+        API?: string,
+        params?: string[] //选取API的参数，第一项为value，第二项为label，若有第三项（预防API设计不当），则用上一级的参数去筛选获取的值，值[第三项] === 上一级参数。
+      }[],
+      properties: string[] //对应的层级value去替换API的变量
+    } 
+    /*
+    CascaderOption {
+      value: string | number,
+      label: string | number,
+      isLeaf?: boolean,
+      children?: CascaderOption[]
+    }
 
+    可看例子： 消防設備登記表
+    */
+    `
   };
   typeNameOptions = [
     { property: '', value: '不設置' },
@@ -113,13 +134,15 @@ export class DriveEditComponent implements OnInit {
     { property: 'checkbox', value: '多選' },
     { property: 'switch', value: '開關' },
     { property: 'colleagueSearcher', value: '員工搜索' },
-    { property: 'photoUpload', value: '圖片上傳' }
+    { property: 'photoUpload', value: '圖片上傳' },
+    { property: 'cascader', value: '级联'}
   ]
   pipeOptions = [
     { property: '-1', value: '不設置' },
     { property: 'replace', value: '簡單替換' },
     { property: 'lazyLoad', value: '網絡請求后替換' },
-    { property: 'date', value: '日期格式化' }
+    { property: 'date', value: '日期格式化' },
+    { property: 'empno', value: '员工信息格式化' }
   ];
   additionalFnOptions = [
     { property: 'changeBodyFontSize', value: '表格數據字體大小調整' },

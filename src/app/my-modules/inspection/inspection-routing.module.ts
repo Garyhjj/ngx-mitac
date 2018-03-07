@@ -19,6 +19,10 @@ const bRoutes: Routes = [
             {
                 path: 'boss',
                 loadChildren: 'app/my-modules/inspection/inspection-boss/inspection-boss.module#InspectionBossModule'
+            },
+            {
+                path: 'equip',
+                loadChildren: 'app/my-modules/inspection/inspection-equip/inspection-equip.module#InspectionEquipModule'
             }
         ]
     }

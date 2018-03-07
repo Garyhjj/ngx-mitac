@@ -23,7 +23,8 @@ export class UtilService {
                     return this._message.error('没找到资源', { nzDuration: 3000 });
                 case 500:
                     return this._message.error('無法連接到服務器,請稍後重試！', { nzDuration: 3000 });
-
+                case 0:
+                    return this._message.error(err.statusText, { nzDuration: 3000 });
             }
         }
     }
@@ -64,18 +65,18 @@ export class UtilService {
         this._message.warning(mes, { nzDuration: 3000 });
     }
 
-    showWarningConfirm(set:{title:string,content:string,okText?:string},cb?: () => void) {
+    showWarningConfirm(set: { title: string, content: string, okText?: string }, cb?: () => void) {
         set.okText = set.okText || '收到';
         this.modalService.warning({
             title: set.title,
             content: set.content,
             okText: set.okText,
             onOk: cb
-          });
+        });
     }
 
-    showLoading(){
-        return this._message.loading('正在執行中', {nzDuration: 0}).messageId;
+    showLoading() {
+        return this._message.loading('正在執行中', { nzDuration: 0 }).messageId;
     }
 
     dismissLoading(id: string) {

@@ -53,9 +53,9 @@
 
             <app-my-cascader [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'cascader'" 
             [myPlaceHolder]="inputTypeList[i].placeHolder"
-            [myOptions]="inputTypeList[i].options"
-            [myCascaderLazySets] = "inputTypeList[i].cascaderLazySets"
-            [myProperties] = "inputTypeList[i].properties"
+            [myOptions]="inputTypeList[i].more?.options"
+            [myCascaderLazySets] = "inputTypeList[i].more?.cascaderLazySets"
+            [myProperties] = "inputTypeList[i].more?.properties"
             ></app-my-cascader>
 
             <app-my-switch [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'switch'"
