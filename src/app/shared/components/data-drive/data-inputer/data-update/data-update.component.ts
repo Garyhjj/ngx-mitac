@@ -50,7 +50,7 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
         return true;
       } else {
         this.primaryKey = u.property;
-        this.primaryValue = !Number.isNaN(+u.InputOpts.default)? u.InputOpts.default as number : -1;
+        this.primaryValue = !Number.isNaN(+u.InputOpts.default) ? u.InputOpts.default as number : -1;
         return false;
       }
     });
@@ -77,7 +77,7 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
   }
 
   submitForm() {
-    if(!this.dataDrive.runBeforeUpdateSubmit(this.validateForm, this.globalUpdateErrSubject)) return setTimeout(() => this.globalUpdateErrSubject.next(''), 3000);
+    if (!this.dataDrive.runBeforeUpdateSubmit(this.validateForm, this.globalUpdateErrSubject)) return setTimeout(() => this.globalUpdateErrSubject.next(''), 3000);
     const value = this.validateForm.value;
     const cascaderProps = this.inputTypeList.filter(i => i.type === 'cascader').map(t => t.label);
     cascaderProps.forEach(c => {
@@ -93,9 +93,9 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
     this.dataDriveService.updateData(this.dataDrive, value).subscribe(c => {
       finalFn(id);
       this.dataDriveService.updateViewData(this.dataDrive);
-      this.util.showGlobalSucMes(this.changeIdx < 0?'插入成功': '更新成功');
+      this.util.showGlobalSucMes(this.changeIdx < 0 ? '插入成功' : '更新成功');
       setTimeout(() => this.subject1.destroy(), 500);
-    },(err) => {this.util.errDeal(err); finalFn(id)})
+    }, (err) => { this.util.errDeal(err); finalFn(id) })
   }
 
   subscribeGlErr() {
@@ -117,11 +117,29 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
         if (data) {
           const target = data.find(d => d.property === s.property);
           if (target) {
-             const primary = data.find(d => d.property === this.primaryKey);
-             if(primary) {
-               this.primaryValue = +primary.value;
-             }
+            const primary = data.find(d => d.property === this.primaryKey);
+            if (primary) {
+              this.primaryValue = +primary.value;
+            }
             def = target.value;
+          } else {
+            // 判断是否是级联组件，获得初始值
+            const type = s.InputOpts.type;
+            if (type === 'cascader') {
+              const properties = s.InputOpts.more && s.InputOpts.more.properties;
+              if (isArray(properties)) {
+                def = ''
+                properties.forEach(p => {
+                  if (typeof p === 'string') {
+                    const target = data.find(d => d.property === p);
+                    if(target) {
+                      const val = target.value;
+                      def += def ? ',' + val : val;
+                    }
+                  }
+                })
+              }
+            }
           }
         }
       } else {
@@ -144,7 +162,7 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
         }
       }
       myForm[s.property] = [def, valid];
-      return Object.assign({ label: mapColumn ? mapColumn.value : s.property, property: s.property}, s.InputOpts);
+      return Object.assign({ label: mapColumn ? mapColumn.value : s.property, property: s.property }, s.InputOpts);
     });
     // this.dataDrive.onUpdateFormShow((fg) => {
     //   console.log(fg.value);

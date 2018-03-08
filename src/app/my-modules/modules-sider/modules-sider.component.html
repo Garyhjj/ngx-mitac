@@ -52,12 +52,12 @@
           <li nz-menu-item data-route="/inspection/boss/comment" *ngIf="canSeeFunction(164)">巡檢報告評分</li>
         </ul>
       </li>
-      <li nz-menu-group>
+      <li nz-menu-group *ngIf="canSeeFunction(316)">
         <span title>设备巡检</span>
         <ul>
-            <li nz-menu-item data-route="/inspection/equip/list">设备登记</li>
+            <li nz-menu-item data-route="/inspection/equip/list" *ngIf="canSeeFunction(317)">设备登记</li>
           <li nz-menu-item data-route="/inspection/equip/improvement">改善措施</li>
-          <li nz-menu-item data-route="/inspection/equip/lines">问题追踪</li>
+          <li nz-menu-item data-route="/inspection/equip/lines" *ngIf="canSeeFunction(343)">问题追踪</li>
         </ul>
       </li>
     </ul>

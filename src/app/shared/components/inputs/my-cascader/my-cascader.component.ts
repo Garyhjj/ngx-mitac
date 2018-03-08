@@ -48,8 +48,10 @@ export class MyCascaderComponent implements OnInit {
       this._value = [''];
     }else if(isArray(value)){
       this._value = value;
+      setTimeout(() =>this._console(this._value),50);
     }else if(typeof value === 'string'){
       this._value = value.split(',');
+      setTimeout(() =>this._console(this._value),50);
     }else {
       this._value = [''];
     }
@@ -71,13 +73,16 @@ export class MyCascaderComponent implements OnInit {
   registerOnTouched(fn:any) { }
 
   _console(value) {
-    const out: any= {}; 
+    let out: any= {}; 
     value.forEach((v,idx) => {
       const myPropertys = this.myProperties;
       if(myPropertys && myPropertys.length>0 && myPropertys[idx]) {
         out[myPropertys[idx]] = v;
       }
     })
+    if(Object.keys(out).length === 0) {
+      out = null;
+    }
     this.propagateChange(out);
   }
 

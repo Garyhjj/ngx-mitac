@@ -74,14 +74,19 @@ export class MyFlexPipe implements PipeTransform {
                   return { property: d[0], value: d[1] }
                 }
               } else if (typeof d === 'object') {
-                const keys = Object.keys(d);
-                if (keys.length > 1) {
-                  if (isArray(lazyParams) && lazyParams.length > 1) {
-                    return { property: d[lazyParams[0]], value: d[lazyParams[1]] }
+                let keys = Object.keys(d);
+                if (keys.length > 0) {
+                  if (isArray(lazyParams) && lazyParams.length > 0) {
+                    keys = lazyParams;
                   }
-                  return { property: d[keys[0]], value: d[keys[1]] }
+                  if(keys.length === 1) {
+                    return { property: d[keys[0]], value: d[keys[0]] }
+                  }else if(keys.length > 1) {
+                    return { property: d[keys[0]], value: d[keys[1]] }
+                  }
                 }
               }
+              return {};
             });
             this.cachedData = this.cachedData || [];
             this.cachedData = this.cachedData.concat([{ url: api, data: obList }]);
