@@ -1,0 +1,8 @@
+<nz-tabset *ngIf="tabs">
+  <nz-tab *ngFor="let tab of tabs">
+    <ng-template #nzTabHeading>
+      {{tab.INSPECT_NAME}}
+    </ng-template>
+    <app-data-drive [name]= "'inspectionEquipCheckList'" (dataDriveInit)="getDataDrive($event, tab.NAME_ID)"></app-data-drive>
+  </nz-tab>
+</nz-tabset>

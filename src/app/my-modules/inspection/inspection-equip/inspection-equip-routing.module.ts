@@ -1,3 +1,4 @@
+import { InspectionEquipCheckListComponent } from './inspection-equip-checkList/inspection-equip-checkList.component';
 import { InspectionEquipListComponent } from './inspection-equip-list/inspection-equip-list.component';
 import { InspectionEquipLinesComponent } from './inspection-equip-lines/inspection-equip-lines.component';
 import { InspectionEquipImprovementComponent } from './inspection-equip-improvement/inspection-equip-improvement.component';
@@ -39,11 +40,10 @@ const eRoutes: Routes = [
             //     path: 'schedule',
             //     component: InspectionBossScheduleComponent
             // },
-            // {
-            //     canActivate: [BossGuard],
-            //     path: 'comment',
-            //     component: InspectionBossCommentComponent
-            // }
+            {
+                path: 'checkList',
+                component: InspectionEquipCheckListComponent
+            }
         ]
     }
 ]

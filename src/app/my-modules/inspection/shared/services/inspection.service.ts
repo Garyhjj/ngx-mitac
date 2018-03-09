@@ -21,5 +21,9 @@ export class InspectionService {
         return this.http.post(inspectionConfig.uploadReport, r);
     }
 
+    getMRIName(type: string) {
+        return this.http.get(replaceQuery(inspectionConfig.getMRIName, {type}, this.user));
+    }
+
 }
 

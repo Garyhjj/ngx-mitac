@@ -1,4 +1,4 @@
-<ul nz-menu [nzMode]="isCollapsed?'vertical':'inline'" style="height:100%" (click)="select($event)" [class.ant-layout-sider-collapsed]="isCollapsed">
+<ul nz-menu [nzMode]="isCollapsed?'vertical':'inline'" style="height:calc(100% - 48px);overflow-y:auto;overflow-x:hidden" (click)="select($event)" [class.ant-layout-sider-collapsed]="isCollapsed">
   <!-- <li nz-submenu>
     <span title><i class="anticon anticon-file-pdf"></i><span class="nav-text">eMPI</span></span>
     <ul>
@@ -52,10 +52,11 @@
           <li nz-menu-item data-route="/inspection/boss/comment" *ngIf="canSeeFunction(164)">巡檢報告評分</li>
         </ul>
       </li>
-      <li nz-menu-group *ngIf="canSeeFunction(316)">
+      <li nz-menu-group *ngIf="canSeeFunction(5)">
         <span title>设备巡检</span>
         <ul>
-            <li nz-menu-item data-route="/inspection/equip/list" *ngIf="canSeeFunction(317)">设备登记</li>
+          <li nz-menu-item data-route="/inspection/equip/list" *ngIf="canSeeFunction(317)">设备登记</li>
+          <li nz-menu-item data-route="/inspection/equip/checkList">设备巡检项</li>
           <li nz-menu-item data-route="/inspection/equip/improvement">改善措施</li>
           <li nz-menu-item data-route="/inspection/equip/lines" *ngIf="canSeeFunction(343)">问题追踪</li>
         </ul>
