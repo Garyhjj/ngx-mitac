@@ -13,7 +13,6 @@ export class InspectionEquipCheckListComponent implements OnInit {
 
   ngOnInit() {
     this.inspectionService.getMRIName('equip').subscribe(c => {
-      console.log(c);
       this.tabs = c;
     })
   }

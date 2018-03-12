@@ -8,6 +8,7 @@ import { InspectionEquipImprovementComponent } from './inspection-equip-improvem
 import { InspectionEquipLinesComponent } from './inspection-equip-lines/inspection-equip-lines.component';
 import { InspectionEquipListComponent } from './inspection-equip-list/inspection-equip-list.component';
 import { InspectionEquipCheckListComponent } from './inspection-equip-checkList/inspection-equip-checkList.component';
+import { InspectionEquipStatusComponent } from './inspection-equip-status/inspection-equip-status.component';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { InspectionEquipCheckListComponent } from './inspection-equip-checkList/
     InspectionEquipImprovementComponent,
     InspectionEquipLinesComponent,
     InspectionEquipListComponent,
-    InspectionEquipCheckListComponent
+    InspectionEquipCheckListComponent,
+    InspectionEquipStatusComponent
 ]
 })
 export class InspectionEquipModule { }
