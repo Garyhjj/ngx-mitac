@@ -56,7 +56,7 @@
         <span title>设备巡检</span>
         <ul>
           <li nz-menu-item data-route="/inspection/equip/list" *ngIf="canSeeFunction(317)">设备登记</li>
-          <li nz-menu-item data-route="/inspection/equip/checkList">设备巡检项</li>
+          <li nz-menu-item data-route="/inspection/equip/checkList" *ngIf="canSeeFunction(343)">设备巡检项</li>
           <li nz-menu-item data-route="/inspection/equip/improvement">改善措施</li>
           <li nz-menu-item data-route="/inspection/equip/lines" *ngIf="canSeeFunction(343)">问题追踪</li>
           <li nz-menu-item data-route="/inspection/equip/status" *ngIf="canSeeFunction(343)">巡检完成状况</li>

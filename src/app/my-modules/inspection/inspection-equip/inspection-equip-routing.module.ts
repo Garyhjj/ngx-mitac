@@ -1,3 +1,4 @@
+import { EquipGuard } from './equip-guard.service';
 import { InspectionEquipHistoryComponent } from './inspection-equip-history/inspection-equip-history.component';
 import { InspectionEquipStatusComponent } from './inspection-equip-status/inspection-equip-status.component';
 import { InspectionEquipCheckListComponent } from './inspection-equip-checkList/inspection-equip-checkList.component';
@@ -19,10 +20,12 @@ const eRoutes: Routes = [
         canActivateChild: [AuthGuard],
         children: [
             {
+                canActivate: [EquipGuard],
                 path: 'lines',
                 component: InspectionEquipLinesComponent
             },
             {
+                canActivate: [EquipGuard],
                 path: 'history',
                 component: InspectionEquipHistoryComponent
             },
@@ -31,14 +34,17 @@ const eRoutes: Routes = [
                 component: InspectionEquipImprovementComponent
             },
             {
+                canActivate: [EquipGuard],
                 path: 'list',
                 component: InspectionEquipListComponent
             },
             {
+                canActivate: [EquipGuard],
                 path: 'status',
                 component: InspectionEquipStatusComponent
             },
             {
+                canActivate: [EquipGuard],
                 path: 'checkList',
                 component: InspectionEquipCheckListComponent
             }

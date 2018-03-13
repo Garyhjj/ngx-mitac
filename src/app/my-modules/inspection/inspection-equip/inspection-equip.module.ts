@@ -1,3 +1,5 @@
+import { EquipGuard } from './equip-guard.service';
+import { InspectionEquipService } from './shared/services/inspection-equip.service';
 import { SharedModule } from './../../../shared/shared.module';
 import { DataDriveModule } from './../../../shared/components/data-drive/data-drive.module';
 import { InspectionEquipRoutingModule } from './inspection-equip-routing.module';
@@ -22,6 +24,7 @@ import { InspectionEquipHistoryComponent } from './inspection-equip-history/insp
     InspectionEquipCheckListComponent,
     InspectionEquipStatusComponent,
     InspectionEquipHistoryComponent
-]
+  ],
+  providers: [InspectionEquipService, EquipGuard]
 })
 export class InspectionEquipModule { }
