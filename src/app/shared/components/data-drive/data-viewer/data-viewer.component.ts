@@ -1,5 +1,5 @@
 import { DataDrive, DataViewSet } from '../../data-drive/shared/models/index';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, TemplateRef } from '@angular/core';
 
 @Component({
   selector: 'app-data-viewer',
@@ -19,9 +19,20 @@ export class DataViewerComponent implements OnInit {
 
   @Input()
   isModal: boolean;
+
+  @Input() 
+  set more(m:any) {
+    if(m.actionRef) {
+      this.actionRef = m.actionRef;
+    }
+  };
+
+  actionRef: TemplateRef<void>;
+
   constructor() { }
 
   ngOnInit() {
+    
   }
 
 }

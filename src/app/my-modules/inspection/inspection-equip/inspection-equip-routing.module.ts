@@ -1,3 +1,4 @@
+import { InspectionEquipHistoryComponent } from './inspection-equip-history/inspection-equip-history.component';
 import { InspectionEquipStatusComponent } from './inspection-equip-status/inspection-equip-status.component';
 import { InspectionEquipCheckListComponent } from './inspection-equip-checkList/inspection-equip-checkList.component';
 import { InspectionEquipListComponent } from './inspection-equip-list/inspection-equip-list.component';
@@ -21,13 +22,10 @@ const eRoutes: Routes = [
                 path: 'lines',
                 component: InspectionEquipLinesComponent
             },
-            // {
-            //     path: 'report',
-            //     component: InspectionBossReportComponent,
-            //     resolve: {
-            //         schedule: BossScheduleResolver
-            //     }
-            // },
+            {
+                path: 'history',
+                component: InspectionEquipHistoryComponent
+            },
             {
                 path: 'improvement',
                 component: InspectionEquipImprovementComponent

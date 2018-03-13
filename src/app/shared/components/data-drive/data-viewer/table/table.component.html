@@ -49,6 +49,7 @@
             <a (click)="linkToPhone(setDetail.linkToPhone,i)">{{setDetail.linkToPhone.name}}</a>
           </ng-container>
         </span>
+        <ng-template [ngTemplateOutlet]="actionRef" [ngTemplateOutletContext]="{data: arrayToObjectForData(i)}" *ngIf="actionRef"></ng-template>
       </td>
     </tr>
   </tbody>

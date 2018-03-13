@@ -303,6 +303,7 @@ export class DriveEditComponent implements OnInit {
         deletable: [tableData.deletable],
         editable: [tableData.editable],
         isCompanyLimited: [false],
+        stopFirstInit: [tableData.stopFirstInit],
         defaultSearchParams: [stringify(tableData.defaultSearchParams)],
         columns: new FormArray(columnFormList)
       }),

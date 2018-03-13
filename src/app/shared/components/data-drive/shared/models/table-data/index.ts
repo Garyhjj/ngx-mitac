@@ -27,6 +27,7 @@ export interface TableData {
     deletable?: boolean;
     visible?: boolean;
     searchable?: boolean;
+    stopFirstInit?: boolean;
     isCompanyLimited?: boolean | string;
     defaultSearchParams?: any;
     columns: TableDataColumn[];
@@ -38,6 +39,7 @@ export class TableDataModel implements TableData {
     addable: boolean;
     deletable: boolean;
     visible: boolean;
+    stopFirstInit?: boolean;
     isCompanyLimited?: boolean | string;
     defaultSearchParams?: any;
     columns: TableDataColumn[];

@@ -9,6 +9,7 @@ import { InspectionEquipLinesComponent } from './inspection-equip-lines/inspecti
 import { InspectionEquipListComponent } from './inspection-equip-list/inspection-equip-list.component';
 import { InspectionEquipCheckListComponent } from './inspection-equip-checkList/inspection-equip-checkList.component';
 import { InspectionEquipStatusComponent } from './inspection-equip-status/inspection-equip-status.component';
+import { InspectionEquipHistoryComponent } from './inspection-equip-history/inspection-equip-history.component';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { InspectionEquipStatusComponent } from './inspection-equip-status/inspec
     InspectionEquipLinesComponent,
     InspectionEquipListComponent,
     InspectionEquipCheckListComponent,
-    InspectionEquipStatusComponent
+    InspectionEquipStatusComponent,
+    InspectionEquipHistoryComponent
 ]
 })
 export class InspectionEquipModule { }

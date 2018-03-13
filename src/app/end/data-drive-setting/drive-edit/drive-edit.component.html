@@ -364,6 +364,16 @@
                 </div>
               </nz-col>
 
+              <nz-col [nzSpan]="8">
+                <div nz-form-item nz-row>
+                  <div nz-form-label nz-col [nzSpan]="12">
+                    <label>取消初次数据获取</label>
+                  </div>
+                  <div nz-form-control nz-col [nzSpan]="12">
+                    <app-my-switch formControlName="stopFirstInit" [myTrueFormat]="true" [myFalseFormat]="false"></app-my-switch>
+                  </div>
+                </div>
+              </nz-col>
 
               <nz-col [nzSpan]="8">
                 <div nz-form-item nz-row>

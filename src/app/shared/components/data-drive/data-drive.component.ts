@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs/Observable';
 import { DataDrive, TableDataModel } from './shared/models/index';
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, TemplateRef, ContentChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { APPConfig } from '../../../shared/config/app.config';
 import { NzModalService } from 'ng-zorro-antd';
@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs/Subscription';
   styleUrls: ['./data-drive.component.css']
 })
 export class DataDriveComponent implements OnInit, OnDestroy {
-
+  @ContentChild('actionRef') actionRef: TemplateRef<void>;
   tableData: TableDataModel;
   dataDrive: DataDrive;
   isShowModal = Observable.of(false);
@@ -46,13 +46,15 @@ export class DataDriveComponent implements OnInit, OnDestroy {
     }
     this.dataDriveInit.emit(this.dataDrive);
     this.tableData = this.dataDrive.tableData;
-    this.dataDrive.isGetingData = true;
     this.isShowModal = this.dataDrive.observeIsShowModal();
-    const final = () => setTimeout(() => this.dataDrive.isGetingData = false, 200);
-    this.dataDriveService.getInitData(this.dataDrive).subscribe((ds: any) => {
-      this.dataDriveService.initTableData(this.dataDrive, ds);
-      final();
-    }, (err) => { this.utilService.errDeal(err); final(); });
+    if(this.tableData && !this.tableData.stopFirstInit) {
+      this.dataDrive.isGetingData = true;
+      const final = () => setTimeout(() => this.dataDrive.isGetingData = false, 200);
+      this.dataDriveService.getInitData(this.dataDrive).subscribe((ds: any) => {
+        this.dataDriveService.initTableData(this.dataDrive, ds);
+        final();
+      }, (err) => { this.utilService.errDeal(err); final(); });
+    }
     this.dataDrive.observeSelfUpdateTableData().subscribe(d => this.dataDriveService.initTableData(this.dataDrive, d));
     const searchSets = this.dataDrive.searchSets;
     if((!searchSets || searchSets.length === 0) && this.dataDrive.canAutoUpdate) {

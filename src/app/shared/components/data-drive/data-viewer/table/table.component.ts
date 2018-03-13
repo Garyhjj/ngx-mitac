@@ -7,7 +7,7 @@ import { DataDriveService } from './../../core/services/data-drive.service';
 import { TabelViewSetMore, TabelViewSet } from './../../../data-drive/shared/models/viewer/table';
 import { Subscription } from 'rxjs/Rx';
 import { TableData } from '../../../data-drive/shared/models/index';
-import { Component, OnInit, Input, AfterViewInit, OnDestroy, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, OnDestroy, AfterViewChecked, ChangeDetectorRef, TemplateRef } from '@angular/core';
 import { DataDrive } from '../../../data-drive/shared/models/index';
 import { throttle, isArray, sortUtils } from '../../../../utils/index';
 import { Observable } from 'rxjs/Observable';
@@ -39,6 +39,8 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   private types: any = {};
   showInformer = new Subject<any>();
   fileList;
+  @Input() actionRef: TemplateRef<void>;
+
   @Input()
   set opts(opts: DataDrive) {
     this.tableSet = opts.dataViewSet as TabelViewSet;
@@ -137,7 +139,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   getTypes() {
     this._dataDrive.tableData.columns.filter(c => c.more && c.more.type).forEach(f => {
       const type = f.more.type;
-      this.types[f.property] = type? type.name: 'text';
+      this.types[f.property] = type ? type.name : 'text';
     })
   }
 
@@ -152,7 +154,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
       this.dataDriveService.deleteData(this._dataDrive, data[idx]).subscribe(r => {
         this.dataDriveService.updateViewData(this._dataDrive);
         finalFn(id);
-      }, (err) => {this.util.errDeal(err); finalFn(id)});
+      }, (err) => { this.util.errDeal(err); finalFn(id) });
     }
     this.modalService.confirm({
       title: '您確定要刪除這一條目嗎？',
@@ -168,7 +170,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   toUpdate(idx) {
     if (!this.canEdit) return;
     idx = this.calIdx(idx);
-    if(this._dataDrive.runChangeUpdateViewer(idx)) return;
+    if (this._dataDrive.runChangeUpdateViewer(idx)) return;
     const subscription = this.modalService.open({
       title: '更新',
       content: DataUpdateComponent,
@@ -278,9 +280,9 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
 
   }
   scanImgs(imgs: string) {
-    if(imgs){
+    if (imgs) {
       this.fileList = imgs.split(',').map(i => {
-        return {url: APPConfig.baseUrl + i}
+        return { url: APPConfig.baseUrl + i }
       });
       this.showInformer.next(1);
     }
@@ -307,6 +309,16 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
       this._dataDrive.emitParamsOut(out);
     }
     return false;
+  }
+
+  arrayToObjectForData(idx: number) {
+    idx = this.calIdx(idx);
+    const data = this._dataDrive.getData()[idx];
+    const out: any = {};
+    data.forEach(d => {
+      out[d.property] = d.value;
+    })
+    return out;
   }
 
   linkToPhone(params: { url: string, local: string }, idx: number) {
@@ -347,7 +359,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   }
 
   calIdx(idx) {
-    return this.pageIndex > -1? (this.pageIndex - 1) * this.pageCount + idx: idx;
+    return this.pageIndex > -1 ? (this.pageIndex - 1) * this.pageCount + idx : idx;
   }
 
   runRegExp(dataIdx: number, body: {
@@ -397,10 +409,10 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
                     break;
                   } else {
                     let params;
-                    if(match.length < 3) {
+                    if (match.length < 3) {
                       params = [];
-                    }else {
-                      params = isArray(match[2])?match[2]: [match[2]];
+                    } else {
+                      params = isArray(match[2]) ? match[2] : [match[2]];
                     }
                     const t = target.find(s => s.property === match[0]) as any;
                     if (!t) {
@@ -444,7 +456,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     this.canScroll = true;
   }
 
-  trackByIndex(index, item){
+  trackByIndex(index, item) {
     return index;
   }
   ngOnInit() {
