@@ -35,13 +35,13 @@
       <span class="nav-text">巡检</span>
     </span>
     <ul>
-      <li nz-menu-group *ngIf="canSeeFunction(161)">
+      <li nz-submenu *ngIf="canSeeFunction(161)">
         <span title>基本設置</span>
         <ul>
           <li nz-menu-item data-route="/inspection/basic/name">巡檢名稱</li>
         </ul>
       </li>
-      <li nz-menu-group *ngIf="canSeeFunction(5)">
+      <li nz-submenu *ngIf="canSeeFunction(5)">
         <span title>主管巡检</span>
         <ul>
           <li nz-menu-item data-route="/inspection/boss/schedule" *ngIf="canSeeFunction(124)">排班</li>
@@ -52,7 +52,7 @@
           <li nz-menu-item data-route="/inspection/boss/comment" *ngIf="canSeeFunction(164)">巡檢報告評分</li>
         </ul>
       </li>
-      <li nz-menu-group *ngIf="canSeeFunction(5)">
+      <li nz-submenu *ngIf="canSeeFunction(5)">
         <span title>设备巡检</span>
         <ul>
           <li nz-menu-item data-route="/inspection/equip/list" *ngIf="canSeeFunction(317)">设备登记</li>

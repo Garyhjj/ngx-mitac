@@ -1,3 +1,4 @@
+import { AppService } from './../core/services/app.service';
 import { Breadcrumb_Clear } from './../core/actions/breadcrumb.action';
 import { Router } from '@angular/router';
 import { User_Logout } from './../core/actions/user.action';
@@ -21,13 +22,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
   mySub1: Subscription;
   mySub2: Subscription;
   mySub3: Subscription;
+  tips: Observable<number>;
   constructor(
     private store$: Store<myStore>,
     private authService: AuthService,
-    private route: Router
+    private route: Router,
+    private appService: AppService
   ) { }
 
   ngOnInit() {
+    this.appService.getAllTips();
     this.mySub1 = this.authService.authSubject.subscribe(a => {
       this.auth = a;
       if(!a) {
@@ -36,6 +40,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
     this.mySub2 = this.authService.loginPageSubject.subscribe(b => {this.isLoginPage = b});
     this.mySub3 = this.store$.select(s => s.userReducer).subscribe((u) =>this.user = u);
+    this.tips = this.store$.select(s => s.userReducer).map((user) => user.modules || []).map((ms) => ms.map((m) => m.TIPS || 0)).map(ts => {
+      if(Array.isArray(ts)) {
+        return ts.reduce((a, b) => a + b, 0)
+      }
+      return 0
+    })
   }
 
   ngOnDestroy() {

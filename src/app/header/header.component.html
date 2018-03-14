@@ -8,7 +8,13 @@
     <div class="menu">
       <ul nz-menu [nzTheme]="'dark'" [nzMode]="'horizontal'" style="line-height: 63px;" *ngIf="auth && !isLoginPage" class="ul-horizontal">
         <li nz-menu-item>
-          <i class="anticon anticon-notification"></i>消息</li>
+          <i class="anticon anticon-notification"></i> 消息
+          <nz-badge [nzCount]="tips | async">
+            <ng-template #content>
+              &nbsp;&nbsp;
+            </ng-template>
+          </nz-badge>
+        </li>
         <li nz-menu-item>
           <i class="anticon anticon-user"></i>{{user.NICK_NAME}}</li>
         <li nz-menu-item>

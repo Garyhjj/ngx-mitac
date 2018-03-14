@@ -11,5 +11,7 @@ export const APIGlobalConfig = {
      */
     uploadPicture: APPConfig.baseUrl + 'IPQA/UploadPicture',
 
-    getSelfPrivilege: APPConfig.baseUrl + 'Guid/GetUserFunctions?moduleID={moduleID}'
+    getSelfPrivilege: APPConfig.baseUrl + 'Guid/GetUserFunctions?moduleID={moduleID}',
+
+    getAllTips: APPConfig.baseUrl + 'users/tips'
 }
