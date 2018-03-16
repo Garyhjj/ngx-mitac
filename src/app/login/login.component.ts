@@ -1,3 +1,4 @@
+import { UtilService } from './../core/services/util.service';
 import { myStore } from './../core/store';
 import { Store } from '@ngrx/store';
 import { AuthService } from './../core/services/auth.service';
@@ -20,7 +21,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private router: Router,
     private store$: Store<myStore>,
-    private _notification: NzNotificationService
+    private _notification: NzNotificationService,
+    private util: UtilService
   ) { }
 
   ngOnInit() {
@@ -45,6 +47,6 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.router.navigate(['/']);
       this.loading = false;
       this._notification.create('success','登录成功',`您好：${user.User.NICK_NAME}`)
-    },(err) => {this.loading = false;console.log(err)});
+    },(err) => {this.loading = false;this.util.errDeal(err)});
   }
 }

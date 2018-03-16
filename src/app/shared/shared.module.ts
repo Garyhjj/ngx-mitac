@@ -1,3 +1,4 @@
+import { FileUploadComponent } from './components/inputs/file-upload/file-upload.component';
 import { PhotoUploadComponent } from './components/inputs/photo-upload/photo-upload.component';
 import { ColleagueSearcherComponent } from './components/inputs/colleague-searcher/colleague-searcher.component';
 import { MySwitchComponent } from './components/inputs/my-switch/my-switch.component';
@@ -25,7 +26,8 @@ import { MxCheckboxComponent } from './components/inputs/mx-checkbox/mx-checkbox
         MyCascaderComponent,
         MySwitchComponent,
         ColleagueSearcherComponent,
-        PhotoUploadComponent
+        PhotoUploadComponent,
+        FileUploadComponent
     ],
     exports: [
         CommonModule,
@@ -41,7 +43,8 @@ import { MxCheckboxComponent } from './components/inputs/mx-checkbox/mx-checkbox
         MyCascaderComponent,
         MySwitchComponent,
         ColleagueSearcherComponent,
-        PhotoUploadComponent
+        PhotoUploadComponent,
+        FileUploadComponent
     ],
     entryComponents: [],
     providers: []

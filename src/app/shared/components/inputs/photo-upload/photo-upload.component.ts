@@ -163,7 +163,6 @@ export class PhotoUploadComponent implements OnInit {
         }])
       })
     }
-    console.log(img)
     const that = this;
     reader.onload = function () {
       var result = this.result;
