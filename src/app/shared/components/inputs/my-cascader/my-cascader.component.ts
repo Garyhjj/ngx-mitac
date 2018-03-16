@@ -102,7 +102,7 @@ export class MyCascaderComponent implements OnInit {
       if(this.myProperties && this.myProperties.length < idx+2) {
         throw new Error('myProperties 数组长度不足，无法进行懒加载项目');
       }
-      this.getLazyData(lazySet, {[this.myProperties[idx+1]]: option.value}, (val) => {
+      this.getLazyData(lazySet, {[this.myProperties[idx]]: option.value}, (val) => {
         e.resolve(val)
       }, () => option.loading = false, (res) => {
         const params = lazySet.params;

@@ -25,6 +25,10 @@ const mRoutes: Routes = [
             {
                 path: 'inspection',
                 loadChildren: 'app/my-modules/inspection/inspection.module#InspectionModule'
+            },
+            {
+                path: 'reservation',
+                loadChildren: './reservation/reservation.module#ReservationModule'
             }
         ]
     }
