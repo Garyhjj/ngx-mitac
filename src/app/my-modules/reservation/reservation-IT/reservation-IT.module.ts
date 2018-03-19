@@ -1,3 +1,4 @@
+import { ReservationITService } from './shared/services/reservaton-IT.service';
 import { ReservationITRoutingModule } from './reservation-IT-routing';
 import { DataDriveModule } from './../../../shared/components/data-drive/data-drive.module';
 import { NgModule } from '@angular/core';
@@ -12,6 +13,7 @@ import { ApplicationITComponent } from './application-IT/application-IT.componen
   ],
   declarations: [ReservationITComponent,
     ApplicationITComponent
-]
+  ],
+  providers: [ReservationITService]
 })
 export class ReservationITModule { }

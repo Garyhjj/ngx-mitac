@@ -1,3 +1,4 @@
+import { ReservationService } from './shared/services/resvation.service';
 import { ReservationRoutingModule } from './reservation-routing.module';
 import { SharedModule } from './../../shared/shared.module';
 import { NgModule } from '@angular/core';
@@ -9,6 +10,7 @@ import { ReservationComponent } from './reservation.component';
     CommonModule, SharedModule, ReservationRoutingModule
   ],
   declarations: [ReservationComponent
-]
+  ],
+  providers: [ReservationService]
 })
 export class ReservationModule { }

@@ -14,7 +14,7 @@ const bRoutes: Routes = [
         children: [
             {
                 path: 'basic',
-                loadChildren: './basic/basic.module#BasicModule'
+                loadChildren: './basic/basic.module#BasicModule',
             },
             {
                 path: 'IT',

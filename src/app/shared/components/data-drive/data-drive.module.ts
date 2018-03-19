@@ -9,13 +9,13 @@ import { DataInputerModule } from './data-inputer/data-inputer.module';
 
 @NgModule({
   imports: [
-    CommonModule, SharedModule, DataViewerModule, DataInputerModule
+    CommonModule, SharedModule, DataViewerModule, DataInputerModule, 
   ],
   declarations: [
     DataDriveComponent,
     MenuComponent
 ],
-  exports: [DataDriveComponent],
+  exports: [DataDriveComponent, DataViewerModule],
   providers: [DataDriveService]
 })
 export class DataDriveModule { }
