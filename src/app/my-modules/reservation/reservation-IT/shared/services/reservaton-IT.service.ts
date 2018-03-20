@@ -4,7 +4,7 @@ import { UserState } from './../../../../../core/store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { reservationITConfig } from '../config';
-import { replaceQuery } from '../../../../../shared/utils';
+import { replaceQuery, isArray } from '../../../../../shared/utils';
 
 @Injectable()
 export class ReservationITService {
@@ -12,6 +12,9 @@ export class ReservationITService {
     role = 3;
     user: UserState;
     deptId;
+    dept;
+    timeMes;
+    
     constructor(
         private http: HttpClient,
         private auth: AuthService,
@@ -31,7 +34,17 @@ export class ReservationITService {
         }
         const target = this.reservationService.deptList.find(c => c.TYPE === 'IT_SERVICE');
         if(target) {
+            this.dept = target;
             this.deptId = target.ID;
+        }
+    }
+
+    async getDeptTimeMes() {
+        if(isArray(this.timeMes)) return this.timeMes;
+        await this.getITDeptId().catch(err => {});
+        let res = await this.reservationService.getServiceTime(this.deptId).toPromise().catch(err => null);
+        if(isArray(res)) {
+            this.timeMes = res;
         }
     }
 
@@ -41,6 +54,10 @@ export class ReservationITService {
 
     getServiceDayInfo(dept_id: number, date: string) {
         return this.http.get(replaceQuery(reservationITConfig.getServiceDayInfo, {dept_id, date}));
+    }
+
+    updateService(d: any) {
+        return this.reservationService.updateService(d);
     }
 
 }

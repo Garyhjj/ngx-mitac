@@ -157,6 +157,14 @@ export class DataDrive implements DataDriveOptions {
         this.on('beforeUpdateSubmit', cb);
     }
 
+    beforeUpdateShow(cb: (data: any) => Boolean) {
+        this.on('beforeUpdateShow',cb);
+    }
+
+    runBeforeUpdateShow(data) {
+        return this.emitEvent('beforeUpdateShow', data);
+    }
+
     beforeSearch(cb: (data: any) => any) {
         this.on('beforeSearch', cb);
     }

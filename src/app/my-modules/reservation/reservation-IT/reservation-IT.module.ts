@@ -6,14 +6,16 @@ import { CommonModule } from '@angular/common';
 import { ReservationITComponent } from './reservation-IT.component';
 import { SharedModule } from '../../../shared/shared.module';
 import { ApplicationITComponent } from './application-IT/application-IT.component';
+import { SelfApplicationITComponent } from './self-application-IT/self-application-IT.component';
 
 @NgModule({
   imports: [
     CommonModule, SharedModule, DataDriveModule, ReservationITRoutingModule
   ],
   declarations: [ReservationITComponent,
-    ApplicationITComponent
-  ],
+    ApplicationITComponent,
+    SelfApplicationITComponent
+],
   providers: [ReservationITService]
 })
 export class ReservationITModule { }

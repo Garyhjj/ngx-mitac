@@ -6,7 +6,7 @@
 </nz-steps>
 
 <div class="steps-content">
-  <ng-container *ngIf="current === 0">
+  <ng-container *ngIf="current === 0 && dateMes">
     <nz-calendar [nzLocale]="'zh-cn'" [nzMode]="'month'">
       <ng-template #dateCell let-day>
         <div class="cell-containar" (click)="selectDate(day)" [class.card-select]="selectedDate === day.title">
@@ -87,14 +87,20 @@
         </div>
       </div>
     </form>
+  </ng-container> 
+
+  <ng-container *ngIf="current === 3">
+    <div class="last-step">
+      申請成功!
+    </div>
   </ng-container>
 </div>
-<div class="steps-action">
-  <button nz-button [nzType]="'default'" (click)="pre()" *ngIf="current > 0">
-    <span>Previous</span>
+<div class="steps-action" *ngIf="current < 3">
+  <button nz-button [nzType]="'default'" (click)="pre()" *ngIf="current > 0" class="step-button">
+    <span>上一步</span>
   </button>
-  <button nz-button [nzType]="'default'" (click)="next()" *ngIf="current < 3 && canNext()">
-    <span>Next</span>
+  <button nz-button [nzType]="'default'" (click)="next()" *ngIf="current < 3 && canNext()" class="step-button">
+    <span>下一步</span>
   </button>
   <button nz-button [nzType]="'primary'" (click)="done()" *ngIf="current === 3">
     <span>Done</span>

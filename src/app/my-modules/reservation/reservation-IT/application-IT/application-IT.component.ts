@@ -23,7 +23,7 @@ export class ApplicationITComponent implements OnInit {
   dateMes: {
     CDATE: string,
     REMAIN_NUMBER: number
-  }[] = [];
+  }[];
   dayInfo: ServiceTimeInfo[] = [];
   deptId = 1;
   dateFormat = 'YYYY-MM-DD';
@@ -48,12 +48,43 @@ export class ApplicationITComponent implements OnInit {
   }
 
   next() {
-    if(this.current === 2) {
-      console.log(this.myForm.value)
-    }else {
+    if (this.current === 2) {
+      let val = Object.assign({}, this.myForm.value);
+      val.DEPT_ID = this.deptId;
+      val.SERVICE_DATE = this.selectedDate;
+      val.TIME_ID = this.selectedTimeId;
+      val.ID = 0;
+      if (this.testTime()) {
+        let loadingId = this.util.showLoading();
+        const final = (id) => {
+          this.util.dismissLoading(id);
+        }
+        this.reservationITService.updateService(val).subscribe(res => {
+          final(loadingId);
+          this.current += 1;
+        }, err => {
+          this.util.errDeal(err);
+          final(loadingId);
+        })
+      } else {
+        this._message.error('操作超時,當前時間已不允許申請該時間段的服務,請返回重新選擇');
+
+      }
+    } else {
       this.current += 1;
       this.changeContent();
     }
+  }
+
+  testTime() {
+    const time = this.dayInfo.find(d => d.TIME_ID === this.selectedTimeId);
+    if (time) {
+      const lastTime = this.selectedDate + ' ' + time.END_TIME;
+      if (new Date(lastTime).getTime() - new Date().getTime() > time.PRE_MIN_MINUTE * 60 * 1000) {
+        return true;
+      }
+    }
+    return false;
   }
 
   done() {
@@ -90,7 +121,7 @@ export class ApplicationITComponent implements OnInit {
       }
       case 2: {
         this.myForm = this.fb.group({
-          STATUS: ['NEW'],
+          STATUS: ['New'],
           DEPT_ID: [],
           SERVICE_DATE: [],
           TIME_ID: [],

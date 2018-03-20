@@ -24,5 +24,14 @@ export class ReservationService {
         return this.http.get(replaceQuery(reservationConfig.getServiceDeptInfo, {}, this.user));
     }
 
+    updateService(d:any) {
+        d.COMPANY_ID = this.user.COMPANY_ID;
+        return this.http.post(reservationConfig.updateService, d);
+    }
+
+    getServiceTime(dept_id:number) {
+        return this.http.get(replaceQuery(reservationConfig.getServiceTime,{dept_id}))
+    }
+
 }
 

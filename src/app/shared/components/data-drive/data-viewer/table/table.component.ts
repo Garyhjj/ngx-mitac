@@ -167,10 +167,20 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     return false;
   }
 
+  getDataByIdx(idx:number) {
+    const data = this._dataDrive.getData()[idx];
+    const out: any = {};
+    data.forEach(d => {
+      out[d.property] = d.value;
+    })
+    return out;
+  }
+
   toUpdate(idx) {
     if (!this.canEdit) return;
     idx = this.calIdx(idx);
     if (this._dataDrive.runChangeUpdateViewer(idx)) return;
+    if (!this._dataDrive.runBeforeUpdateShow(this.getDataByIdx(idx))) return;
     const subscription = this.modalService.open({
       title: '更新',
       content: DataUpdateComponent,

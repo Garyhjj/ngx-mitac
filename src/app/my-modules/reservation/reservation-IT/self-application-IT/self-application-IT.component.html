@@ -1,0 +1,27 @@
+<nz-tabset [(nzSelectedIndex)]="tabIdx" (nzSelectedIndexChange)="tabChange($event)">
+    <nz-tab>
+      <ng-template #nzTabHeading>
+        待受理单据
+      </ng-template>
+      <app-data-drive [name]= "'reservationITSelf'" (dataDriveInit)="getDataDrive1($event)"></app-data-drive>
+    </nz-tab>
+    <nz-tab>
+      <ng-template #nzTabHeading>
+        进行中单据
+      </ng-template>
+      <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive2($event)"></app-data-drive>
+    </nz-tab>
+    <nz-tab>
+      <ng-template #nzTabHeading>
+        待评价单据
+      </ng-template>
+      <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive3($event)"></app-data-drive>
+    </nz-tab>
+
+    <nz-tab>
+        <ng-template #nzTabHeading>
+          已结案单据
+        </ng-template>
+        <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive4($event)"></app-data-drive>
+      </nz-tab>
+  </nz-tabset>
