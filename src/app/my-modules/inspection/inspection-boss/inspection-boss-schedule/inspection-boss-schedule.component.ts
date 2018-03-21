@@ -31,6 +31,7 @@ export class InspectionBossScheduleComponent implements OnInit {
   changeUpdateViewer = (data) => {
     this.initForm(data);
     this.isVisible = true;
+    return false;
   }
   constructor(
     private fb: FormBuilder,
@@ -205,7 +206,7 @@ export class InspectionBossScheduleComponent implements OnInit {
     this.allDataDrive[nameId] = d;
     d.addDefaultSearchParams({ nameID: nameId });
     d.beforeInitTableData((data) => this.combineSameHeader(data));
-    d.changeUpdateViewer(this.changeUpdateViewer)
+    d.beforeUpdateShow(this.changeUpdateViewer)
   }
 
   combineSameHeader(data) {

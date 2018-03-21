@@ -1,6 +1,6 @@
 import { NgxValidatorExtendService } from './../../../../core/services/ngx-validator-extend.service';
 import { Router } from '@angular/router';
-import { ServiceTimeInfo } from './../shared/models/index';
+import { ServiceTimeInfo, ReservationApplication } from './../shared/models/index';
 import { UtilService } from './../../../../core/services/util.service';
 import { ReservationITService } from './../shared/services/reservaton-IT.service';
 import { NzMessageService } from 'ng-zorro-antd';
@@ -30,6 +30,7 @@ export class ApplicationITComponent implements OnInit {
   selectedDate: string;
   selectedTimeId;
   serviceTime;
+  selectedTimeMes: ServiceTimeInfo;
   constructor(
     private _message: NzMessageService,
     private fb: FormBuilder,
@@ -49,10 +50,12 @@ export class ApplicationITComponent implements OnInit {
 
   next() {
     if (this.current === 2) {
-      let val = Object.assign({}, this.myForm.value);
+      let val: ReservationApplication = Object.assign({}, this.myForm.value);
       val.DEPT_ID = this.deptId;
       val.SERVICE_DATE = this.selectedDate;
       val.TIME_ID = this.selectedTimeId;
+      val.START_TIME = this.selectedTimeMes.START_TIME;
+      val.END_TIME = this.selectedTimeMes.END_TIME;
       val.ID = 0;
       if (this.testTime()) {
         let loadingId = this.util.showLoading();
@@ -140,6 +143,7 @@ export class ApplicationITComponent implements OnInit {
 
   selectCard(item: ServiceTimeInfo) {
     if (item.REMAIN_NUMBER > 0) {
+      this.selectedTimeMes = item;
       this.selectedTimeId = item.TIME_ID;
       this.serviceTime = this.selectedDate + ' ' + item.START_TIME + ' ~ ' + item.END_TIME;
     }

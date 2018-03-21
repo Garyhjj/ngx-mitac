@@ -184,27 +184,6 @@ export class DataDrive implements DataDriveOptions {
         return this.onAlterData('onUpdateData', data);
     }
 
-    changeUpdateViewer(cb: (data: any) => void) {
-        if (this.eventsQueue['changeUpdateViewer']) {
-            this.eventsQueue[0] = cb;
-        } else {
-            this.eventsQueue['changeUpdateViewer'] = [cb];
-        }
-    }
-    runChangeUpdateViewer(idx?) {
-        const eventQueue: Array<Function> = this.eventsQueue['changeUpdateViewer'] || [];
-        if (eventQueue.length > 0) {
-            const data = this.getData()[idx];
-            const out: any = {};
-            data && data.forEach(d => {
-                out[d.property] = d.value;
-            })
-            eventQueue[0](out)
-            return true;
-        } else {
-            return false;
-        }
-    }
     changeUpdateWay(cb: (data: any) => Observable<any> | boolean) {
         if (this.eventsQueue['changeUpdateWay']) {
             this.eventsQueue[0] = cb;

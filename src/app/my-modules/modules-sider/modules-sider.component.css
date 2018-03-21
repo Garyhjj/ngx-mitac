@@ -9,7 +9,7 @@ span[title] {
 
 :host ::ng-deep .ant-layout-sider-collapsed {
   overflow-y:visible!important;
-  overflow-x:visible!important
+  overflow-x:visible!important;
 }
 
  :host ::ng-deep .ant-layout-sider-collapsed .nav-text {

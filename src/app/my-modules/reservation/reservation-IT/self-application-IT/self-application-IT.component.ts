@@ -57,7 +57,7 @@ export class SelfApplicationITComponent implements OnInit {
     d.beforeInitTableData(data => {
       return data.filter(s => {
         const status = s.STATUS;
-        const list = ['Closed', 'Canceled', 'CX'],
+        const list = ['Closed', 'Canceled', 'CX'];
         return list.indexOf(status) > -1;
       })
     })
