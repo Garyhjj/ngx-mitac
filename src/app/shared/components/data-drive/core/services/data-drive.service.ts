@@ -125,7 +125,7 @@ export class DataDriveService {
         } else {
             tableData.data = [];
         }
-        dataDrive.emitAfterDataInit();
+        dataDrive.emitAfterDataInit(ds);
     }
 
     updateData(dataDrive: DataDrive, ds: any) {

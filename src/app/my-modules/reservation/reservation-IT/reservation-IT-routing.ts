@@ -1,3 +1,4 @@
+import { ITServerWorkspaceComponent } from './IT-server-workspace/IT-server-workspace.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../../../route/auth-guard.service';
@@ -21,6 +22,10 @@ const bRoutes: Routes = [
             {
                 path: 'self',
                 component: SelfApplicationITComponent
+            },
+            {
+                path: 'workspace',
+                component: ITServerWorkspaceComponent
             }
         ]
     }

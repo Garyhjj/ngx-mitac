@@ -1,3 +1,4 @@
+import { ApplicationImpressionComponent } from './application-impression/application-impression.component';
 import { ReservationPersonComponent } from './reservation-person/reservation-person.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -26,6 +27,10 @@ const bRoutes: Routes = [
             {
                 path: 'time',
                 component: ResvationTimeComponent
+            },
+            {
+                path: 'impression',
+                component: ApplicationImpressionComponent
             }
         ]
     }

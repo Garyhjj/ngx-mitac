@@ -16,7 +16,7 @@ export const reservationConfig = {
      * POST
      * 2018-03-20
      */
-    updateService: APPConfig.baseUrl + 'Service/UpdateSrvice',
+    updateService: APPConfig.baseUrl + 'reservations/applications',
 
     /**
      * URL

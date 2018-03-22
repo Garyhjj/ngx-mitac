@@ -7,6 +7,7 @@ import { ReservationITComponent } from './reservation-IT.component';
 import { SharedModule } from '../../../shared/shared.module';
 import { ApplicationITComponent } from './application-IT/application-IT.component';
 import { SelfApplicationITComponent } from './self-application-IT/self-application-IT.component';
+import { ITServerWorkspaceComponent } from './IT-server-workspace/IT-server-workspace.component';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { SelfApplicationITComponent } from './self-application-IT/self-applicati
   ],
   declarations: [ReservationITComponent,
     ApplicationITComponent,
-    SelfApplicationITComponent
+    SelfApplicationITComponent,
+    ITServerWorkspaceComponent
 ],
   providers: [ReservationITService]
 })

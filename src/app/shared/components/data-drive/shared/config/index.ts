@@ -8,10 +8,12 @@ import { inspectionAttendanceConfig } from './inspection-attendance.config';
 import { inspectionScheduleLineConfig } from './inspection-schedule-line.config';
 import { inspectionCommentConfig } from './inspection-comment.config';
 export const DataDriveStore = {
+    reservationITWorkspace: 121,
     reservationITSelf: 101,
     reservationTime: 85,
     reservationPerson: 84,
     reservationDepartment: 83,
+    reservationImpression: 81,
     inspectionEquipIssueList: 63,
     inspectionEquipHistory: 62,
     inspectionEquipStatus: 61,

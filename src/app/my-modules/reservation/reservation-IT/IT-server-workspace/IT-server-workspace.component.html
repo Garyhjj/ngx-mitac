@@ -1,0 +1,70 @@
+<nz-alert [nzType]="'info'" class="esd-header">
+  <nz-row alert-body [nzType]="'flex'" [nzJustify]="'space-around'">
+    <nz-col>
+      <span>待受理單據：{{newCount}}</span>
+    </nz-col>
+    <nz-col>
+      <span>進行中單據：{{processingCount}}</span>
+    </nz-col>
+    <nz-col>
+      <span>超時單據：{{outTimeCount}}</span>
+    </nz-col>
+  </nz-row>
+</nz-alert>
+
+
+<nz-tabset>
+  <nz-tab>
+    <ng-template #nzTabHeading>
+      待受理單據：
+    </ng-template>
+    <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive1($event)">
+      <ng-template #actionRef let-data="data">
+        <span>
+          <a (click)="closeResvation(data)">關閉預約</a>
+          <span nz-table-divider></span>
+          <a (click)="receiveResvation(data)">接收預約</a>
+        </span>
+      </ng-template>
+    </app-data-drive>
+  </nz-tab>
+  <nz-tab>
+    <ng-template #nzTabHeading>
+      進行中單據
+    </ng-template>
+    <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive2($event)">
+      <ng-template #actionRef let-data="data">
+        <span>
+          <a (click)="closeResvation(data)">關閉預約</a>
+          <span nz-table-divider></span>
+          <a (click)="doneResvation(data)">完成預約</a>
+          <span nz-table-divider></span>
+          <a (click)="resetResvation(data)">重置預約</a>
+        </span>
+      </ng-template>
+    </app-data-drive>
+  </nz-tab>
+  <nz-tab>
+    <ng-template #nzTabHeading>
+      超時單據
+    </ng-template>
+    <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive3($event)">
+      <ng-template #actionRef let-data="data">
+        <span>
+          <a (click)="closeResvation(data)">關閉預約</a>
+          <ng-container *ngIf="data?.STATUS==='Processing'">
+            <span nz-table-divider></span>
+            <a (click)="doneResvation(data)">完成預約</a>
+            <span nz-table-divider></span>
+            <a (click)="resetResvation(data)">重置預約</a>
+          </ng-container>
+          <ng-container *ngIf="data?.STATUS==='New'">
+            <span nz-table-divider></span>
+            <a (click)="receiveResvation(data)">接收預約</a>
+          </ng-container>
+        </span>
+      </ng-template>
+    </app-data-drive>
+  </nz-tab>
+
+</nz-tabset>

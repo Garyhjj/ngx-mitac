@@ -12,6 +12,7 @@ export interface ServiceTimeInfo {
 
 export interface ReservationApplication {
     ID?: number;
+    DOCNO?: string;
     STATUS?: string;
     DEPT_ID?: number;
     SERVICE_DATE?: string;

@@ -169,7 +169,7 @@ export class DataDrive implements DataDriveOptions {
         this.on('beforeSearch', cb);
     }
 
-    afterDataInit(cb: () => void) {
+    afterDataInit(cb: (data:any) => void) {
         this.on('afterDataInit', cb);
     }
     beforeInitTableData(cb: (data: any[]) => any | void) {
@@ -198,8 +198,8 @@ export class DataDrive implements DataDriveOptions {
         }
         return false;
     }
-    emitAfterDataInit() {
-        this.eventSubject.next('afterDataInit');
+    emitAfterDataInit(data) {
+        return this.onAlterData('afterDataInit', data);
     }
     emitParamsOut(data) {
         this.emitEvent('paramsOut', data)
