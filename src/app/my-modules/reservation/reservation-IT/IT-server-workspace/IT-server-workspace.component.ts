@@ -93,7 +93,7 @@ export class ITServerWorkspaceComponent implements OnInit {
 
   closeResvation(data: ReservationApplication) {
     const doClose = () => {
-      const send = Object.assign({}, data, {STATUS: 'Closed'});
+      const send = Object.assign({}, data, {STATUS: 'CX'});
       this.updateService(send);
     }
     this.modalService.confirm({
