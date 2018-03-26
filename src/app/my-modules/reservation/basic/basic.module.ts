@@ -8,6 +8,7 @@ import { BasicRoutingModule } from './basic-routing';
 import { ReservationPersonComponent } from './reservation-person/reservation-person.component';
 import { ResvationTimeComponent } from './resvation-time/resvation-time.component';
 import { ApplicationImpressionComponent } from './application-impression/application-impression.component';
+import { ReservationTypeComponent } from './reservation-type/reservation-type.component';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { ApplicationImpressionComponent } from './application-impression/applica
     ReservationDepartmentComponent,
     ReservationPersonComponent,
     ResvationTimeComponent,
-    ApplicationImpressionComponent
+    ApplicationImpressionComponent,
+    ReservationTypeComponent
 ]
 })
 export class BasicModule { }

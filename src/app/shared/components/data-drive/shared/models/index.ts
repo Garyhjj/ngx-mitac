@@ -4,6 +4,7 @@ import { AdditionalFn } from './additionalFn/index';
 import { TableDataModel, TableData } from './table-data/index';
 import { SearchItemSet } from './searcher';
 import { DataViewSet, TabelViewSetMore, DataViewType } from './viewer/index';
+// tslint:disable-next-line:import-blacklist
 import { BehaviorSubject } from 'rxjs/Rx';
 import { bindEventForArray, isArray } from '../../../../utils/index';
 import { DataViewSetFactory } from './viewer/index';
@@ -51,7 +52,7 @@ export class DataDrive implements DataDriveOptions {
     searchSets?: SearchItemSet[];
     updateSets?: SearchItemSet[];
     tableData: TableDataModel;
-    canAutoUpdate: boolean = true;
+    canAutoUpdate = true;
     additionalFn?: AdditionalFn;
     APIs: {
         search: string;
@@ -123,59 +124,140 @@ export class DataDrive implements DataDriveOptions {
     isCompanyLimited() {
         return this.tableData.isCompanyLimited;
     }
-
+    /**
+     * 增加默認搜索參數
+     * @param {any} p
+     * @memberof DataDrive
+     */
     addDefaultSearchParams(p) {
         if (typeof p === 'object') {
             this.tableData.defaultSearchParams = this.tableData.defaultSearchParams || {};
             Object.assign(this.tableData.defaultSearchParams, p);
         }
     }
-
-    getData() {
+    /**
+     * 獲得table數據
+     *
+     * @returns {any[]}
+     * @memberof DataDrive
+     */
+    getData(): any[] {
         if (this.tableData.data && this.tableData.data.length > 0) {
-            return this.tableData.data
+            return this.tableData.data;
         } else {
-            return []
+            return [];
         }
     }
-    observeHideLists() {
+
+    /**
+     * 觀察被隱藏的列
+     *
+     * @returns {Observable<string[]>}
+     * @memberof DataDrive
+     */
+    observeHideLists(): Observable<string[]> {
         return this.hideListSubject.asObservable();
     }
-    observeIsGettingData() {
+
+    /**
+     * 觀察是否在獲取數據
+     *
+     * @returns Observable<boolean>
+     * @memberof DataDrive
+     */
+    observeIsGettingData(): Observable<boolean> {
         return this.isGetingDataSubject.asObservable();
     }
-    observeIsShowModal() {
+
+    /**
+     * 觀察是否在全屏視圖中
+     *
+     * @returns Observable<boolean>
+     * @memberof DataDrive
+     */
+    observeIsShowModal(): Observable<boolean> {
         return this.isShowModalSubject.asObservable();
     }
+
+    /**
+     * 更新操作的生命週期----表單顯示時
+     *
+     * @param {(fg: FormGroup, sub: Subject<string>, InputList: any[]) => void} cb
+     * @memberof DataDrive
+     */
     onUpdateFormShow(cb: (fg: FormGroup, sub: Subject<string>, InputList: any[]) => void) {
         this.on('updateFormShow', cb);
     }
+
+    /**
+     * 點擊paramsOut定義按鈕的訂閱函數
+     *
+     * @param {(data) => void} cb
+     * @memberof DataDrive
+     */
     onParamsOut(cb: (data) => void) {
         this.on('paramsOut', cb);
     }
+
+    /**
+     * 更新操作的生命週期----表單提交前,return false 可以取消提交操作, sub可發佈取消的原因
+     *
+     * @param {(fg: FormGroup, sub: Subject<string>) => void} cb
+     * @memberof DataDrive
+     */
     beforeUpdateSubmit(cb: (fg: FormGroup, sub: Subject<string>) => void) {
         this.on('beforeUpdateSubmit', cb);
     }
 
+    /**
+     * 更新操作的生命週期----更新操作點擊時,return false 可不顯示默認的更新頁面
+     *
+     * @param {(data: any) => Boolean} cb
+     * @memberof DataDrive
+     */
     beforeUpdateShow(cb: (data: any) => Boolean) {
-        this.on('beforeUpdateShow',cb);
+        this.on('beforeUpdateShow', cb);
     }
 
     runBeforeUpdateShow(data) {
         return this.emitEvent('beforeUpdateShow', data);
     }
 
+    /**
+     * 搜索的生命週期---搜索前,可操作data數據，也可return 新的搜索條件
+     *
+     * @param {(data: any) => any} cb
+     * @memberof DataDrive
+     */
     beforeSearch(cb: (data: any) => any) {
         this.on('beforeSearch', cb);
     }
 
-    afterDataInit(cb: (data:any) => void) {
+    /**
+     * 數據視圖的渲染週期---視圖顯示數據后
+     *兔
+     * @param {(data: any) => void} cb
+     * @memberof DataDrive
+     */
+    afterDataInit(cb: (data: any) => void) {
         this.on('afterDataInit', cb);
     }
+    /**
+     * 數據視圖的渲染週期---視圖顯示數據前
+     *
+     * @param {((data: any[]) => any | void)} cb
+     * @memberof DataDrive
+     */
     beforeInitTableData(cb: (data: any[]) => any | void) {
         this.on('beforeInitTableData', cb);
     }
 
+    /**
+     * 更新操作的生命週期----更新數據發送前，可為數據進行最後的加工
+     *
+     * @param {((data: any) => any | void)} cb
+     * @memberof DataDrive
+     */
     onUpdateData(cb: (data: any) => any | void) {
         this.on('onUpdateData', cb);
     }
@@ -184,6 +266,12 @@ export class DataDrive implements DataDriveOptions {
         return this.onAlterData('onUpdateData', data);
     }
 
+    /**
+     * 改寫默認的更新方法（使用配置API去更新）
+     *
+     * @param {((data: any) => Observable<any> | boolean)} cb
+     * @memberof DataDrive
+     */
     changeUpdateWay(cb: (data: any) => Observable<any> | boolean) {
         if (this.eventsQueue['changeUpdateWay']) {
             this.eventsQueue[0] = cb;
@@ -202,14 +290,14 @@ export class DataDrive implements DataDriveOptions {
         return this.onAlterData('afterDataInit', data);
     }
     emitParamsOut(data) {
-        this.emitEvent('paramsOut', data)
+        this.emitEvent('paramsOut', data);
     }
 
     emitEvent(name: string, ...p) {
         const eventQueue: Array<Function> = this.eventsQueue[name] || [];
         let canContinue = true;
         for (let i = 0; i < eventQueue.length; i++) {
-            const cb = eventQueue[i]
+            const cb = eventQueue[i];
             if (cb) {
                 if (cb(...p) === false) {
                     canContinue = false;
@@ -230,7 +318,7 @@ export class DataDrive implements DataDriveOptions {
     onAlterData(eventName: string, data: any) {
         const eventQueue: Array<Function> = this.eventsQueue[eventName] || [];
         for (let i = 0; i < eventQueue.length; i++) {
-            const cb = eventQueue[i]
+            const cb = eventQueue[i];
             if (cb) {
                 const res = cb(data);
                 if (typeof res === 'object') {
@@ -246,9 +334,11 @@ export class DataDrive implements DataDriveOptions {
     }
     runBeforeSearch(data: any) {
         const eventQueue: Array<Function> = this.eventsQueue['beforeSearch'] || [];
-        if (typeof data !== 'object') return data;
+        if (typeof data !== 'object') {
+            return data;
+        }
         for (let i = 0; i < eventQueue.length; i++) {
-            const cb = eventQueue[i]
+            const cb = eventQueue[i];
             if (cb) {
                 const res = cb(Object.assign({}, data));
                 if (typeof res === 'object') {
@@ -260,7 +350,7 @@ export class DataDrive implements DataDriveOptions {
     }
 
     runBeforeUpdateSubmit(fg: FormGroup, globalUpdateErrSubject: Subject<string>) {
-        return this.emitEvent('beforeUpdateSubmit', fg, globalUpdateErrSubject)
+        return this.emitEvent('beforeUpdateSubmit', fg, globalUpdateErrSubject);
     }
 
     private subscribeEvent() {
@@ -274,17 +364,32 @@ export class DataDrive implements DataDriveOptions {
                         }
                     });
             }
-        })
+        });
     }
-
+    /**
+     * 發佈table的數據已自動滾到底部
+     *
+     * @memberof DataDrive
+     */
     hasScrolledToBottom() {
         this.scrollToBottomSubject.next(1);
     }
-
+    /**
+     * 觀察table的數據自動滾到底部的時候
+     *
+     * @returns
+     * @memberof DataDrive
+     */
     observeScrollToBottom() {
         return this.scrollToBottomSubject.asObservable();
     }
 
+    /**
+     * 可自動更新table數據
+     *
+     * @param {any} data
+     * @memberof DataDrive
+     */
     selfUpdateTableData(data) {
         if (isArray(data)) {
             this.selfSearchDataSubject.next(data);
@@ -296,24 +401,36 @@ export class DataDrive implements DataDriveOptions {
     }
 
     updateFormGroupInited(fg: FormGroup, globalUpdateErrSubject: Subject<string>, inputTypeList) {
-        return this.emitEvent('updateFormShow', fg, globalUpdateErrSubject, inputTypeList)
+        return this.emitEvent('updateFormShow', fg, globalUpdateErrSubject, inputTypeList);
     }
-
+    /**
+     * 可設置paramsOut按鈕的名字及拋出的內容
+     *
+     * @param {string} name
+     * @param {string[]} [params]
+     * @memberof DataDrive
+     */
     setParamsOut(name: string, params?: string[]) {
         if (this.dataViewSet.type === 'table') {
             const more: TabelViewSetMore = this.dataViewSet.more || {};
             more.paramsOut = {
                 name: name,
                 params: params
-            }
+            };
         }
     }
 
+    /**
+     * 更改視圖類型
+     *
+     * @param {DataViewType} type
+     * @memberof DataDrive
+     */
     switchViewType(type: DataViewType) {
         const currentView = this.dataViewSet;
-        if(this.otherDataViewSets) {
+        if (this.otherDataViewSets) {
             const targetIdx = this.otherDataViewSets.findIndex(c => c.type === type);
-            if(targetIdx > -1) {
+            if (targetIdx > -1) {
                 const target = this.otherDataViewSets.splice(targetIdx, 1)[0];
                 this.otherDataViewSets.push(currentView);
                 target.tempAddition = currentView.tempAddition;
@@ -322,7 +439,12 @@ export class DataDrive implements DataDriveOptions {
             }
         }
     }
-
+    /**
+     * 添加額外的視圖配置，對某些視圖類型有限（如：考卷）
+     *
+     * @param {any} a
+     * @memberof DataDrive
+     */
     setViewTempAddtion(a) {
         this.dataViewSet.tempAddition = a;
     }

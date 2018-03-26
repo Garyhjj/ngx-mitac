@@ -47,7 +47,7 @@ export class DataDriveComponent implements OnInit, OnDestroy {
     this.dataDriveInit.emit(this.dataDrive);
     this.tableData = this.dataDrive.tableData;
     this.isShowModal = this.dataDrive.observeIsShowModal();
-    if(this.tableData && !this.tableData.stopFirstInit) {
+    if (this.tableData && !this.tableData.stopFirstInit) {
       this.dataDrive.isGetingData = true;
       const final = () => setTimeout(() => this.dataDrive.isGetingData = false, 200);
       this.dataDriveService.getInitData(this.dataDrive).subscribe((ds: any) => {
@@ -57,16 +57,17 @@ export class DataDriveComponent implements OnInit, OnDestroy {
     }
     this.dataDrive.observeSelfUpdateTableData().subscribe(d => this.dataDriveService.initTableData(this.dataDrive, d));
     const searchSets = this.dataDrive.searchSets;
-    if((!searchSets || searchSets.length === 0) && this.dataDrive.canAutoUpdate) {
-      this.dataDrive.observeScrollToBottom().subscribe( _ => 
-        {
-          this.dataDriveService.updateViewData(this.dataDrive)
-        });
+    if ((!searchSets || searchSets.length === 0) && this.dataDrive.canAutoUpdate) {
+      this.dataDrive.observeScrollToBottom().subscribe(_ => {
+        this.dataDriveService.updateViewData(this.dataDrive);
+      });
     }
   }
 
   ngOnDestroy() {
+    // tslint:disable-next-line:no-unused-expression
     this.sub1 && this.sub1.unsubscribe();
+    // tslint:disable-next-line:no-unused-expression
     this.sub2 && this.sub2.unsubscribe();
   }
 }

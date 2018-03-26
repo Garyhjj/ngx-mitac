@@ -8,6 +8,7 @@ import { inspectionAttendanceConfig } from './inspection-attendance.config';
 import { inspectionScheduleLineConfig } from './inspection-schedule-line.config';
 import { inspectionCommentConfig } from './inspection-comment.config';
 export const DataDriveStore = {
+    reservationITType: 141,
     reservationITWorkspace: 121,
     reservationITSelf: 101,
     reservationTime: 85,

@@ -1,3 +1,4 @@
+import { ReservationTypeComponent } from './reservation-type/reservation-type.component';
 import { ApplicationImpressionComponent } from './application-impression/application-impression.component';
 import { ReservationPersonComponent } from './reservation-person/reservation-person.component';
 import { NgModule } from '@angular/core';
@@ -31,6 +32,10 @@ const bRoutes: Routes = [
             {
                 path: 'impression',
                 component: ApplicationImpressionComponent
+            },
+            {
+                path: 'type',
+                component: ReservationTypeComponent
             }
         ]
     }
