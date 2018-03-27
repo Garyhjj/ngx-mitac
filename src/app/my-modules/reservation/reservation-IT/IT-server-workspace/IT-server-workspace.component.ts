@@ -9,6 +9,7 @@ import * as moment from 'moment';
 import { isArray } from '../../../../shared/utils';
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'app-IT-server-workspace',
   templateUrl: './IT-server-workspace.component.html',
   styleUrls: ['./IT-server-workspace.component.css']
@@ -20,7 +21,7 @@ export class ITServerWorkspaceComponent implements OnInit {
   outTimeCount: number;
   d1: DataDrive;
   d2: DataDrive;
-  d3: DataDrive
+  d3: DataDrive;
   constructor(
     private reservationITService: ReservationITService,
     private dataDriveService: DataDriveService,
@@ -35,7 +36,7 @@ export class ITServerWorkspaceComponent implements OnInit {
     this.d1 = d;
     d.afterDataInit((data) => {
       this.newCount = isArray(data) ? data.length : 0;
-    })
+    });
     await this.addDefaultSearchParams('New', d);
   }
 
@@ -43,7 +44,7 @@ export class ITServerWorkspaceComponent implements OnInit {
     this.d2 = d;
     d.afterDataInit((data) => {
       this.processingCount = isArray(data) ? data.length : 0;
-    })
+    });
     await this.addDefaultSearchParams('Processing', d);
   }
 
@@ -51,16 +52,16 @@ export class ITServerWorkspaceComponent implements OnInit {
     this.d3 = d;
     d.afterDataInit((data) => {
       this.outTimeCount = isArray(data) ? data.length : 0;
-    })
+    });
     d.beforeInitTableData((data: ReservationApplication[]) => {
-      return data.filter(d => {
-        const date = moment(d.SERVICE_DATE).format('YYYY-MM-DD') + ' ' + d.END_TIME;
+      return data.filter(ds => {
+        const date = moment(ds.SERVICE_DATE).format('YYYY-MM-DD') + ' ' + ds.END_TIME;
         if (new Date().getTime() - new Date(date).getTime() > 0) {
           return true;
         }
         return false;
-      })
-    })
+      });
+    });
     await this.addDefaultSearchParams('', d);
   }
 
@@ -75,14 +76,14 @@ export class ITServerWorkspaceComponent implements OnInit {
 
   updateService(data: ReservationApplication) {
     const loadingID = this.util.showLoading();
-      const final = () => this.util.dismissLoading(loadingID);
-      this.reservationITService.updateService(data).subscribe(() => {
-        final();
-        this.updateAllDataDrive();
-      }, err => {
-        this.util.errDeal(err);
-        final();
-      })
+    const final = () => this.util.dismissLoading(loadingID);
+    this.reservationITService.updateService(data).subscribe(() => {
+      final();
+      this.updateAllDataDrive();
+    }, err => {
+      this.util.errDeal(err);
+      final();
+    });
   }
 
   updateAllDataDrive() {
@@ -93,9 +94,9 @@ export class ITServerWorkspaceComponent implements OnInit {
 
   closeResvation(data: ReservationApplication) {
     const doClose = () => {
-      const send = Object.assign({}, data, {STATUS: 'CX'});
+      const send = Object.assign({}, data, { STATUS: 'CX' });
       this.updateService(send);
-    }
+    };
     this.modalService.confirm({
       title: '您確定要關閉此預約？',
       onOk() {
@@ -108,13 +109,13 @@ export class ITServerWorkspaceComponent implements OnInit {
 
   receiveResvation(data: ReservationApplication) {
     const doReceive = () => {
-      const send = Object.assign({}, data, {STATUS:'Processing', HANDLER: this.reservationITService.user.EMPNO});
+      const send = Object.assign({}, data, { STATUS: 'Processing', HANDLER: this.reservationITService.user.EMPNO });
       this.updateService(send);
-    }
+    };
     this.modalService.confirm({
       title: '您確定要接收此預約？',
       onOk() {
-        doReceive()
+        doReceive();
       },
       onCancel() {
       }
@@ -123,9 +124,9 @@ export class ITServerWorkspaceComponent implements OnInit {
 
   doneResvation(data: ReservationApplication) {
     const doDone = () => {
-      const send = Object.assign({}, data, {STATUS:'Scoring',PROCESS_TIME: moment().format('YYYY-MM-DDT HH:mm:ss')});
+      const send = Object.assign({}, data, { STATUS: 'Scoring', PROCESS_TIME: moment().format('YYYY-MM-DDT HH:mm:ss') });
       this.updateService(send);
-    }
+    };
     this.modalService.confirm({
       title: '您確定已經完成此預約？',
       onOk() {
@@ -135,12 +136,12 @@ export class ITServerWorkspaceComponent implements OnInit {
       }
     });
   }
-  
+
   resetResvation(data: ReservationApplication) {
     const doReset = () => {
-      const send = Object.assign({}, data, {STATUS:'New', HANDLER: ''});
+      const send = Object.assign({}, data, { STATUS: 'New', HANDLER: '', RESET_FLAG: 'Y' });
       this.updateService(send);
-    }
+    };
     this.modalService.confirm({
       title: '您確定要放棄處理此預約？',
       onOk() {
