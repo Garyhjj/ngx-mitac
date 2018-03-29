@@ -16,7 +16,7 @@ export interface DataViewSet {
 
 export class DataViewSetFactory {
     constructor(opts: DataViewSet = { type: 'table' }) {
-        if(opts && opts.hasInited) {
+        if (opts && opts.hasInited) {
             return opts;
         }
         switch (opts.type) {

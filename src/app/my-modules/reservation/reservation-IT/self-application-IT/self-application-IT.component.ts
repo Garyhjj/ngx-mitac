@@ -21,6 +21,11 @@ export class SelfApplicationITComponent implements OnInit {
   d2: DataDrive;
   d3: DataDrive;
   d4: DataDrive;
+  impressionName = 'impression';
+  extralList = [this.impressionName, 'SCORE', 'USER_COMMENT'];
+  isImpressionVisible = false;
+  impressionList: any[];
+  impressionSelected: any = {};
   constructor(
     private reservationITService: ReservationITService,
     private dataDriveService: DataDriveService,
@@ -38,6 +43,7 @@ export class SelfApplicationITComponent implements OnInit {
 
   async getDataDrive1(d: DataDrive) {
     this.d1 = d;
+    d.tableData.columns = d.tableData.columns.filter(c => this.extralList.indexOf(c.property) < 0);
     await this.alterData(d);
     d.addDefaultSearchParams({ status: 'New' });
     d.beforeUpdateShow((data) => {
@@ -52,6 +58,7 @@ export class SelfApplicationITComponent implements OnInit {
 
   async getDataDrive2(d: DataDrive) {
     this.d2 = d;
+    d.tableData.columns = d.tableData.columns.filter(c => this.extralList.indexOf(c.property) < 0);
     await this.alterData(d);
     d.addDefaultSearchParams({ status: 'Processing' });
     this.dataDriveService.updateViewData(d);
@@ -61,6 +68,7 @@ export class SelfApplicationITComponent implements OnInit {
   async getDataDrive3(d: DataDrive) {
     this.d3 = d;
     d.tableData.editable = false;
+    d.tableData.columns = d.tableData.columns.filter(c => this.extralList.indexOf(c.property) < 0);
     await this.alterData(d);
     d.addDefaultSearchParams({ status: 'Scoring' });
     this.dataDriveService.updateViewData(d);
@@ -69,6 +77,16 @@ export class SelfApplicationITComponent implements OnInit {
   async getDataDrive4(d: DataDrive) {
     this.d4 = d;
     d.tableData.editable = false;
+    const more = d.dataViewSet.more;
+    d.beforeInitTableData((data) => {
+      return data.map(da => {
+        da[this.impressionName] = '';
+        return da;
+      });
+    });
+    if (d.dataViewSet.type === 'table' && more) {
+      d.dataViewSet.more.showAction = false;
+    }
     await this.alterData(d);
     d.beforeInitTableData(data => {
       return data.filter(s => {
@@ -114,16 +132,28 @@ export class SelfApplicationITComponent implements OnInit {
     });
   }
   cancelResvation(app: ReservationApplication) {
-    const doReset = () => {
+    const doCancel = () => {
       const send = Object.assign({}, app, { STATUS: 'Canceled' });
       this.updateService(send);
     };
     this.modalService.confirm({
-      title: '您確定要取消此預約？',
+      title: '您確定要取消吗？',
       onOk() {
-        doReset();
+        doCancel();
       },
       onCancel() {
+      }
+    });
+  }
+
+  showImpressionDetail(app: ReservationApplication) {
+    this.impressionList = [];
+    this.isImpressionVisible = true;
+    this.impressionSelected = {};
+    this.reservationITService.getPersonImpression(app.HANDLER).subscribe((imList: any[]) => this.impressionList = imList);
+    this.reservationITService.getServiceImpressionResults(app.ID).subscribe(res => {
+      if (Array.isArray(res)) {
+        res.forEach(r => this.impressionSelected[r.IMPRESSION_ID] = true);
       }
     });
   }

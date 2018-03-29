@@ -17,6 +17,7 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class DataDriveComponent implements OnInit, OnDestroy {
   @ContentChild('actionRef') actionRef: TemplateRef<void>;
+  @ContentChild('tableCell') tableCell: TemplateRef<void>;
   tableData: TableDataModel;
   dataDrive: DataDrive;
   isShowModal = Observable.of(false);

@@ -29,7 +29,13 @@
             <div *ngSwitchCase="'img'">
               <button nz-button [nzType]="'primary'" *ngIf="item.value" (click)="scanImgs(item.value)">
                 <span>瀏覽圖片</span>
-              </button></div>
+              </button>
+            </div>
+            <ng-container *ngSwitchCase="'self'">
+              <ng-template [ngTemplateOutlet]="tableCell" [ngTemplateOutletContext]="{data: arrayToObjectForData(i), property: item.property}"
+                *ngIf="tableCell"></ng-template>
+              <span *ngIf="!tableCell">{{item.value | myFlex: (pipes && pipes[item.property]?pipes[item.property]:'') | async }}</span>
+            </ng-container>
             <span *ngSwitchDefault>{{item.value | myFlex: (pipes && pipes[item.property]?pipes[item.property]:'') | async }}</span>
           </ng-container>
         </td>
@@ -37,9 +43,9 @@
       <td [style.backgroundColor]="setDetail.body?runRegExp(i, setDetail.body, 'bgColor'):''" [style.fontSize]="setDetail.body?runRegExp(i, setDetail.body, 'textSize'):''"
         [style.color]="setDetail.body?runRegExp(i, setDetail.body, 'textColor'):''" nz-td *ngIf="setDetail.showAction">
         <span>
-          <a  *ngIf="canEdit" (click)="toUpdate(i)">修改</a>
+          <a *ngIf="canEdit" (click)="toUpdate(i)">修改</a>
           <span nz-table-divider *ngIf="canEdit && canDelete"></span>
-          <a  *ngIf="canDelete" (click)="toDelete(i)">刪除</a>
+          <a *ngIf="canDelete" (click)="toDelete(i)">刪除</a>
           <ng-container *ngIf="setDetail.paramsOut">
             <span nz-table-divider *ngIf="canEdit || canDelete"></span>
             <a (click)="paramsOut(setDetail.paramsOut.params,i)">{{setDetail.paramsOut.name}}</a>

@@ -1,5 +1,5 @@
 import { APPConfig } from './../../../../../shared/config/app.config';
-export const reservationITConfig =  {
+export const reservationITConfig = {
     /**
      * URL
      * 获取服务部门在某時間段內的剩餘號數
@@ -17,5 +17,25 @@ export const reservationITConfig =  {
      * @param {number} {dept_id}
      * @param {string} {date} // YYYY-MM-DD
      */
-    getServiceDayInfo: APPConfig.baseUrl + 'Service/GetServiceInfo?dept_id={dept_id}&date={date}'
-}
+    getServiceDayInfo: APPConfig.baseUrl + 'Service/GetServiceInfo?dept_id={dept_id}&date={date}',
+
+    /**
+     * URL
+     * 获取某次服务中的印象结果
+     * GET
+     * 2018-03-29
+     * @param {number} {service_id}
+     * @param {string} {empno} // YYYY-MM-DD
+     */
+    getServiceImpressionResults: APPConfig.baseUrl + 'Service/GetServiceResults?empno={empno}&service_id={service_id}',
+
+    /**
+     * URL
+     * 获取服务人员的历史印象
+     * GET
+     * 2018-03-29
+     * @param {number} {empno}
+     * @param {string} {rownum} // 取多少个
+     */
+    getPersonImpression: APPConfig.baseUrl + 'Service/GetServiceImpression?empno={empno}&rownum={rownum}'
+};

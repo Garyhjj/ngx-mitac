@@ -16,7 +16,14 @@
     <ng-template #nzTabHeading>
       进行中单据
     </ng-template>
-    <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive2($event)"></app-data-drive>
+    <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive2($event)">
+      <ng-template #actionRef let-data="data">
+        <span>
+          <span nz-table-divider></span>
+          <a (click)="cancelResvation(data)">取消預約</a>
+        </span>
+      </ng-template>
+    </app-data-drive>
   </nz-tab>
   <nz-tab>
     <ng-template #nzTabHeading>
@@ -29,6 +36,28 @@
     <ng-template #nzTabHeading>
       已结案单据
     </ng-template>
-    <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive4($event)"></app-data-drive>
+    <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive4($event)">
+      <ng-template #tableCell let-data="data" let-property="property">
+        <button nz-button [nzType]="'primary'" *ngIf="property === impressionName" (click)="showImpressionDetail(data)">
+          <span>查看详细</span>
+        </button>
+      </ng-template>
+    </app-data-drive>
   </nz-tab>
 </nz-tabset>
+<nz-modal [nzVisible]="isImpressionVisible" [nzTitle]="'印象'" [nzContent]="modalContent" [nzFooter]="modalFooter" (nzOnCancel)="isImpressionVisible = false"
+  nzWidth="560px">
+  <ng-template #modalContent>
+    <div class="impression-content">
+      <div class="button-modal"></div>
+      <div class="button" *ngFor="let item of impressionList">
+        <button nz-button [nzType]="impressionSelected[item.ID]?'primary': 'default'">
+          <span>{{item.DESCRIPTION}} &nbsp;&nbsp;{{ item.QTY }}</span>
+        </button>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #modalFooter>
+
+  </ng-template>
+</nz-modal>

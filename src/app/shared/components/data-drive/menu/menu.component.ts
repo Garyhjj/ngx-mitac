@@ -47,6 +47,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   changeBodySize() {
+    this.viewerType = this.dataDrive.dataViewSet.type;
     switch (this.viewerType) {
       case 'table':
         this.dataDrive.dataViewSet.changeBodyFontSize(this.bodyFontSize + 'px');
@@ -54,23 +55,23 @@ export class MenuComponent implements OnInit, OnDestroy {
     }
   }
 
-  changeMenuDetail(type:string) {
+  changeMenuDetail(type: string) {
     this.menuDetail = type;
   }
 
   addItem() {
-    if(!this.dataDrive.isDataAddable()) return;
-    if(!this.dataDrive.runBeforeUpdateShow({})) return;
-    if(!this.dataDrive.updateSets) return;
+    if (!this.dataDrive.isDataAddable()) return;
+    if (!this.dataDrive.runBeforeUpdateShow({})) return;
+    if (!this.dataDrive.updateSets) return;
     const subscription = this.modalService.open({
-      title          : '新增',
-      content        : DataUpdateComponent,
+      title: '新增',
+      content: DataUpdateComponent,
       onOk() {
       },
       onCancel() {
 
       },
-      footer         : false,
+      footer: false,
       componentParams: {
         opts: this.dataDrive
       }
@@ -89,16 +90,16 @@ export class MenuComponent implements OnInit, OnDestroy {
     }
   }
 
-  switchViewType(type:DataViewType[]) {
-    if(!isArray(type)) return;
-    if(this.currentViewIdx < 0) {
+  switchViewType(type: DataViewType[]) {
+    if (!isArray(type)) return;
+    if (this.currentViewIdx < 0) {
       this.currentViewIdx = type.findIndex(t => t == this.dataDrive.dataViewSet.type);
     }
-    if(this.currentViewIdx < 0) {
+    if (this.currentViewIdx < 0) {
       this.currentViewIdx = 0;
     }
     this.currentViewIdx++;
-    if(this.currentViewIdx > type.length-1) {
+    if (this.currentViewIdx > type.length - 1) {
       this.currentViewIdx = 0;
     }
     this.dataDrive.switchViewType(type[this.currentViewIdx])

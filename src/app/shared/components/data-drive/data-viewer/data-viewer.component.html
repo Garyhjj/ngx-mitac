@@ -1,5 +1,5 @@
 <div [ngSwitch]="_dataDrive.dataViewSet.type">
   <app-exam-paper [opts]="_dataDrive" *ngSwitchCase="'exam'" [isModal]="isModal" [header]="_dataDrive.dataViewSet?.tempAddition"></app-exam-paper>
-  <app-table [opts]="_dataDrive" *ngSwitchCase="'table'" [isModal]="isModal" [actionRef]="actionRef"></app-table>
+  <app-table [opts]="_dataDrive" *ngSwitchCase="'table'" [isModal]="isModal" [actionRef]="actionRef" [tableCell]="tableCell"></app-table>
   <div *ngSwitchDefault>output2</div>
 </div>

@@ -6,11 +6,11 @@ export interface TableDataColumn {
             name: string,
             params?: any;
         },
-        pipe?:{
-            name:string,
-            params:any[]
+        pipe?: {
+            name: string,
+            params: any[]
         },
-        sortBy?:{
+        sortBy?: {
             name: string,
             params: any[]
         }

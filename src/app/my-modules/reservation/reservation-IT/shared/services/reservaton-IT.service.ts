@@ -14,50 +14,57 @@ export class ReservationITService {
     deptId;
     dept;
     timeMes;
-    
     constructor(
         private http: HttpClient,
         private auth: AuthService,
         private reservationService: ReservationService
     ) {
         this.user = this.auth.user;
-        if(this.user.privilege.find(m => m.FUNCTION_ID === 343)) {
+        if (this.user.privilege.find(m => m.FUNCTION_ID === 343)) {
             this.role = 1;
         }
     }
 
     async getITDeptId() {
-        if(this.deptId > 0) return;
-        if(!this.reservationService.deptList) {
-            let res = await this.reservationService.getServiceDeptInfo().toPromise();
+        if (this.deptId > 0) { return; }
+        if (!this.reservationService.deptList) {
+            const res = await this.reservationService.getServiceDeptInfo().toPromise();
             this.reservationService.deptList = res;
         }
         const target = this.reservationService.deptList.find(c => c.TYPE === 'IT_SERVICE');
-        if(target) {
+        if (target) {
             this.dept = target;
             this.deptId = target.ID;
         }
     }
 
     async getDeptTimeMes() {
-        if(isArray(this.timeMes)) return this.timeMes;
-        await this.getITDeptId().catch(err => {});
-        let res = await this.reservationService.getServiceTime(this.deptId).toPromise().catch(err => null);
-        if(isArray(res)) {
+        if (isArray(this.timeMes)) { return this.timeMes; }
+        await this.getITDeptId().catch(err => { });
+        const res = await this.reservationService.getServiceTime(this.deptId).toPromise().catch(err => null);
+        if (isArray(res)) {
             this.timeMes = res;
         }
     }
 
     getServiceDateMes(dept_id: number) {
-        return this.http.get(replaceQuery(reservationITConfig.getServiceDateMes, {dept_id}));
+        return this.http.get(replaceQuery(reservationITConfig.getServiceDateMes, { dept_id }));
     }
 
     getServiceDayInfo(dept_id: number, date: string) {
-        return this.http.get(replaceQuery(reservationITConfig.getServiceDayInfo, {dept_id, date}));
+        return this.http.get(replaceQuery(reservationITConfig.getServiceDayInfo, { dept_id, date }));
     }
 
     updateService(d: any) {
         return this.reservationService.updateService(d);
+    }
+
+    getServiceImpressionResults(service_id: number, empno?: string) {
+        return this.http.get(replaceQuery(reservationITConfig.getServiceImpressionResults, { empno, service_id }));
+    }
+
+    getPersonImpression(empno) {
+        return this.http.get(replaceQuery(reservationITConfig.getPersonImpression, { empno, rownum: 30 }));
     }
 
 }

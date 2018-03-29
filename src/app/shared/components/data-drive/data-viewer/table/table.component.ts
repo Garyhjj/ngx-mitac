@@ -5,6 +5,7 @@ import { DataUpdateComponent } from './../../data-inputer/data-update/data-updat
 import { NzModalService } from 'ng-zorro-antd';
 import { DataDriveService } from './../../core/services/data-drive.service';
 import { TabelViewSetMore, TabelViewSet } from './../../../data-drive/shared/models/viewer/table';
+// tslint:disable-next-line:import-blacklist
 import { Subscription } from 'rxjs/Rx';
 import { TableData } from '../../../data-drive/shared/models/index';
 import { Component, OnInit, Input, AfterViewInit, OnDestroy, AfterViewChecked, ChangeDetectorRef, TemplateRef } from '@angular/core';
@@ -40,7 +41,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   showInformer = new Subject<any>();
   fileList;
   @Input() actionRef: TemplateRef<void>;
-
+  @Input() tableCell: TemplateRef<void>;
   @Input()
   set opts(opts: DataDrive) {
     this.tableSet = opts.dataViewSet as TabelViewSet;
@@ -88,12 +89,12 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   sort(name: string, v: string, by: { name: string, params: any[] }) {
     const isAscend = v === 'ascend';
     this._dataDrive.tableData.data = this.tableData.data = this.tableData.data.sort((a: any, b: any) => {
-      if (!isArray(a) || !isArray(b)) return 0;
+      if (!isArray(a) || !isArray(b)) { return 0; }
       const target_a = a.find(p => p.property === name).value || '';
       const target_b = b.find(p => p.property === name).value || '';
       const a_value = target_a || target_a.value || '';
       const b_value = target_b || target_b.value || '';
-      if (typeof by !== 'object') return 0;
+      if (typeof by !== 'object') { return 0; }
       const byWhat = sortUtils[by.name];
       const params = by.params || [];
       return typeof byWhat === 'function' ? byWhat(a_value, b_value, isAscend, ...params) : 0;
@@ -128,38 +129,38 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     this._dataDrive.afterDataInit(() => {
       // this.tableData.data = this._dataDrive.tableData.data;
       this.updateFilterColumns();
-    })
+    });
   }
 
   getPipes() {
     this._dataDrive.tableData.columns.filter(c => c.more && c.more.pipe).forEach(f => {
       this.pipes[f.property] = f.more.pipe;
-    })
+    });
   }
   getTypes() {
     this._dataDrive.tableData.columns.filter(c => c.more && c.more.type).forEach(f => {
       const type = f.more.type;
       this.types[f.property] = type ? type.name : 'text';
-    })
+    });
   }
 
   toDelete(idx) {
-    if (!this.canDelete) return;
+    if (!this.canDelete) { return; }
     idx = this.calIdx(idx);
     const deleteFn = () => {
       const data = this._dataDrive.getData();
-      if (!data[idx]) return;
+      if (!data[idx]) { return; }
       const id = this.util.showLoading();
-      const finalFn = (id) => this.util.dismissLoading(id);
+      const finalFn = (loadingID) => this.util.dismissLoading(loadingID);
       this.dataDriveService.deleteData(this._dataDrive, data[idx]).subscribe(r => {
         this.dataDriveService.updateViewData(this._dataDrive);
         finalFn(id);
-      }, (err) => { this.util.errDeal(err); finalFn(id) });
-    }
+      }, (err) => { this.util.errDeal(err); finalFn(id); });
+    };
     this.modalService.confirm({
       title: '您確定要刪除這一條目嗎？',
       onOk() {
-        deleteFn()
+        deleteFn();
       },
       onCancel() {
       }
@@ -167,19 +168,19 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     return false;
   }
 
-  getDataByIdx(idx:number) {
+  getDataByIdx(idx: number) {
     const data = this._dataDrive.getData()[idx];
     const out: any = {};
     data.forEach(d => {
       out[d.property] = d.value;
-    })
+    });
     return out;
   }
 
   toUpdate(idx) {
-    if (!this.canEdit) return;
+    if (!this.canEdit) { return; }
     idx = this.calIdx(idx);
-    if (!this._dataDrive.runBeforeUpdateShow(this.getDataByIdx(idx))) return;
+    if (!this._dataDrive.runBeforeUpdateShow(this.getDataByIdx(idx))) { return; }
     const subscription = this.modalService.open({
       title: '更新',
       content: DataUpdateComponent,
@@ -196,7 +197,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     });
     subscription.subscribe(result => {
       // console.log(result);
-    })
+    });
     return false;
   }
 
@@ -208,6 +209,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   }
 
   subjectIsGettingData() {
+    // tslint:disable-next-line:no-unused-expression
     this.sub2 && this.sub2.unsubscribe();
     this.sub2 = this._dataDrive.observeIsGettingData().subscribe(s => {
       if (!s && this._loading) {
@@ -262,7 +264,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     const inform = () => {
       this.informTime = nowTime;
       this._dataDrive.hasScrolledToBottom();
-    }
+    };
     if (this.informTime) {
       if (nowTime.getTime() - this.informTime.getTime() > 1000 * 10) {
         inform();
@@ -291,7 +293,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   scanImgs(imgs: string) {
     if (imgs) {
       this.fileList = imgs.split(',').map(i => {
-        return { url: APPConfig.baseUrl + i }
+        return { url: APPConfig.baseUrl + i };
       });
       this.showInformer.next(1);
     }
@@ -307,14 +309,14 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
           if (p.indexOf(d.property) > -1) {
             out[d.property] = d.value;
           }
-        })
+        });
         this._dataDrive.emitParamsOut(out);
       }
     } else {
       const out: any = {};
       data.forEach(d => {
         out[d.property] = d.value;
-      })
+      });
       this._dataDrive.emitParamsOut(out);
     }
     return false;
@@ -326,7 +328,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     const out: any = {};
     data.forEach(d => {
       out[d.property] = d.value;
-    })
+    });
     return out;
   }
 
@@ -363,7 +365,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
       });
       subscription.subscribe(result => {
         // console.log(result);
-      })
+      });
     }
   }
 
@@ -443,7 +445,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
         }
       }
       return body[type];
-    }
+    };
     const res = test();
     cache.setCache(type, res);
     return res;
@@ -454,8 +456,11 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     clearTimeout(this.timeEvent2);
   }
   unsubscribeAll() {
+    // tslint:disable-next-line:no-unused-expression
     this.sub1 && this.sub1.unsubscribe();
+    // tslint:disable-next-line:no-unused-expression
     this.sub2 && this.sub2.unsubscribe();
+    // tslint:disable-next-line:no-unused-expression
     this.sub3 && this.sub3.unsubscribe();
   }
   mouseEnter() {
@@ -493,7 +498,7 @@ class StyleCache {
   idx: number;
   bgColor: string;
   textSize: string;
-  textColor: string
+  textColor: string;
   constructor() {
 
   }

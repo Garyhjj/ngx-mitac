@@ -20,19 +20,22 @@ export class DataViewerComponent implements OnInit {
   @Input()
   isModal: boolean;
 
-  @Input() 
-  set more(m:any) {
-    if(m.actionRef) {
+  @Input()
+  set more(m: any) {
+    if (m.actionRef) {
       this.actionRef = m.actionRef;
     }
-  };
-
+    if (m.tableCell) {
+      this.tableCell = m.tableCell;
+    }
+  }
+  tableCell: TemplateRef<void>;
   actionRef: TemplateRef<void>;
 
   constructor() { }
 
   ngOnInit() {
-    
+
   }
 
 }

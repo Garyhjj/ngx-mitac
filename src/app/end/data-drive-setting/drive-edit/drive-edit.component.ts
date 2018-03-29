@@ -24,7 +24,7 @@ export class DriveEditComponent implements OnInit {
 
   @ViewChild('nzTabBarExtraContentRule') nzTabBarExtraContentRule: TemplateRef<void>;
   @ViewChild('nzTabBarExtraContentView') nzTabBarExtraContentView: TemplateRef<void>;
-  @ViewChild('nzTabBarExtraContentTable') nzTabBarExtraContentTable: TemplateRef<void>
+  @ViewChild('nzTabBarExtraContentTable') nzTabBarExtraContentTable: TemplateRef<void>;
   preViewSetting;
   formLayout = 'horizontal';
   setForm: FormGroup;
@@ -99,7 +99,7 @@ export class DriveEditComponent implements OnInit {
         params?: string[] //选取API的参数，第一项为value，第二项为label，若有第三项（预防API设计不当），则用上一级的参数去筛选获取的值，值[第三项] === 上一级参数。
       }[],
       properties: string[] //对应的层级value去替换API的变量
-    } 
+    }
     /*
     CascaderOption {
       value: string | number,
@@ -114,12 +114,15 @@ export class DriveEditComponent implements OnInit {
   };
   typeNameOptions = [
     { property: '', value: '不設置' },
-    { property: 'img', value: '圖片' }
-  ]
+    { property: 'img', value: '圖片' },
+    { property: 'self', value: '页面内自定义' }
+  ];
   sortWayOptions = ((d) => {
-    let options = [{ property: '-1', value: '不設置' }];
-    for (let prop in d) {
-      options.push({ property: prop, value: prop });
+    const options = [{ property: '-1', value: '不設置' }];
+    for (const prop in d) {
+      if (d.hasOwnProperty(prop)) {
+        options.push({ property: prop, value: prop });
+      }
     }
     return options;
   })(sortUtils);
@@ -135,8 +138,8 @@ export class DriveEditComponent implements OnInit {
     { property: 'switch', value: '開關' },
     { property: 'colleagueSearcher', value: '員工搜索' },
     { property: 'photoUpload', value: '圖片上傳' },
-    { property: 'cascader', value: '级联'}
-  ]
+    { property: 'cascader', value: '级联' }
+  ];
   pipeOptions = [
     { property: '-1', value: '不設置' },
     { property: 'replace', value: '簡單替換' },
@@ -157,7 +160,7 @@ export class DriveEditComponent implements OnInit {
   viewTypeOptions = [
     { property: 'table', value: '表格' },
     { property: 'exam', value: '考卷' }
-  ]
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -173,17 +176,17 @@ export class DriveEditComponent implements OnInit {
       const id = params.id;
       if (id > 0) {
         const loading = this.util.showLoading();
-        const final = (loading) => this.util.dismissLoading(loading);
+        const final = (ld) => this.util.dismissLoading(ld);
         this.dataDriveSettingService.getSetting(id).subscribe(d => {
           final(loading);
           if (d) {
             const drive: any = new DataDrive(d);
             drive.des = d.description;
             this.initForm(drive);
-          }else {
+          } else {
             this.initForm();
           }
-        }, err => { this.util.errDeal(err); final(loading) })
+        }, err => { this.util.errDeal(err); final(loading); });
       } else {
         this.initForm();
       }
@@ -192,8 +195,8 @@ export class DriveEditComponent implements OnInit {
 
   /**
    * 預覽頁與配置頁的轉換時對preViewSetting的操作
-   * 
-   * @param {umber} i 
+   *
+   * @param {umber} i
    * @memberof DriveEditComponent
    */
   indexChange(i) {
@@ -204,15 +207,15 @@ export class DriveEditComponent implements OnInit {
       const setting = new DataDriveSetting(val);
       setTimeout(() => {
         this.preViewSetting = setting;
-      }, 500)
+      }, 500);
 
     }
   }
   /**
    * 將定義的配置轉換成對表單良好的格式
-   * 
-   * @param {any} e 
-   * @returns 
+   *
+   * @param {any} e
+   * @returns
    * @memberof DriveEditComponent
    */
   settingConvertToForm(e) {
@@ -220,14 +223,16 @@ export class DriveEditComponent implements OnInit {
       if (e.additionalFn) {
         const additionalFn = e.additionalFn;
         e.additionalFn = {};
-        for (let prop in additionalFn) {
-          if (prop === 'switchViewType') {
-            if (isArray(additionalFn[prop])) {
-              e.additionalFn.switchViewType = additionalFn[prop].join(',')
+        for (const prop in additionalFn) {
+          if (additionalFn.hasOwnProperty(prop)) {
+            if (prop === 'switchViewType') {
+              if (isArray(additionalFn[prop])) {
+                e.additionalFn.switchViewType = additionalFn[prop].join(',');
+              }
+            } else if (additionalFn[prop] === true) {
+              e.additionalFn.others = e.additionalFn.others || [];
+              e.additionalFn.others.push(prop);
             }
-          } else if (additionalFn[prop] === true) {
-            e.additionalFn.others = e.additionalFn.others || [];
-            e.additionalFn.others.push(prop);
           }
         }
         if (isArray(e.additionalFn)) {
@@ -236,7 +241,9 @@ export class DriveEditComponent implements OnInit {
       }
 
       e.dataViewSetList = [];
+      // tslint:disable-next-line:no-unused-expression
       e.dataViewSet && e.dataViewSetList.push(e.dataViewSet);
+      // tslint:disable-next-line:no-unused-expression
       e.otherDataViewSets && (e.dataViewSetList = e.dataViewSetList.concat(e.otherDataViewSets));
       return e;
     }
@@ -244,8 +251,8 @@ export class DriveEditComponent implements OnInit {
   }
   /**
    * 總表初始化入口
-   * 
-   * @param {DataDrive} [setting] 
+   *
+   * @param {DataDrive} [setting]
    * @memberof DriveEditComponent
    */
   initForm(setting?) {
@@ -260,7 +267,7 @@ export class DriveEditComponent implements OnInit {
         columnFormList.push(this.initColumnForm());
       }
     } else {
-      columnFormList.push(this.initColumnForm())
+      columnFormList.push(this.initColumnForm());
     }
     const updateSetsFormList = [];
     if (isArray(formData.updateSets)) {
@@ -326,9 +333,9 @@ export class DriveEditComponent implements OnInit {
   }
   /**
    * 初始化更新欄位配置的表單
-   * 
-   * @param {*} [d={}] 
-   * @returns 
+   *
+   * @param {*} [d={}]
+   * @returns
    * @memberof DriveEditComponent
    */
   initUpdateSetForm(d: any = {}) {
@@ -355,9 +362,9 @@ export class DriveEditComponent implements OnInit {
   }
   /**
    * 初始化數據列的配置表單
-   * 
-   * @param {*} [d={}] 
-   * @returns 
+   *
+   * @param {*} [d={}]
+   * @returns
    * @memberof DriveEditComponent
    */
   initColumnForm(d: any = {}) {
@@ -380,13 +387,13 @@ export class DriveEditComponent implements OnInit {
   }
 
   newColumnTab(fa: FormArray) {
-    fa.push(this.initColumnForm())
+    fa.push(this.initColumnForm());
   }
   /**
    * 初始化視圖配置的表單
-   * 
-   * @param {*} [viewSet={}] 
-   * @returns 
+   *
+   * @param {*} [viewSet={}]
+   * @returns
    * @memberof DriveEditComponent
    */
   initViewSetForm(viewSet: any = {}) {
@@ -395,9 +402,11 @@ export class DriveEditComponent implements OnInit {
     });
     form.get('type').valueChanges.subscribe(t => {
       const controls = form.controls;
-      for (let prop in controls) {
-        if (prop !== 'type') {
-          form.removeControl(prop)
+      for (const prop in controls) {
+        if (controls.hasOwnProperty(prop)) {
+          if (prop !== 'type') {
+            form.removeControl(prop);
+          }
         }
       }
       // 根據視圖的種類修改表單的結構
@@ -421,9 +430,9 @@ export class DriveEditComponent implements OnInit {
   }
   /**
    * 初始化表格的配置的表單
-   * 
-   * @param {FormGroup} fg 
-   * @param {*} [d={}] 
+   *
+   * @param {FormGroup} fg
+   * @param {*} [d={}]
    * @memberof DriveEditComponent
    */
   initTableViewSetForm(fg: FormGroup, d: any = {}) {
@@ -441,7 +450,7 @@ export class DriveEditComponent implements OnInit {
       name: [more.linkToPhone && more.linkToPhone.name],
       url: [more.linkToPhone && more.linkToPhone.url],
       local: [more.linkToPhone && more.linkToPhone.local]
-    }))
+    }));
     // 分頁
     if (more.pageSet && more.pageSet.enable) {
       fg.get('pageSet').setValue(true);
@@ -453,16 +462,16 @@ export class DriveEditComponent implements OnInit {
       } else {
         fg.removeControl('pageCount');
       }
-    })
+    });
     // 樣式規則
-    let ruleFormList = []
+    const ruleFormList = [];
     if (more.body && isArray(more.body.rules) && more.body.rules.length > 0) {
       const rules = more.body.rules;
       rules.forEach(c => {
         ruleFormList.push(this.initRuleForm(c));
-      })
+      });
     } else {
-      ruleFormList.push(this.initRuleForm())
+      ruleFormList.push(this.initRuleForm());
     }
     // 數據樣式
     const body = this.fb.group({
@@ -474,11 +483,12 @@ export class DriveEditComponent implements OnInit {
     fg.addControl('body', body);
     const fixedHeader = this.fb.group({
       enable: [false]
-    })
+    });
     const fixedHeaderData = more.fixedHeader || {};
     // 滾動條
     fixedHeader.get('enable').valueChanges.subscribe(v => {
       if (v) {
+        // tslint:disable-next-line:max-line-length
         fixedHeader.addControl('scrollHeight', new FormControl(fixedHeaderData.scrollHeight || 'auto', this.validatorExtendService.required()));
         fixedHeader.addControl('autoScroll', new FormControl(false));
         fixedHeader.get('autoScroll').valueChanges.subscribe(a => {
@@ -489,15 +499,17 @@ export class DriveEditComponent implements OnInit {
             fixedHeader.removeControl('interval');
             fixedHeader.removeControl('loop');
           }
-        })
+        });
       } else {
         fixedHeader.removeControl('interval');
         fixedHeader.removeControl('loop');
         fixedHeader.removeControl('autoScroll');
         fixedHeader.removeControl('scrollHeight');
       }
-    })
+    });
+    // tslint:disable-next-line:no-unused-expression
     fixedHeader.get('enable') && fixedHeader.get('enable').setValue(fixedHeaderData.enable);
+    // tslint:disable-next-line:no-unused-expression
     fixedHeader.get('autoScroll') && fixedHeader.get('autoScroll').setValue(fixedHeaderData.autoScroll ? true : false);
     fg.addControl('fixedHeader', fixedHeader);
 
@@ -507,13 +519,13 @@ export class DriveEditComponent implements OnInit {
     rules.removeAt(idx);
   }
   newRuleTab(rules: FormArray) {
-    rules.push(this.initRuleForm())
+    rules.push(this.initRuleForm());
   }
   /**
    * 初始化樣式規則的表單
-   * 
-   * @param {*} [d={}] 
-   * @returns 
+   *
+   * @param {*} [d={}]
+   * @returns
    * @memberof DriveEditComponent
    */
   initRuleForm(d: any = {}) {
@@ -522,22 +534,22 @@ export class DriveEditComponent implements OnInit {
       textColor: [d.textColor],
       bgColor: [d.bgColor],
       textSize: [d.textSize]
-    })
+    });
   }
   submitForm(another = false) {
     const val = this.setForm.value;
     const send = new DataDriveSetting(val);
-    if (another) send.id = 0;
+    if (another) { send.id = 0; }
     const loading = this.util.showLoading();
-    const final = (loading) => this.util.dismissLoading(loading);
+    const final = () => this.util.dismissLoading(loading);
     this.dataDriveSettingService.uploadSetting(send).subscribe(id => {
       this.util.showGlobalSucMes('提交成功');
-      final(loading);
+      final();
       this.router.navigate(['/end/dataDrive/edit', id]);
-    }, err => { this.util.errDeal(err); final(loading) })
+    }, err => { this.util.errDeal(err); final(); });
   }
   saveToAnother() {
-    this.submitForm(true)
+    this.submitForm(true);
   }
 
 }
@@ -613,7 +625,7 @@ class DataDriveSetting {
             c.more.sortBy = {
               name: c.sortByName + '',
               params: parse(c.sortByParams)
-            }
+            };
             delete c.sortByName;
             delete c.sortByParams;
           }
@@ -622,7 +634,7 @@ class DataDriveSetting {
             c.more.pipe = {
               name: c.pipeName + '',
               params: parse(c.pipeParams)
-            }
+            };
             delete c.pipeName;
             delete c.pipeParams;
           }
@@ -630,7 +642,7 @@ class DataDriveSetting {
             c.more = c.more || {};
             c.more.type = {
               name: c.typeName + '',
-            }
+            };
             delete c.typeName;
           }
         });
@@ -643,21 +655,21 @@ class DataDriveSetting {
       const before = d.dataViewSetList.slice(1);
       this.otherDataViewSets = [];
       before.forEach(c => {
-        if (typeof c !== 'object') return;
+        if (typeof c !== 'object') { return; }
         this.otherDataViewSets.push(this.alterViewSet(c));
-      })
+      });
     }
   }
   getDataViewSet(d) {
     if (isArray(d.dataViewSetList) && d.dataViewSetList.length > 0) {
       const before = d.dataViewSetList[0];
-      if (typeof before !== 'object') return;
+      if (typeof before !== 'object') { return; }
       this.dataViewSet = this.alterViewSet(before);
     }
   }
 
   alterViewSet(before) {
-    if (typeof before !== 'object') return;
+    if (typeof before !== 'object') { return; }
     switch (before.type) {
       case 'table':
         return this.alterTableViewSet(before);
@@ -691,7 +703,7 @@ class DataDriveSetting {
           if (r.matches) {
             r.matches = JSON.parse(r.matches);
           }
-        })
+        });
       }
     }
     if (more.fixedHeader) {
@@ -699,7 +711,7 @@ class DataDriveSetting {
         delete more.fixedHeader.enable;
         return out;
       }
-      more.pageSet = { enable: false }
+      more.pageSet = { enable: false };
       if (more.fixedHeader.autoScroll) {
         more.fixedHeader.autoScroll = {};
         const autoScroll = more.fixedHeader.autoScroll;
@@ -713,9 +725,9 @@ class DataDriveSetting {
   }
   /**
    * 消除空值，空數組，空對象
-   * 
-   * @param {Object} o 
-   * @param {Object} [parent] 
+   *
+   * @param {Object} o
+   * @param {Object} [parent]
    * @memberof DataDriveSetting
    */
   clearNull(o, parent?) {
@@ -728,36 +740,40 @@ class DataDriveSetting {
         }
       }
     } else if (typeof o === 'object') {
-      for (let prop in o) {
-        const value = o[prop];
-        if (value === '' || value === void (0) || value === null) {
-          delete o[prop];
-          parent && this.clearNull(parent);
-        } else if (isArray(value)) {
-          if (value.length > 0) {
-            for (let idx = 0; idx < value.length; idx++) {
-              if (typeof value[idx] === 'object') {
-                const v = value[idx];
-                if (Object.keys(v).length === 0) {
-                  value.splice(idx, 1);
-                  if (value.length === 0) {
-                    delete o[prop];
-                    break;
+      for (const prop in o) {
+        if (o.hasOwnProperty(prop)) {
+          const value = o[prop];
+          if (value === '' || value === void (0) || value === null) {
+            delete o[prop];
+            // tslint:disable-next-line:no-unused-expression
+            parent && this.clearNull(parent);
+          } else if (isArray(value)) {
+            if (value.length > 0) {
+              for (let idx = 0; idx < value.length; idx++) {
+                if (typeof value[idx] === 'object') {
+                  const v = value[idx];
+                  if (Object.keys(v).length === 0) {
+                    value.splice(idx, 1);
+                    if (value.length === 0) {
+                      delete o[prop];
+                      break;
+                    }
+                  } else {
+                    this.clearNull(v, value);
                   }
-                } else {
-                  this.clearNull(v, value);
                 }
               }
+            } else {
+              delete o[prop];
             }
-          } else {
-            delete o[prop];
-          }
-        } else if (typeof value === 'object') {
-          if (Object.keys(value).length === 0) {
-            delete o[prop];
-            parent && this.clearNull(parent);
-          } else {
-            this.clearNull(value, o);
+          } else if (typeof value === 'object') {
+            if (Object.keys(value).length === 0) {
+              delete o[prop];
+              // tslint:disable-next-line:no-unused-expression
+              parent && this.clearNull(parent);
+            } else {
+              this.clearNull(value, o);
+            }
           }
         }
       }
@@ -778,11 +794,11 @@ class DataDriveSetting {
         this.additionalFn = this.additionalFn || {};
         before.others.split(',').forEach(c => {
           this.additionalFn[c] = true;
-        })
+        });
       }
       if (before.switchViewType) {
         this.additionalFn = this.additionalFn || {};
-        this.additionalFn.switchViewType = before.switchViewType.split(',')
+        this.additionalFn.switchViewType = before.switchViewType.split(',');
       }
     }
   }
