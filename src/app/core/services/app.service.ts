@@ -23,7 +23,7 @@ export class AppService {
         if (!(typeof name === 'string') || !name) return Observable.of([]);
         let emp_name = name.toUpperCase();
         emp_name = tify(emp_name).replace(/^\"/g, '').replace(/\"$/g, '');
-        return this.http.get(replaceQuery(APIGlobalConfig.getAgentUrl, { emp_name })).map((cs: { AGENT_NAME: string }[]) => cs.map(c => c && c.AGENT_NAME));
+        return this.http.get(replaceQuery(APIGlobalConfig.getAgentUrl, { emp_name }));
     }
 
     uploadPicture(img: string) {
@@ -38,11 +38,11 @@ export class AppService {
     getAllTips() {
         const user = this.auth.user;
         const send = {
-            empno:user.EMPNO,
-            company_name:user.COMPANY_ID,
-            moduleId:[61]
+            empno: user.EMPNO,
+            company_name: user.COMPANY_ID,
+            moduleId: [61]
         }
-        this.http.post(APIGlobalConfig.getAllTips,send).subscribe((tips:MyModule[]) => {
+        this.http.post(APIGlobalConfig.getAllTips, send).subscribe((tips: MyModule[]) => {
             this.store$.dispatch(new User_Update_modules(tips));
         })
     }

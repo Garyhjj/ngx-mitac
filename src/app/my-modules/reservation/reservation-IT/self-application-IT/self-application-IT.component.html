@@ -2,6 +2,11 @@
   <nz-tab>
     <ng-template #nzTabHeading>
       待受理单据
+      <nz-badge [nzCount]="newCount" *ngIf="newCount">
+        <ng-template #content>
+          &nbsp;&nbsp;
+        </ng-template>
+      </nz-badge>
     </ng-template>
     <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive1($event)">
       <ng-template #actionRef let-data="data">
@@ -15,6 +20,11 @@
   <nz-tab>
     <ng-template #nzTabHeading>
       进行中单据
+      <nz-badge [nzCount]="processingCount" *ngIf="processingCount">
+        <ng-template #content>
+          &nbsp;&nbsp;
+        </ng-template>
+      </nz-badge>
     </ng-template>
     <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive2($event)">
       <ng-template #actionRef let-data="data">
@@ -28,8 +38,19 @@
   <nz-tab>
     <ng-template #nzTabHeading>
       待评价单据
+      <nz-badge [nzCount]="commentCount" *ngIf="commentCount">
+        <ng-template #content>
+          &nbsp;&nbsp;
+        </ng-template>
+      </nz-badge>
     </ng-template>
-    <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive3($event)"></app-data-drive>
+    <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive3($event)">
+      <ng-template #actionRef let-data="data">
+        <span>
+          <a (click)="commentResvation(data)">评价</a>
+        </span>
+      </ng-template>
+    </app-data-drive>
   </nz-tab>
 
   <nz-tab>
@@ -45,7 +66,7 @@
     </app-data-drive>
   </nz-tab>
 </nz-tabset>
-<nz-modal [nzVisible]="isImpressionVisible" [nzTitle]="'印象'" [nzContent]="modalContent" [nzFooter]="modalFooter" (nzOnCancel)="isImpressionVisible = false"
+<!-- <nz-modal [nzVisible]="isImpressionVisible" [nzTitle]="'印象'" [nzContent]="modalContent" [nzFooter]="modalFooter" (nzOnCancel)="isImpressionVisible = false"
   nzWidth="560px">
   <ng-template #modalContent>
     <div class="impression-content">
@@ -56,6 +77,54 @@
         </button>
       </div>
     </div>
+  </ng-template>
+  <ng-template #modalFooter>
+
+  </ng-template>
+</nz-modal> -->
+
+
+<nz-modal [nzVisible]="isCommentVisible" [nzTitle]="'评价'" [nzContent]="modalContent" [nzFooter]="modalFooter" (nzOnCancel)="isCommentVisible = false"
+  nzWidth="760px">
+  <ng-template #modalContent>
+    <form nz-form [nzLayout]="'horizontal'" [formGroup]="myForm" *ngIf="myForm">
+
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSpan]="6">
+          <label>總评分</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="16" [style.textAlign]="'center'">
+          <nz-rate nzAllowHalf formControlName="SCORE"></nz-rate>
+        </div>
+      </div>
+
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSpan]="6">
+          <label>对Ta的印象</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="16">
+          <div class="impression-content">
+            <div class="button" *ngFor="let item of impressionList">
+              <button nz-button [nzType]="impressionSelected[item.ID]?'primary': 'default'" (click)="selectImpression(item)">
+                <span>{{item.DESCRIPTION}} &nbsp;&nbsp;{{ item.QTY }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div nz-form-item nz-row>
+        <div nz-form-label nz-col [nzSpan]="6">
+          <label>评语</label>
+        </div>
+        <div nz-form-control nz-col [nzSpan]="16">
+          <nz-input nzType="textarea" [nzAutosize]="'1'" formControlName="USER_COMMENT"></nz-input>
+        </div>
+      </div>
+      <div nz-form-item nz-row [style.display]="'block'">
+        <button nz-button nz-col [nzOffset]="6" [nzSpan]="12" type="button" [nzType]="'primary'" [nzSize]="'large'" (click)="submitForm()"
+          [disabled]="!myForm.valid">確定</button>
+      </div>
+    </form>
   </ng-template>
   <ng-template #modalFooter>
 

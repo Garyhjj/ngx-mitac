@@ -63,8 +63,12 @@ export class ReservationITService {
         return this.http.get(replaceQuery(reservationITConfig.getServiceImpressionResults, { empno, service_id }));
     }
 
-    getPersonImpression(empno) {
-        return this.http.get(replaceQuery(reservationITConfig.getPersonImpression, { empno, rownum: 30 }));
+    getPersonImpression(empno: string, rownum = 30) {
+        return this.http.get(replaceQuery(reservationITConfig.getPersonImpression, { empno, rownum }));
+    }
+
+    getPersonComment(dept_id: number, empno: string, rownum: number) {
+        return this.http.get(replaceQuery(reservationITConfig.getPersonComment, { dept_id, empno, rownum }));
     }
 
 }

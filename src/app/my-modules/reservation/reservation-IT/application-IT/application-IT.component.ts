@@ -8,6 +8,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import * as moment from 'moment';
 import { DayInterface } from 'ng-zorro-antd/src/calendar/nz-calendar.component';
+import { AppService } from '../../../../core/services/app.service';
+import { isArray } from '../../../../shared/utils';
 
 @Component({
   selector: 'app-application-IT',
@@ -37,7 +39,8 @@ export class ApplicationITComponent implements OnInit {
     private reservationITService: ReservationITService,
     private util: UtilService,
     private router: Router,
-    private validatorExtendService: NgxValidatorExtendService
+    private validatorExtendService: NgxValidatorExtendService,
+    private gbService: AppService
   ) {
   }
 
@@ -132,6 +135,14 @@ export class ApplicationITComponent implements OnInit {
           IMAGES: [],
           CONTACT: ['', this.validatorExtendService.required()],
           MOBILE: ['', this.validatorExtendService.required()]
+        });
+        this.myForm.get('CONTACT').valueChanges.subscribe(v => {
+          this.gbService.getColleague(v).subscribe((cg) => {
+            if (isArray(cg) && cg.length === 1) {
+              const tar = cg[0];
+              this.myForm.get('MOBILE').setValue(`${tar.TELEPHONE} / ${tar.MOBILE}`);
+            }
+          })
         });
         break;
       }

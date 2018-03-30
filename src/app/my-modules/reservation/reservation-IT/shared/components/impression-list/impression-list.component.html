@@ -1,0 +1,8 @@
+<div class="impression-content">
+  <div class="button-modal"></div>
+  <div class="button" *ngFor="let item of impressionList">
+    <button nz-button [nzType]="impressionSelected[item.ID]?'primary': 'default'">
+      <span>{{item.DESCRIPTION}} &nbsp;&nbsp;{{ item.QTY }}</span>
+    </button>
+  </div>
+</div>

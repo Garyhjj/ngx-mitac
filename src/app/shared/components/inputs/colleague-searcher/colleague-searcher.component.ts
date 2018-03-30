@@ -40,17 +40,18 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
    * @param {*} value 
    */
   writeValue(value: string) {
-    if(value){
+    if (value) {
       value = value + '';
       this.appService.getColleague(value).subscribe((data: any) => {
-        if(data.length === 1) {
-          this.searchOptions = data;
-          this.selectedOption = data[0];
-          this.propagateChange(data[0].split(',')[0]);
-        }else {
-          this.propagateChange('')
+        if (data.length === 1) {
+          const alter = data.map(c => c.EMPNO + ',' + c.NICK_NAME + ',' + c.USER_NAME);
+          this.searchOptions = alter;
+          this.selectedOption = alter[0];
+          this.propagateChange(alter[0].EMPNO);
+        } else {
+          this.propagateChange('');
         }
-      }, (err) => {this.util.errDeal(err); this.propagateChange('')});
+      }, (err) => { this.util.errDeal(err); this.propagateChange('') });
     }
   }
 
@@ -67,14 +68,14 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
    * 也是一样注册,当 touched 然后调用
    * @param {*} fn 
    */
-  registerOnTouched(fn:any) { }
+  registerOnTouched(fn: any) { }
 
   ngOnInit() {
     this.mySub = this.searchTerms.asObservable().debounceTime(300).distinctUntilChanged().subscribe((term: string) => {
       const query = encodeURI(term);
       this.appService.getColleague(term).subscribe((data: any) => {
-        this.searchOptions = data;
-      }, (err) => {this.util.errDeal(err)});
+        this.searchOptions = data.map(c => c.EMPNO + ',' + c.NICK_NAME + ',' + c.USER_NAME);
+      }, (err) => { this.util.errDeal(err); });
     })
   }
 

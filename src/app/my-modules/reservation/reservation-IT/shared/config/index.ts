@@ -37,5 +37,16 @@ export const reservationITConfig = {
      * @param {number} {empno}
      * @param {string} {rownum} // 取多少个
      */
-    getPersonImpression: APPConfig.baseUrl + 'Service/GetServiceImpression?empno={empno}&rownum={rownum}'
+    getPersonImpression: APPConfig.baseUrl + 'Service/GetServiceImpression?empno={empno}&rownum={rownum}',
+
+    /**
+     * URL
+     * 获取服务人员的历史評價
+     * GET
+     * 2018-03-29
+     * @param {number} {dept_id}
+     * @param {number} {empno}
+     * @param {string} {rownum} // 取多少个
+     */
+    getPersonComment: APPConfig.baseUrl + 'Service/GetServiceComment?dept_id={dept_id}&empno={empno}&rownum={rownum}',
 };

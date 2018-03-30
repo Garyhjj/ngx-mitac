@@ -38,6 +38,7 @@ export class TableDataModel implements TableData {
     editable: boolean;
     addable: boolean;
     deletable: boolean;
+    searchable?: boolean;
     visible: boolean;
     stopFirstInit?: boolean;
     isCompanyLimited?: boolean | string;

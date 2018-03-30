@@ -1,7 +1,7 @@
-import { APPConfig } from "./app.config";
+import { APPConfig } from './app.config';
 
 export const APIGlobalConfig = {
-    getAgentUrl: APPConfig.baseUrl + 'OffDuty/GetOffDutyAgent?emp_name={emp_name}',
+    getAgentUrl: APPConfig.baseUrl + 'Guid/GetUserLikeNoSite?emp_name={emp_name}',
     /**
      * URL
      * 上传图片，获得返回的url
@@ -14,4 +14,4 @@ export const APIGlobalConfig = {
     getSelfPrivilege: APPConfig.baseUrl + 'Guid/GetUserFunctions?moduleID={moduleID}',
 
     getAllTips: APPConfig.baseUrl + 'users/tips'
-}
+};

@@ -1,3 +1,5 @@
+import { ITServerRateComponent } from './IT-server-rate/IT-server-rate.component';
+import { ITServerTrackComponent } from './IT-server-track/IT-server-track.component';
 import { ITServerWorkspaceComponent } from './IT-server-workspace/IT-server-workspace.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -26,10 +28,18 @@ const bRoutes: Routes = [
             {
                 path: 'workspace',
                 component: ITServerWorkspaceComponent
+            },
+            {
+                path: 'track',
+                component: ITServerTrackComponent
+            },
+            {
+                path: 'rate',
+                component: ITServerRateComponent
             }
         ]
     }
-]
+];
 
 @NgModule({
     imports: [

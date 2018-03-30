@@ -1,0 +1,35 @@
+<app-data-drive [name]="'reservationServerRate'" (dataDriveInit)="getDataDrive($event)">
+  <ng-template #actionRef let-data="data">
+    <span>
+      <a (click)="toRateDetail(data)">更多細節</a>
+    </span>
+  </ng-template>
+</app-data-drive>
+
+<nz-modal [nzVisible]="isDetailVisible" [nzTitle]="'細節'" [nzContent]="modalContent" [nzFooter]="modalFooter" (nzOnCancel)="isDetailVisible = false"
+  nzWidth="460px">
+  <ng-template #modalContent>
+    <div class="yinxiang-container">
+      <div class="title">大家對Ta的印象:</div>
+      <div class="yinxiang">
+        <div class="yx" *ngFor="let item of yinxiangList">{{item.DESCRIPTION}}</div>
+      </div>
+    </div>
+    <div class="split-block"></div>
+    <div class="comment" *ngFor="let i of commentList">
+      <!-- <div class="comment" > -->
+      <img class="comment-avatar" [src]="i.AVATAR_URL">
+      <div class="comment-right">
+        <div class="comment-name">{{i.NAME}}</div>
+        <div class="comment-rate">
+          <nz-rate [nzDefaultValue]="i.SCORE" nzDisabled=true *ngIf="i.SCORE"></nz-rate>
+          <span class="comment-date">{{i.COMMENT_TIME}}</span>
+        </div>
+        <div class="comment-desc">{{i.USER_COMMENT}}</div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #modalFooter>
+
+  </ng-template>
+</nz-modal>

@@ -1,3 +1,6 @@
+import { NgxValidatorExtendService } from './../../../../core/services/ngx-validator-extend.service';
+import { FormGroup, FormBuilder } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
 import { UtilService } from './../../../../core/services/util.service';
 import { NzModalService } from 'ng-zorro-antd';
 import { ReservationApplication } from './../shared/models/index';
@@ -5,6 +8,8 @@ import { DataDriveService } from './../../../../shared/components/data-drive/cor
 import { ReservationITService } from './../shared/services/reservaton-IT.service';
 import { Component, OnInit } from '@angular/core';
 import { DataDrive } from '../../../../shared/components/data-drive/shared/models';
+import * as moment from 'moment';
+import { ImpressionListComponent } from '../shared/components/impression-list/impression-list.component';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -24,13 +29,22 @@ export class SelfApplicationITComponent implements OnInit {
   impressionName = 'impression';
   extralList = [this.impressionName, 'SCORE', 'USER_COMMENT'];
   isImpressionVisible = false;
+  isCommentVisible = false;
   impressionList: any[];
   impressionSelected: any = {};
+  myForm: FormGroup;
+  commentTarget: ReservationApplication;
+  dateFormat = 'YYYY-MM-DDT HH:mm:ss';
+  newCount;
+  processingCount;
+  commentCount;
   constructor(
     private reservationITService: ReservationITService,
     private dataDriveService: DataDriveService,
     private modalService: NzModalService,
-    private util: UtilService
+    private util: UtilService,
+    private fb: FormBuilder,
+    private validatorExtendService: NgxValidatorExtendService
   ) { }
 
   ngOnInit() {
@@ -53,6 +67,7 @@ export class SelfApplicationITComponent implements OnInit {
         return false;
       }
     });
+    d.afterDataInit((ds) => this.newCount = ds.length);
     this.dataDriveService.updateViewData(d);
   }
 
@@ -61,6 +76,7 @@ export class SelfApplicationITComponent implements OnInit {
     d.tableData.columns = d.tableData.columns.filter(c => this.extralList.indexOf(c.property) < 0);
     await this.alterData(d);
     d.addDefaultSearchParams({ status: 'Processing' });
+    d.afterDataInit((ds) => this.processingCount = ds.length);
     this.dataDriveService.updateViewData(d);
   }
 
@@ -71,6 +87,7 @@ export class SelfApplicationITComponent implements OnInit {
     d.tableData.columns = d.tableData.columns.filter(c => this.extralList.indexOf(c.property) < 0);
     await this.alterData(d);
     d.addDefaultSearchParams({ status: 'Scoring' });
+    d.afterDataInit((ds) => this.commentCount = ds.length);
     this.dataDriveService.updateViewData(d);
   }
 
@@ -147,14 +164,80 @@ export class SelfApplicationITComponent implements OnInit {
   }
 
   showImpressionDetail(app: ReservationApplication) {
-    this.impressionList = [];
-    this.isImpressionVisible = true;
-    this.impressionSelected = {};
-    this.reservationITService.getPersonImpression(app.HANDLER).subscribe((imList: any[]) => this.impressionList = imList);
-    this.reservationITService.getServiceImpressionResults(app.ID).subscribe(res => {
-      if (Array.isArray(res)) {
-        res.forEach(r => this.impressionSelected[r.IMPRESSION_ID] = true);
+    const subscription = this.modalService.open({
+      title: '印象',
+      content: ImpressionListComponent,
+      onOk() {
+      },
+      onCancel() {
+
+      },
+      footer: false,
+      componentParams: {
+        application: app
       }
+    });
+    subscription.subscribe(result => {
+      // console.log(result);
+    });
+  }
+
+  commentResvation(app: ReservationApplication) {
+    this.myForm = null;
+    this.isCommentVisible = true;
+    this.impressionList = [];
+    this.impressionSelected = {};
+    const loadingID = this.util.showLoading();
+    const final = () => {
+      this.util.dismissLoading(loadingID);
+    };
+    this.reservationITService.getPersonImpression(app.HANDLER).subscribe((_: any[]) => {
+      this.impressionList = _;
+      final();
+      this.myForm = this.fb.group({
+        SCORE: ['', this.validatorExtendService.required()],
+        USER_COMMENT: ['']
+      });
+      this.commentTarget = app;
+    }
+      , (err) => {
+        final();
+        this.util.errDeal(err);
+      });
+  }
+
+  selectImpression(i: any) {
+    this.impressionSelected[i.ID] = !this.impressionSelected[i.ID];
+    this.impressionList = this.impressionList.map((g) => {
+      if (g === i) {
+        g.QTY = this.impressionSelected[i.ID] ? g.QTY + 1 : g.QTY - 1;
+      }
+      return g;
+    });
+  }
+
+  submitForm() {
+    const val = this.myForm.value;
+    const send = Object.assign({}, this.commentTarget, val);
+    send.newImpressionList = [];
+    for (const prop in this.impressionSelected) {
+      if (this.impressionSelected[prop]) {
+        send.newImpressionList.push(prop);
+      }
+    }
+    send.STATUS = 'Closed';
+    send.COMMENT_TIME = moment().format(this.dateFormat);
+    const loadingID = this.util.showLoading();
+    const final = () => {
+      this.util.dismissLoading(loadingID);
+    };
+    this.reservationITService.updateService(send).subscribe(res => {
+      final();
+      this.isCommentVisible = false;
+      this.updateAllDataDrive();
+    }, err => {
+      this.util.errDeal(err);
+      final();
     });
   }
 

@@ -8,6 +8,8 @@ import { inspectionAttendanceConfig } from './inspection-attendance.config';
 import { inspectionScheduleLineConfig } from './inspection-schedule-line.config';
 import { inspectionCommentConfig } from './inspection-comment.config';
 export const DataDriveStore = {
+    reservationServerRate: 162,
+    reservationITTeack: 161,
     reservationITType: 141,
     reservationITWorkspace: 121,
     reservationITSelf: 101,
@@ -58,7 +60,7 @@ export const DataDriveStore = {
                     textSize: '1.6rem',
                     rules: [
                         {
-                            matches: [['RESIT', 'regex','^\是$']],
+                            matches: [['RESIT', 'regex', '^\是$']],
                             textColor: 'red',
                         }
                     ]
@@ -156,7 +158,7 @@ export const DataDriveStore = {
         otherDataViewSets: [
             {
                 title: '考卷内容',
-                type: 'exam',  
+                type: 'exam',
             }
         ],
         updateSets: [

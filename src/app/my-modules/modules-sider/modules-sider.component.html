@@ -1,4 +1,5 @@
-<ul nz-menu [nzMode]="isCollapsed?'vertical':'inline'" style="height:calc(100% - 48px);overflow-y:auto;overflow-x:hidden" (click)="select($event)" [class.ant-layout-sider-collapsed]="isCollapsed">
+<ul nz-menu [nzMode]="isCollapsed?'vertical':'inline'" style="height:calc(100% - 48px);overflow-y:auto;overflow-x:hidden"
+  (click)="select($event)" [class.ant-layout-sider-collapsed]="isCollapsed">
   <!-- <li nz-submenu>
     <span title><i class="anticon anticon-file-pdf"></i><span class="nav-text">eMPI</span></span>
     <ul>
@@ -88,6 +89,8 @@
           <li nz-menu-item data-route="/reservation/IT/application">服务申请</li>
           <li nz-menu-item data-route="/reservation/IT/self">个人服务申请记录</li>
           <li nz-menu-item data-route="/reservation/IT/workspace">服务人员工作台</li>
+          <li nz-menu-item data-route="/reservation/IT/rate">排行榜</li>
+          <li nz-menu-item data-route="/reservation/IT/track">服务追蹤</li>
         </ul>
       </li>
       <!-- <li nz-submenu *ngIf="canSeeFunction(5)">
