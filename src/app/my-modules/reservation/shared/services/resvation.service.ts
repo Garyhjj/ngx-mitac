@@ -19,6 +19,9 @@ export class ReservationService {
         private auth: AuthService
     ) {
         this.user = this.auth.user;
+        if (this.user.privilege.find(m => m.FUNCTION_ID === 416)) {
+            this.role = 1;
+        }
     }
 
     getServiceDeptInfo() {

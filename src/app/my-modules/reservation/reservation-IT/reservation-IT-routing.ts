@@ -1,3 +1,4 @@
+import { ReservationGuard } from './../reservation-guard.service';
 import { ITServerRateComponent } from './IT-server-rate/IT-server-rate.component';
 import { ITServerTrackComponent } from './IT-server-track/IT-server-track.component';
 import { ITServerWorkspaceComponent } from './IT-server-workspace/IT-server-workspace.component';
@@ -26,14 +27,17 @@ const bRoutes: Routes = [
                 component: SelfApplicationITComponent
             },
             {
+                canActivateChild: [ReservationGuard],
                 path: 'workspace',
                 component: ITServerWorkspaceComponent
             },
             {
+                canActivateChild: [ReservationGuard],
                 path: 'track',
                 component: ITServerTrackComponent
             },
             {
+                canActivateChild: [ReservationGuard],
                 path: 'rate',
                 component: ITServerRateComponent
             }

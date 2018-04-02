@@ -6,13 +6,17 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --prod",
+    "build:dev": "ng build --dev",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "prod": "npm run build && node server.js",
-    "serve": "npm run build && pm2 start server.js --name=mitacEnd",
-    "reServe": "npm run build && pm2 reload mitacEnd",
-    "update": "git pull && npm i && npm run build && pm2 reload mitacEnd"
+    "prod": "npm run build && set NODE_ENV=production && node server.js",
+    "serve": "npm run build && set NODE_ENV=production && pm2 start server.js --name=mitacEnd",
+    "reServe": "npm run build && set NODE_ENV=production && pm2 reload mitacEnd",
+    "update": "git pull && npm i && npm run build && set NODE_ENV=production && pm2 reload mitacEnd",
+    "serve:dev": "npm run build:dev && set NODE_ENV=development && pm2 start server.js --name=mitacEnd",
+    "reServe:dev": "npm run build:dev && set NODE_ENV=development && pm2 reload mitacEnd",
+    "update:dev": "git pull && npm i && npm run build:dev && set NODE_ENV=development && pm2 reload mitacEnd"
   },
   "private": true,
   "dependencies": {

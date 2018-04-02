@@ -3,11 +3,13 @@ import { Breadcrumb_Clear } from './../core/actions/breadcrumb.action';
 import { Router } from '@angular/router';
 import { User_Logout } from './../core/actions/user.action';
 import { Observable } from 'rxjs/Observable';
+// tslint:disable-next-line:import-blacklist
 import { Subscription } from 'rxjs/Rx';
 import { AuthService } from './../core/services/auth.service';
 import { myStore, UserState } from './../core/store';
 import { Store } from '@ngrx/store';
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { isArray } from '../shared/utils';
 
 @Component({
   selector: 'app-header',
@@ -16,9 +18,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 
-  auth:boolean;
-  isLoginPage:boolean;
-  user:UserState = {};
+  auth: boolean;
+  isLoginPage: boolean;
+  user: UserState = {};
   mySub1: Subscription;
   mySub2: Subscription;
   mySub3: Subscription;
@@ -34,14 +36,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.appService.getAllTips();
     this.mySub1 = this.authService.authSubject.subscribe(a => {
       this.auth = a;
-      if(!a) {
+      if (!a) {
         this.route.navigate(['/login']);
       }
     });
-    this.mySub2 = this.authService.loginPageSubject.subscribe(b => {this.isLoginPage = b});
-    this.mySub3 = this.store$.select(s => s.userReducer).subscribe((u) =>this.user = u);
+    this.mySub2 = this.authService.loginPageSubject.subscribe(b => { this.isLoginPage = b });
+    this.mySub3 = this.store$.select(s => s.userReducer).subscribe((u) => this.user = u);
     this.tips = this.store$.select(s => s.userReducer).map((user) => user.modules || []).map((ms) => ms.map((m) => m.TIPS || 0)).map(ts => {
-      if(Array.isArray(ts)) {
+      if (Array.isArray(ts)) {
         return ts.reduce((a, b) => a + b, 0)
       }
       return 0
@@ -56,11 +58,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   canSeeEnd() {
     const privilege = this.authService.user.privilege;
-    return privilege.find(p => p.FUNCTION_ID === 42);
+    return isArray(privilege) && privilege.find(p => p.FUNCTION_ID === 42);
   }
 
   confirm() {
-    this.loginOut()
+    this.loginOut();
   }
 
   loginOut() {

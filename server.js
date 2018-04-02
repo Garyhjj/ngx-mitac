@@ -14,7 +14,7 @@ app.use(function (req, res, next) {
 })
 
 
-
-app.listen(8081, function () {
-  console.log('production on port 8081')
+const port = process.env.NODE_ENV && process.env.NODE_ENV.trim() === 'production' ? 8081 : 8083;
+app.listen(port, function () {
+  console.log('production on port ' + port);
 })
