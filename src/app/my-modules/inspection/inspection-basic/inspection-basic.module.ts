@@ -13,6 +13,6 @@ import { InspectionNameComponent } from './inspection-name/inspection-name.compo
   declarations: [
     InspectionBasicComponent,
     InspectionNameComponent
-]
+  ]
 })
 export class InspectionBasicModule { }

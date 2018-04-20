@@ -16,7 +16,7 @@ import { BoardService } from './shared/services/board.service';
     UrgentMaterialComponent,
     UrgentNoComponent,
     EsdComponent
-],
+  ],
   providers: [BoardService]
 })
 export class BoardModule { }

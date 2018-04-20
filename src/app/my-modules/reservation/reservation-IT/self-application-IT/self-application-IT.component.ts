@@ -1,3 +1,4 @@
+import { AppService } from './../../../../core/services/app.service';
 import { NgxValidatorExtendService } from './../../../../core/services/ngx-validator-extend.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
@@ -10,6 +11,7 @@ import { Component, OnInit } from '@angular/core';
 import { DataDrive } from '../../../../shared/components/data-drive/shared/models';
 import * as moment from 'moment';
 import { ImpressionListComponent } from '../shared/components/impression-list/impression-list.component';
+import { isArray } from '../../../../shared/utils';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -44,7 +46,8 @@ export class SelfApplicationITComponent implements OnInit {
     private modalService: NzModalService,
     private util: UtilService,
     private fb: FormBuilder,
-    private validatorExtendService: NgxValidatorExtendService
+    private validatorExtendService: NgxValidatorExtendService,
+    private gbService: AppService
   ) { }
 
   ngOnInit() {
@@ -66,6 +69,26 @@ export class SelfApplicationITComponent implements OnInit {
       } else {
         return false;
       }
+    });
+    d.onUpdateFormShow((fg) => {
+      const contactInput = fg.get('CONTACT');
+      contactInput.valueChanges.subscribe(v => {
+        this.gbService.getColleague(v).subscribe((cg) => {
+          if (isArray(cg) && cg.length === 1) {
+            const tar = cg[0];
+            fg.get('MOBILE').setValue((() => {
+              const mobile = tar.MOBILE;
+              const telephone = tar.TELEPHONE;
+              if (mobile && telephone) {
+                return `${telephone} / ${mobile}`;
+              } else {
+                return mobile ? mobile : telephone ? telephone : '';
+              }
+            })());
+          }
+        });
+      });
+      contactInput.setValue(this.reservationITService.user.EMPNO);
     });
     d.afterDataInit((ds) => this.newCount = ds.length);
     this.dataDriveService.updateViewData(d);

@@ -49,4 +49,12 @@ export const reservationITConfig = {
      * @param {string} {rownum} // 取多少个
      */
     getPersonComment: APPConfig.baseUrl + 'Service/GetServiceComment?dept_id={dept_id}&empno={empno}&rownum={rownum}',
+
+    /**
+     * URL
+     * 获取服務單據
+     * GET
+     * 2018-04-13
+     */
+    getReservationList: APPConfig.baseUrl + 'Service/GetServices?docno={docno}&status={status}&contact={contact}&handler={handler}&type={type}&company_id={*COMPANY_ID}&date_fm={date_fm}&date_to={date_to}'
 };

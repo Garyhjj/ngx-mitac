@@ -58,7 +58,6 @@ export const esdConfig = {
             {
                 property: 'BOSS', value: '主管名'
             }
-            
         ]
     }
-}
+};

@@ -18,16 +18,17 @@ import { Subscription } from 'rxjs/Subscription';
   ]
 })
 export class ColleagueSearcherComponent implements OnInit, OnDestroy {
-  private propagateChange = (_: any) => { };
   selectedOption;
   searchOptions = [];
+  searchTerms = new Subject<string>();
+  mySub: Subscription;
 
   @Input()
   miDisabled;
 
   @Input() miPlaceHolder = '請輸入英文名/工號/中文名';
-  searchTerms = new Subject<string>();
-  mySub: Subscription
+
+  private propagateChange = (_: any) => { };
 
   constructor(
     private appService: AppService,
@@ -36,8 +37,8 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
 
   /**
    * 给外部formControl写入数据
-   * 
-   * @param {*} value 
+   *
+   * @param {*} value
    */
   writeValue(value: string) {
     if (value) {
@@ -47,18 +48,18 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
           const alter = data.map(c => c.EMPNO + ',' + c.NICK_NAME + ',' + c.USER_NAME);
           this.searchOptions = alter;
           this.selectedOption = alter[0];
-          this.propagateChange(alter[0].EMPNO);
+          this.propagateChange(data[0].EMPNO);
         } else {
           this.propagateChange('');
         }
-      }, (err) => { this.util.errDeal(err); this.propagateChange('') });
+      }, (err) => { this.util.errDeal(err); this.propagateChange(''); });
     }
   }
 
   /**
    * 把外面登记的监测change的函数赋值给this.propagateChange
    * 当内部数据改变时,可使用this.propagateChange(this.imgs)去触发传递出去
-   * @param {*} fn 
+   * @param {*} fn
    */
   registerOnChange(fn: any) {
     this.propagateChange = fn;
@@ -66,7 +67,7 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
 
   /**
    * 也是一样注册,当 touched 然后调用
-   * @param {*} fn 
+   * @param {*} fn
    */
   registerOnTouched(fn: any) { }
 
@@ -76,10 +77,11 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
       this.appService.getColleague(term).subscribe((data: any) => {
         this.searchOptions = data.map(c => c.EMPNO + ',' + c.NICK_NAME + ',' + c.USER_NAME);
       }, (err) => { this.util.errDeal(err); });
-    })
+    });
   }
 
   ngOnDestroy() {
+    // tslint:disable-next-line:no-unused-expression
     this.mySub && this.mySub.unsubscribe();
   }
 

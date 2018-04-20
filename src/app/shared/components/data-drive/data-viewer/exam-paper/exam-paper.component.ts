@@ -26,8 +26,8 @@ export class ExamPaperComponent implements OnInit, OnDestroy {
       this._header = f;
       this.examTime = f.time || 30;
     }
-  };
-  _status: number//1 配置中，2 考試前，3 考試中，4.考試后
+  }
+  _status: number; // 1 配置中，2 考試前，3 考試中，4.考試后
 
   @Input()
   set status(s) {
@@ -36,7 +36,7 @@ export class ExamPaperComponent implements OnInit, OnDestroy {
       this.checkLeftTime();
     } else if (s === 4) {
       this.showResult();
-      clearTimeout(this.timeEvent)
+      clearTimeout(this.timeEvent);
     }
   }
   get status() {
@@ -52,8 +52,8 @@ export class ExamPaperComponent implements OnInit, OnDestroy {
   subTitlePrefixs = ['一', '二', '三', '四'];
   markSets: any = {};
   timeEvent;
-  timeEvent2
-  myForm: FormGroup
+  timeEvent2;
+  myForm: FormGroup;
 
   @Output() getResult = new EventEmitter();
   lastMark;
@@ -65,11 +65,11 @@ export class ExamPaperComponent implements OnInit, OnDestroy {
       this.status = 1;
       this.opts.afterDataInit(() => {
         transform();
-      })
+      });
       const transform = () => {
         const data = this.opts.tableData.data;
         this.alterContent(data);
-      }
+      };
       transform();
     } else {
       this.status = 2;
@@ -77,7 +77,7 @@ export class ExamPaperComponent implements OnInit, OnDestroy {
         this.alterContent(this.content);
         setTimeout(() => {
           this.beginTime = new Date();
-          this.status = 3
+          this.status = 3;
         }, 2000);
       }
     }
@@ -93,7 +93,7 @@ export class ExamPaperComponent implements OnInit, OnDestroy {
     const form: any = {};
     q.forEach(c => {
       form[c.ID] = [''];
-    })
+    });
     this.myForm = this.fb.group(form);
   }
 
@@ -104,7 +104,7 @@ export class ExamPaperComponent implements OnInit, OnDestroy {
           const out: any = {};
           d.forEach(c => {
             out[c.property] = c.value;
-          })
+          });
           return out;
         }
         return d;
@@ -121,10 +121,10 @@ export class ExamPaperComponent implements OnInit, OnDestroy {
         this.markSets[name] = { total: 0, average: 0 };
         this[name + 'List'].forEach(c => {
           this.markSets[name]['total'] += c.SCORE || 0;
-        })
+        });
         this.markSets[name]['average'] = Math.round(this.markSets[name]['total'] / this[name + 'List'].length);
       }
-    }
+    };
     this.TFList = allQ.filter(a => a.TYPE === 'TF');
     alter('TF');
     this.radioList = allQ.filter(a => a.TYPE === 'RADIO').map(c => {
@@ -133,7 +133,8 @@ export class ExamPaperComponent implements OnInit, OnDestroy {
         const pre = 'OPTION_';
         ['A', 'B', 'C', 'D', 'E'].forEach(b => {
           const val = c[pre + b];
-          val && c.optionList.push([b, b+'、 '+ val]);
+          // tslint:disable-next-line:no-unused-expression
+          val && c.optionList.push([b, b + '、 ' + val]);
         });
       }
       return c;
@@ -145,7 +146,8 @@ export class ExamPaperComponent implements OnInit, OnDestroy {
         const pre = 'OPTION_';
         ['A', 'B', 'C', 'D', 'E'].forEach(b => {
           const val = c[pre + b];
-          val && c.optionList.push({ label: b+'、 '+ val, value: b, checked: false });
+          // tslint:disable-next-line:no-unused-expression
+          val && c.optionList.push({ label: b + '、 ' + val, value: b, checked: false });
         });
       }
       return c;
@@ -154,23 +156,25 @@ export class ExamPaperComponent implements OnInit, OnDestroy {
   }
 
   keepLogin() {
-    if(this.status === 3) {
+    if (this.status === 3) {
       this.auth.updateToken();
     }
-    this.timeEvent2 = setTimeout(() => this.keepLogin(), 60*1000);
+    this.timeEvent2 = setTimeout(() => this.keepLogin(), 60 * 1000);
   }
 
   checkLeftTime() {
     const past = new Date().getTime() - this.beginTime.getTime();
     const left = this.examTime * 60 * 1000 - past;
     if (left >= 0) {
+      // tslint:disable-next-line:no-bitwise
       const minute = ~~(left / (1000 * 60));
       const minuteString = minute < 10 ? '0' + minute : minute;
+      // tslint:disable-next-line:no-bitwise
       const second = ~~((left - minute * 1000 * 60) / 1000);
       const secondString = second < 10 ? '0' + second : second;
       this.leftTime = `${minuteString}:${secondString}`;
       this.timeEvent = setTimeout(() => this.checkLeftTime(), 1000);
-    }else {
+    } else {
       this.finish();
       this.confirmServ.info({
         title: '考試時間結束',
@@ -183,29 +187,29 @@ export class ExamPaperComponent implements OnInit, OnDestroy {
     const val = this.myForm.value;
     this.lastMark = 0;
     const answerList = this.content.map(c => {
-      if(c.TYPE === 'CHECKBOX') {
+      if (c.TYPE === 'CHECKBOX') {
         const yourAnswer = val[c.ID] || '';
         const trueAnswer = c.RIGHT_ANSWER || '';
         const list1 = yourAnswer.split(',') || [];
         const list2 = trueAnswer.split(',') || [];
-        if(list1.length === list2.length) {
-          if(new Set([...list1,...list2]).size === list2.length) {
+        if (list1.length === list2.length) {
+          if (new Set([...list1, ...list2]).size === list2.length) {
             this.lastMark += +c.SCORE || 0;
           }
         }
-      }else if (c.RIGHT_ANSWER === val[c.ID]) {
+      } else if (c.RIGHT_ANSWER === val[c.ID]) {
         this.lastMark += +c.SCORE || 0;
       }
       return {
         EXAM_ID: c.EXAM_ID,
         QUESTION_ID: c.QUESTION_ID,
         ANSWERS: val[c.ID]
-      }
-    })
+      };
+    });
     this.getResult.emit({
       answerList,
       lastMark: this.lastMark
-    })
+    });
   }
 
   showResult() {
@@ -220,7 +224,7 @@ export class ExamPaperComponent implements OnInit, OnDestroy {
       });
       this.alterContent(this.content);
       setTimeout(() => {
-        if(this.lastMark < this._header.passScore) {
+        if (this.lastMark < this._header.passScore) {
           this.confirmServ.error({
             title: `最後得分:  ${this.lastMark}`,
             content: '考試不及格'

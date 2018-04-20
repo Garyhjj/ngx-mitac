@@ -1,1 +1,1 @@
-export * from './breadcrumb.action'
+export * from './breadcrumb.action';

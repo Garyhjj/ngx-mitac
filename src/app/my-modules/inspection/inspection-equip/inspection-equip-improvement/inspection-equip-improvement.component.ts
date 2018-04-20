@@ -17,13 +17,13 @@ export class InspectionEquipImprovementComponent implements OnInit {
   getDataDrive(d: DataDrive) {
 
     d.onUpdateFormShow((fg) => {
-      fg.get('ACTION_DATE').setValue(moment(new Date()).format('YYYY-MM-DD'))
+      fg.get('ACTION_DATE').setValue(moment(new Date()).format('YYYY-MM-DD'));
     });
 
     d.onUpdateData((data) => {
       data.PROBLEM_STATUS = 'Done';
       return data;
-    })
+    });
   }
 
 }

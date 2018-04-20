@@ -19,9 +19,9 @@ export class DataDriveSettingService {
     }
 
     uploadSetting(d) {
-        if(typeof d !== 'object') throw new Error('API參數不對')
-        const send:any = {};
-        send.ID = d.id>0? d.id: 0;
+        if (typeof d !== 'object') { throw new Error('API參數不對'); }
+        const send: any = {};
+        send.ID = d.id > 0 ? d.id : 0;
         send.TABLE_DATA = stringify(d.tableData);
         delete d.tableData;
         send.UPDATE_SETS = stringify(d.updateSets);
@@ -33,9 +33,11 @@ export class DataDriveSettingService {
         delete d.description;
         send.MAIN_SET = stringify(d);
         for (let prop in send) {
-            const value = send[prop];
-            if (value === '' || value === void (0) || value === null) {
-              delete send[prop]
+            if (send.hasOwnProperty(prop)) {
+                const value = send[prop];
+                if (value === '' || value === void (0) || value === null) {
+                    delete send[prop];
+                }
             }
         }
         return this.http.post(DataDriveSettingConfig.uploadSetting, send);

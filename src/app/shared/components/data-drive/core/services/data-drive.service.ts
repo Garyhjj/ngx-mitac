@@ -1,7 +1,7 @@
 import { isArray, parse } from './../../../../utils/index';
 import { Observable } from 'rxjs/Observable';
 import { AuthService } from './../../../../../core/services/auth.service';
-import { myStore, UserState } from './../../../../../core/store';
+import { MyStore, UserState } from './../../../../../core/store';
 import { DataDrive } from './../../shared/models/index';
 import { APPConfig } from './../../../../config/app.config';
 import { HttpClient } from '@angular/common/http';
@@ -24,10 +24,11 @@ export class DataDriveService {
 
     async initDataDrive(name: string) {
         let pureOption = this.getDriveOption(name);
+        // tslint:disable-next-line:no-unused-expression
         typeof pureOption === 'object' && (pureOption = JSON.parse(JSON.stringify(pureOption)));
         let userName = this.user ? this.user.USER_NAME : '';
         if (typeof pureOption === 'number') {
-            pureOption = await this.getSettingByNet(pureOption).toPromise().catch((err) => {this.utilSerive.errDeal(err)});
+            pureOption = await this.getSettingByNet(pureOption).toPromise().catch((err) => { this.utilSerive.errDeal(err); });
             pureOption = pureOption || '';
         }
         if (typeof pureOption === 'object') {
@@ -38,23 +39,23 @@ export class DataDriveService {
     }
 
     getSettingByNet(id) {
-        return this.http.get(replaceQuery(DataDriveSettingConfig.getSetting,{id})).map((d: any[]) => {
-            if(isArray(d) && d.length === 1) {
-                const opts:any = {};
+        return this.http.get(replaceQuery(DataDriveSettingConfig.getSetting, { id })).map((d: any[]) => {
+            if (isArray(d) && d.length === 1) {
+                const opts: any = {};
                 const target = d[0];
                 opts.tableData = parse(target.TABLE_DATA);
                 opts.updateSets = parse(target.UPDATE_SETS);
                 opts.searchSets = parse(target.SEARCH_SETS);
-                if(target.MAIN_SET) {
+                if (target.MAIN_SET) {
                     Object.assign(opts, parse(target.MAIN_SET));
                 }
                 opts.id = target.ID;
                 opts.description = target.DESCRIPTION;
                 return opts;
-            }else {
+            } else {
                 return null;
             }
-        })
+        });
     }
 
     getInitData(dataDrive: DataDrive) {
@@ -62,9 +63,13 @@ export class DataDriveService {
     }
 
     searchData(dataDrive: DataDrive, params: any = {}) {
+        const newSearchWay = dataDrive.runChangeSearchWay(params) as Observable<any>;
+        if (newSearchWay instanceof Observable) {
+            return newSearchWay;
+        }
         if (Object.keys(params).length === 0) {
-            params = dataDrive.lastestSearchParams? dataDrive.lastestSearchParams: {};
-        }else {
+            params = dataDrive.lastestSearchParams ? dataDrive.lastestSearchParams : {};
+        } else {
             dataDrive.lastestSearchParams = params;
         }
         const isCompanyLimited = dataDrive.isCompanyLimited() as any;
@@ -78,16 +83,18 @@ export class DataDriveService {
         return this.http.get(replaceQuery(APPConfig.baseUrl + dataDrive.APIs.search, params, this.user));
     }
     bindUserMesFordefaultSearchParams(p) {
-        for(const prop in p) {
-            const val = p[prop];
-            if(typeof val ==='string') {
-                p[prop] = replaceQuery(p[prop], this.user)
+        for (const prop in p) {
+            if (p.hasOwnProperty(prop)) {
+                const val = p[prop];
+                if (typeof val === 'string') {
+                    p[prop] = replaceQuery(p[prop], this.user);
+                }
             }
         }
         return p;
     }
     getDriveOption(name: string) {
-        if(typeof name === 'object') {
+        if (typeof name === 'object') {
             return name;
         }
         return DataDriveStore[name];
@@ -95,7 +102,7 @@ export class DataDriveService {
     updateViewData(dataDrive: DataDrive) {
         this.getInitData(dataDrive).subscribe((c: any[]) => {
             this.initTableData(dataDrive, c);
-        });
+        }, (err) => this.utilSerive.errDeal(err));
     }
 
     initTableData(dataDrive: DataDrive, ds: any[]) {
@@ -135,7 +142,7 @@ export class DataDriveService {
             ds = this.addCompanyID(ds, isCompanyLimited);
         }
         const newUpdateWay = dataDrive.runChangeUpdateWay(ds) as Observable<any>;
-        if(newUpdateWay instanceof Observable) {
+        if (newUpdateWay instanceof Observable) {
             return newUpdateWay;
         }
         if (!dataDrive.APIs || !dataDrive.APIs.update) {
@@ -153,11 +160,11 @@ export class DataDriveService {
         const out: any = {};
         ds.forEach(d => {
             out[d.property] = d.value;
-        })
+        });
         return this.http.delete(replaceQuery(APPConfig.baseUrl + url, out, this.user));
     }
     toExcel(dataDrive: DataDrive) {
-        if (!dataDrive) return;
+        if (!dataDrive) { return; }
         const tableData = dataDrive.tableData;
         const dataViewSet = dataDrive.dataViewSet;
         const name = (dataViewSet && dataViewSet.title) || 'default';
@@ -171,12 +178,12 @@ export class DataDriveService {
         if (data && data.length > 0) {
             excelData = data.map(c => c.filter(s => !s.hide).map(d => d.value));
         }
-        this.utilSerive.toExcel(name, excelHeader, excelData)
+        this.utilSerive.toExcel(name, excelHeader, excelData);
     }
 
     addCompanyID(send: any, otherName: string) {
         if (typeof send === 'object' && this.user) {
-            const name = typeof otherName === 'string' ? otherName : 'company_id'
+            const name = typeof otherName === 'string' ? otherName : 'company_id';
             const out = Object.assign({}, send, { [name]: this.user.COMPANY_ID });
             return out;
         } else {
@@ -185,10 +192,10 @@ export class DataDriveService {
     }
 
     lazyLoad(api: string) {
-        if(!api) {
+        if (!api) {
             throw new Error('無API');
         }
-        return this.http.get(replaceQuery((api.indexOf('https:') > -1|| api.indexOf('http:')> -1)?api:APPConfig.baseUrl + api,{}, this.user));
+        return this.http.get(replaceQuery((api.indexOf('https:') > -1 || api.indexOf('http:') > -1) ? api : APPConfig.baseUrl + api, {}, this.user));
     }
 
 }

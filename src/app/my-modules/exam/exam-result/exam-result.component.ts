@@ -11,7 +11,7 @@ import { isArray } from '../../../shared/utils/index';
 })
 export class ExamResultComponent implements OnInit {
 
-  dataDrive: DataDrive
+  dataDrive: DataDrive;
   user = this.auth.user;
   constructor(
     private examService: ExamService,
@@ -27,12 +27,12 @@ export class ExamResultComponent implements OnInit {
   }
 
   alterDriveByRole() {
-    if(this.examService.role === 2) {
-      this.dataDrive.beforeInitTableData(data =>{
-        if(isArray(data)) {
-        return data.filter(d => d.ASSISTANT === this.auth.user.EMPNO);
+    if (this.examService.role === 2) {
+      this.dataDrive.beforeInitTableData(data => {
+        if (isArray(data)) {
+          return data.filter(d => d.ASSISTANT === this.auth.user.EMPNO);
         }
-      })
+      });
     }
   }
 

@@ -1,0 +1,177 @@
+<div class="container">
+  <nz-content style="background:#fff; padding: 3px;height:100%">
+    <!-- 搜索框栏 -->
+    <div class="fliter-container">
+      <div class="left-container" *ngIf="!notShowSearchInput && dataDrive.tableData">
+        <nz-input [(ngModel)]="filterValue" style="width:350px" [nzPlaceHolder]="selectedOption?.placeHolder | sgChineseConv" *ngIf="dataDrive.tableData.searchable && optionList && optionList.length >0"
+          [disabled]="!validateForm.valid">
+          <ng-template #addOnBefore>
+            <nz-select style="width: 80px;" [(ngModel)]="selectedOption">
+              <nz-option *ngFor="let option of optionList" [nzLabel]="option.label | sgChineseConv" [nzValue]="option">
+              </nz-option>
+            </nz-select>
+          </ng-template>
+          <ng-template #addOnAfter>
+            <!-- <button [disabled]="!validateForm.valid" (click)="clickSimpleSearch('simple')">
+                            <i class="anticon anticon-search"></i>
+                        </button> -->
+            <i class="anticon anticon-search" (click)="clickSimpleSearch('simple')"></i>
+          </ng-template>
+        </nz-input>
+        <div class="new-button" *ngIf="dataDrive.additionalFn?.addItem">
+          <button nz-button [nzType]="'primary'" (click)="addItem()">
+            {{'newData' | translate}}
+          </button>
+        </div>
+      </div>
+      <div class="right-controler">
+        <a class="high-level-search" (click)="toggle()" *ngIf="!show && dataDrive.tableData  && dataDrive.tableData.searchable && dataDrive?.searchSets && dataDrive?.searchSets.length > 0">{{'queryDetailPra' | translate}}</a>
+        <a class="high-level-search" (click)="toggle()" *ngIf="show">{{'queryPra' | translate}}</a>
+        <nz-tooltip [nzTitle]="'downloadExcelFile' | translate" [nzPlacement]="'top'">
+          <a nz-tooltip>
+            <button nz-button [nzType]="'default'" (click)="toExcel()" *ngIf="dataDrive.additionalFn?.toExcel">
+              <i class="anticon anticon-download"></i>
+            </button>
+          </a>
+        </nz-tooltip>
+
+        <nz-tooltip [nzTitle]="'pickColumn' | translate" [nzPlacement]="'top'">
+          <a nz-tooltip>
+            <button nz-button [nzType]="'default'" (click)="showModalTop()" *ngIf="dataDrive.additionalFn?.filterColumn">
+              <i class="anticon anticon-setting"></i>
+            </button>
+          </a>
+        </nz-tooltip>
+
+        <nz-tooltip [nzTitle]="'fullScreen' | translate" [nzPlacement]="'top'">
+          <a nz-tooltip>
+            <button nz-button [nzType]="'default'" (click)="showModal()" *ngIf="dataDrive.additionalFn?.fullScreen">
+              <i class="anticon anticon-arrows-alt"></i>
+            </button>
+          </a>
+        </nz-tooltip>
+
+        <nz-tooltip [nzTitle]="'viewType' | translate" [nzPlacement]="'top'">
+          <a nz-tooltip>
+            <button nz-button [nzType]="'default'" (click)="switchViewType(dataDrive.additionalFn.switchViewType)" *ngIf="dataDrive.additionalFn?.switchViewType">
+              <i class="anticon anticon-laptop"></i>
+            </button>
+          </a>
+        </nz-tooltip>
+
+        <nz-tooltip [nzTitle]="'changeTableFontSize' | translate" [nzPlacement]="'top'">
+          <a nz-tooltip>
+            <button nz-button [nzType]="'default'" (click)="openFontSizeModal()" *ngIf="dataDrive.additionalFn?.changeHeaderFontSize">
+              <i class="anticon anticon-info"></i>
+            </button>
+          </a>
+        </nz-tooltip>
+      </div>
+    </div>
+    <!-- End 搜索框栏 -->
+    <!-- 检索项 -->
+    <div class="filter" *ngIf="tagList && tagList.length >0">
+      <i class="anticon anticon-filter" style="margin-right:10px"></i>
+      <span style="margin-right:10px">{{'queryItem' | translate}}:</span>
+      <span>
+        <nz-tag nzClosable (nzClose)="onCloseTag(tag,'simple')" *ngFor="let tag of tagList">{{tag.label | sgChineseConv}}</nz-tag>
+      </span>
+      <span style="margin-right:10px;cursor:pointer;" *ngIf="tagList && tagList.length >0" (click)="clearAllFilter('simple')">{{'clear' | translate}}</span>
+    </div>
+    <!-- End 检索项 -->
+
+    <!-- 高级搜索框 -->
+    <div class="high-level-search-contianer" [style.display]="show ?'block':'none'">
+      <form nz-form [formGroup]="validateForm" class="ant-advanced-search-form">
+        <div nz-row [nzGutter]="40">
+          <div nz-col [nzSpan]="8" *ngFor="let item of columnNameStrings;let i =index">
+            <div nz-form-item nz-row>
+              <div nz-form-label nz-col [nzSpan]="5">
+                <label [attr.for]="inputTypeList[i].label">{{inputTypeList[i].label}}</label>
+              </div>
+              <div nz-form-control nz-col [nzSpan]="19">
+                <!-- <nz-input [nzSize]="'large'" [nzPlaceHolder]="inputTypeList[i].placeHolder" [formControlName]="item" [nzId]="i"></nz-input> -->
+                <nz-input [formControlName]="item" [nzPlaceHolder]="inputTypeList[i].placeHolder" [nzSize]="'large'" *ngIf="inputTypeList[i]?.type === 'text'">
+                </nz-input>
+
+                <nz-input [formControlName]="item" [nzPlaceHolder]="inputTypeList[i].placeHolder" *ngIf="inputTypeList[i]?.type === 'textarea'"
+                  nzType="textarea" [nzAutosize]="'1'"></nz-input>
+
+
+
+                <app-my-select [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'select'" [myPlaceHolder]="inputTypeList[i].placeHolder"
+                  [options]="inputTypeList[i]?.more?.options" [lazyAPI]="inputTypeList[i]?.more?.lazyAPI" [lazyParams]="inputTypeList[i]?.more?.lazyParams"
+                  [lazyAPIUserMes]="inputTypeList[i]?.more?.lazyAPIUserMes" [label]="inputTypeList[i].label" (emitSelectList)="getSelectList($event)"></app-my-select>
+
+                <!-- <app-my-select [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'select'" [allOptions]="inputTypeList[i]"></app-my-select> -->
+
+
+                <app-my-date-picker [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'datePicker'" [myPickerFormat]="inputTypeList[i].more?.pickerFormat"
+                  [myFormat]="inputTypeList[i].more?.showFormat" [myShowTime]="inputTypeList[i].more?.showTime" [myPlaceHolder]="inputTypeList[i].placeHolder"
+                  [myMode]="inputTypeList[i].more?.showMode"></app-my-date-picker>
+
+
+                <app-my-time-picker [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'timePicker'" [myPickerFormat]="inputTypeList[i].more?.pickerFormat"
+                  [myFormat]="inputTypeList[i].more?.showFormat" [myPlaceHolder]="inputTypeList[i].placeHolder">
+                </app-my-time-picker>
+
+                <nz-input-number [formControlName]="item" [nzSize]="'large'" [nzStep]="inputTypeList[i].more?.step" [nzMax]="inputTypeList[i].more?.max"
+                  [nzMin]="inputTypeList[i].more?.min" [style.width]="'50%'" *ngIf="inputTypeList[i]?.type === 'number'"></nz-input-number>
+
+                <app-my-cascader [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'cascader'" [myPlaceHolder]="inputTypeList[i].placeHolder"
+                  [myOptions]="inputTypeList[i].more?.options" [myCascaderLazySets]="inputTypeList[i].more?.cascaderLazySets"
+                  [myProperties]="inputTypeList[i].more?.properties"></app-my-cascader>
+
+                <app-my-switch [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'switch'" [myTrueFormat]="inputTypeList[i]?.trueFormat"
+                  [myFalseFormat]="inputTypeList[i]?.falseFormat"></app-my-switch>
+
+                <app-colleague-searcher [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'colleagueSearcher'"></app-colleague-searcher>
+
+                <app-photo-upload [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'photoUpload'" [pickerFormat]="inputTypeList[i]?.more?.pickerFormat"
+                  [maxCount]="inputTypeList[i]?.more?.maxCount" [removable]="inputTypeList[i]?.more?.removable" [addable]="inputTypeList[i]?.more?.addable"
+                  [scanable]="inputTypeList[i]?.more?.scanable"></app-photo-upload>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col [nzSpan]="24" style="text-align: right;">
+            <button nz-button [nzType]="'primary'" [disabled]="!validateForm.valid" (click)="submitForm('high-level')">{{'query' | translate}}</button>
+            <button nz-button (click)="reSet()">{{'reset' | translate}}</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <!-- End 高级搜索框 -->
+    <!-- Modal -->
+    <app-filter-column-flex [isVisible]="isVisible" [opts]="dataDrive" (closed)="closeModal()"></app-filter-column-flex>
+    <!-- End Modal -->
+
+    <!-- 调整表格字体大小 -->
+    <nz-modal [nzVisible]="showFontSizeModal" [nzContent]="modalContent1" [nzFooter]="footer" [nzTitle]="'changeTableFontSize' | translate"
+      (nzOnCancel)="closeFontSizeModal()">
+      <ng-template #modalContent1>
+        <nz-row [nzType]="'flex'" [nzJustify]="'start'" style="margin-bottom: 20px;" *ngIf="dataDrive.additionalFn?.changeHeaderFontSize">
+          <div nz-col class="flex-center">
+            <div>{{'headerFontSize' | translate}}</div>
+          </div>
+          <nz-slider nz-col [nzMin]="10" [nzMax]="60" [nzSpan]="12" [(ngModel)]="headerFontSize" (nzOnAfterChange)="changeHeaderSize()"></nz-slider>
+        </nz-row>
+        <nz-row [nzType]="'flex'" [nzJustify]="'start'" *ngIf="dataDrive.additionalFn?.changeBodyFontSize">
+          <div nz-col class="flex-center">
+            <div>{{'dataFontSize' | translate}}</div>
+          </div>
+          <nz-slider nz-col [nzMin]="10" [nzMax]="60" [nzSpan]="12" [(ngModel)]="bodyFontSize" (nzOnAfterChange)="changeBodySize()"></nz-slider>
+        </nz-row>
+      </ng-template>
+      <ng-template #footer>
+        <div>
+          <button nz-button [nzType]="'primary'" (click)="closeFontSizeModal()">
+            {{'confirm' | translate}}
+          </button>
+        </div>
+      </ng-template>
+    </nz-modal>
+    <!-- End 调整表格字体大小 -->
+  </nz-content>
+</div>

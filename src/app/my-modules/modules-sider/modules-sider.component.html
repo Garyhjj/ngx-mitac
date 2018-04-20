@@ -11,57 +11,57 @@
   <li nz-submenu nzOpen>
     <span title>
       <i class="anticon anticon-file-pdf"></i>
-      <span class="nav-text">看板</span>
+      <span class="nav-text">{{'board' | translate}}</span>
     </span>
     <ul>
-      <li nz-menu-item data-route="/board/urgentMaterial">急料看板</li>
-      <li nz-menu-item data-route="/board/urgentNo">急料工單看板</li>
-      <li nz-menu-item data-route="/board/esd">門禁狀況</li>
+      <li nz-menu-item data-route="/board/urgentMaterial">{{'urgentMaterialBoard' | translate}}</li>
+      <li nz-menu-item data-route="/board/urgentNo">{{'urgentNoBoard' | translate}}</li>
+      <li nz-menu-item data-route="/board/esd">{{'esd' | translate}}</li>
     </ul>
   </li>
   <li nz-submenu *ngIf="canSeeModule(26025)">
     <span title>
       <i class="anticon anticon-file-pdf"></i>
-      <span class="nav-text">訓練考試</span>
+      <span class="nav-text">{{'exam' | translate}}</span>
     </span>
     <ul>
-      <li nz-menu-item data-route="/exam/question">考試題目</li>
-      <li nz-menu-item data-route="/exam/unit">考卷維護</li>
-      <li nz-menu-item data-route="/exam/result">考試結果</li>
+      <li nz-menu-item data-route="/exam/question">{{'question' | translate}}</li>
+      <li nz-menu-item data-route="/exam/unit">{{'unit' | translate}}</li>
+      <li nz-menu-item data-route="/exam/result">{{'examResult' | translate}}</li>
     </ul>
   </li>
   <li nz-submenu *ngIf="canSeeModule(61)">
     <span title>
       <i class="anticon anticon-search"></i>
-      <span class="nav-text">巡检</span>
+      <span class="nav-text">{{'inspection' | translate}}</span>
     </span>
     <ul>
       <li nz-submenu *ngIf="canSeeFunction(161)">
-        <span title>基本設置</span>
+        <span title>{{'baseSetting' | translate}}</span>
         <ul>
-          <li nz-menu-item data-route="/inspection/basic/name">巡檢名稱</li>
+          <li nz-menu-item data-route="/inspection/basic/name">{{'inspectionName' | translate}}</li>
         </ul>
       </li>
       <li nz-submenu *ngIf="canSeeFunction(5)">
-        <span title>主管巡检</span>
+        <span title>{{'bossInspection' | translate}}</span>
         <ul>
-          <li nz-menu-item data-route="/inspection/boss/schedule" *ngIf="canSeeFunction(124)">排班</li>
-          <li nz-menu-item data-route="/inspection/boss/report">巡检报告</li>
-          <li nz-menu-item data-route="/inspection/boss/improvement">改善措施</li>
-          <li nz-menu-item data-route="/inspection/boss/lines" *ngIf="canSeeFunction(103)">问题追踪</li>
-          <li nz-menu-item data-route="/inspection/boss/attendance" *ngIf="canSeeFunction(163)">考勤記錄</li>
-          <li nz-menu-item data-route="/inspection/boss/comment" *ngIf="canSeeFunction(164)">巡檢報告評分</li>
+          <li nz-menu-item data-route="/inspection/boss/schedule" *ngIf="canSeeFunction(124)">{{'schedule' | translate}}</li>
+          <li nz-menu-item data-route="/inspection/boss/report">{{'inspectionReport' | translate}}</li>
+          <li nz-menu-item data-route="/inspection/boss/improvement">{{'improvement' | translate}}</li>
+          <li nz-menu-item data-route="/inspection/boss/lines" *ngIf="canSeeFunction(103)">{{'problemResult' | translate}}</li>
+          <li nz-menu-item data-route="/inspection/boss/attendance" *ngIf="canSeeFunction(163)">{{'attendance' | translate}}</li>
+          <li nz-menu-item data-route="/inspection/boss/comment" *ngIf="canSeeFunction(164)">{{'inspectionReportScore' | translate}}</li>
         </ul>
       </li>
       <li nz-submenu *ngIf="canSeeFunction(5)">
-        <span title>设备巡检</span>
+        <span title>{{'eqInspection' | translate}}</span>
         <ul>
-          <li nz-menu-item data-route="/inspection/equip/list" *ngIf="canSeeFunction(317)">设备登记</li>
-          <li nz-menu-item data-route="/inspection/equip/checkList" *ngIf="canSeeFunction(343)">设备巡检项</li>
-          <li nz-menu-item data-route="/inspection/equip/improvement">改善措施</li>
-          <li nz-menu-item data-route="/inspection/equip/lines" *ngIf="canSeeFunction(343)">问题追踪</li>
-          <li nz-menu-item data-route="/inspection/equip/status" *ngIf="canSeeFunction(343)">巡检完成状况</li>
-          <li nz-menu-item data-route="/inspection/equip/history" *ngIf="canSeeFunction(343)">巡检记录查询</li>
+          <li nz-menu-item data-route="/inspection/equip/list" *ngIf="canSeeFunction(317)">{{'eqRegistry' | translate}}</li>
+          <li nz-menu-item data-route="/inspection/equip/checkList" *ngIf="canSeeFunction(343)">{{'eqCheckList' | translate}}</li>
+          <li nz-menu-item data-route="/inspection/equip/improvement">{{'improvement' | translate}}</li>
+          <li nz-menu-item data-route="/inspection/equip/lines" *ngIf="canSeeFunction(343)">{{'problemResult' | translate}}</li>
+          <li nz-menu-item data-route="/inspection/equip/status" *ngIf="canSeeFunction(343)">{{'eqStatus' | translate}}</li>
+          <li nz-menu-item data-route="/inspection/equip/history" *ngIf="canSeeFunction(343)">{{'eqHistory' | translate}}</li>
         </ul>
       </li>
     </ul>
@@ -70,27 +70,28 @@
   <li nz-submenu *ngIf="canSeeModule(26031)">
     <span title>
       <i class="anticon anticon-search"></i>
-      <span class="nav-text">服務預約</span>
+      <span class="nav-text">{{'service' | translate}}</span>
     </span>
-    <ul>
-      <li nz-submenu *ngIf="canSeeFunction(416)">
-        <span title>基本設置</span>
+    <ul *ngIf="canSeeFunction(416)">
+      <li nz-submenu>
+        <span title>{{'baseSetting' | translate}}</span>
         <ul>
-          <li nz-menu-item data-route="/reservation/basic/department">服務名稱</li>
-          <li nz-menu-item data-route="/reservation/basic/person">服務人員</li>
-          <li nz-menu-item data-route="/reservation/basic/time">服務時間段</li>
-          <li nz-menu-item data-route="/reservation/basic/impression">服務印象设定</li>
-          <li nz-menu-item data-route="/reservation/basic/type">服務種類</li>
+          <li nz-menu-item data-route="/reservation/basic/department">{{'serviceName' | translate}}</li>
+          <li nz-menu-item data-route="/reservation/basic/person">{{'servicePerson' | translate}}</li>
+          <li nz-menu-item data-route="/reservation/basic/time">{{'serviceTime' | translate}}</li>
+          <li nz-menu-item data-route="/reservation/basic/impression">{{'serviceImpression' | translate}}</li>
+          <li nz-menu-item data-route="/reservation/basic/type">{{'serviceType' | translate}}</li>
         </ul>
       </li>
       <li nz-submenu>
-        <span title>IT支援</span>
+        <span title>{{'ITSupport' | translate}}</span>
         <ul>
-          <li nz-menu-item data-route="/reservation/IT/application">服务申请</li>
-          <li nz-menu-item data-route="/reservation/IT/self">个人服务申请记录</li>
-          <li nz-menu-item data-route="/reservation/IT/workspace" *ngIf="canSeeFunction(416)">服务人员工作台</li>
-          <li nz-menu-item data-route="/reservation/IT/rate" *ngIf="canSeeFunction(416)">排行榜</li>
-          <li nz-menu-item data-route="/reservation/IT/track" *ngIf="canSeeFunction(416)">服务追蹤</li>
+          <li nz-menu-item data-route="/reservation/IT/application">{{'serviceApply' | translate}}</li>
+          <li nz-menu-item data-route="/reservation/IT/self">{{'serviceApplyHistory' | translate}}</li>
+          <li nz-menu-item data-route="/reservation/IT/workspace" *ngIf="canSeeFunction(416)">{{'workspace' | translate}}</li>
+          <li nz-menu-item data-route="/reservation/IT/rate" *ngIf="canSeeFunction(416)">{{'rank' | translate}}</li>
+          <li nz-menu-item data-route="/reservation/IT/track" *ngIf="canSeeFunction(416)">{{'serviceTrack' | translate}}</li>
+          <li nz-menu-item data-route="/reservation/IT/board" *ngIf="canSeeFunction(416)">{{'serviceOvertime' | translate}}</li>
         </ul>
       </li>
       <!-- <li nz-submenu *ngIf="canSeeFunction(5)">
@@ -115,6 +116,22 @@
           <li nz-menu-item data-route="/inspection/equip/history" *ngIf="canSeeFunction(343)">巡检记录查询</li>
         </ul>
       </li> -->
+    </ul>
+  </li>
+  <li nz-submenu>
+    <span title>
+      <i class="anticon anticon-file-pdf"></i>
+      <span class="nav-text">{{'report' | translate}}</span>
+    </span>
+    <ul>
+      <li nz-submenu>
+        <span title>Gecko Report</span>
+        <ul>
+          <li nz-menu-item data-route="/report/geckoReport/geckoShipping">Shipping Report</li>
+          <li nz-menu-item data-route="/report/geckoReport/geckoRma">Rma Report</li>
+          <li nz-menu-item data-route="/report/geckoReport/geckoRepair">Repair Report</li>
+        </ul>
+      </li>
     </ul>
   </li>
 </ul>

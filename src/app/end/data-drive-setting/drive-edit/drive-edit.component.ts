@@ -118,7 +118,7 @@ export class DriveEditComponent implements OnInit {
     { property: 'self', value: '页面内自定义' }
   ];
   sortWayOptions = ((d) => {
-    const options = [{ property: '-1', value: '不設置' }];
+    const options = [{ property: '', value: '不設置' }];
     for (const prop in d) {
       if (d.hasOwnProperty(prop)) {
         options.push({ property: prop, value: prop });
@@ -141,7 +141,7 @@ export class DriveEditComponent implements OnInit {
     { property: 'cascader', value: '级联' }
   ];
   pipeOptions = [
-    { property: '-1', value: '不設置' },
+    { property: '', value: '不設置' },
     { property: 'replace', value: '簡單替換' },
     { property: 'lazyLoad', value: '網絡請求后替換' },
     { property: 'date', value: '日期格式化' },
@@ -311,7 +311,8 @@ export class DriveEditComponent implements OnInit {
         editable: [tableData.editable],
         isCompanyLimited: [false],
         stopFirstInit: [tableData.stopFirstInit],
-        defaultSearchParams: [stringify(tableData.defaultSearchParams)],
+        defaultSearchParams: [stringify(tableData.defaultSearchParams), this.validatorExtendService.jsonString()],
+        refreshDataInterval: [tableData.refreshDataInterval],
         columns: new FormArray(columnFormList)
       }),
       updateSets: new FormArray(updateSetsFormList),
@@ -345,8 +346,8 @@ export class DriveEditComponent implements OnInit {
       InputOpts: this.fb.group({
         type: [d.InputOpts && d.InputOpts.type, this.validatorExtendService.required()],
         placeHolder: [d.InputOpts && d.InputOpts.placeHolder],
-        match: [d.InputOpts && d.InputOpts.match && stringify(d.InputOpts.match)],
-        more: [d.InputOpts && d.InputOpts.more && stringify(d.InputOpts.more)]
+        match: [d.InputOpts && d.InputOpts.match && stringify(d.InputOpts.match), this.validatorExtendService.jsonString()],
+        more: [d.InputOpts && d.InputOpts.more && stringify(d.InputOpts.more), this.validatorExtendService.jsonString()]
       })
     });
     const InputOpts = form.get('InputOpts');
@@ -373,9 +374,9 @@ export class DriveEditComponent implements OnInit {
       value: [d.value, this.validatorExtendService.required()],
       typeName: [d.more && d.more.type && d.more.type.name],
       sortByName: [d.more && d.more.sortBy && d.more.sortBy.name],
-      sortByParams: [d.more && d.more.sortBy && stringify(d.more.sortBy.params)],
+      sortByParams: [d.more && d.more.sortBy && stringify(d.more.sortBy.params), this.validatorExtendService.jsonString()],
       pipeName: [d.more && d.more.pipe && d.more.pipe.name],
-      pipeParams: [d.more && d.more.pipe && stringify(d.more.pipe.params)]
+      pipeParams: [d.more && d.more.pipe && stringify(d.more.pipe.params), this.validatorExtendService.jsonString()]
     });
     return form;
   }

@@ -1,7 +1,7 @@
 <nz-tabset [(nzSelectedIndex)]="tabIdx" (nzSelectedIndexChange)="tabChange($event)">
   <nz-tab>
     <ng-template #nzTabHeading>
-      待受理单据
+      {{'serviceModule.waitingToAccept' | translate}}
       <nz-badge [nzCount]="newCount" *ngIf="newCount">
         <ng-template #content>
           &nbsp;&nbsp;
@@ -12,14 +12,14 @@
       <ng-template #actionRef let-data="data">
         <span>
           <span nz-table-divider></span>
-          <a (click)="cancelResvation(data)">取消預約</a>
+          <a (click)="cancelResvation(data)">{{'serviceModule.cancelService' | translate}}</a>
         </span>
       </ng-template>
     </app-data-drive>
   </nz-tab>
   <nz-tab>
     <ng-template #nzTabHeading>
-      进行中单据
+      {{'serviceModule.handling' | translate}}
       <nz-badge [nzCount]="processingCount" *ngIf="processingCount">
         <ng-template #content>
           &nbsp;&nbsp;
@@ -30,14 +30,14 @@
       <ng-template #actionRef let-data="data">
         <span>
           <span nz-table-divider></span>
-          <a (click)="cancelResvation(data)">取消預約</a>
+          <a (click)="cancelResvation(data)">{{'serviceModule.cancelService' | translate}}</a>
         </span>
       </ng-template>
     </app-data-drive>
   </nz-tab>
   <nz-tab>
     <ng-template #nzTabHeading>
-      待评价单据
+      {{'serviceModule.waitingScore' | translate}}
       <nz-badge [nzCount]="commentCount" *ngIf="commentCount">
         <ng-template #content>
           &nbsp;&nbsp;
@@ -47,7 +47,7 @@
     <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive3($event)">
       <ng-template #actionRef let-data="data">
         <span>
-          <a (click)="commentResvation(data)">评价</a>
+          <a (click)="commentResvation(data)">{{'serviceModule.score' | translate}}</a>
         </span>
       </ng-template>
     </app-data-drive>
@@ -55,12 +55,12 @@
 
   <nz-tab>
     <ng-template #nzTabHeading>
-      已结案单据
+      {{'serviceModule.ClosedService' | translate}}
     </ng-template>
     <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive4($event)">
       <ng-template #tableCell let-data="data" let-property="property">
         <button nz-button [nzType]="'primary'" *ngIf="property === impressionName" (click)="showImpressionDetail(data)">
-          <span>查看详细</span>
+          <span>{{'serviceModule.showDetail' | translate}}</span>
         </button>
       </ng-template>
     </app-data-drive>
@@ -91,7 +91,7 @@
 
       <div nz-form-item nz-row>
         <div nz-form-label nz-col [nzSpan]="6">
-          <label>總评分</label>
+          <label>{{'serviceModule.sumScore' | translate}}</label>
         </div>
         <div nz-form-control nz-col [nzSpan]="16" [style.textAlign]="'center'">
           <nz-rate nzAllowHalf formControlName="SCORE"></nz-rate>
@@ -100,7 +100,7 @@
 
       <div nz-form-item nz-row>
         <div nz-form-label nz-col [nzSpan]="6">
-          <label>对Ta的印象</label>
+          <label>{{'serviceModule.yinxiang' | translate}}</label>
         </div>
         <div nz-form-control nz-col [nzSpan]="16">
           <div class="impression-content">
@@ -114,7 +114,7 @@
       </div>
       <div nz-form-item nz-row>
         <div nz-form-label nz-col [nzSpan]="6">
-          <label>评语</label>
+          <label>{{'serviceModule.comment' | translate}}</label>
         </div>
         <div nz-form-control nz-col [nzSpan]="16">
           <nz-input nzType="textarea" [nzAutosize]="'1'" formControlName="USER_COMMENT"></nz-input>
@@ -122,7 +122,7 @@
       </div>
       <div nz-form-item nz-row [style.display]="'block'">
         <button nz-button nz-col [nzOffset]="6" [nzSpan]="12" type="button" [nzType]="'primary'" [nzSize]="'large'" (click)="submitForm()"
-          [disabled]="!myForm.valid">確定</button>
+          [disabled]="!myForm.valid">{{'serviceModule.confirm2' | translate}}</button>
       </div>
     </form>
   </ng-template>

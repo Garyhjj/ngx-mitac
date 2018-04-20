@@ -15,10 +15,10 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 })
 export class MySwitchComponent implements OnInit {
 
-  private propagateChange = (_: any) => { };
   _value: boolean;
   @Input() myTrueFormat: string | number = 'Y';
   @Input() myFalseFormat: string | number = 'N';
+  private propagateChange = (_: any) => { };
 
   constructor() { }
 
@@ -27,22 +27,22 @@ export class MySwitchComponent implements OnInit {
 
   /**
    * 给外部formControl写入数据
-   * 
-   * @param {*} value 
+   *
+   * @param {*} value
    */
   writeValue(value: string | number) {
     if (value === this.myTrueFormat) {
       this._value = true;
     } else {
       this._value = false;
-      setTimeout(() => this.change(this._value),50);
+      setTimeout(() => this.change(this._value), 50);
     }
   }
 
   /**
    * 把外面登记的监测change的函数赋值给this.propagateChange
    * 当内部数据改变时,可使用this.propagateChange(this.imgs)去触发传递出去
-   * @param {*} fn 
+   * @param {*} fn
    */
   registerOnChange(fn: any) {
     this.propagateChange = fn;
@@ -50,7 +50,7 @@ export class MySwitchComponent implements OnInit {
 
   /**
    * 也是一样注册,当 touched 然后调用
-   * @param {*} fn 
+   * @param {*} fn
    */
   registerOnTouched(fn: any) { }
 

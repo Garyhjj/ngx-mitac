@@ -1,0 +1,10 @@
+/* :host ::ng-deep
+.ant-table-content { 
+    overflow: auto!important;
+}
+
+:host ::ng-deep
+.ant-table-body { 
+    width: 2350px; 
+} */
+

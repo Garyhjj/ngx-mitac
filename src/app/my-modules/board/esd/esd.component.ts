@@ -17,23 +17,22 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class EsdComponent implements OnInit, OnDestroy {
 
-  date = moment(new Date()).format('YYYY-MM-DD')
+  date = moment(new Date()).format('YYYY-MM-DD');
 
-  notPassQuantity: number = 0;
-  passQuantity: number = 0;
+  notPassQuantity = 0;
+  passQuantity = 0;
 
-  validateForm: FormGroup
+  validateForm: FormGroup;
 
-  dataDrive: DataDrive
+  dataDrive: DataDrive;
 
   lazyTopAPI = boardConfig.getTopDep.replace(APPConfig.baseUrl, '');
-  
   checkBoxOptions;
 
-  cache:any ={};
+  cache: any = {};
 
   cacheName;
-  targetSubList: string[] =[];
+  targetSubList: string[] = [];
   sub1: Subscription;
   constructor(private boardService: BoardService, private util: UtilService, private fb: FormBuilder) { }
 
@@ -46,6 +45,7 @@ export class EsdComponent implements OnInit, OnDestroy {
     }, (err) => this.util.errDeal(err));
   }
   ngOnDestroy() {
+    // tslint:disable-next-line:no-unused-expression
     this.sub1 && this.sub1.unsubscribe();
   }
 
@@ -53,25 +53,25 @@ export class EsdComponent implements OnInit, OnDestroy {
     this.validateForm.get('top').valueChanges.concatMap(c => {
       this.targetSubList = [];
       this.validateForm.get('sub').setValue('');
-      this.cacheName =c;
-      return this.boardService.getSubDep(c)
+      this.cacheName = c;
+      return this.boardService.getSubDep(c);
     }).subscribe(a => {
       const list = a as any[];
-      if(isArray(list)) {
+      if (isArray(list)) {
         this.checkBoxOptions = list.map(d => {
           this.targetSubList.push(d.CHU_DEPTNO);
-          return { value: d.CHU_NAME, property: d.CHU_DEPTNO};
+          return { value: d.CHU_NAME, property: d.CHU_DEPTNO };
         });
         this.cache[this.cacheName] = this.targetSubList.slice();
       }
-    })
+    });
   }
 
   initForm() {
     this.validateForm = this.fb.group({
       top: [''],
       sub: ['']
-    })
+    });
   }
   getDrive(d: DataDrive) {
     this.dataDrive = d;
@@ -82,31 +82,32 @@ export class EsdComponent implements OnInit, OnDestroy {
   submitForm() {
     const value = this.validateForm.value;
     const list = value['sub'];
-    const top = value['top']
-    if(list) {
+    const top = value['top'];
+    if (list) {
       this.targetSubList = list.split(',');
-    }else {
+    } else {
       this.targetSubList = this.cache[top];
     }
-    if(this.targetSubList && this.targetSubList.length > 0) {
+    if (this.targetSubList && this.targetSubList.length > 0) {
       let req = [];
       this.targetSubList.forEach(s => req.push(this.boardService.getEsdNotPassList(s)));
       Observable.forkJoin(...req).subscribe(res => {
         let all = [];
         res.forEach(r => {
-          if(isArray(r)) {
+          if (isArray(r)) {
             all = all.concat(r);
           }
-        })
+        });
         this.dataDrive.selfUpdateTableData(all);
-      })
-    }else {
-      this.boardService.getEsdNotPassList('').subscribe(d => this.dataDrive.selfUpdateTableData(d))
+      });
+    } else {
+      this.boardService.getEsdNotPassList('').subscribe(d => this.dataDrive.selfUpdateTableData(d));
     }
   }
 
   reSet() {
     this.targetSubList = [];
-    this.validateForm && this.validateForm.reset()
+    // tslint:disable-next-line:no-unused-expression
+    this.validateForm && this.validateForm.reset();
   }
 }

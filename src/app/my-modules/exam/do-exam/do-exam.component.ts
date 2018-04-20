@@ -44,7 +44,7 @@ export class DoExamComponent implements OnInit {
             });
 
           });
-        }else {
+        } else {
           this.confirmServ.error({
             title: '該考卷不可用！',
             content: '請找管理員確認',
@@ -53,7 +53,7 @@ export class DoExamComponent implements OnInit {
             },
           });
         }
-      }, (err) => this.util.errDeal(err))
+      }, (err) => this.util.errDeal(err));
   }
 
 
@@ -61,23 +61,24 @@ export class DoExamComponent implements OnInit {
     answerList: any[],
     lastMark: number
   }) {
-    if(isArray(r.answerList) && r.answerList.length>0) {
+    if (isArray(r.answerList) && r.answerList.length > 0) {
       const exam_id = r.answerList[0].EXAM_ID;
       const header: ExamResult = {
         EXAM_ID: exam_id,
         USER_ID: '',
         RESULT: r.lastMark,
         COMPANY_ID: ''
-      }
+      };
       this.examService.updateExamResult(header).concatMap((id) => {
         const answerList = r.answerList.map(a => {
-          a.RESULT_ID = id
+          a.RESULT_ID = id;
           return a;
-        })
-        return this.examService.updateExamAnswer(answerList)}).subscribe(res => {
+        });
+        return this.examService.updateExamAnswer(answerList);
+      }).subscribe(res => {
         this.status = 4;
-      }, (err) => this.util.errDeal(err))
+      }, (err) => this.util.errDeal(err));
     }
-    
+
   }
 }

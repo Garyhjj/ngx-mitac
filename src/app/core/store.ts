@@ -1,16 +1,16 @@
 import { UserState } from './store';
-export class myStore{
+export class MyStore {
     breadcrumbReducer: BreadcrumbState[];
     userReducer: UserState;
 }
 
-export interface BreadcrumbState{
-    routeName: string,
-    routeUrl: string,
-    active?: boolean
+export interface BreadcrumbState {
+    routeName: string;
+    routeUrl: string;
+    active?: boolean;
 }
 
-export interface UserState{
+export interface UserState {
     AVATAR_URL?: string;
     COMPANY_ID?: string;
     DEPTNO?: string;
@@ -31,16 +31,16 @@ export interface UserState{
 
 
 export interface MyModule {
-    GROUP_ID:number;
-    DISPLAY:'Y' | 'N';
-    GROUP_NAME:string;
-    ICON_URL:string;
-    MODULE_DESCRIPTION:string;
-    MODULE_ID:number;
-    MODULE_NAME:string;
-    TIPS:number;
+    GROUP_ID: number;
+    DISPLAY: 'Y' | 'N';
+    GROUP_NAME: string;
+    ICON_URL: string;
+    MODULE_DESCRIPTION: string;
+    MODULE_ID: number;
+    MODULE_NAME: string;
+    TIPS: number;
 }
 
 export interface Privilege {
-    FUNCTION_ID:number,FUNCTION_NAME:string,FUNCTION_URL:string,ROLE_ID:number,ROLE_NAME:string;
+    FUNCTION_ID: number; FUNCTION_NAME: string; FUNCTION_URL: string; ROLE_ID: number; ROLE_NAME: string;
 }

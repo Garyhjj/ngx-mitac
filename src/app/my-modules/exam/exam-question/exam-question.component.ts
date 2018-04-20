@@ -8,7 +8,7 @@ import { DataDrive } from '../../../shared/components/data-drive/shared/models/i
 })
 export class ExamQuestionComponent implements OnInit {
 
-  dataDrive: DataDrive
+  dataDrive: DataDrive;
 
   constructor() { }
 
@@ -51,7 +51,7 @@ export class ExamQuestionComponent implements OnInit {
           errReset();
         }
       });
-    })
+    });
   }
 
   beforeUpdate() {
@@ -65,7 +65,7 @@ export class ExamQuestionComponent implements OnInit {
         } catch (e) {
 
         }
-        if(['Y', 'N'].indexOf(value['RIGHT_ANSWER']) < 0) {
+        if (['Y', 'N'].indexOf(value['RIGHT_ANSWER']) < 0) {
           sub.next('判斷題答案只能是正確或者錯誤');
           return false;
         }
@@ -97,7 +97,7 @@ export class ExamQuestionComponent implements OnInit {
       }
       sub.next('');
       return true;
-    })
+    });
   }
 
 }

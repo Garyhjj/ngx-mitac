@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { NgxValidatorExtendService } from './../../../../core/services/ngx-validator-extend.service';
 import { Router } from '@angular/router';
 import { ServiceTimeInfo, ReservationApplication } from './../shared/models/index';
@@ -12,6 +13,7 @@ import { AppService } from '../../../../core/services/app.service';
 import { isArray } from '../../../../shared/utils';
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'app-application-IT',
   templateUrl: './application-IT.component.html',
   styleUrls: ['./application-IT.component.css']
@@ -33,6 +35,7 @@ export class ApplicationITComponent implements OnInit {
   selectedTimeId;
   serviceTime;
   selectedTimeMes: ServiceTimeInfo;
+  noServiceText: string;
   constructor(
     private _message: NzMessageService,
     private fb: FormBuilder,
@@ -40,7 +43,8 @@ export class ApplicationITComponent implements OnInit {
     private util: UtilService,
     private router: Router,
     private validatorExtendService: NgxValidatorExtendService,
-    private gbService: AppService
+    private gbService: AppService,
+    private translateService: TranslateService
   ) {
   }
 
@@ -64,14 +68,15 @@ export class ApplicationITComponent implements OnInit {
         let loadingId = this.util.showLoading();
         const final = (id) => {
           this.util.dismissLoading(id);
-        }
+        };
         this.reservationITService.updateService(val).subscribe(res => {
           final(loadingId);
           this.current += 1;
+          this.changeContent();
         }, err => {
           this.util.errDeal(err);
           final(loadingId);
-        })
+        });
       } else {
         this._message.error('操作超時,當前時間已不允許申請該時間段的服務,請返回重新選擇');
 
@@ -113,16 +118,31 @@ export class ApplicationITComponent implements OnInit {
     switch (this.current) {
       case 0: {
         this.selectedDate = '';
-        this.index = 'First-content';
+        this.dateMes = null;
+        const loadingId = this.util.showLoading();
+        const final = () => this.util.dismissLoading(loadingId);
+        this.reservationITService.getServiceDateMes(this.deptId).subscribe((res: any) => {
+          this.dateMes = res;
+          final();
+        }, (err) => {
+          this.util.errDeal(err);
+          final();
+        });
         break;
       }
       case 1: {
-        if (!this.selectedDate) return this.current = 0;
+        if (!this.selectedDate) { return this.current = 0; }
         this.dayInfo = [];
         this.selectedTimeId = 0;
+        const loadingId = this.util.showLoading();
+        const final = () => this.util.dismissLoading(loadingId);
         this.reservationITService.getServiceDayInfo(this.deptId, this.selectedDate).subscribe((c: ServiceTimeInfo[]) => {
           this.dayInfo = c;
-        })
+          final();
+        }, (err) => {
+          this.util.errDeal(err);
+          final();
+        });
         break;
       }
       case 2: {
@@ -136,18 +156,31 @@ export class ApplicationITComponent implements OnInit {
           CONTACT: ['', this.validatorExtendService.required()],
           MOBILE: ['', this.validatorExtendService.required()]
         });
-        this.myForm.get('CONTACT').valueChanges.subscribe(v => {
+        const contactInput = this.myForm.get('CONTACT');
+        contactInput.valueChanges.subscribe(v => {
           this.gbService.getColleague(v).subscribe((cg) => {
             if (isArray(cg) && cg.length === 1) {
               const tar = cg[0];
-              this.myForm.get('MOBILE').setValue(`${tar.TELEPHONE} / ${tar.MOBILE}`);
+              this.myForm.get('MOBILE').setValue((() => {
+                const mobile = tar.MOBILE;
+                const telephone = tar.TELEPHONE;
+                if (mobile && telephone) {
+                  return `${telephone} / ${mobile}`;
+                } else {
+                  return mobile ? mobile : telephone ? telephone : '';
+                }
+              })());
             }
-          })
+          });
         });
+        contactInput.setValue(this.reservationITService.user.EMPNO);
+        break;
+      }
+      case 3: {
+        setTimeout(() => { this.current = 0; this.changeContent(); }, 2500);
         break;
       }
       default: {
-        this.index = 'error';
       }
     }
   }
@@ -157,28 +190,36 @@ export class ApplicationITComponent implements OnInit {
       this.selectedTimeMes = item;
       this.selectedTimeId = item.TIME_ID;
       this.serviceTime = this.selectedDate + ' ' + item.START_TIME + ' ~ ' + item.END_TIME;
+      this.next();
     }
   }
 
   getDetailByDate(date: DayInterface) {
     const target = this.dateMes.find(d => moment(new Date(d.CDATE)).format(this.dateFormat) === moment(date.date).format(this.dateFormat));
-    return target ? target.REMAIN_NUMBER : '無服務';
+    return target ? target.REMAIN_NUMBER : 0;
   }
 
   selectDate(date: DayInterface) {
     if (this.getDetailByDate(date) > 0) {
       this.selectedDate = moment(date.date).format('YYYY-MM-DD');
+      this.next();
     }
   }
 
   async ngOnInit() {
+    this.translateService.get('serviceModule.noService').subscribe((data) => {
+      this.noServiceText = data;
+    });
+
     await this.reservationITService.getITDeptId();
     if (this.reservationITService.deptId > 0) {
       this.deptId = this.reservationITService.deptId;
     } else {
       this.router.navigate(['/modules']);
     }
+    const loadingId = this.util.showLoading();
     let res = await this.reservationITService.getServiceDateMes(this.deptId).toPromise().catch((err) => this.util.errDeal(err));
+    this.util.dismissLoading(loadingId);
     if (Array.isArray(res)) {
       this.dateMes = res;
     }

@@ -18,12 +18,12 @@ export class MyDatePickerComponent implements OnInit {
 
   @Input() myPickerFormat = 'YYYY-MM-DD';
   @Input() myShowTime: string | boolean = false;
-  @Input() myFormat: string = 'YYYY-MM-DD';
-  @Input() myPlaceHolder: string = '請選擇時間';
-  @Input() myMode: string = 'day';
-  private propagateChange = (_: string) => { };
+  @Input() myFormat = 'YYYY-MM-DD';
+  @Input() myPlaceHolder = '請選擇時間';
+  @Input() myMode = 'day';
   _date: Date = null;
   dataString: string;
+  private propagateChange = (_: string) => { };
   constructor() { }
 
   ngOnInit() {
@@ -31,13 +31,13 @@ export class MyDatePickerComponent implements OnInit {
 
   /**
    * 给外部formControl写入数据
-   * 
-   * @param {*} value 
+   *
+   * @param {*} value
    */
   writeValue(value: string) {
     if (value) {
       const date = new Date(value);
-      if(date.toString() !== 'Invalid Date') {
+      if (date.toString() !== 'Invalid Date') {
         this.dataString = value;
         this._date = date;
       }
@@ -47,7 +47,7 @@ export class MyDatePickerComponent implements OnInit {
   /**
    * 把外面登记的监测change的函数赋值给this.propagateChange
    * 当内部数据改变时,可使用this.propagateChange(this.imgs)去触发传递出去
-   * @param {*} fn 
+   * @param {*} fn
    */
   registerOnChange(fn: any) {
     this.propagateChange = fn;
@@ -55,17 +55,17 @@ export class MyDatePickerComponent implements OnInit {
 
   /**
    * 也是一样注册,当 touched 然后调用
-   * @param {*} fn 
+   * @param {*} fn
    */
   registerOnTouched(fn: any) { }
 
   /**
    * 内部更改例子
-   * @param {*} fn 
+   * @param {*} fn
    */
   change(value: Date) {
     this.dataString = value ? moment(value).format(this.myPickerFormat) : '';
-    this.propagateChange(this.dataString)//去触发外部监控的函数
+    this.propagateChange(this.dataString); // 去触发外部监控的函数
   }
 
 }

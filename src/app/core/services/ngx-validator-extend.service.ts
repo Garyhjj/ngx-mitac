@@ -21,19 +21,19 @@ export class NgxValidatorExtendService {
   required(): ValidatorFn | any {
     return (ctrl: AbstractControl) => {
       let value = ctrl.value;
-      return value || value === 0? null : {
+      return value || value === 0 ? null : {
         'required': true
-      }
-    }
+      };
+    };
   }
 
   isNull(): ValidatorFn | any {
     return (ctrl: AbstractControl) => {
       let value = ctrl.value;
-      return !(value || value === 0)? null : {
+      return !(value || value === 0) ? null : {
         'null': true
-      }
-    }
+      };
+    };
   }
 
   /**
@@ -44,7 +44,7 @@ export class NgxValidatorExtendService {
   minLength(num: number): ValidatorFn {
     return (ctrl: AbstractControl) => {
       let value = ctrl.value;
-      if(value === void(0) || value === null) return null;
+      if (value === void (0) || value === null) { return null; }
       value = value + '';
       let valueL = value.length;
       return !value || (valueL >= num) ? null : {
@@ -52,8 +52,8 @@ export class NgxValidatorExtendService {
           'requiredLength': num,
           'actualLength': valueL
         }
-      }
-    }
+      };
+    };
   }
 
   /**
@@ -64,7 +64,7 @@ export class NgxValidatorExtendService {
   maxLength(num: number): ValidatorFn {
     return (ctrl: AbstractControl) => {
       let value = ctrl.value;
-      if(value === void(0) || value === null) return null;
+      if (value === void (0) || value === null) { return null; }
       value = value + '';
       let valueL = value.length;
       return !value || (valueL <= num) ? null : {
@@ -72,8 +72,8 @@ export class NgxValidatorExtendService {
           'requiredLength': num,
           'actualLength': valueL
         }
-      }
-    }
+      };
+    };
   }
 
   /**
@@ -89,8 +89,8 @@ export class NgxValidatorExtendService {
           'requiredValue': num,
           'actualValue': value
         }
-      }
-    }
+      };
+    };
   }
 
   /**
@@ -106,8 +106,8 @@ export class NgxValidatorExtendService {
           'requiredValue': num,
           'actualValue': value
         }
-      }
-    }
+      };
+    };
   }
 
   /**
@@ -119,12 +119,14 @@ export class NgxValidatorExtendService {
     if (bet instanceof Array && bet.length > 1) {
       return (ctrl: AbstractControl) => {
         let value = ctrl.value;
-        if(!value) return null;
+        if (!value) { return null; }
         let valueL = value.length;
-        return !value || (valueL >= bet[0] && valueL <= bet[1]) ? null : { 'betweenLength' :{
-          'requiredLength': bet[0] + '-' + bet[1], 'actualLength': valueL
-        }}
-      }
+        return !value || (valueL >= bet[0] && valueL <= bet[1]) ? null : {
+          'betweenLength': {
+            'requiredLength': bet[0] + '-' + bet[1], 'actualLength': valueL
+          }
+        };
+      };
     } else {
       throw new Error('参数必须是数组类型,并且长度不能小于1');
     }
@@ -141,22 +143,22 @@ export class NgxValidatorExtendService {
       let regx = new RegExp(reg);
       return regx.test(value) ? null : {
         'RegExp': regx.toString()
-      }
-    }
+      };
+    };
   }
 
   /**
    * 检测是否为邮箱
    * @return {ValidatorFn} 验证器
    */
-  email(): ValidatorFn{
+  email(): ValidatorFn {
     return (ctrl: AbstractControl) => {
       let value = ctrl.value;
-      if(!value) return null;
+      if (!value) { return null; }
       return !value || /^([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-]*)*\@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])*/.test(value) ? null : {
         'email': true
-      }
-    }
+      };
+    };
   }
 
   /**
@@ -164,17 +166,17 @@ export class NgxValidatorExtendService {
    * @param  {number}   length 字符长度
    * @return {ValidatorFn}        验证器
    */
-  length(length:number): ValidatorFn {
+  length(length: number): ValidatorFn {
     return (ctrl: AbstractControl) => {
       let value = ctrl.value;
-      if(!value) return null;
+      if (!value) { return null; }
       let valueL = value.length;
       return !value || valueL === Number(length) ? null : {
         'length': {
           'requiredLength': Number(length), 'actualLength': valueL
         }
-      }
-    }
+      };
+    };
   }
 
   /**
@@ -182,14 +184,16 @@ export class NgxValidatorExtendService {
    * @param  {number[]} bet 大小范围
    * @return {ValidatorFn}     验证器
    */
-  between(bet:number[]): ValidatorFn {
+  between(bet: number[]): ValidatorFn {
     if (bet instanceof Array && bet.length > 1) {
       return (ctrl: AbstractControl) => {
         let value = Number(ctrl.value);
-        return !value || (value >= bet[0] && value <= bet[1]) ? null : { 'between' :{
-          'requiredValue': bet[0] + '-' + bet[1], 'actualValue': value
-        }}
-      }
+        return !value || (value >= bet[0] && value <= bet[1]) ? null : {
+          'between': {
+            'requiredValue': bet[0] + '-' + bet[1], 'actualValue': value
+          }
+        };
+      };
     } else {
       throw new Error('参数必须是数组类型,并且长度不能小于1');
     }
@@ -202,11 +206,11 @@ export class NgxValidatorExtendService {
   integer(): ValidatorFn {
     return (ctrl: AbstractControl) => {
       let value = ctrl.value;
-      if(!value) return null;
+      if (!value) { return null; }
       return !value || /^\-?\d+$/.test(value) ? null : {
         'integer': true
-      }
-    }
+      };
+    };
   }
 
   /**
@@ -216,11 +220,11 @@ export class NgxValidatorExtendService {
   number(): ValidatorFn {
     return (ctrl: AbstractControl) => {
       let value = ctrl.value;
-      if(!value) return null;
+      if (!value) { return null; }
       return !value || !isNaN(Number(value)) ? null : {
         'number': true
-      }
-    }
+      };
+    };
   }
 
   /**
@@ -230,11 +234,11 @@ export class NgxValidatorExtendService {
   mobile(): ValidatorFn {
     return (ctrl: AbstractControl) => {
       let value = ctrl.value;
-      if(!value) return null;
+      if (!value) { return null; }
       return !value || /^1\d{10}$/.test(value) ? null : {
         'mobile': true
-      }
-    }
+      };
+    };
   }
 
   /**
@@ -244,11 +248,11 @@ export class NgxValidatorExtendService {
   telephone(): ValidatorFn {
     return (ctrl: AbstractControl) => {
       let value = ctrl.value;
-      if(!value) return null;
+      if (!value) { return null; }
       return !value || /^\d{4}\-\d{8}$/.test(value) ? null : {
         'telephone': true
-      }
-    }
+      };
+    };
   }
 
   /**
@@ -258,11 +262,11 @@ export class NgxValidatorExtendService {
   url(): ValidatorFn {
     return (ctrl: AbstractControl) => {
       let value = ctrl.value;
-      if(!value) return null;
+      if (!value) { return null; }
       return !value || /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/g.test(value) ? null : {
         'url': true
-      }
-    }
+      };
+    };
   }
 
   /**
@@ -270,18 +274,18 @@ export class NgxValidatorExtendService {
    * @param  {string}   name 同级栏位名称
    * @return {ValidatorFn}      验证器
    */
-  equalTo(name:string): ValidatorFn {
+  equalTo(name: string): ValidatorFn {
     return (ctrl: AbstractControl) => {
       let value = ctrl.value;
-      if(!ctrl.parent) return null;
-      if(!ctrl.parent.controls[name]) throw new Error('同级栏位中没有'+ name + '栏位')
-      let anotherVal = ctrl.parent.controls[name].value || null
-      return (anotherVal && value == anotherVal) ? null : {
+      if (!ctrl.parent) { return null; }
+      if (!ctrl.parent.controls[name]) { throw new Error('同级栏位中没有' + name + '栏位'); }
+      let anotherVal = ctrl.parent.controls[name].value || null;
+      return (anotherVal && value === anotherVal) ? null : {
         'equalTo': {
           'target': name
         }
-      }
-    }
+      };
+    };
   }
 
   /**
@@ -289,15 +293,30 @@ export class NgxValidatorExtendService {
    * @param  {number} num   小数位的个数
    * @return {ValidatorFn}     验证器
    */
-  toFix(num:number): ValidatorFn {
+  toFix(num: number): ValidatorFn {
     return (ctrl: AbstractControl) => {
       let value = ctrl.value;
-      if(!value) return null;
-      let reg = '^([\\d]+)(\\.[\\d]{'+Number(num)+'})?$';
+      if (!value) { return null; }
+      let reg = '^([\\d]+)(\\.[\\d]{' + Number(num) + '})?$';
       return new RegExp(reg).test(value) ? null : {
         'toFix': true
       };
-    }
+    };
+  }
+
+  jsonString(): ValidatorFn {
+    return (ctrl: AbstractControl) => {
+      let value = ctrl.value;
+      if (!value) { return null; }
+      try {
+        JSON.parse(value);
+      } catch (e) {
+        return {
+          'jsonString': true
+        };
+      }
+      return null;
+    };
   }
 
   /**
@@ -306,9 +325,9 @@ export class NgxValidatorExtendService {
    * @param  {any}      opt 自定义参数
    * @return {ValidatorFn}     验证器
    */
-  selfDefine(fn:ValidatorFn,opt?:any): ValidatorFn | any {
+  selfDefine(fn: ValidatorFn, opt?: any): ValidatorFn | any {
     return (ctrl: AbstractControl) => {
-      return fn.call(this,ctrl,opt);
-    }
+      return fn.call(this, ctrl, opt);
+    };
   }
 }

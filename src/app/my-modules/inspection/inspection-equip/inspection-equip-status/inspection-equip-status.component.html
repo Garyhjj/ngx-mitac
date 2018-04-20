@@ -1,15 +1,15 @@
 <nz-tabset>
   <nz-tab>
     <ng-template #nzTabHeading>
-      已巡检
+      {{'insoectionModule.haveBeenInspecting' | translate}}
     </ng-template>
-    <app-data-drive [name]= "'inspectionEquipStatus'" (dataDriveInit)="getDataDrive1($event)"></app-data-drive>
+    <app-data-drive [name]="'inspectionEquipStatus'" (dataDriveInit)="getDataDrive1($event)"></app-data-drive>
   </nz-tab>
 
   <nz-tab>
     <ng-template #nzTabHeading>
-      待巡检
+      {{'insoectionModule.toBeInspecting' | translate}}
     </ng-template>
-    <app-data-drive [name]= "'inspectionEquipStatus'" (dataDriveInit)="getDataDrive2($event)"></app-data-drive>
+    <app-data-drive [name]="'inspectionEquipStatus'" (dataDriveInit)="getDataDrive2($event)"></app-data-drive>
   </nz-tab>
 </nz-tabset>

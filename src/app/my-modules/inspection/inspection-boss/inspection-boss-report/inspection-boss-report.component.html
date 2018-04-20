@@ -6,13 +6,13 @@
     <nz-alert [nzType]="'info'" class="header">
       <nz-row alert-body [nzType]="'flex'" [nzJustify]="'space-around'">
         <nz-col>
-          <span>巡檢日期：{{date}}</span>
+          <span>{{'insoectionModule.checkDate' | translate}}：{{date}}</span>
         </nz-col>
         <nz-col>
-          <span>巡檢人員：{{tab.PERSON}}</span>
+          <span>{{'insoectionModule.checkPeople' | translate}}：{{tab.PERSON}}</span>
         </nz-col>
         <nz-col>
-          <span>發現事項：{{issueCount}}</span>
+          <span>{{'insoectionModule.issueCount' | translate}}：{{issueCount}}</span>
         </nz-col>
       </nz-row>
     </nz-alert>

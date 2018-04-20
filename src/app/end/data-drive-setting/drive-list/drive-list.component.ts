@@ -1,5 +1,5 @@
 import { BreadcrumbModel } from './../../../core/models/breadcrumb.model';
-import { myStore } from './../../../core/store';
+import { MyStore } from './../../../core/store';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { DataDrive } from './../../../shared/components/data-drive/shared/models/index';
@@ -14,7 +14,7 @@ export class DriveListComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private store$: Store<myStore>
+    private store$: Store<MyStore>
   ) { }
 
   ngOnInit() {
@@ -22,9 +22,9 @@ export class DriveListComponent implements OnInit {
 
   getDataDrive(d: DataDrive) {
     d.setParamsOut('查看詳細');
-    d.onParamsOut((d) => {
-      let breadcrumbModel = new BreadcrumbModel([['詳細配置'+d.ID], '/end/dataDrive/edit/'+ d.ID, 1]);
-      breadcrumbModel.update(this.store$)
+    d.onParamsOut((ds) => {
+      let breadcrumbModel = new BreadcrumbModel([['詳細配置' + ds.ID], '/end/dataDrive/edit/' + ds.ID, 1]);
+      breadcrumbModel.update(this.store$);
       // this.router.navigate(['/end/dataDrive/edit', d.ID])
     }
     );

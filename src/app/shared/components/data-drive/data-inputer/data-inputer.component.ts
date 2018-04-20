@@ -50,6 +50,6 @@ export class DataInputerComponent implements OnInit {
   }
 
   ngOnInit() {
-    
+
   }
 }

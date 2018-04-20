@@ -1,0 +1,21 @@
+{
+    "menu":"Menu",
+    "queryItem":"Query Items",
+    "queryPra":"Query Parameters",
+    "queryDetailPra":"Query Detail Parameters",
+    "newData":"New Data",
+    "pickColumn":"Pick Column",
+    "fullScreen":"Full Screen",
+    "downloadExcelFile":"Download Excel File",
+    "tableFontSize":"Table Font Size",
+    "viewType":"View Type",
+    "headerFontSize":"Header Font Size",
+    "dataFontSize":"Data Font Size",
+    "all":"All",
+    "query":"Query",
+    "reset":"Reset",
+    "report":"Report",
+    "confirm":"Confirm",
+    "clear":"Clear",
+    "changeTableFontSize": "Change Table Font Size"
+}

@@ -1,13 +1,13 @@
 <nz-tabset [(nzSelectedIndex)]="tabIdx">
   <nz-tab>
     <ng-template #nzTabHeading>
-      小夜班
+      {{'insoectionModule.nightDuty' | translate}}
     </ng-template>
     <app-data-drive [name]="'inspectionScheduleLine'" (dataDriveInit)="getDataDrive2($event)"></app-data-drive>
   </nz-tab>
   <nz-tab>
     <ng-template #nzTabHeading>
-      安全值日官
+      {{'insoectionModule.safeDuty' | translate}}
     </ng-template>
     <app-data-drive [name]="'inspectionScheduleLine'" (dataDriveInit)="getDataDrive3($event)"></app-data-drive>
   </nz-tab>
@@ -19,32 +19,32 @@
   </nz-tab>
 </nz-tabset>
 
-<nz-modal [nzVisible]="isVisible" [nzTitle]="'排班'" [nzContent]="modalContent" [nzFooter]="modalFooter" (nzOnCancel)="isVisible = false">
+<nz-modal [nzVisible]="isVisible" nzTitle="{{'insoectionModule.schedule' | translate}}" [nzContent]="modalContent" [nzFooter]="modalFooter"
+  (nzOnCancel)="isVisible = false">
   <ng-template #modalContent>
     <form nz-form [nzLayout]="formLayout" [formGroup]="scheduleForm" *ngIf="scheduleForm">
       <ng-container *ngIf="tabIdx === 2">
         <div nz-form-item nz-row>
           <div nz-form-label nz-col [nzSpan]="6">
-            <label>*巡檢週次</label>
+            <label>*{{'insoectionModule.inspectionWeek' | translate}}</label>
           </div>
           <div nz-form-control nz-col [nzSpan]="16">
-            <app-mx-select [myPlaceHolder]="'請選擇巡檢週次'" [options]="weekOption"
-              formControlName="SCHEDULE_NAME"></app-mx-select>
+            <app-mx-select myPlaceHolder="{{'insoectionModule.selectInspectionWeek' | translate}}" [options]="weekOption" formControlName="SCHEDULE_NAME"></app-mx-select>
           </div>
         </div>
         <div nz-form-item nz-row>
           <div nz-form-label nz-col [nzSpan]="6">
-            <label>*巡檢區域</label>
+            <label>*{{'insoectionModule.location2' | translate}}</label>
           </div>
           <div nz-form-control nz-col [nzSpan]="16">
-            <app-mx-select [myPlaceHolder]="'請選擇巡檢區域'" [lazyAPI]="'IPQA/GetMRILookup?lookup_type=7S_LOCATION'" [lazyParams]="['LOOKUP_CODE', 'LOOKUP_CODE']"
-              formControlName="AREA"></app-mx-select>
+            <app-mx-select myPlaceHolder="{{'insoectionModule.selectLocation' | translate}}" [lazyAPI]="'IPQA/GetMRILookup?lookup_type=7S_LOCATION'"
+              [lazyParams]="['LOOKUP_CODE', 'LOOKUP_CODE']" formControlName="AREA"></app-mx-select>
           </div>
         </div>
       </ng-container>
       <div nz-form-item nz-row *ngIf="tabIdx !== 2">
         <div nz-form-label nz-col [nzSpan]="6">
-          <label>*值班日期</label>
+          <label>*{{'insoectionModule.dutyDay' | translate}}</label>
         </div>
         <div nz-form-control nz-col [nzSpan]="16">
           <app-my-date-picker formControlName="FROM_DATE"></app-my-date-picker>
@@ -53,7 +53,7 @@
 
       <div nz-form-item nz-row>
         <div nz-form-label nz-col [nzSpan]="6">
-          <label>*開始時間</label>
+          <label>*{{'insoectionModule.startTime' | translate}}</label>
         </div>
         <div nz-form-control nz-col [nzSpan]="16">
           <app-my-time-picker myPickerFormat="HH:mm" myFormat="HH:mm" formControlName="FROM_TIME"></app-my-time-picker>
@@ -62,7 +62,7 @@
 
       <div nz-form-item nz-row>
         <div nz-form-label nz-col [nzSpan]="6">
-          <label>*結束時間</label>
+          <label>*{{'insoectionModule.endTime' | translate}}</label>
         </div>
         <div nz-form-control nz-col [nzSpan]="16">
           <app-my-time-picker myPickerFormat="HH:mm" myFormat="HH:mm" formControlName="TO_TIME"></app-my-time-picker>
@@ -73,7 +73,7 @@
         <ng-container *ngFor="let ctrl of scheduleForm.controls['empnos'].controls; let i = index;">
           <div nz-form-control nz-col [formGroupName]="i">
             <div nz-form-label nz-col [nzSpan]="6">
-              <label>*值班人員{{i+1}}</label>
+              <label>*{{'insoectionModule.inspector' | translate}}{{i+1}}</label>
             </div>
             <div nz-form-control nz-col [nzSpan]="16">
               <app-colleague-searcher style="width: 60%; margin-right:8px;" formControlName="person">
@@ -88,13 +88,14 @@
         <div nz-form-control nz-col [nzOffset]="6">
           <button nz-button [nzType]="'dashed'" [nzSize]="'large'" style="width:60%" (click)="addEmp()">
             <i class="anticon anticon-plus"></i>
-            <span> 增加值班人員</span>
+            <span> {{'insoectionModule.addInspector' | translate}}</span>
           </button>
         </div>
       </div>
 
       <div nz-form-item nz-row [style.display]="'block'">
-        <button nz-button nz-col [nzOffset]="6" [nzSpan]="12" type="submit" [nzType]="'primary'" [nzSize]="'large'" (click)="submitForm()" [disabled]="!scheduleForm.valid">確定</button>
+        <button nz-button nz-col [nzOffset]="6" [nzSpan]="12" type="submit" [nzType]="'primary'" [nzSize]="'large'" (click)="submitForm()"
+          [disabled]="!scheduleForm.valid">{{'confirm' | translate}}</button>
       </div>
     </form>
   </ng-template>

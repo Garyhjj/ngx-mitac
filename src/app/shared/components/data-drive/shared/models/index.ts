@@ -267,6 +267,28 @@ export class DataDrive implements DataDriveOptions {
     }
 
     /**
+     * 改寫默認的搜索方法（使用配置API去搜索）
+     *
+     * @param {((data?: any) => Observable<any>)} cb
+     * @memberof DataDrive
+     */
+    changeSearchWay(cb: (data?: any) => Observable<any>) {
+        if (this.eventsQueue['changeSearchWay']) {
+            this.eventsQueue[0] = cb;
+        } else {
+            this.eventsQueue['changeSearchWay'] = [cb];
+        }
+    }
+
+    runChangeSearchWay(data) {
+        const eventQueue: Array<Function> = this.eventsQueue['changeSearchWay'] || [];
+        if (eventQueue.length > 0) {
+            return eventQueue[0](data);
+        }
+        return false;
+    }
+
+    /**
      * 改寫默認的更新方法（使用配置API去更新）
      *
      * @param {((data: any) => Observable<any> | boolean)} cb

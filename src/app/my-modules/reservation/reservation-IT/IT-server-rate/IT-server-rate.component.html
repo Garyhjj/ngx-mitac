@@ -1,18 +1,20 @@
 <app-data-drive [name]="'reservationServerRate'" (dataDriveInit)="getDataDrive($event)">
   <ng-template #actionRef let-data="data">
-    <span>
-      <a (click)="toRateDetail(data)">更多細節</a>
+    <span *ngIf="data.TOTAL">
+      <a (click)="toRateDetail(data)">{{'serviceModule.moreDetail' | translate}}</a>
     </span>
   </ng-template>
 </app-data-drive>
 
-<nz-modal [nzVisible]="isDetailVisible" [nzTitle]="'細節'" [nzContent]="modalContent" [nzFooter]="modalFooter" (nzOnCancel)="isDetailVisible = false"
-  nzWidth="460px">
+<nz-modal [nzVisible]="isDetailVisible" [nzTitle]="'serviceModule.detail' | translate" [nzContent]="modalContent" [nzFooter]="modalFooter"
+  (nzOnCancel)="isDetailVisible = false" nzWidth="460px">
   <ng-template #modalContent>
     <div class="yinxiang-container">
-      <div class="title">大家對Ta的印象:</div>
+      <div class="title">{{'serviceModule.moreDetail' | translate}}:</div>
       <div class="yinxiang">
-        <div class="yx" *ngFor="let item of yinxiangList">{{item.DESCRIPTION}}</div>
+        <ng-container *ngFor="let item of yinxiangList">
+          <div class="yx" *ngIf="item.QTY > 0">{{item.DESCRIPTION}} {{item.QTY}}</div>
+        </ng-container>
       </div>
     </div>
     <div class="split-block"></div>

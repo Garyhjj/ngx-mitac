@@ -34,37 +34,37 @@
           <li nz-menu-item *ngIf="dataDrive.additionalFn.addItem" (click)="addItem()">
             <span title>
               <i class="anticon anticon-plus-circle-o"></i>
-              <span>新增數據</span>
+              <span>{{'newData' | translate}}</span>
             </span>
           </li>
           <li nz-menu-item *ngIf="dataDrive.additionalFn.filterColumn" (click)="changeMenuDetail('filterColumn')">
             <span title>
               <i class="anticon anticon-plus-circle-o"></i>
-              <span>挑選列</span>
+              <span>{{'pickColumn' | translate}}</span>
             </span>
           </li>
           <li nz-menu-item *ngIf="dataDrive.additionalFn.fullScreen" (click)="showModal()">
             <span title>
               <i class="anticon anticon-play-circle-o"></i>
-              <span>視圖全屏顯示</span>
+              <span>{{'fullScreen' | translate}}</span>
             </span>
           </li>
           <li nz-menu-item *ngIf="dataDrive.additionalFn.toExcel" (click)="toExcel()">
             <span title>
               <i class="anticon anticon-file-excel"></i>
-              <span>導出Excel文件</span>
+              <span>{{'downloadExcelFile' | translate}}</span>
             </span>
           </li>
           <li nz-menu-item *ngIf="dataDrive.additionalFn.changeBodyFontSize || dataDrive.additionalFn.changeHeaderFontSize" (click)="changeMenuDetail('fontSize')">
             <span title>
               <i class="anticon anticon-setting"></i>
-              <span>表格字體大小</span>
+              <span>{{'tableFontSize' | translate}}</span>
             </span>
           </li>
           <li nz-menu-item *ngIf="dataDrive.additionalFn.switchViewType" (click)="switchViewType(dataDrive.additionalFn.switchViewType)">
             <span title>
               <i class="anticon anticon-setting"></i>
-              <span>切換視圖類型</span>
+              <span>{{'viewType' | translate}}</span>
             </span>
           </li>
         </ul>
@@ -74,13 +74,13 @@
       <ng-container *ngIf="menuDetail === 'fontSize'">
         <nz-row [nzType]="'flex'" [nzJustify]="'start'" style="margin-bottom: 20px;" *ngIf="dataDrive.additionalFn.changeHeaderFontSize">
           <div nz-col class="flex-center">
-            <div>列名字體大小：</div>
+            <div>{{'headerFontSize' | translate}}</div>
           </div>
           <nz-slider nz-col [nzMin]="10" [nzMax]="60" [nzSpan]="12" [(ngModel)]="headerFontSize" (nzOnAfterChange)="changeHeaderSize()"></nz-slider>
         </nz-row>
         <nz-row [nzType]="'flex'" [nzJustify]="'start'" *ngIf="dataDrive.additionalFn.changeBodyFontSize">
           <div nz-col class="flex-center">
-            <div>數據字體大小：</div>
+            <div>{{'dataFontSize' | translate}}</div>
           </div>
           <nz-slider nz-col [nzMin]="10" [nzMax]="60" [nzSpan]="12" [(ngModel)]="bodyFontSize" (nzOnAfterChange)="changeBodySize()"></nz-slider>
         </nz-row>

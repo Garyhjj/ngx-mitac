@@ -247,46 +247,46 @@
 
                 <nz-collapseset *ngIf="ctrl.get('linkToPhone')">
                   <nz-collapse nzTitle="二维码跳转其它网址配置" formGroupName="linkToPhone">
-                      <div nz-row>
-                          <nz-col [nzSpan]="8">
-                            <div nz-form-item nz-row>
-                              <div nz-form-label nz-col [nzSpan]="4">
-                                <label>名稱</label>
-                              </div>
-                              <div nz-form-control nz-col [nzSpan]="14">
-                                <nz-input formControlName="name" [nzSize]="'large'">
-                                </nz-input>
-                              </div>
-                            </div>
-                          </nz-col>
-                      
-                          <nz-col [nzSpan]="8">
-                            <div nz-form-item nz-row>
-                              <div nz-form-label nz-col [nzSpan]="4">
-                                <label>跳轉地址</label>
-                              </div>
-                              <div nz-form-control nz-col [nzSpan]="14">
-                                <nz-input formControlName="url" [nzSize]="'large'" nzPlaceHolder="可以增加綁定參數，注意同樣地與數據庫返回的屬性一致">
-                                </nz-input>
-                              </div>
-                            </div>
-                          </nz-col>
-                      
-                          <nz-col [nzSpan]="8">
-                            <div nz-form-item nz-row>
-                              <div nz-form-label nz-col [nzSpan]="4">
-                                <label>本地地址</label>
-                              </div>
-                              <div nz-form-control nz-col [nzSpan]="14">
-                                <nz-input formControlName="local" [nzSize]="'large'" nzPlaceHolder="可選">
-                                </nz-input>
-                              </div>
-                            </div>
-                          </nz-col>
+                    <div nz-row>
+                      <nz-col [nzSpan]="8">
+                        <div nz-form-item nz-row>
+                          <div nz-form-label nz-col [nzSpan]="4">
+                            <label>名稱</label>
+                          </div>
+                          <div nz-form-control nz-col [nzSpan]="14">
+                            <nz-input formControlName="name" [nzSize]="'large'">
+                            </nz-input>
+                          </div>
                         </div>
-                    </nz-collapse>
-                    </nz-collapseset>
-                    
+                      </nz-col>
+
+                      <nz-col [nzSpan]="8">
+                        <div nz-form-item nz-row>
+                          <div nz-form-label nz-col [nzSpan]="4">
+                            <label>跳轉地址</label>
+                          </div>
+                          <div nz-form-control nz-col [nzSpan]="14">
+                            <nz-input formControlName="url" [nzSize]="'large'" nzPlaceHolder="可以增加綁定參數，注意同樣地與數據庫返回的屬性一致">
+                            </nz-input>
+                          </div>
+                        </div>
+                      </nz-col>
+
+                      <nz-col [nzSpan]="8">
+                        <div nz-form-item nz-row>
+                          <div nz-form-label nz-col [nzSpan]="4">
+                            <label>本地地址</label>
+                          </div>
+                          <div nz-form-control nz-col [nzSpan]="14">
+                            <nz-input formControlName="local" [nzSize]="'large'" nzPlaceHolder="可選">
+                            </nz-input>
+                          </div>
+                        </div>
+                      </nz-col>
+                    </div>
+                  </nz-collapse>
+                </nz-collapseset>
+
               </nz-tab>
               <ng-template #nzTabBarExtraContentView>
                 <i class="ant-tabs-new-tab anticon anticon-plus" (click)="newViewSetTab(); viewIdx=setForm.get('dataViewSetList').controls.length-1"></i>增加切換視圖
@@ -386,6 +386,17 @@
                   </div>
                 </div>
               </nz-col>
+              <nz-col [nzSpan]="8">
+                <div nz-form-item nz-row>
+                  <div nz-form-label nz-col [nzSpan]="12">
+                    <label>刷新數據間隔</label>
+                  </div>
+                  <div nz-form-control nz-col [nzSpan]="12">
+                    <nz-input formControlName="refreshDataInterval" [nzSize]="'large'" nzPlaceHolder="單位為毫秒">
+                    </nz-input>
+                  </div>
+                </div>
+              </nz-col>
             </div>
 
             <nz-tabset [nzType]="'card'" [nzTabBarExtraTemplate]="nzTabBarExtraContentTable" formArrayName="columns" [nzSelectedIndex]="columnIdx">
@@ -467,22 +478,21 @@
                   </nz-col>
 
                   <nz-col [nzSpan]="12">
-                      <div nz-form-item nz-row>
-                        <div nz-form-label nz-col [nzSpan]="8">
-                          <label>除文本外的顯示方法</label>
-                        </div>
-                        <div nz-form-control nz-col [nzSpan]="14">
-                          <app-mx-select formControlName="typeName" myPlaceHolder="可選" [options]="typeNameOptions"></app-mx-select>
-                        </div>
+                    <div nz-form-item nz-row>
+                      <div nz-form-label nz-col [nzSpan]="8">
+                        <label>除文本外的顯示方法</label>
                       </div>
-                    </nz-col>
+                      <div nz-form-control nz-col [nzSpan]="14">
+                        <app-mx-select formControlName="typeName" myPlaceHolder="可選" [options]="typeNameOptions"></app-mx-select>
+                      </div>
+                    </div>
+                  </nz-col>
                 </div>
 
               </nz-tab>
               <ng-template #nzTabBarExtraContentTable>
-                <i class="ant-tabs-new-tab anticon anticon-plus" 
-                (click)="newColumnTab(setForm.controls['tableData'].controls['columns']);columnIdx = setForm.controls['tableData'].controls['columns'].controls.length-1">
-              </i>增加數據列
+                <i class="ant-tabs-new-tab anticon anticon-plus" (click)="newColumnTab(setForm.controls['tableData'].controls['columns']);columnIdx = setForm.controls['tableData'].controls['columns'].controls.length-1">
+                </i>增加數據列
               </ng-template>
             </nz-tabset>
 
@@ -501,8 +511,7 @@
                 <ng-template [ngTemplateOutlet]="inputSetForm" [ngTemplateOutletContext]="{formGroup: searchSet, type: 1}" *ngIf="inputSetForm"></ng-template>
               </nz-tab>
               <ng-template #nzTabBarExtraContentSearchSets>
-                <i class="ant-tabs-new-tab anticon anticon-plus" 
-                (click)="newUpdateSetTab(setForm.get('searchSets')); SearchIdx=setForm.controls['searchSets'].controls.length-1"></i>增加查詢項
+                <i class="ant-tabs-new-tab anticon anticon-plus" (click)="newUpdateSetTab(setForm.get('searchSets')); SearchIdx=setForm.controls['searchSets'].controls.length-1"></i>增加查詢項
               </ng-template>
             </nz-tabset>
           </nz-collapse>
@@ -519,8 +528,7 @@
                 <ng-template [ngTemplateOutlet]="inputSetForm" [ngTemplateOutletContext]="{formGroup: updateSet, type: 2}" *ngIf="inputSetForm"></ng-template>
               </nz-tab>
               <ng-template #nzTabBarExtraContentUpdateSets>
-                <i class="ant-tabs-new-tab anticon anticon-plus" 
-                (click)="newUpdateSetTab(setForm.get('updateSets')); updateIdx = setForm.controls['updateSets'].controls.length-1"></i>增加更新項
+                <i class="ant-tabs-new-tab anticon anticon-plus" (click)="newUpdateSetTab(setForm.get('updateSets')); updateIdx = setForm.controls['updateSets'].controls.length-1"></i>增加更新項
               </ng-template>
             </nz-tabset>
 
@@ -529,7 +537,7 @@
 
 
         <div nz-form-item nz-row [style.display]="'block'">
-            <button nz-button nz-col [nzOffset]="3" [nzSpan]="8" type="button" [nzType]="'primary'" [nzSize]="'large'" (click)="saveToAnother()"
+          <button nz-button nz-col [nzOffset]="3" [nzSpan]="8" type="button" [nzType]="'primary'" [nzSize]="'large'" (click)="saveToAnother()"
             [disabled]="!setForm.valid" *ngIf="setForm.value.id > 0">另存</button>
           <button nz-button nz-col [nzOffset]="3" [nzSpan]="8" type="button" [nzType]="'primary'" [nzSize]="'large'" (click)="submitForm()"
             [disabled]="!setForm.valid">{{setForm.value.id > 0? '更新': '提交'}}</button>

@@ -1,4 +1,4 @@
-import { isNumber } from "../../../../../utils/index";
+import { isNumber } from '../../../../../utils/index';
 
 export interface InputSet {
     type?: InputTypes;
@@ -22,8 +22,9 @@ export class PhotoUpload implements InputSet {
         removable?: boolean;
         addabble?: boolean;
         scanable?: boolean
-    }
+    };
     constructor(opts?: any) {
+        // tslint:disable-next-line:no-unused-expression
         opts && Object.assign(this, opts);
         // this.more = this.more || {};
         // this.more.pickerFormat = this.more.pickerFormat || 'string';
@@ -31,7 +32,7 @@ export class PhotoUpload implements InputSet {
         // this.more.removable = this.more.removable || true;
         // this.more.addabble = this.more.addabble || true;
         // this.more.scanable = this.more.scanable || true;
-        this.type = 'photoUpload'
+        this.type = 'photoUpload';
     }
 }
 
@@ -39,6 +40,7 @@ export class ColleagueSearcher implements InputSet {
     type: InputTypes;
     default?: string | number;
     constructor(opts?: any) {
+        // tslint:disable-next-line:no-unused-expression
         opts && Object.assign(this, opts);
         this.type = 'colleagueSearcher';
     }
@@ -50,6 +52,7 @@ export class Switch implements InputSet {
     falseFormat?: string | number;
     trueFormat?: string | number;
     constructor(opts?: any) {
+        // tslint:disable-next-line:no-unused-expression
         opts && Object.assign(this, opts);
         this.type = 'switch';
         this.falseFormat = this.falseFormat || 'N';
@@ -58,17 +61,17 @@ export class Switch implements InputSet {
 
 }
 export interface CascaderOption {
-    value: string | number,
-    label: string | number,
-    isLeaf?: boolean,
-    children?: CascaderOption[]
+    value: string | number;
+    label: string | number;
+    isLeaf?: boolean;
+    children?: CascaderOption[];
 }
 export interface CascaderLazySet {
-    value: string | number,
-    lazyLayer: number,
-    isLeaf?: boolean,
-    API?: string,
-    params?: string[]
+    value: string | number;
+    lazyLayer: number;
+    isLeaf?: boolean;
+    API?: string;
+    params?: string[];
 }
 export class Cascader implements InputSet {
     type: InputTypes;
@@ -77,8 +80,9 @@ export class Cascader implements InputSet {
         cascaderLazySets?: CascaderLazySet[];
         properties: string[];
         options?: CascaderOption[];
-    }
+    };
     constructor(opts?: any) {
+        // tslint:disable-next-line:no-unused-expression
         opts && Object.assign(this, opts);
         const lazySet = this.more && this.more.cascaderLazySets;
         if (lazySet && lazySet.length > 0) {
@@ -98,7 +102,7 @@ export class DatePicker implements InputSet {
         showFormat?: string;
         showTime?: boolean;
         showMode?: 'month' | 'day'
-    }
+    };
     constructor(opts?: any) {
         if (opts) {
             Object.assign(this, opts);
@@ -119,7 +123,7 @@ export class TimePicker implements InputSet {
     more?: {
         pickerFormat?: string;
         showFormat?: string;
-    }
+    };
     constructor(opts?: any) {
         if (opts) {
             Object.assign(this, opts);
@@ -138,7 +142,7 @@ export class InputSetDefault implements InputSet {
     default?: string | boolean | number;
     more?: any;
     constructor() {
-        this.more = {editable: true};
+        this.more = { editable: true };
         this.editable = true;
         this.default = '';
     }
@@ -150,8 +154,9 @@ export class CheckboxInputSet implements InputSet {
     default?: string | boolean | number;
     more?: {
         options?: { property: string, value: string | number }[]
-    }
+    };
     constructor(opts?: InputSet) {
+        // tslint:disable-next-line:no-unused-expression
         opts && Object.assign(this, opts);
         this.more = this.more || {};
         this.more.options = this.more.options || [];
@@ -166,8 +171,9 @@ export class CheckboxInputSet implements InputSet {
                 } else if (typeof o === 'string' || typeof o === 'number') {
                     newOpts.push({ property: o, value: o });
                 }
-            })
+            });
         }
+        // tslint:disable-next-line:no-unused-expression
         (newOpts.length > 0) && (this.more.options = newOpts);
     }
 }
@@ -182,8 +188,9 @@ export class SelectInputSet implements InputSet {
         lazyAPI?: string,
         lazyParams?: string[],
         lazyAPIUserMes?: any;
-    }
+    };
     constructor(opts?: InputSet) {
+        // tslint:disable-next-line:no-unused-expression
         opts && Object.assign(this, opts);
         this.more = this.more || {};
         this.more.options = this.more.options || [];
@@ -198,8 +205,9 @@ export class SelectInputSet implements InputSet {
                 } else if (typeof o === 'string' || typeof o === 'number') {
                     newOpts.push({ property: o, value: o });
                 }
-            })
+            });
         }
+        // tslint:disable-next-line:no-unused-expression
         (newOpts.length > 0) && (this.more.options = newOpts);
     }
 }
@@ -286,13 +294,13 @@ export class NumberInputSet extends TextInputSet {
         min?: number,
         max?: number,
         step?: number
-    }
+    };
     constructor(opts: InputSet) {
         super(opts);
         this.more = this.more || {};
         this.more.step = this.more.step || 1;
         this.more.max = isNumber(this.more.max) ? this.more.max : Infinity;
-        this.more.min = isNumber(this.more.min) ? this.more.min : -Infinity
+        this.more.min = isNumber(this.more.min) ? this.more.min : -Infinity;
         this.type = 'number';
         this.default = Number(this.default);
     }

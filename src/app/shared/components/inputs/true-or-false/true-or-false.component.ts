@@ -16,7 +16,6 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 export class TrueOrFalseComponent implements OnInit {
 
   radioValue = '';
-  private propagateChange = (_: any) => { };
   _myTrueFormat: string | number = 'Y';
   @Input()
   set myTrueFormat(_: string | number) {
@@ -30,21 +29,21 @@ export class TrueOrFalseComponent implements OnInit {
     if (_ !== void (0) && _ !== null) {
       this._myFalseFormat = _;
     }
-  };
+  }
 
-  @Input() fontSize: string = '1.6rem';
+  @Input() fontSize = '1.6rem';
   _result;
-  
-  @Input() 
+
+  @Input()
   set result(r: {
     trueAnswer: any,
     yourAnswer: any
   }) {
-    if(typeof r ==='object') {
+    if (typeof r === 'object') {
       this._result = r;
       this.checkResult();
     }
-  };
+  }
   get result() {
     return this._result;
   }
@@ -53,13 +52,14 @@ export class TrueOrFalseComponent implements OnInit {
 
 
   @Input() question;
+  private propagateChange = (_: any) => { };
 
   constructor() { }
 
   /**
    * 给外部formControl写入数据
-   * 
-   * @param {*} value 
+   *
+   * @param {*} value
    */
   writeValue(value: string) {
     if ([this._myFalseFormat, this._myTrueFormat].indexOf(value) > -1) {
@@ -70,7 +70,7 @@ export class TrueOrFalseComponent implements OnInit {
   /**
    * 把外面登记的监测change的函数赋值给this.propagateChange
    * 当内部数据改变时,可使用this.propagateChange(this.imgs)去触发传递出去
-   * @param {*} fn 
+   * @param {*} fn
    */
   registerOnChange(fn: any) {
     this.propagateChange = fn;
@@ -78,7 +78,7 @@ export class TrueOrFalseComponent implements OnInit {
 
   /**
    * 也是一样注册,当 touched 然后调用
-   * @param {*} fn 
+   * @param {*} fn
    */
   registerOnTouched(fn: any) { }
 

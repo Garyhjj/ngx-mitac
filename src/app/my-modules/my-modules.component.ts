@@ -9,7 +9,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 })
 export class MyModulesComponent implements OnInit, OnDestroy {
 
-  mySub:Subscription;
+  mySub: Subscription;
   isCollapsed = false;
   constructor() { }
 

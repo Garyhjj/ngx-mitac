@@ -1,8 +1,8 @@
 import { APIGlobalConfig } from './../../shared/config/api-global.config';
 import { reqObserve } from './../interceptors/http-header.interceptor';
-import { User_Login, User_Update_Privilege } from './../actions/user.action';
+import { UserLogin, UserUpdatePrivilege } from './../actions/user.action';
 import { Store } from '@ngrx/store';
-import { UserState, myStore, Privilege } from './../store';
+import { UserState, MyStore, Privilege } from './../store';
 import { EncryptUtilService } from './encryptUtil.service';
 import { LoginConfig } from './../../login/shared/config/login.config';
 import { Injectable } from '@angular/core';
@@ -22,14 +22,14 @@ export class AuthService {
 
     auth = false;
     authSubject = new BehaviorSubject<boolean>(false);
-    tokenStoreName: string = 'tokenMes';
+    tokenStoreName = 'tokenMes';
     loginPageSubject = new BehaviorSubject<boolean>(false);
     user: UserState;
     tokenEffectTime: number = 1000 * 60 * 20;
     constructor(
         private http: HttpClient,
         private encryptUtilService: EncryptUtilService,
-        private store$: Store<myStore>,
+        private store$: Store<MyStore>,
         private util: UtilService
     ) {
         this.updateAuth(this.checkAuth());
@@ -41,7 +41,7 @@ export class AuthService {
     login(data: any) {
         return this.http.post(LoginConfig.loginUrl, this.getNewToken(data.userName, data.password)).do((d: any) => {
             let user: UserState = {};
-            Object.assign(user, d.User)
+            Object.assign(user, d.User);
             user.modules = d.Modules;
             user.password = data.password;
             user.rememberPWD = data.remember;
@@ -50,8 +50,8 @@ export class AuthService {
             this.updateTokenMes(expires, d.Token);
             this.auth = true;
             this.updateAuth(true);
-            this.store$.dispatch(new User_Login(user));
-        })
+            this.store$.dispatch(new UserLogin(user));
+        });
     }
 
     updateToken() {
@@ -70,24 +70,24 @@ export class AuthService {
         this.authSubject.subscribe((a) => {
             if (a) {
                 const send = { moduleID: '' };
-                this.http.get(replaceQuery(APIGlobalConfig.getSelfPrivilege, send)).subscribe((p: Privilege[])=> {
-                    this.store$.dispatch(new User_Update_Privilege(p));
+                this.http.get(replaceQuery(APIGlobalConfig.getSelfPrivilege, send)).subscribe((p: Privilege[]) => {
+                    this.store$.dispatch(new UserUpdatePrivilege(p));
                 }, (err) => this.util.errDeal(err));
             }
-        })
+        });
     }
 
     hasPrivilege(module: string, fn: string) {
         const privilege = this.user.privilege;
-        if(isArray(privilege)) {
-            return !! privilege.filter(m => m.ROLE_NAME.indexOf(module) > -1).find(p => p.FUNCTION_URL === fn);
+        if (isArray(privilege)) {
+            return !!privilege.filter(m => m.ROLE_NAME.indexOf(module) > -1).find(p => p.FUNCTION_URL === fn);
         }
         return false;
     }
 
     checkAuth() {
         let tokenMes = this.getTokenMes();
-        return tokenMes && (tokenMes.expires> new Date().getTime());
+        return tokenMes && (tokenMes.expires > new Date().getTime());
         // return true;
     }
     updateTokenMes(expires: number, token: string) {

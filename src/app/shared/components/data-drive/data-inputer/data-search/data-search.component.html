@@ -83,11 +83,11 @@
   <nz-row [nzType]="'flex'" [nzJustify]="'center'">
     <nz-col [nzSpan]="'6'">
         <button nz-button nz-col type="submit" [nzType]="'primary'" [nzSize]="'large'" [disabled]="!validateForm.valid" (click)="submitForm()">
-            <i class="anticon anticon-search"></i>查询</button>
+            <i class="anticon anticon-search"></i>{{'query' | translate}}</button>
     </nz-col>
     <nz-col [nzSpan]="'6'">
         <button nz-button nz-col [nzType]="'primary'" type="botton" [nzSize]="'large'" (click)="reSet()">
-            <i class="anticon anticon-reload"></i>重置</button>
+            <i class="anticon anticon-reload"></i>{{'reset' | translate}}</button>
     </nz-col>
   </nz-row>
 </form>

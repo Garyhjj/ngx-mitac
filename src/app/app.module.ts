@@ -15,6 +15,13 @@ import { CoreModule } from './core/core.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClient} from '@angular/common/http';
+
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 
 @NgModule({
   declarations: [
@@ -28,7 +35,14 @@ import { HeaderComponent } from './header/header.component';
     SharedModule,
     AppRoutingModule,
     // ServiceWorkerModule.register('/ngsw-worker.js', {enabled: environment.production}),
-    StoreModule.forRoot({breadcrumbReducer, userReducer})
+    StoreModule.forRoot({breadcrumbReducer, userReducer}),
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [HttpClient]
+      }
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent]

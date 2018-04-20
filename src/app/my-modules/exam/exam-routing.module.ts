@@ -37,7 +37,7 @@ const bRoutes: Routes = [
             }
         ]
     }
-]
+];
 
 @NgModule({
     imports: [

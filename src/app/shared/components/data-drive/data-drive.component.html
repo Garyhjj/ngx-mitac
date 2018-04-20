@@ -1,24 +1,31 @@
 <div *ngIf="dataDrive">
-  <nz-collapseset>
+  <!-- <div *ngIf="dataDrive.tableData && dataDrive.tableData.searchable && dataDrive.searchSets && dataDrive.searchSets.length > 0">
+    <app-data-searchbar [opts]="dataDrive"></app-data-searchbar>
+  </div> -->
+  <app-data-searchbar [opts]="dataDrive"></app-data-searchbar>
+
+  <!-- <nz-collapseset>
     <ng-container *ngIf="dataDrive.additionalFn">
-      <nz-collapse [nzTitle]="'菜單'" *ngIf="dataDrive.additionalFn.menu">
+      <nz-collapse [nzTitle]=" 'menu' | translate " *ngIf="dataDrive.additionalFn.menu">
         <app-menu [opts]="dataDrive"></app-menu>
       </nz-collapse>
     </ng-container>
-    <nz-collapse [nzTitle]="'檢索'" *ngIf="dataDrive.tableData && dataDrive.tableData.searchable && dataDrive.searchSets && dataDrive.searchSets.length > 0">
+    <nz-collapse [nzTitle]=" 'queryPra' | translate " *ngIf="dataDrive.tableData && dataDrive.tableData.searchable && dataDrive.searchSets && dataDrive.searchSets.length > 0">
       <app-data-inputer [opts]="dataDrive" [type]="2" *ngIf="dataDrive && dataDrive.tableData"></app-data-inputer>
     </nz-collapse>
-  </nz-collapseset>
+  </nz-collapseset> -->
+
+  <!-- <div style="height:8px;width:100%"></div> -->
   <ng-content select=".my-data-searcher"></ng-content>
 </div>
 
 <!-- <app-data-inputer [opts]="dataDrive" [type]="1" [changeIdx]="2" *ngIf="dataDrive && dataDrive.tableData && dataDrive.tableData.data"></app-data-inputer> -->
 
 <app-data-viewer [opts]="dataDrive" class="main-view" *ngIf="dataDrive && dataDrive.tableData && dataDrive.tableData.visible"
-  [more]="{actionRef:actionRef,tableCell:tableCell}"></app-data-viewer>
+  [more]="{actionRef:actionRef,tableCell:tableCell,headerCellRef:headerCellRef, headerCellStyle: headerCellStyle, bodyCellStyle: bodyCellStyle}"></app-data-viewer>
 <ng-content select=".my-data-viewer"></ng-content>
 
 <div class="my-modal" *ngIf="isShowModal | async">
   <ng-content select=".my-full-screen-header"></ng-content>
-  <app-data-viewer [opts]="dataDrive" [isModal]="true"></app-data-viewer>
+  <app-data-viewer [opts]="dataDrive" [isModal]="true" [more]="{actionRef:actionRef,tableCell:tableCell,headerCellRef:headerCellRef, headerCellStyle: headerCellStyle, bodyCellStyle: bodyCellStyle}"></app-data-viewer>
 </div>

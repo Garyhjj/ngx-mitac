@@ -38,6 +38,7 @@ export class FilterColumnComponent implements OnInit, OnDestroy {
   }
 
   unsubscribeAll() {
+    // tslint:disable-next-line:no-unused-expression
     this.sub1 && this.sub1.unsubscribe();
   }
 
@@ -71,6 +72,7 @@ export class FilterColumnComponent implements OnInit, OnDestroy {
   updateHideList() {
     const hideList = [];
     this.checkOptionsOne.forEach(item => {
+      // tslint:disable-next-line:no-unused-expression
       !item.checked && hideList.push(item.value);
     });
     this.dataDrive.selfHideLists = hideList;

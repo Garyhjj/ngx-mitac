@@ -28,7 +28,7 @@ const dRoutes: Routes = [
             }
         ]
     }
-]
+];
 
 @NgModule({
     imports: [

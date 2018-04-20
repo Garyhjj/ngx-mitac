@@ -1,5 +1,5 @@
-import { Breadcrumb_Cancel } from './../../core/actions/breadcrumb.action';
-import { myStore, BreadcrumbState } from './../../core/store';
+import { BreadcrumbCancel } from './../../core/actions/breadcrumb.action';
+import { MyStore, BreadcrumbState } from './../../core/store';
 import { Store } from '@ngrx/store';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
@@ -16,30 +16,34 @@ export class ContentComponent implements OnInit, OnDestroy {
   breadcrumb: BreadcrumbState[];
   sub: Subscription;
   constructor(
-    private store$: Store<myStore>,
+    private store$: Store<MyStore>,
     private router: Router
   ) { }
 
   ngOnInit() {
-    this.sub = this.store$.select((s: myStore) => s.breadcrumbReducer).subscribe((b) => {
+    this.sub = this.store$.select((s: MyStore) => s.breadcrumbReducer).subscribe((b) => {
       this.breadcrumb = b;
       const idx = b.findIndex(r => r.active);
-      this.tabIdx = idx > -1? idx: b.length-1;
+      this.tabIdx = idx > -1 ? idx : b.length - 1;
     });
   }
 
   ngOnDestroy() {
+    // tslint:disable-next-line:no-unused-expression
     this.sub && this.sub.unsubscribe();
   }
 
   tabIdxChange(idx: number) {
-    if(idx > -1) {
+    if (idx > -1) {
       this.router.navigate([this.breadcrumb[idx].routeUrl]);
     }
   }
 
   closeTab(tab) {
-    this.store$.dispatch(new Breadcrumb_Cancel(tab));
+    this.store$.dispatch(new BreadcrumbCancel(tab));
+    if (this.breadcrumb.length <= 0) {
+      this.router.navigateByUrl('/end');
+    }
   }
 
 }

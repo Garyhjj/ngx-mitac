@@ -30,6 +30,7 @@ export interface TableData {
     stopFirstInit?: boolean;
     isCompanyLimited?: boolean | string;
     defaultSearchParams?: any;
+    refreshDataInterval?: number;
     columns: TableDataColumn[];
     data?: TableInsideData[][];
 }
@@ -43,6 +44,7 @@ export class TableDataModel implements TableData {
     stopFirstInit?: boolean;
     isCompanyLimited?: boolean | string;
     defaultSearchParams?: any;
+    refreshDataInterval?: number;
     columns: TableDataColumn[];
     data?: TableInsideData[][];
     private inputSetFactory;

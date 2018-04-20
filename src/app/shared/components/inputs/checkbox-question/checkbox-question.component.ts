@@ -19,12 +19,13 @@ export class CheckboxQuestionComponent implements OnInit, AfterViewInit {
   @Input() checkOptions: { label: string, value: string, checked: boolean }[] = [
   ];
   @Input() title = '';
-  @Input() fontSize: string = '1.6rem';
+  @Input() fontSize = '1.6rem';
   @Input() titlePrefix = '';
   @ViewChild('checkbox')
   checkbox: any;
-  private propagateChange = (_: any) => { };
   _result;
+  yourAnswerString = '';
+  private propagateChange = (_: any) => { };
 
   @Input()
   set result(r: {
@@ -35,19 +36,17 @@ export class CheckboxQuestionComponent implements OnInit, AfterViewInit {
       this._result = r;
       this.checkResult();
     }
-  };
+  }
   get result() {
     return this._result;
   }
-
-  yourAnswerString = '';
 
   constructor() { }
 
   /**
    * 给外部formControl写入数据
-   * 
-   * @param {*} value 
+   *
+   * @param {*} value
    */
   writeValue(value: any) {
     if (Object.prototype.toString.call(value) === '[object Array]') {
@@ -58,7 +57,7 @@ export class CheckboxQuestionComponent implements OnInit, AfterViewInit {
   /**
    * 把外面登记的监测change的函数赋值给this.propagateChange
    * 当内部数据改变时,可使用this.propagateChange(this.imgs)去触发传递出去
-   * @param {*} fn 
+   * @param {*} fn
    */
   registerOnChange(fn: any) {
     this.propagateChange = fn;
@@ -66,7 +65,7 @@ export class CheckboxQuestionComponent implements OnInit, AfterViewInit {
 
   /**
    * 也是一样注册,当 touched 然后调用
-   * @param {*} fn 
+   * @param {*} fn
    */
   registerOnTouched(fn: any) { }
 
@@ -120,14 +119,14 @@ export class CheckboxQuestionComponent implements OnInit, AfterViewInit {
         if (result.hasOwnProperty('yourAnswer')) {
           yourAnswer = result.yourAnswer ? result.yourAnswer.split(',') : [];
         }
-        if(yourAnswer.length === trueAnswer.length) {
-          if(new Set([...trueAnswer,...yourAnswer]).size === trueAnswer.length) {
-            return true
+        if (yourAnswer.length === trueAnswer.length) {
+          if (new Set([...trueAnswer, ...yourAnswer]).size === trueAnswer.length) {
+            return true;
           }
         }
       }
     }
-    return false
+    return false;
   }
 
 }

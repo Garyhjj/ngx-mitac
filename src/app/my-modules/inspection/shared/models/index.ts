@@ -1,6 +1,6 @@
 export interface InspectionReportState {
     Header: InspectionReportHeader;
-    Lines: InspectionReportLineState[]
+    Lines: InspectionReportLineState[];
 }
 
 export interface InspectionReportHeader {
@@ -14,7 +14,7 @@ export interface InspectionReportHeader {
     TYPE: string;
     INSPECTOR_NAME: string;
     MACHINE_ID?: string;
-    MACHINE_NAME?: string
+    MACHINE_NAME?: string;
 }
 
 export interface InspectionReportLineState {

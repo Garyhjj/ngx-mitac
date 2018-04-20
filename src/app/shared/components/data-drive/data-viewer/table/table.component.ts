@@ -1,3 +1,4 @@
+import { TableDataColumn } from './../../shared/models/table-data/index';
 import { NgxValidatorExtendService } from './../../../../../core/services/ngx-validator-extend.service';
 import { UtilService } from './../../../../../core/services/util.service';
 import { QRComponent } from '../../../QR/QR.component';
@@ -42,6 +43,9 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   fileList;
   @Input() actionRef: TemplateRef<void>;
   @Input() tableCell: TemplateRef<void>;
+  @Input() headerCellRef: TemplateRef<void>;
+  @Input() headerCellStyle: (column: TableDataColumn) => any;
+  @Input() bodyCellStyle: (data: any, property: string) => any;
   @Input()
   set opts(opts: DataDrive) {
     this.tableSet = opts.dataViewSet as TabelViewSet;
@@ -78,6 +82,23 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     private validatorExtendService: NgxValidatorExtendService
   ) {
 
+  }
+
+  _headerCellStyle(item: TableDataColumn) {
+    let def: any = {};
+    if (this.setDetail && this.setDetail.header) {
+      const header = this.setDetail.header;
+      def = {
+        'background-color': header.bgColor,
+        'color': header.textColor,
+        'font-size': header.textSize
+      };
+    }
+    let outDefine;
+    if (this.headerCellStyle && item) {
+      outDefine = this.headerCellStyle(item);
+    }
+    return typeof outDefine === 'object' ? Object.assign(def, outDefine) : def;
   }
 
   get canEdit() {
@@ -383,28 +404,28 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
       textSize?: string;
       bgColor?: string;
     }[]
-  }, type: string) {
+  }, property?: string) {
     const cache = this.styleCache;
     dataIdx = this.calIdx(dataIdx);
-    if (cache.idx === dataIdx) {
-      const styeCache = cache.getCache(type);
-      if (styeCache) {
-        return styeCache;
-      }
-    } else {
-      cache.reset(dataIdx);
-    }
+    const allData = this._dataDrive.getData();
+    const target = allData && allData[dataIdx];
     const test = () => {
+      if (!body) {
+        return Object.create(null);
+      }
       let rules: {
         matches: string[][];
         textColor?: string;
         textSize?: string;
         bgColor?: string;
       }[];
-
-      const target = this.tableData.data && this.tableData.data[dataIdx];
+      if (cache.idx === dataIdx && allData.length > 1) {
+        return cache;
+      } else {
+        cache.reset(dataIdx);
+      }
       if (!(rules = body.rules) || !target) {
-        return body[type];
+        return body;
       } else {
         if (rules.length > 0) {
           for (let i = 0; i < rules.length; i++) {
@@ -437,19 +458,28 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
                   }
                 }
                 if (result) {
-                  return rule[type] ? rule[type] : body[type];
+                  return rule ? Object.assign({}, body, rule) : body;
                 }
               }
             }
           }
         }
       }
-      return body[type];
+      return body;
     };
     const res = test();
-    cache.setCache(type, res);
-    return res;
-
+    const types = ['bgColor', 'textSize', 'textColor'];
+    types.forEach(t => cache.setCache(t, res[t]));
+    const def = {
+      'background-color': cache.bgColor,
+      'color': cache.textColor,
+      'font-size': cache.textSize
+    };
+    let outStyle;
+    if (this.bodyCellStyle) {
+      outStyle = this.bodyCellStyle(target, property);
+    }
+    return typeof outStyle === 'object' ? Object.assign({}, def, outStyle) : def;
   }
   clearTimeEvent() {
     clearTimeout(this.timeEvent1);
@@ -471,7 +501,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   }
 
   trackByIndex(index, item) {
-    return index;
+    return (typeof item === 'object') && item.hasOwnProperty('ID') ? item.ID : index;
   }
   ngOnInit() {
     if (!this.isModal) {

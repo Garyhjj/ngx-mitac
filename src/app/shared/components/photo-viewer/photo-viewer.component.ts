@@ -16,7 +16,7 @@ export class PhotoViewerComponent implements OnInit, OnDestroy {
     if (Number.isInteger(idx) && idx > -1) {
       this._previewImageIdx = idx;
     }
-  };
+  }
   @Input() myShowInformer: Observable<boolean>;
   mySub: Subscription;
   previewVisible = false;
@@ -27,12 +27,12 @@ export class PhotoViewerComponent implements OnInit, OnDestroy {
     this.previewVisible = false;
   }
   stopPropagation(e: Event) {
-    e.stopPropagation()
+    e.stopPropagation();
     return false;
   }
   prev(e: Event) {
     if (this._previewImageIdx === 0) {
-      this._previewImageIdx = this.imgList.length - 1
+      this._previewImageIdx = this.imgList.length - 1;
     } else {
       --this.previewImageIdx;
     }
@@ -40,7 +40,7 @@ export class PhotoViewerComponent implements OnInit, OnDestroy {
   }
   next(e: Event) {
     if (this._previewImageIdx === this.imgList.length - 1) {
-      this._previewImageIdx = 0
+      this._previewImageIdx = 0;
     } else {
       ++this._previewImageIdx;
     }
@@ -49,7 +49,7 @@ export class PhotoViewerComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (this.myShowInformer instanceof Observable) {
-      this.mySub = this.myShowInformer.subscribe(_ => this.previewVisible = true)
+      this.mySub = this.myShowInformer.subscribe(_ => this.previewVisible = true);
     }
   }
 

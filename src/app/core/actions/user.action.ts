@@ -10,7 +10,7 @@ export const USER_UPDATE_PRIVILEGE = '[User] update privilege';
 export const USER_UPDATE_MODULE = '[User] update module';
 export const USER_UPDATE_MODULES = '[User] update modules';
 
-export class User_Login implements Action {
+export class UserLogin implements Action {
   readonly type = USER_LOGIN;
   payload: UserState;
   constructor(token: UserState) {
@@ -18,7 +18,7 @@ export class User_Login implements Action {
   }
 }
 
-export class User_Update_module implements Action {
+export class UserUpdateModule implements Action {
   readonly type = USER_UPDATE_MODULE;
   payload: MyModule;
   constructor(token: MyModule) {
@@ -26,7 +26,7 @@ export class User_Update_module implements Action {
   }
 }
 
-export class User_Update_modules implements Action {
+export class UserUpdateModules implements Action {
   readonly type = USER_UPDATE_MODULES;
   payload: MyModule[];
   constructor(token: MyModule[]) {
@@ -34,7 +34,7 @@ export class User_Update_modules implements Action {
   }
 }
 
-export class User_Update_Privilege implements Action {
+export class UserUpdatePrivilege implements Action {
   readonly type = USER_UPDATE_PRIVILEGE;
   payload: Privilege[];
   constructor(token: Privilege[]) {
@@ -42,17 +42,17 @@ export class User_Update_Privilege implements Action {
   }
 }
 
-export class User_Logout implements Action {
+export class UserLogout implements Action {
   readonly type = USER_LOGOUT;
   payload: any;
 }
 
-export class User_Clear implements Action {
+export class UserClear implements Action {
   readonly type = USER_CLEAR;
   payload: any;
 }
 
-export class User_ChineseConv implements Action {
+export class UserChineseConv implements Action {
   readonly type = USER_CHINESECOV;
   payload: any;
   constructor(avatar: any) {
@@ -60,13 +60,13 @@ export class User_ChineseConv implements Action {
   }
 }
 
-export class User_Update implements Action {
+export class UserUpdate implements Action {
   readonly type = USER_UPDATE;
   payload: any;
   constructor(avatar: any) {
     this.payload = avatar;
   }
-};
+}
 
 
-export type UserActions = User_Login | User_Logout | User_Update | User_ChineseConv | User_Clear | User_Update_Privilege | User_Update_module | User_Update_modules;
+export type UserActions = UserLogin | UserLogout | UserUpdate | UserChineseConv | UserClear | UserUpdatePrivilege | UserUpdateModule | UserUpdateModules;

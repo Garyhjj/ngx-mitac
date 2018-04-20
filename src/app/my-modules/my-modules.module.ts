@@ -3,18 +3,19 @@ import { ModulesSiderComponent } from './modules-sider/modules-sider.component';
 import { SharedModule } from './../shared/shared.module';
 import { MyModulesComponent } from './my-modules.component';
 import { MyModulesRoutingModule } from './my-modules-routing.module';
-import { NgModule }      from '@angular/core';
-import { CommonModule }  from '@angular/common';
-
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReportComponent } from './report/report.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
-  imports:      [ CommonModule, MyModulesRoutingModule, SharedModule],
+  imports: [CommonModule, MyModulesRoutingModule, SharedModule, TranslateModule],
   declarations: [
     MyModulesComponent,
     ModulesSiderComponent,
     ContentComponent
   ],
-  providers:    [  ]
+  providers: []
 })
-export class MyModulesModule {}
+export class MyModulesModule { }

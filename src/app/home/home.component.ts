@@ -9,16 +9,16 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 })
 export class HomeComponent implements OnInit, OnDestroy {
 
-  mySub:Subscription;
-  isCollapsed:boolean = false;
+  mySub: Subscription;
+  isCollapsed = false;
   constructor() { }
 
   ngOnInit() {
-    
+
   }
 
   ngOnDestroy() {
-    
+
   }
 
 }

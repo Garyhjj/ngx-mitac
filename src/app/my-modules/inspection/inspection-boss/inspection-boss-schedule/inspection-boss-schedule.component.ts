@@ -10,6 +10,7 @@ import { FormBuilder } from '@angular/forms';
 import { FormGroup, FormArray } from '@angular/forms';
 import { AuthService } from '../../../../core/services/auth.service';
 import { isArray } from '../../../../shared/utils/index';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-inspection-boss-schedule',
@@ -19,7 +20,7 @@ import { isArray } from '../../../../shared/utils/index';
 export class InspectionBossScheduleComponent implements OnInit {
 
   isVisible = false;
-  formLayout = 'horizontal'
+  formLayout = 'horizontal';
   scheduleForm: FormGroup;
   linesList;
   allDataDrive: any = {};
@@ -27,7 +28,8 @@ export class InspectionBossScheduleComponent implements OnInit {
   currentDataDrive: DataDrive;
   mriWeekList;
   weekOption;
-  timeErr='';
+  timeErr = '';
+  translateTexts: any;
   changeUpdateViewer = (data) => {
     this.initForm(data);
     this.isVisible = true;
@@ -40,18 +42,21 @@ export class InspectionBossScheduleComponent implements OnInit {
     private util: UtilService,
     private dataDriveService: DataDriveService,
     private modalService: NzModalService,
-    private validatorExtendService: NgxValidatorExtendService
+    private validatorExtendService: NgxValidatorExtendService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit() {
-
+    this.translate.stream(['insoectionModule.startimeBeforeEndtime', 'insoectionModule.sureDelete', 'insertSuccess', 'updateSuccess']).subscribe((res) => {
+      this.translateTexts = res;
+    });
   }
 
   initForm(data?) {
-    if(this.tabIdx === 2 && !this.mriWeekList) {
+    if (this.tabIdx === 2 && !this.mriWeekList) {
       this.inspectionBossService.getMriWeek().subscribe(c => {
         this.mriWeekList = c;
-        this.weekOption = this.mriWeekList.map(m => ({property: m.WEEK_ID, value: m.WEEK_DESC }));
+        this.weekOption = this.mriWeekList.map(m => ({ property: m.WEEK_ID, value: m.WEEK_DESC }));
       });
     }
     let array = [];
@@ -68,16 +73,16 @@ export class InspectionBossScheduleComponent implements OnInit {
     this.scheduleForm = this.fb.group({
       SCHEDULE_HEADER_ID: [data.SCHEDULE_HEADER_ID],
       SCHEDULE_NAME: [
-        this.tabIdx === 2? (() => {
-          if(data.WEEK && data.YEAR) {
-            return data.YEAR + (+data.WEEK<10?'0' + data.WEEK: data.WEEK);
+        this.tabIdx === 2 ? (() => {
+          if (data.WEEK && data.YEAR) {
+            return data.YEAR + (+data.WEEK < 10 ? '0' + data.WEEK : data.WEEK);
           }
-        })(): ''
-      ,this.tabIdx === 2 ? this.validatorExtendService.required():null],
-      AREA: [data.AREA, this.tabIdx === 2 ? this.validatorExtendService.required():null],
-      FROM_DATE: [data.FROM_DATE, this.tabIdx !== 2 ? this.validatorExtendService.required():null],
-      FROM_TIME: [data.FROM_TIME? data.FROM_TIME: '08:00', this.validatorExtendService.required()],
-      TO_TIME: [data.TO_TIME? data.TO_TIME: '18:00', this.validatorExtendService.required()],
+        })() : ''
+        , this.tabIdx === 2 ? this.validatorExtendService.required() : null],
+      AREA: [data.AREA, this.tabIdx === 2 ? this.validatorExtendService.required() : null],
+      FROM_DATE: [data.FROM_DATE, this.tabIdx !== 2 ? this.validatorExtendService.required() : null],
+      FROM_TIME: [data.FROM_TIME ? data.FROM_TIME : '08:00', this.validatorExtendService.required()],
+      TO_TIME: [data.TO_TIME ? data.TO_TIME : '18:00', this.validatorExtendService.required()],
       empnos: this.fb.array(array)
     });
     const fromTime = this.scheduleForm.get('FROM_TIME');
@@ -85,36 +90,36 @@ export class InspectionBossScheduleComponent implements OnInit {
     // 核對時間的合法性
     Observable.merge(fromTime.valueChanges, toTime.valueChanges).subscribe(c => {
       const prefix = '2018-01-01 ';
-      if(new Date(prefix+ fromTime.value).getTime() - new Date(prefix+ toTime.value).getTime() < 0) {
-        this.timeErr = ''
-      }else {
-        this.timeErr = '結束時間必須在開始時間之後';
+      if (new Date(prefix + fromTime.value).getTime() - new Date(prefix + toTime.value).getTime() < 0) {
+        this.timeErr = '';
+      } else {
+        this.timeErr = this.translateTexts['insoectionModule.startimeBeforeEndtime'];
       }
-    })
+    });
   }
 
   initEmpno(val?) {
-    return this.fb.group({ person: [val, this.validatorExtendService.required()] })
+    return this.fb.group({ person: [val, this.validatorExtendService.required()] });
   }
 
   cancleEmp(i) {
     const empnos = this.scheduleForm.get('empnos') as FormArray;
     const val = empnos.controls[i].value;
-    if(val && val.person) {
+    if (val && val.person) {
       const store = this.linesList.find(l => l.EMPNO === val.person);
       // 刪除前對已在數據庫有的記錄進行詢問
-      if(store) {
+      if (store) {
         const deleteFn = () => {
           this.inspectionBossService.deleteScheduleLines(store.SCHEDULE_LINE_ID).subscribe(() => {
             empnos.removeAt(i);
             this.currentDataDrive = this.allDataDrive[this.tabIdx + 2];
             this.dataDriveService.updateViewData(this.currentDataDrive);
           }, err => this.util.errDeal(err));
-        }
+        };
         this.modalService.confirm({
-          title: '您確定要刪除這值班人員嗎？',
+          title: this.translateTexts['insoectionModule.sureDelete'],
           onOk() {
-            deleteFn()
+            deleteFn();
           },
           onCancel() {
           },
@@ -123,7 +128,7 @@ export class InspectionBossScheduleComponent implements OnInit {
       } else {
         empnos.removeAt(i);
       }
-    }else {
+    } else {
       empnos.removeAt(i);
     }
   }
@@ -136,18 +141,18 @@ export class InspectionBossScheduleComponent implements OnInit {
   submitForm() {
     const val = this.scheduleForm.value;
     const user = this.auth.user;
-    let weekDes = val.SCHEDULE_NAME? this.mriWeekList.find(m => m.WEEK_ID === val.SCHEDULE_NAME): {};
+    let weekDes = val.SCHEDULE_NAME ? this.mriWeekList.find(m => m.WEEK_ID === val.SCHEDULE_NAME) : {};
     weekDes = weekDes || {};
     let week, year;
     // 7s有這些項目
-    if(weekDes.WEEK_ID) {
+    if (weekDes.WEEK_ID) {
       week = +weekDes.WEEK_ID.slice(4);
       year = +weekDes.WEEK_ID.slice(0, 4);
     }
     const Header = {
       AREA: val.AREA || '',
       COMPANY_NAME: user.COMPANY_ID || '',
-      ENABLED: "Y",
+      ENABLED: 'Y',
       FROM_DATE: weekDes.WEEK_START_DAY || val.FROM_DATE || '',
       FROM_TIME: val.FROM_TIME || '',
       NAME_ID: this.tabIdx + 2,
@@ -156,26 +161,26 @@ export class InspectionBossScheduleComponent implements OnInit {
       SCHEDULE_NAME: weekDes.WEEK_DESC || '',
       TO_DATE: weekDes.WEEK_END_DAY || val.FROM_DATE || '',
       TO_TIME: val.TO_TIME || '',
-      WEEK: week || "",
-      YEAR: year || ""
+      WEEK: week || '',
+      YEAR: year || ''
     };
     const Lines = [];
     if (val.empnos && val.empnos.length > 0) {
       val.empnos.forEach((c, idx) => {
         if (c.person) {
           const person = c.person;
-          const l = this.linesList.find(l => l.EMPNO === person);
+          const l = this.linesList.find(li => li.EMPNO === person);
           Lines.push({
             EMPNO: person,
             LINE_NUM: idx + 1,
             SCHEDULE_HEADER_ID: l ? l.SCHEDULE_HEADER_ID : 0,
             SCHEDULE_LINE_ID: l ? l.SCHEDULE_LINE_ID : 0
-          })
+          });
         }
-      })
-    };
+      });
+    }
     this.inspectionBossService.uploadSchedule({ Schedules: [{ Header, Lines }] }).subscribe(r => {
-      this.util.showGlobalSucMes(val.SCHEDULE_HEADER_ID < 0 ? '插入成功' : '更新成功');
+      this.util.showGlobalSucMes(val.SCHEDULE_HEADER_ID < 0 ? this.translateTexts['insertSuccess'] : this.translateTexts['updateSuccess']);
       this.isVisible = false;
       this.currentDataDrive = this.allDataDrive[this.tabIdx + 2];
       this.dataDriveService.updateViewData(this.currentDataDrive);
@@ -195,18 +200,18 @@ export class InspectionBossScheduleComponent implements OnInit {
     const nameId = 4;
     this.alterDataDrive(d, nameId);
     d.beforeSearch((data) => {
-      if(data && data.week) {
+      if (data && data.week) {
         data.week = data.week.slice(4);
       }
       return data;
-    })
+    });
   }
 
   alterDataDrive(d: DataDrive, nameId: number) {
     this.allDataDrive[nameId] = d;
     d.addDefaultSearchParams({ nameID: nameId });
     d.beforeInitTableData((data) => this.combineSameHeader(data));
-    d.beforeUpdateShow(this.changeUpdateViewer)
+    d.beforeUpdateShow(this.changeUpdateViewer);
   }
 
   combineSameHeader(data) {
@@ -224,10 +229,10 @@ export class InspectionBossScheduleComponent implements OnInit {
             one.linesList.push(s);
           });
           data = data.filter(d => d.SCHEDULE_HEADER_ID !== one.SCHEDULE_HEADER_ID);
-        };
+        }
       }
       myData.push(one);
-    };
+    }
     return myData;
   }
 

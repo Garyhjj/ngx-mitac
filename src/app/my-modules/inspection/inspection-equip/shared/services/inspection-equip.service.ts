@@ -13,7 +13,7 @@ export class InspectionEquipService {
         private auth: AuthService
     ) {
         this.user = this.auth.user;
-        if(this.user.privilege.find(m => m.FUNCTION_ID === 343)) {
+        if (this.user.privilege.find(m => m.FUNCTION_ID === 343)) {
             this.role = 1;
         }
     }

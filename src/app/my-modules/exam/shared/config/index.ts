@@ -14,7 +14,7 @@ export const examConfig = {
     updateExamResult: APPConfig.baseUrl + 'EXAM/UpdateResult',
 
     updateExamAnswer: APPConfig.baseUrl + 'EXAM/UpdateAnswer'
-}
+};
 
 export interface ExamMapping {
     ID: number;

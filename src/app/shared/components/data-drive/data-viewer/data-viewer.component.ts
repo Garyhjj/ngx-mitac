@@ -1,3 +1,4 @@
+import { TableDataColumn } from './../shared/models/table-data/index';
 import { DataDrive, DataViewSet } from '../../data-drive/shared/models/index';
 import { Component, OnInit, Input, TemplateRef } from '@angular/core';
 
@@ -28,10 +29,21 @@ export class DataViewerComponent implements OnInit {
     if (m.tableCell) {
       this.tableCell = m.tableCell;
     }
+    if (m.headerCellRef) {
+      this.headerCellRef = m.headerCellRef;
+    }
+    if (m.headerCellStyle) {
+      this.headerCellStyle = m.headerCellStyle;
+    }
+    if (m.bodyCellStyle) {
+      this.bodyCellStyle = m.bodyCellStyle;
+    }
   }
   tableCell: TemplateRef<void>;
   actionRef: TemplateRef<void>;
-
+  headerCellRef: TemplateRef<void>;
+  headerCellStyle: (TableDataColumn) => any;
+  bodyCellStyle: (data: any, property: string) => any;
   constructor() { }
 
   ngOnInit() {

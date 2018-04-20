@@ -18,7 +18,7 @@ import { DriveEditComponent } from './drive-edit/drive-edit.component';
   declarations: [DataDriveSettingComponent,
     DriveListComponent,
     DriveEditComponent
-],
-providers: [DataDriveSettingService]
+  ],
+  providers: [DataDriveSettingService]
 })
 export class DataDriveSettingModule { }

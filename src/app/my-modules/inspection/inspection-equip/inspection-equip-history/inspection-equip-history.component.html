@@ -1,12 +1,12 @@
 <nz-tabset [(nzSelectedIndex)]="tabIdx">
   <nz-tab>
     <ng-template #nzTabHeading>
-      歷史記錄
+      {{'insoectionModule.history' | translate}}
     </ng-template>
     <app-data-drive [name]="'inspectionEquipHistory'" (dataDriveInit)="getDataDrive1($event)">
       <ng-template #actionRef let-data="data">
         <span>
-          <a *ngIf="data?.FAIL > 0" (click)="toDetail(data)">查看问题点</a>
+          <a *ngIf="data?.FAIL > 0" (click)="toDetail(data)">{{'insoectionModule.problemPoint' | translate}}</a>
         </span>
       </ng-template>
     </app-data-drive>
@@ -14,7 +14,7 @@
 
   <nz-tab *ngIf="issueList?.length > 0">
     <ng-template #nzTabHeading>
-      問題點
+      {{'insoectionModule.problem' | translate}}
     </ng-template>
     <app-data-drive [name]="'inspectionEquipIssueList'" (dataDriveInit)="getDataDrive2($event)"></app-data-drive>
   </nz-tab>

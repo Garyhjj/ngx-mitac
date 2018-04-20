@@ -7,13 +7,14 @@ import { TableComponent } from './table/table.component';
 import { SharedModule } from '../../../shared.module';
 import { FilterColumnComponent } from '../filter-column/filter-column.component';
 import { ExamPaperModule } from './exam-paper/exam-paper.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
-    CommonModule, SharedModule, ExamPaperModule
+    CommonModule, SharedModule, ExamPaperModule,TranslateModule
   ],
-  declarations: [DataViewerComponent, TableComponent, FilterColumnComponent, QRComponent, MyFlexPipe],
-  exports: [DataViewerComponent, TableComponent, FilterColumnComponent, MyFlexPipe],
+  declarations: [DataViewerComponent, TableComponent, FilterColumnComponent, QRComponent, MyFlexPipe,],
+  exports: [DataViewerComponent, TableComponent, FilterColumnComponent, MyFlexPipe,],
   entryComponents: [DataViewerComponent, QRComponent]
 })
 export class DataViewerModule { }

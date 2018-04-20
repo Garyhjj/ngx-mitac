@@ -1,6 +1,6 @@
 export const inspectionCommentConfig = {
     id: 14,
-    APIs: { 
+    APIs: {
         search: 'IPQA/commentInfo?nameID=3&dateFM={dateFM}&dateTO={dateTO}&type={type}',
     },
     additionalFn: {
@@ -68,4 +68,4 @@ export const inspectionCommentConfig = {
             }
         ]
     }
-}
+};

@@ -10,11 +10,11 @@ import { replaceQuery } from '../../../../shared/utils';
 export class ExamService {
 
     user: UserState;
-    private _role: number = 3;
+    private _role = 3;
     get role() {
-        if(this.checkPrivilege('admin')) {
+        if (this.checkPrivilege('admin')) {
             this._role = 1;
-        } else if(this.checkPrivilege('leader')){
+        } else if (this.checkPrivilege('leader')) {
             this._role = 2;
         }
         return this._role;
@@ -29,8 +29,8 @@ export class ExamService {
             getExamHeader: string,
             updateExamResult: string,
             updateExamAnswer: string
-            }
-    ) { 
+        }
+    ) {
         this.user = this.auth.user;
     }
 
@@ -47,20 +47,20 @@ export class ExamService {
         const send = {
             exam_id: id,
             company_id: this.user.COMPANY_ID
-        }
-        return this.http.get(replaceQuery(this.examConfig.getExamPaper,send))
+        };
+        return this.http.get(replaceQuery(this.examConfig.getExamPaper, send));
     }
 
     getExamHeader(id: number) {
         const send = {
             id: id,
             company_id: this.user.COMPANY_ID
-        }
-        return this.http.get(replaceQuery(this.examConfig.getExamHeader,send))
+        };
+        return this.http.get(replaceQuery(this.examConfig.getExamHeader, send));
     }
 
     updateExamResult(res: ExamResult) {
-        const add = {COMPANY_ID: this.user.COMPANY_ID, USER_ID: this.user.ID};
+        const add = { COMPANY_ID: this.user.COMPANY_ID, USER_ID: this.user.ID };
         Object.assign(res, add);
         return this.http.post(this.examConfig.updateExamResult, res);
     }
@@ -72,11 +72,11 @@ export class ExamService {
 }
 
 export interface ExamResult {
-    EXAM_ID: number,
-    ID?: number,
-    USER_ID: string,
-    RESULT: number,
-    COMPANY_ID: string
+    EXAM_ID: number;
+    ID?: number;
+    USER_ID: string;
+    RESULT: number;
+    COMPANY_ID: string;
 }
 
 export interface ExamAnswer {

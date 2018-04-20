@@ -1,12 +1,12 @@
 import { AppService } from './../core/services/app.service';
-import { Breadcrumb_Clear } from './../core/actions/breadcrumb.action';
+import { BreadcrumbClear } from './../core/actions/breadcrumb.action';
 import { Router } from '@angular/router';
-import { User_Logout } from './../core/actions/user.action';
+import { UserLogout } from './../core/actions/user.action';
 import { Observable } from 'rxjs/Observable';
 // tslint:disable-next-line:import-blacklist
 import { Subscription } from 'rxjs/Rx';
 import { AuthService } from './../core/services/auth.service';
-import { myStore, UserState } from './../core/store';
+import { MyStore, UserState } from './../core/store';
 import { Store } from '@ngrx/store';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { isArray } from '../shared/utils';
@@ -26,33 +26,42 @@ export class HeaderComponent implements OnInit, OnDestroy {
   mySub3: Subscription;
   tips: Observable<number>;
   constructor(
-    private store$: Store<myStore>,
+    private store$: Store<MyStore>,
     private authService: AuthService,
     private route: Router,
     private appService: AppService
   ) { }
 
   ngOnInit() {
-    this.appService.getAllTips();
     this.mySub1 = this.authService.authSubject.subscribe(a => {
       this.auth = a;
       if (!a) {
-        this.route.navigate(['/login']);
+        // const user = this.authService.user;
+        // if (user.rememberPWD) {
+        //   this.authService.login({ userName: user.USER_NAME, password: user.password, remember: user.rememberPWD }).subscribe(() => {
+        //     this.appService.getAllTips();
+        //   }, (err) => this.route.navigate(['/login']));
+        // }
+      } else {
+        this.appService.getAllTips();
       }
     });
-    this.mySub2 = this.authService.loginPageSubject.subscribe(b => { this.isLoginPage = b });
+    this.mySub2 = this.authService.loginPageSubject.subscribe(b => { this.isLoginPage = b; });
     this.mySub3 = this.store$.select(s => s.userReducer).subscribe((u) => this.user = u);
     this.tips = this.store$.select(s => s.userReducer).map((user) => user.modules || []).map((ms) => ms.map((m) => m.TIPS || 0)).map(ts => {
       if (Array.isArray(ts)) {
-        return ts.reduce((a, b) => a + b, 0)
+        return ts.reduce((a, b) => a + b, 0);
       }
-      return 0
-    })
+      return 0;
+    });
   }
 
   ngOnDestroy() {
+    // tslint:disable-next-line:no-unused-expression
     this.mySub1 && this.mySub1.unsubscribe();
+    // tslint:disable-next-line:no-unused-expression
     this.mySub2 && this.mySub1.unsubscribe();
+    // tslint:disable-next-line:no-unused-expression
     this.mySub3 && this.mySub1.unsubscribe();
   }
 
@@ -68,7 +77,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   loginOut() {
     this.route.navigate(['/login']);
     this.authService.clearTokenMes();
-    this.store$.dispatch(new Breadcrumb_Clear());
-    this.store$.dispatch(new User_Logout());
+    this.store$.dispatch(new BreadcrumbClear());
+    this.store$.dispatch(new UserLogout());
   }
 }

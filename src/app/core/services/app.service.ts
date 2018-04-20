@@ -1,5 +1,5 @@
-import { User_Update_modules } from './../actions/user.action';
-import { myStore, MyModule } from './../store';
+import { UserUpdateModules } from './../actions/user.action';
+import { MyStore, MyModule } from './../store';
 import { Store } from '@ngrx/store';
 // tslint:disable
 import { tify } from '../../shared/utils/chinese-conv';
@@ -16,7 +16,7 @@ export class AppService {
     constructor(
         private http: HttpClient,
         private auth: AuthService,
-        private store$: Store<myStore>,
+        private store$: Store<MyStore>,
     ) { }
 
     getColleague(name: string): Observable<any> {
@@ -43,7 +43,7 @@ export class AppService {
             moduleId: [61]
         }
         this.http.post(APIGlobalConfig.getAllTips, send).subscribe((tips: MyModule[]) => {
-            this.store$.dispatch(new User_Update_modules(tips));
+            this.store$.dispatch(new UserUpdateModules(tips));
         })
     }
 }

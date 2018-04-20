@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { NgxValidatorExtendService } from './../../../../core/services/ngx-validator-extend.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ImpressionListComponent } from './../shared/components/impression-list/impression-list.component';
@@ -24,10 +25,13 @@ export class ITServerWorkspaceComponent implements OnInit {
   processingCount: number;
   outTimeCount: number;
   otherOutTimeCount: number;
+  nearlyOutTimeCount: number;
+  d0: DataDrive;
   d1: DataDrive;
   d2: DataDrive;
   d3: DataDrive;
   d4: DataDrive;
+  d6: DataDrive;
   user: UserState;
   commentCount;
   impressionName = 'impression';
@@ -37,19 +41,37 @@ export class ITServerWorkspaceComponent implements OnInit {
   closedTarget: ReservationApplication;
   doneTarget: ReservationApplication;
   doneForm: FormGroup;
+  yinxiangText: string;
+  confirmToAccept: string;
+  confirmToReset: string;
   constructor(
     private reservationITService: ReservationITService,
     private dataDriveService: DataDriveService,
     private modalService: NzModalService,
     private util: UtilService,
     private fb: FormBuilder,
-    private validatorExtendService: NgxValidatorExtendService
+    private validatorExtendService: NgxValidatorExtendService,
+    private translateService: TranslateService
   ) { }
 
   ngOnInit() {
     this.user = this.reservationITService.user;
+    this.translateService.get(['serviceModule.yinxiang2', 'serviceModule.confirmToAccept', 'serviceModule.confirmToReset']).subscribe(data => {
+      // console.log(data);
+      this.yinxiangText = data['serviceModule.yinxiang2'];
+      this.confirmToAccept = data['serviceModule.confirmToAccept'];
+      this.confirmToReset = data['serviceModule.confirmToReset'];
+    });
   }
 
+  getDataDrive0(d: DataDrive) {
+    this.d0 = d;
+    const hideList = ['REMARK', 'TYPE', 'HANDLE_TIME', 'SCORE', 'USER_COMMENT', 'impression'];
+    d.tableData.columns = d.tableData.columns.filter(c => hideList.indexOf(c.property) < 0);
+    d.afterDataInit((data) => {
+      this.nearlyOutTimeCount = isArray(data) ? data.length : 0;
+    });
+  }
   async getDataDrive1(d: DataDrive) {
     this.d1 = d;
     const hideList = ['HANDLER', 'REMARK', 'TYPE', 'HANDLE_TIME', 'SCORE', 'USER_COMMENT', 'impression'];
@@ -78,21 +100,29 @@ export class ITServerWorkspaceComponent implements OnInit {
     d.beforeInitTableData((data: ReservationApplication[]) => {
       const newList = [];
       const processingList = [];
+      const nearlyOutTimeList = [];
       const last = data.filter(ds => {
+        const dept = this.reservationITService.dept;
+        const PRE_MIN_MINUTE = dept.PRE_MIN_MINUTE ? dept.PRE_MIN_MINUTE : 0;
         const date = moment(ds.SERVICE_DATE).format('YYYY-MM-DD') + ' ' + ds.END_TIME;
-        if (new Date().getTime() - new Date(date).getTime() > 0) {
-          return true;
-        }
         const status = ds.STATUS;
-        if (status === 'New') {
-          newList.push(ds);
-        } else if (status === 'Processing') {
-          processingList.push(ds);
+        const during = new Date().getTime() - new Date(date).getTime();
+        if (during > 0) {
+          return true;
+        } else if (-during < PRE_MIN_MINUTE * 60 * 1000) {
+          nearlyOutTimeList.push(ds);
+        } else {
+          if (status === 'New') {
+            newList.push(ds);
+          } else if (status === 'Processing') {
+            processingList.push(ds);
+          }
         }
-        this.d1.selfUpdateTableData(newList);
-        this.d2.selfUpdateTableData(processingList);
         return false;
       });
+      this.d1.selfUpdateTableData(newList);
+      this.d2.selfUpdateTableData(processingList);
+      this.d0.selfUpdateTableData(nearlyOutTimeList);
       return last;
     });
     await this.addDefaultSearchParams('', d);
@@ -132,7 +162,7 @@ export class ITServerWorkspaceComponent implements OnInit {
 
   showImpressionDetail(app: ReservationApplication) {
     const subscription = this.modalService.open({
-      title: '印象',
+      title: this.yinxiangText,
       content: ImpressionListComponent,
       onOk() {
       },
@@ -167,6 +197,7 @@ export class ITServerWorkspaceComponent implements OnInit {
   }
 
   async getDataDrive6(d: DataDrive) {
+    this.d6 = d;
     await this.reservationITService.getITDeptId();
     d.tableData.editable = false;
     d.tableData.searchable = false;
@@ -209,6 +240,7 @@ export class ITServerWorkspaceComponent implements OnInit {
 
   updateAllDataDrive() {
     this.dataDriveService.updateViewData(this.d3);
+    this.dataDriveService.updateViewData(this.d6);
   }
 
   closeResvation(data: ReservationApplication) {
@@ -228,7 +260,9 @@ export class ITServerWorkspaceComponent implements OnInit {
     if (this.reason) {
       const doClose = () => {
         const send = Object.assign({}, this.closedTarget, { STATUS: 'CX', REMARK: this.reason });
-        this.updateService(send);
+        this.updateService(send, () => {
+          this.isClosedVisible = false;
+        });
         this.closedTarget = null;
       };
       doClose();
@@ -242,7 +276,7 @@ export class ITServerWorkspaceComponent implements OnInit {
       this.updateService(send);
     };
     this.modalService.confirm({
-      title: '您確定受理嗎？',
+      title: this.confirmToAccept,
       onOk() {
         doReceive();
       },
@@ -252,10 +286,11 @@ export class ITServerWorkspaceComponent implements OnInit {
   }
 
   doneResvation(data: ReservationApplication) {
+    this.doneForm = null;
     this.isDoneVisible = true;
     this.doneForm = this.fb.group({
-      TYPE: ['', this.validatorExtendService.required()],
-      HANDLE_TIME: [0, this.validatorExtendService.required()],
+      TYPE: [null, this.validatorExtendService.required()],
+      HANDLE_TIME: [undefined, this.validatorExtendService.required()],
       REMARK: ['']
     });
     this.doneTarget = data;
@@ -289,7 +324,7 @@ export class ITServerWorkspaceComponent implements OnInit {
       this.updateService(send);
     };
     this.modalService.confirm({
-      title: '您確定要重置嗎？',
+      title: this.confirmToReset,
       onOk() {
         doReset();
       },

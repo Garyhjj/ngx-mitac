@@ -20,6 +20,6 @@ import { ReservationTypeComponent } from './reservation-type/reservation-type.co
     ResvationTimeComponent,
     ApplicationImpressionComponent,
     ReservationTypeComponent
-]
+  ]
 })
 export class BasicModule { }

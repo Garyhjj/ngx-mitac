@@ -41,7 +41,7 @@ export interface TabelViewSetMore {
         enable: boolean;
         content: string;
     };
-    showAction?: boolean,
+    showAction?: boolean;
     paramsOut?: {
         name: string,
         params?: string[]
@@ -50,7 +50,7 @@ export interface TabelViewSetMore {
         name: string,
         url: string,
         local?: string
-    }
+    };
 }
 export class TabelViewSet implements DataViewSet {
     type: DataViewType;

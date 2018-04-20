@@ -4,11 +4,11 @@ export interface AdditionalFn {
     changeBodyFontSize?: boolean;
     changeHeaderFontSize?: boolean;
     menu?: boolean;
-    toExcel?: boolean,
-    addItem?: boolean,
-    switchViewType?: string[],
+    toExcel?: boolean;
+    addItem?: boolean;
+    switchViewType?: string[];
     LinkToPhone?: {
         name: string,
         url: string
-    }
+    };
 }

@@ -1,3 +1,4 @@
+import { ITServerBoardComponent } from './IT-server-board/IT-server-board.component';
 import { ReservationGuard } from './../reservation-guard.service';
 import { ITServerRateComponent } from './IT-server-rate/IT-server-rate.component';
 import { ITServerTrackComponent } from './IT-server-track/IT-server-track.component';
@@ -40,6 +41,11 @@ const bRoutes: Routes = [
                 canActivateChild: [ReservationGuard],
                 path: 'rate',
                 component: ITServerRateComponent
+            },
+            {
+                canActivateChild: [ReservationGuard],
+                path: 'board',
+                component: ITServerBoardComponent
             }
         ]
     }

@@ -1,0 +1,21 @@
+ <nz-row [nzType]="'flex'">
+    <nz-col [style.width.%]="isDetail?80:100" [style.marginRight.%]="isDetail?1:0" class="over-flow">
+            <app-data-drive [name]="'geckoShipping'" >
+                <ng-template #actionRef let-data="data">
+                    <span>
+                        <a (click)="toDetail(data)">Detail</a>
+                    </span>
+                </ng-template>
+            </app-data-drive>
+    </nz-col>
+    <nz-col class="middle-padding" [class.hide]="!isDetail" *ngIf="isDetail">
+        <button nz-button [nzType]="'primary'" [nzShape]="'circle'" (click)="toCancel()">
+            <i class="anticon anticon-menu-unfold"></i>
+        </button>
+    </nz-col>
+    <nz-col [class.hide]="!isDetail" [style.width.%]="isDetail?15:0">
+        <app-data-drive [name]="'geckoShippingSN'" (dataDriveInit)="getDetailDrive($event)"></app-data-drive>
+    </nz-col>
+</nz-row>  
+
+

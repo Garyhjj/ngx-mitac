@@ -10,52 +10,52 @@
   <li nz-submenu nzOpen>
     <span title>
       <i class="anticon anticon-file-pdf"></i>
-      <span class="nav-text">看板</span>
+      <span class="nav-text">{{'board' | translate}}</span>
     </span>
     <ul>
-      <li nz-menu-item data-route="/board/urgentMaterial">急料看板</li>
-      <li nz-menu-item data-route="/board/urgentNo">急料工單看板</li>
-      <li nz-menu-item data-route="/board/esd">門禁狀況</li>
+      <li nz-menu-item data-route="/board/urgentMaterial">{{'urgentMaterialBoard' | translate}}</li>
+      <li nz-menu-item data-route="/board/urgentNo">{{'urgentNoBoard' | translate}}</li>
+      <li nz-menu-item data-route="/board/esd">{{'esd' | translate}}</li>
     </ul>
   </li>
   <li nz-submenu *ngIf="canSeeModule(26025)">
     <span title>
       <i class="anticon anticon-file-pdf"></i>
-      <span class="nav-text">訓練考試</span>
+      <span class="nav-text">{{'exam' | translate}}</span>
     </span>
     <ul>
-      <li nz-menu-item data-route="/exam/question">考試題目</li>
-      <li nz-menu-item data-route="/exam/unit">考卷維護</li>
-      <li nz-menu-item data-route="/exam/result">考試結果</li>
+      <li nz-menu-item data-route="/exam/question">{{'question' | translate}}</li>
+      <li nz-menu-item data-route="/exam/unit">{{'unit' | translate}}</li>
+      <li nz-menu-item data-route="/exam/result">{{'examResult' | translate}}</li>
     </ul>
   </li>
   <li nz-submenu *ngIf="canSeeModule(61)">
     <span title>
       <i class="anticon anticon-search"></i>
-      <span class="nav-text">巡检</span>
+      <span class="nav-text">{{'inspection' | translate}}</span>
     </span>
     <ul>
       <li nz-menu-group>
-        <span title>基本設置</span>
+        <span title>{{'baseSetting' | translate}}</span>
         <ul>
-          <li nz-menu-item data-route="/inspection/basic/name">巡檢名稱</li>
+          <li nz-menu-item data-route="/inspection/basic/name">{{'inspectionName' | translate}}</li>
         </ul>
       </li>
       <li nz-menu-group>
-        <span title>主管巡检</span>
+        <span title>{{'bossInspection' | translate}}</span>
         <ul>
-          <li nz-menu-item data-route="/inspection/boss/schedule">排班</li>
-          <li nz-menu-item data-route="/inspection/boss/report">巡检报告</li>
-          <li nz-menu-item data-route="/inspection/boss/improvement">改善措施</li>
-          <li nz-menu-item data-route="/inspection/boss/lines">问题追踪</li>
-          <li nz-menu-item data-route="/inspection/boss/attendance">考勤記錄</li>
+          <li nz-menu-item data-route="/inspection/boss/schedule">{{'schedule' | translate}}</li>
+          <li nz-menu-item data-route="/inspection/boss/report">{{'inspectionReport' | translate}}</li>
+          <li nz-menu-item data-route="/inspection/boss/improvement">{{'improvement' | translate}}</li>
+          <li nz-menu-item data-route="/inspection/boss/lines">{{'problemResult' | translate}}</li>
+          <li nz-menu-item data-route="/inspection/boss/attendance">{{'attendance' | translate}}</li>
         </ul>
       </li>
       <li nz-menu-group>
-        <span title>设备巡检</span>
+        <span title>{{'eqInspection' | translate}}</span>
         <ul>
-          <li nz-menu-item>巡检报告</li>
-          <li nz-menu-item>登记卡</li>
+          <li nz-menu-item>{{'inspectionReport' | translate}}</li>
+          <li nz-menu-item>{{'card' | translate}}</li>
         </ul>
       </li>
     </ul>

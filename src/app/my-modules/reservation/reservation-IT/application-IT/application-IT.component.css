@@ -17,6 +17,14 @@
   cursor: pointer;
 }
 
+.hasremain {
+  background-color: #FFFFFF;
+}
+
+.noremain {
+  color: rgba(0, 0, 0, 0.25);
+}
+
 .cell-containar {
   display: flex;
   align-items: center;
@@ -28,6 +36,11 @@
 .align-center {
   text-align: center;
 }
+
+.cell-disabled {
+  color: rgba(0, 0, 0, 0.25);
+}
+
 .card-select {
   background-color: #20A0ff;
   color: #fff;
@@ -44,4 +57,12 @@
   width: 100px;
   height: 30px;
   line-height: 30px;
+}
+
+:host ::ng-deep .ant-fullcalendar-fullscreen .ant-fullcalendar-content {
+  height: 50px;
+}
+
+:host ::ng-deep .ant-fullcalendar-fullscreen .ant-fullcalendar-date {
+  height: 80px;
 }

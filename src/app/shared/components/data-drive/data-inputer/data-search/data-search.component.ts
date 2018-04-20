@@ -60,18 +60,20 @@ export class DataSearchComponent implements OnInit {
     const cascaderProps = this.inputTypeList.filter(i => i.type === 'cascader').map(t => t.label);
     cascaderProps.forEach(c => {
       const cascaderProp = value[c];
+      // tslint:disable-next-line:no-unused-expression
       cascaderProp && Object.assign(value, cascaderProp);
       delete value[c];
-    })
+    });
 
-    const send: any = Object.assign({},value);
+    const send: any = Object.assign({}, value);
     this.searchSets.forEach(s => {
+      // tslint:disable-next-line:no-unused-expression
       value[s.property] && (send[s.apiProperty ? s.apiProperty : s.property] = value[s.property]);
-    })
+    });
     const id = this.util.showLoading();
-    const finalFn = (id) => this.util.dismissLoading(id);
-    this.dataDriveService.searchData(this.dataDrive, send).subscribe((c: any[]) => {this.dataDriveService.initTableData(this.dataDrive, c); finalFn(id)}
-      , (err) => {this.util.errDeal(err); finalFn(id)}
+    const finalFn = () => this.util.dismissLoading(id);
+    this.dataDriveService.searchData(this.dataDrive, send).subscribe((c: any[]) => { this.dataDriveService.initTableData(this.dataDrive, c); finalFn(); }
+      , (err) => { this.util.errDeal(err); finalFn(); }
     );
   }
 
@@ -98,15 +100,16 @@ export class DataSearchComponent implements OnInit {
           match.fns.forEach(f => {
             const validFn = this.validExd[f.name];
             const validParmas = f.parmas || [];
+            // tslint:disable-next-line:no-unused-expression
             validFn && valid.push(validFn(...validParmas));
-          })
+          });
         }
       }
       myForm[s.property] = [def, valid];
       return Object.assign({ label: mapColumn ? mapColumn.value : s.property }, s.InputOpts);
     });
     this.validateForm = this.fb.group(myForm);
-    this.dataDrive.observeScrollToBottom().subscribe(() => this.submitForm())
+    this.dataDrive.observeScrollToBottom().subscribe(() => this.submitForm());
   }
 
 }

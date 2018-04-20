@@ -34,6 +34,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    // tslint:disable-next-line:no-unused-expression
     this.attachFn && window.removeEventListener('keydown', this.attachFn);
   }
 
@@ -60,9 +61,9 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   addItem() {
-    if (!this.dataDrive.isDataAddable()) return;
-    if (!this.dataDrive.runBeforeUpdateShow({})) return;
-    if (!this.dataDrive.updateSets) return;
+    if (!this.dataDrive.isDataAddable()) { return; }
+    if (!this.dataDrive.runBeforeUpdateShow({})) { return; }
+    if (!this.dataDrive.updateSets) { return; }
     const subscription = this.modalService.open({
       title: '新增',
       content: DataUpdateComponent,
@@ -78,7 +79,7 @@ export class MenuComponent implements OnInit, OnDestroy {
     });
     subscription.subscribe(result => {
       // console.log(result);
-    })
+    });
   }
 
   showModal() {
@@ -91,9 +92,9 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   switchViewType(type: DataViewType[]) {
-    if (!isArray(type)) return;
+    if (!isArray(type)) { return; }
     if (this.currentViewIdx < 0) {
-      this.currentViewIdx = type.findIndex(t => t == this.dataDrive.dataViewSet.type);
+      this.currentViewIdx = type.findIndex(t => t === this.dataDrive.dataViewSet.type);
     }
     if (this.currentViewIdx < 0) {
       this.currentViewIdx = 0;
@@ -102,7 +103,7 @@ export class MenuComponent implements OnInit, OnDestroy {
     if (this.currentViewIdx > type.length - 1) {
       this.currentViewIdx = 0;
     }
-    this.dataDrive.switchViewType(type[this.currentViewIdx])
+    this.dataDrive.switchViewType(type[this.currentViewIdx]);
   }
 
   toExcel() {

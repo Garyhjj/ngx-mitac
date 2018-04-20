@@ -8,15 +8,16 @@ import { inspectionAttendanceConfig } from './inspection-attendance.config';
 import { inspectionScheduleLineConfig } from './inspection-schedule-line.config';
 import { inspectionCommentConfig } from './inspection-comment.config';
 export const DataDriveStore = {
+    reservationITBoard: 181,
     reservationServerRate: 162,
     reservationITTeack: 161,
     reservationITType: 141,
-    reservationITWorkspace: 121,
+    reservationITWorkspace: 120,
     reservationITSelf: 101,
     reservationTime: 85,
     reservationPerson: 84,
-    reservationDepartment: 83,
-    reservationImpression: 81,
+    reservationDepartment: 87,
+    reservationImpression: 86,
     inspectionEquipIssueList: 63,
     inspectionEquipHistory: 62,
     inspectionEquipStatus: 61,
@@ -34,6 +35,10 @@ export const DataDriveStore = {
     inspectionLine: 18 || inspectionLineConfig,
     inspectionName: 19 || inspectionNameConfig,
     esd: 20 || esdConfig,
+    geckoShipping: 81,
+    geckoShippingSN: 82,
+    geckoRma: 102,
+    geckoRepair: 103,
     examResults: 21 || {
         id: 6,
         APIs: {

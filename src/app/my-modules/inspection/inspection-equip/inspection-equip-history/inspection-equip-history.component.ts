@@ -9,7 +9,7 @@ import { isArray } from '../../../../shared/utils';
 })
 export class InspectionEquipHistoryComponent implements OnInit {
 
-  issueList:any[];
+  issueList: any[];
   issueDataDrive: DataDrive;
 
   tabIdx = 0;
@@ -19,11 +19,11 @@ export class InspectionEquipHistoryComponent implements OnInit {
   }
 
   getDataDrive1(d: DataDrive) {
-    d.beforeInitTableData((d:any) => {
-      this.issueList = d.PROBLEMS;
-      if(isArray(d.NOTES)) {
-        return d.NOTES
-      }else {
+    d.beforeInitTableData((ds: any) => {
+      this.issueList = ds.PROBLEMS;
+      if (isArray(ds.NOTES)) {
+        return ds.NOTES;
+      } else {
         return [];
       }
     });
@@ -31,7 +31,7 @@ export class InspectionEquipHistoryComponent implements OnInit {
 
   toDetail(data) {
     this.tabIdx = 1;
-    if(isArray(this.issueList)) {
+    if (isArray(this.issueList)) {
       const HEADER_ID = data.HEADER_ID;
       this.issueDataDrive.selfUpdateTableData(this.issueList.filter(i => i.HEADER_ID === HEADER_ID));
     }

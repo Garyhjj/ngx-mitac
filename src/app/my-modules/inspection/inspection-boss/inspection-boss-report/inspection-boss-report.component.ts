@@ -8,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { InspectionReportLineState, InspectionReportHeader } from '../../shared/models/index';
 import { ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-inspection-boss-report',
@@ -19,19 +20,21 @@ export class InspectionBossReportComponent implements OnInit {
 
   issueCount = 0;
   tabIdx;
-  dataDrive: DataDrive
+  dataDrive: DataDrive;
   scheduleList: {
     INSPECT_NAME: string
     NAME_ID: number
     PERSON: string
     REPORT_ID: number
     SCHEDULE_HEADER_ID: number
-  }[]
+  }[];
+  translateTexts: any;
   constructor(
     private inspectionBossService: InspectionBossService,
     private inspectionService: InspectionService,
     private dataDriveService: DataDriveService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private translate: TranslateService
   ) { }
 
   ngOnInit() {
@@ -40,11 +43,14 @@ export class InspectionBossReportComponent implements OnInit {
         this.scheduleList = data.schedule;
         this.tabIdx = 0;
       });
+    this.translate.stream(['insoectionModule.keyProblemdes', 'insoectionModule.keyProblemType']).subscribe((res) => {
+      this.translateTexts = res;
+    });
   }
 
   tabChange(idx) {
     if (this.dataDrive) {
-      // 修改索參數 
+      // 修改索參數
       this.dataDrive.addDefaultSearchParams({ header_id: this.scheduleList[idx].REPORT_ID });
       // 重新獲取數據
       this.dataDriveService.updateViewData(this.dataDrive);
@@ -64,8 +70,8 @@ export class InspectionBossReportComponent implements OnInit {
         if (c.PROBLEM_FLAG === 'Y') {
           this.issueCount++;
         }
-      })
-    })
+      });
+    });
     const mayHide = ['PROBLEM_TYPE', 'PROBLEM_DESC', 'PROBLEM_PICTURES', 'OWNER_EMPNO'];
 
     // update表單初始化，增加驗證及隱藏
@@ -85,23 +91,23 @@ export class InspectionBossReportComponent implements OnInit {
             c.isHide = isHide;
           }
         });
-      })
-    })
+      });
+    });
 
     // update表單提交前的最後關卡
     this.dataDrive.beforeUpdateSubmit((fg, sub) => {
       const val: InspectionReportLineState = fg.value;
       if (val.PROBLEM_FLAG === 'Y') {
         if (!val.PROBLEM_DESC) {
-          sub.next('請輸入問題描述');
+          sub.next(this.translateTexts['insoectionModule.keyProblemdes']);
           return false;
         }
         if (!val.PROBLEM_TYPE) {
-          sub.next('請輸入問題類別');
+          sub.next(this.translateTexts['insoectionModule.keyProblemType']);
           return false;
         }
       }
-    })
+    });
 
     // 最後修改update的對象
     this.dataDrive.onUpdateData((data: InspectionReportLineState) => {
@@ -118,7 +124,7 @@ export class InspectionBossReportComponent implements OnInit {
 
       }
       return data;
-    })
+    });
 
     // 改寫默認的更新方式
     this.dataDrive.changeUpdateWay((data: InspectionReportLineState) => {
@@ -131,15 +137,15 @@ export class InspectionBossReportComponent implements OnInit {
         TYPE: 'boss',
         INSPECTOR_NAME: this.scheduleList[this.tabIdx].PERSON,
         INSPECT_DATE: this.date
-      }
+      };
       data.COMPANY_NAME = user.COMPANY_ID;
       data.HEADER_ID = header_id;
       data.INSPECT_DATE = this.date;
       const report: InspectionReportState = {
         Header: reportHeader,
         Lines: [data]
-      }
-      return this.inspectionService.uploadReport(report).do((id: number) => { this.scheduleList[this.tabIdx].REPORT_ID = id; this.dataDrive.addDefaultSearchParams({ header_id: id })});
-    })
+      };
+      return this.inspectionService.uploadReport(report).do((id: number) => { this.scheduleList[this.tabIdx].REPORT_ID = id; this.dataDrive.addDefaultSearchParams({ header_id: id }); });
+    });
   }
 }

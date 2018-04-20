@@ -8,15 +8,15 @@ import { RouterModule, Routes } from '@angular/router';
 const eRoutes: Routes = [
     {
         path: '',
-        component:EMPIComponent,
+        component: EMPIComponent,
         canActivate: [AuthGuard],
         canActivateChild: [AuthGuard],
-        children:[{
-            path:'scan',
+        children: [{
+            path: 'scan',
             component: ScanComponent
         }]
     }
-]
+];
 
 @NgModule({
     imports: [

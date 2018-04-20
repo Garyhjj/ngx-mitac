@@ -25,7 +25,7 @@ import { InspectionBossCommentComponent } from './inspection-boss-comment/inspec
     InspectionBossAttendanceComponent,
     InspectionBossScheduleComponent,
     InspectionBossCommentComponent
-],
+  ],
   providers: [InspectionBossService, BossGuard]
 })
 export class InspectionBossModule { }

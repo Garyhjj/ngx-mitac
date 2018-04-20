@@ -1,4 +1,4 @@
-import { myStore, BreadcrumbState } from './../../core/store';
+import { MyStore, BreadcrumbState } from './../../core/store';
 import { Store } from '@ngrx/store';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
@@ -11,11 +11,11 @@ import { Observable } from 'rxjs/Observable';
 export class ContentComponent implements OnInit {
   breadcrumb: Observable<BreadcrumbState[]>;
   constructor(
-    private store$: Store<myStore>
+    private store$: Store<MyStore>
   ) { }
 
   ngOnInit() {
-    this.breadcrumb = this.store$.select((s: myStore) => s.breadcrumbReducer);
+    this.breadcrumb = this.store$.select((s: MyStore) => s.breadcrumbReducer);
   }
 
 }

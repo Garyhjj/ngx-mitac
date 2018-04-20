@@ -16,7 +16,7 @@ export class InspectionService {
         private auth: AuthService
     ) {
         this.user = this.auth.user;
-        if(this.user.privilege.find(m => m.FUNCTION_ID === 343)) {
+        if (this.user.privilege.find(m => m.FUNCTION_ID === 343)) {
             this.role = 1;
         }
     }
@@ -26,7 +26,7 @@ export class InspectionService {
     }
 
     getMRIName(type: string) {
-        return this.http.get(replaceQuery(inspectionConfig.getMRIName, {type}, this.user));
+        return this.http.get(replaceQuery(inspectionConfig.getMRIName, { type }, this.user));
     }
 
 }

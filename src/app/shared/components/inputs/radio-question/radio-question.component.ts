@@ -17,8 +17,8 @@ export class RadioQuestionComponent implements OnInit {
   @Input() radios = [];
 
   @Input() title;
-  @Input() fontSize: string = '1.6rem';
-  @Input() titlePrefix: string = '';
+  @Input() fontSize = '1.6rem';
+  @Input() titlePrefix = '';
   _result;
 
   @Input()
@@ -30,7 +30,7 @@ export class RadioQuestionComponent implements OnInit {
       this._result = r;
       this.checkResult();
     }
-  };
+  }
   get result() {
     return this._result;
   }
@@ -42,8 +42,8 @@ export class RadioQuestionComponent implements OnInit {
 
   /**
    * 给外部formControl写入数据
-   * 
-   * @param {*} value 
+   *
+   * @param {*} value
    */
   writeValue(value: string) {
     if (value) {
@@ -54,7 +54,7 @@ export class RadioQuestionComponent implements OnInit {
   /**
    * 把外面登记的监测change的函数赋值给this.propagateChange
    * 当内部数据改变时,可使用this.propagateChange(this.imgs)去触发传递出去
-   * @param {*} fn 
+   * @param {*} fn
    */
   registerOnChange(fn: any) {
     this.propagateChange = fn;
@@ -62,7 +62,7 @@ export class RadioQuestionComponent implements OnInit {
 
   /**
    * 也是一样注册,当 touched 然后调用
-   * @param {*} fn 
+   * @param {*} fn
    */
   registerOnTouched(fn: any) { }
 

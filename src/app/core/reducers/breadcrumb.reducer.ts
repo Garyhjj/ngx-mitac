@@ -17,10 +17,10 @@ export function breadcrumbReducer(state = initialState, action: BreadcrumbAction
                 } else {
                     sameUrl.active = r.active;
                 }
-            })
+            });
             return copy;
         case BREADCRUMB_CLEAR:
-            return initialState
+            return initialState;
         case BREADCRUMB_CANCEL:
             const filter = state.filter(c => c.routeUrl !== action.payload.routeUrl);
             return filter;

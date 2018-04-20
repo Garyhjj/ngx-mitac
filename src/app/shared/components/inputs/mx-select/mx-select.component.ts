@@ -17,8 +17,6 @@ import { AuthService } from '../../../../core/services/auth.service';
   ]
 })
 export class MxSelectComponent implements OnInit {
-
-  private propagateChange = (_: any) => { };
   _value = [];
   _options = [];
   @Input()
@@ -32,6 +30,7 @@ export class MxSelectComponent implements OnInit {
   @Input() lazyParams: string[];
   @Input() lazyAPIUserMes;
 
+  private propagateChange = (_: any) => { };
   constructor(
     private dataDriveService: DataDriveService,
     private auth: AuthService
@@ -39,8 +38,8 @@ export class MxSelectComponent implements OnInit {
 
   /**
    * 给外部formControl写入数据
-   * 
-   * @param {*} value 
+   *
+   * @param {*} value
    */
   writeValue(value: any) {
     if (value !== void (0)) {
@@ -51,7 +50,7 @@ export class MxSelectComponent implements OnInit {
   /**
    * 把外面登记的监测change的函数赋值给this.propagateChange
    * 当内部数据改变时,可使用this.propagateChange(this.imgs)去触发传递出去
-   * @param {*} fn 
+   * @param {*} fn
    */
   registerOnChange(fn: any) {
     this.propagateChange = fn;
@@ -59,7 +58,7 @@ export class MxSelectComponent implements OnInit {
 
   /**
    * 也是一样注册,当 touched 然后调用
-   * @param {*} fn 
+   * @param {*} fn
    */
   registerOnTouched(fn: any) { }
 
@@ -76,8 +75,9 @@ export class MxSelectComponent implements OnInit {
       const lazyAPIUserMes = this.lazyAPIUserMes;
       if (typeof lazyAPIUserMes === 'object') {
         const user = this.auth.user;
+        // tslint:disable-next-line:forin
         for (let prop in lazyAPIUserMes) {
-          const replaceMes = user[lazyAPIUserMes[prop]]
+          const replaceMes = user[lazyAPIUserMes[prop]];
           this.lazyAPI = this.lazyAPI.replace(`{${prop}}`, replaceMes ? replaceMes : '');
         }
       }
@@ -86,22 +86,22 @@ export class MxSelectComponent implements OnInit {
           this._options = r.filter(f => f).map(d => {
             if (isArray(d)) {
               if (d.length === 1) {
-                return { property: d[0], value: d[0] }
+                return { property: d[0], value: d[0] };
               } else if (d.length > 1) {
-                return { property: d[0], value: d[1] }
+                return { property: d[0], value: d[1] };
               }
             } else if (typeof d === 'object') {
               const params = this.lazyParams;
-              const keys = isArray(params) && params.length > 0?params: Object.keys(d);
+              const keys = isArray(params) && params.length > 0 ? params : Object.keys(d);
               if (keys.length === 1) {
-                return { property: d[keys[0]], value: d[keys[0]] }
+                return { property: d[keys[0]], value: d[keys[0]] };
               } else if (keys.length > 1) {
-                return { property: d[keys[0]], value: d[keys[1]] }
+                return { property: d[keys[0]], value: d[keys[1]] };
               }
             }
-          })
+          });
         }
-      })
+      });
     }
   }
 

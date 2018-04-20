@@ -29,6 +29,10 @@ const mRoutes: Routes = [
             {
                 path: 'reservation',
                 loadChildren: './reservation/reservation.module#ReservationModule'
+            },
+            {
+                path: 'report',
+                loadChildren: 'app/my-modules/report/report.module#ReportModule'
             }
         ]
     }

@@ -24,7 +24,7 @@ import { examConfig } from './shared/config';
     ExamUnitComponent,
     DoExamComponent,
     ExamResultComponent
-],
-  providers: [ExamService, ExamGuard, {provide: EXAM_CONFIG, useValue: examConfig}]
+  ],
+  providers: [ExamService, ExamGuard, { provide: EXAM_CONFIG, useValue: examConfig }]
 })
 export class ExamModule { }

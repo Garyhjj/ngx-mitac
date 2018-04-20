@@ -1,7 +1,33 @@
 <nz-tabset>
   <nz-tab>
     <ng-template #nzTabHeading>
-      待受理單據
+      {{'serviceModule.nearlyOverTime' | translate}}
+      <nz-badge [nzCount]="nearlyOutTimeCount" *ngIf="nearlyOutTimeCount">
+        <ng-template #content>
+          &nbsp;&nbsp;
+        </ng-template>
+      </nz-badge>
+    </ng-template>
+    <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive0($event)">
+      <ng-template #actionRef let-data="data">
+        <span>
+          <ng-container *ngIf="data?.STATUS==='Processing'">
+            <a (click)="doneResvation(data)">{{'serviceModule.finish' | translate}}</a>
+            <span nz-table-divider></span>
+            <a (click)="resetResvation(data)">{{'serviceModule.reset' | translate}}</a>
+          </ng-container>
+          <ng-container *ngIf="data?.STATUS==='New'">
+            <a (click)="closeResvation(data)">{{'serviceModule.close' | translate}}</a>
+            <span nz-table-divider></span>
+            <a (click)="receiveResvation(data)">{{'serviceModule.accept' | translate}}</a>
+          </ng-container>
+        </span>
+      </ng-template>
+    </app-data-drive>
+  </nz-tab>
+  <nz-tab>
+    <ng-template #nzTabHeading>
+      {{'serviceModule.waitingToAccept' | translate}}
       <nz-badge [nzCount]="newCount" *ngIf="newCount">
         <ng-template #content>
           &nbsp;&nbsp;
@@ -11,16 +37,16 @@
     <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive1($event)">
       <ng-template #actionRef let-data="data">
         <span>
-          <a (click)="closeResvation(data)">關閉</a>
+          <a (click)="closeResvation(data)">{{'serviceModule.close' | translate}}</a>
           <span nz-table-divider></span>
-          <a (click)="receiveResvation(data)">受理</a>
+          <a (click)="receiveResvation(data)">{{'serviceModule.accept' | translate}}</a>
         </span>
       </ng-template>
     </app-data-drive>
   </nz-tab>
   <nz-tab>
     <ng-template #nzTabHeading>
-      進行中單據
+      {{'serviceModule.handling' | translate}}
       <nz-badge [nzCount]="processingCount" *ngIf="processingCount">
         <ng-template #content>
           &nbsp;&nbsp;
@@ -30,16 +56,16 @@
     <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive2($event)">
       <ng-template #actionRef let-data="data">
         <span>
-          <a (click)="doneResvation(data)">完成</a>
+          <a (click)="doneResvation(data)">{{'serviceModule.finish' | translate}}</a>
           <span nz-table-divider></span>
-          <a (click)="resetResvation(data)">重置</a>
+          <a (click)="resetResvation(data)">{{'serviceModule.reset' | translate}}</a>
         </span>
       </ng-template>
     </app-data-drive>
   </nz-tab>
   <nz-tab>
     <ng-template #nzTabHeading>
-      超時單據
+      {{'serviceModule.overtime' | translate}}
       <nz-badge [nzCount]="outTimeCount" *ngIf="outTimeCount">
         <ng-template #content>
           &nbsp;&nbsp;
@@ -50,14 +76,14 @@
       <ng-template #actionRef let-data="data">
         <span>
           <ng-container *ngIf="data?.STATUS==='Processing'">
-            <a (click)="doneResvation(data)">完成</a>
+            <a (click)="doneResvation(data)">{{'serviceModule.finish' | translate}}</a>
             <span nz-table-divider></span>
-            <a (click)="resetResvation(data)">重置</a>
+            <a (click)="resetResvation(data)">{{'serviceModule.reset' | translate}}</a>
           </ng-container>
           <ng-container *ngIf="data?.STATUS==='New'">
-            <a (click)="closeResvation(data)">關閉</a>
+            <a (click)="closeResvation(data)">{{'serviceModule.close' | translate}}</a>
             <span nz-table-divider></span>
-            <a (click)="receiveResvation(data)">受理</a>
+            <a (click)="receiveResvation(data)">{{'serviceModule.accept' | translate}}</a>
           </ng-container>
         </span>
       </ng-template>
@@ -66,7 +92,7 @@
 
   <nz-tab>
     <ng-template #nzTabHeading>
-      待评价单据
+      {{'serviceModule.waitingScore' | translate}}
       <nz-badge [nzCount]="commentCount" *ngIf="commentCount">
         <ng-template #content>
           &nbsp;&nbsp;
@@ -79,12 +105,12 @@
 
   <nz-tab>
     <ng-template #nzTabHeading>
-      已结案单据
+      {{'serviceModule.ClosedService' | translate}}
     </ng-template>
     <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive5($event)">
       <ng-template #tableCell let-data="data" let-property="property">
         <button nz-button [nzType]="'primary'" *ngIf="property === impressionName" (click)="showImpressionDetail(data)">
-          <span>查看详细</span>
+          <span>{{'serviceModule.showDetail' | translate}}</span>
         </button>
       </ng-template>
     </app-data-drive>
@@ -92,7 +118,7 @@
 
   <nz-tab>
     <ng-template #nzTabHeading>
-      其Ta人超時單據
+      {{'serviceModule.otherPeopleOvertime' | translate}}
       <nz-badge [nzCount]="otherOutTimeCount" *ngIf="otherOutTimeCount">
         <ng-template #content>
           &nbsp;&nbsp;
@@ -102,7 +128,7 @@
     <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive6($event)">
       <ng-template #actionRef let-data="data">
         <span>
-          <a (click)="resetResvation(data)">重置</a>
+          <a (click)="resetResvation(data)">{{'serviceModule.reset' | translate}}</a>
         </span>
       </ng-template>
     </app-data-drive>
@@ -110,38 +136,39 @@
 </nz-tabset>
 
 
-<nz-modal [nzVisible]="isClosedVisible" [nzTitle]="'關閉原因'" [nzContent]="modalContent" [nzFooter]="modalFooter" (nzOnCancel)="isClosedVisible = false"
-  nzWidth="560px">
-  <ng-template #modalContent>
+
+<nz-modal [nzVisible]="isClosedVisible" [nzTitle]="'serviceModule.closeReason' | translate" [nzContent]="modalContent1" [nzFooter]="modalFooter1"
+  (nzOnCancel)="isClosedVisible = false" nzWidth="560px">
+  <ng-template #modalContent1>
     <form nz-form [nzLayout]="'horizontal'">
 
       <div nz-form-item nz-row>
         <div nz-form-label nz-col [nzSpan]="6">
-          <label>關閉原因</label>
+          <label>{{'serviceModule.closeReason' | translate}}</label>
         </div>
         <div nz-form-control nz-col [nzSpan]="16" [style.textAlign]="'center'">
-          <nz-input [(ngModel)]="reason"></nz-input>
+          <nz-input [(ngModel)]="reason" name="reason"></nz-input>
         </div>
       </div>
       <div nz-form-item nz-row [style.display]="'block'">
         <button nz-button nz-col [nzOffset]="6" [nzSpan]="12" type="button" [nzType]="'primary'" [nzSize]="'large'" (click)="submitClosedForm()"
-          [disabled]="!reason">確定</button>
+          [disabled]="!reason">{{'serviceModule.confirm' | translate}}</button>
       </div>
     </form>
   </ng-template>
-  <ng-template #modalFooter>
+  <ng-template #modalFooter1>
 
   </ng-template>
 </nz-modal>
 
-<nz-modal [nzVisible]="isDoneVisible" [nzTitle]="'處理'" [nzContent]="modalContent" [nzFooter]="modalFooter" (nzOnCancel)="isDoneVisible = false"
-  nzWidth="560px">
+<nz-modal [nzVisible]="isDoneVisible" [nzTitle]="'serviceModule.handle' | translate" [nzContent]="modalContent" [nzFooter]="modalFooter"
+  (nzOnCancel)="isDoneVisible = false" nzWidth="560px">
   <ng-template #modalContent>
     <form nz-form [nzLayout]="'horizontal'" [formGroup]="doneForm" *ngIf="doneForm">
 
       <div nz-form-item nz-row>
         <div nz-form-label nz-col [nzSpan]="6">
-          <label>*問題分類</label>
+          <label>*{{'serviceModule.problemType' | translate}}</label>
         </div>
         <div nz-form-control nz-col [nzSpan]="16">
           <app-mx-select [lazyAPI]="'IPQA/GetMRILookup?lookup_type=IT_SERVICE_TYPE'" [lazyParams]="['LOOKUP_CODE', 'LOOKUP_CODE']"
@@ -151,16 +178,16 @@
 
       <div nz-form-item nz-row>
         <div nz-form-label nz-col [nzSpan]="6">
-          <label>*處理耗時(h)</label>
+          <label>*{{'serviceModule.handleTime' | translate}}(h)</label>
         </div>
         <div nz-form-control nz-col [nzSpan]="16">
-          <nz-input-number [nzSize]="'large'" [style.width]="'50%'" formControlName="HANDLE_TIME"></nz-input-number>
+          <nz-input-number [nzSize]="'large'" [style.width]="'50%'" formControlName="HANDLE_TIME" nzAllowClear="true"></nz-input-number>
         </div>
       </div>
 
       <div nz-form-item nz-row>
         <div nz-form-label nz-col [nzSpan]="6">
-          <label>處理備註</label>
+          <label>{{'serviceModule.handleDesc' | translate}}</label>
         </div>
         <div nz-form-control nz-col [nzSpan]="16">
           <nz-input nzType="textarea" [nzAutosize]="'1'" formControlName="REMARK"></nz-input>
@@ -169,7 +196,7 @@
 
       <div nz-form-item nz-row [style.display]="'block'">
         <button nz-button nz-col [nzOffset]="6" [nzSpan]="12" type="button" [nzType]="'primary'" [nzSize]="'large'" (click)="submitDoneForm()"
-          [disabled]="">確定</button>
+          [disabled]="doneForm.invalid">{{'serviceModule.confirm' | translate}}</button>
       </div>
     </form>
   </ng-template>

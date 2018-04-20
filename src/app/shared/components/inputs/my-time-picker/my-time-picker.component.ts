@@ -15,15 +15,13 @@ import * as moment from 'moment';
   ]
 })
 export class MyTimePickerComponent implements OnInit {
-
-  private propagateChange = (_: string) => { };
-
   @Input() myPickerFormat = 'HH:mm:ss';
-  @Input() myFormat: string = 'HH:mm:ss';
-  @Input() myPlaceHolder: string = '請選擇時間';
+  @Input() myFormat = 'HH:mm:ss';
+  @Input() myPlaceHolder = '請選擇時間';
   imgs: string[];
   _date = new Date();
-  timeString: string = '';
+  timeString = '';
+  private propagateChange = (_: string) => { };
   constructor(
 
   ) { }
@@ -33,24 +31,24 @@ export class MyTimePickerComponent implements OnInit {
 
   /**
    * 给外部formControl写入数据
-   * 
-   * @param {*} value 
+   *
+   * @param {*} value
    */
   writeValue(value: string) {
     if (value) {
-      const date = new Date('2018-01-01T'+value);
-      if(date.toString() !== 'Invalid Date') {
+      const date = new Date('2018-01-01T' + value);
+      if (date.toString() !== 'Invalid Date') {
         this._date = date;
         this.timeString = value;
       }
     }
-    setTimeout(() =>this.change(this._date), 50);
+    setTimeout(() => this.change(this._date), 50);
   }
 
   /**
    * 把外面登记的监测change的函数赋值给this.propagateChange
    * 当内部数据改变时,可使用this.propagateChange(this.imgs)去触发传递出去
-   * @param {*} fn 
+   * @param {*} fn
    */
   registerOnChange(fn: any) {
     this.propagateChange = fn;
@@ -58,14 +56,14 @@ export class MyTimePickerComponent implements OnInit {
 
   /**
    * 也是一样注册,当 touched 然后调用
-   * @param {*} fn 
+   * @param {*} fn
    */
-  registerOnTouched(fn:any) { }
+  registerOnTouched(fn: any) { }
 
-  change(val:Date) {
+  change(val: Date) {
     this.timeString = val ? moment(val).format(this.myPickerFormat) : '';
-    this.propagateChange(this.timeString)//去触发外部监控的函数
+    this.propagateChange(this.timeString); // 去触发外部监控的函数
   }
-  
+
 }
 

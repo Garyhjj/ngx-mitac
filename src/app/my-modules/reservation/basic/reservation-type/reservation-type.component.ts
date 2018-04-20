@@ -20,7 +20,7 @@ export class ReservationTypeComponent implements OnInit {
       data.DESCRIPTION = 'N/A';
       data.ENABLED_FLAG = 'Y';
       data.START_DATE = data.START_DATE || moment().format('YYYY-MM-DD');
-    })
+    });
   }
 
 }

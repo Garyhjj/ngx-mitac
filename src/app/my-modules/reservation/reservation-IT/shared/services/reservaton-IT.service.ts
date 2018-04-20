@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs/Observable';
 import { ReservationService } from './../../../shared/services/resvation.service';
 import { AuthService } from './../../../../../core/services/auth.service';
 import { UserState } from './../../../../../core/store';
@@ -45,6 +46,14 @@ export class ReservationITService {
         if (isArray(res)) {
             this.timeMes = res;
         }
+    }
+
+    getUndoneReservationList() {
+        return Observable.forkJoin(this.getReservationList({ status: 'New' }), this.getReservationList({ status: 'Processing' }))
+            .map(res => res.reduce((a: any[], b: any[]) => a.concat(b), []));
+    }
+    getReservationList(query: any = {}) {
+        return this.http.get(replaceQuery(reservationITConfig.getReservationList, query, this.user));
     }
 
     getServiceDateMes(dept_id: number) {

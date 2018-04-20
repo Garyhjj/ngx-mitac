@@ -1,13 +1,13 @@
 <app-data-drive [name]="'inspectionComment'" (dataDriveInit)="getDataDrive($event)"></app-data-drive>
 
-<nz-modal [nzVisible]="isVisible" [nzTitle]="'評分'" [nzContent]="modalContent" [nzFooter]="modalFooter" (nzOnCancel)="isVisible = false"
-  nzWidth="760px">
+<nz-modal [nzVisible]="isVisible" nzTitle="{{'insoectionModule.comment' | translate}}" [nzContent]="modalContent" [nzFooter]="modalFooter"
+  (nzOnCancel)="isVisible = false" nzWidth="760px">
   <ng-template #modalContent>
     <form nz-form [nzLayout]="formLayout" [formGroup]="myForm" *ngIf="myForm">
 
       <div nz-form-item nz-row>
         <div nz-form-label nz-col [nzSpan]="6">
-          <label>總分</label>
+          <label>{{'insoectionModule.totalMark' | translate}}</label>
         </div>
         <div nz-form-control nz-col [nzSpan]="16">
           <nz-input formControlName="SCORE" [nzSize]="'large'" [nzReadonly]="true">
@@ -17,7 +17,7 @@
 
       <div nz-form-item nz-row>
         <div nz-form-label nz-col [nzSpan]="6">
-          <label>附加分</label>
+          <label>{{'insoectionModule.additionalMark' | translate}}</label>
         </div>
         <div nz-form-control nz-col [nzSpan]="16">
           <nz-input-number formControlName="ADDITIONAL_SCORE" [nzSize]="'large'" [nzMin]="0" [style.width]="'50%'"></nz-input-number>
@@ -29,7 +29,7 @@
           *ngFor="let ctrl of myForm.controls['list'].controls; let i = index;">
           <div nz-form-item nz-row [formGroupName]="i">
             <div nz-form-label nz-col [nzSpan]="6">
-              <label>時間</label>
+              <label>{{'insoectionModule.checkTime' | translate}}</label>
             </div>
             <div nz-form-control nz-col [nzSpan]="16">
               <nz-input formControlName="INSPECT_TIME" [nzSize]="'large'" [nzReadonly]="true">
@@ -39,7 +39,7 @@
 
           <div nz-form-item nz-row [formGroupName]="i">
             <div nz-form-label nz-col [nzSpan]="6">
-              <label>地點</label>
+              <label>{{'insoectionModule.location' | translate}}</label>
             </div>
             <div nz-form-control nz-col [nzSpan]="16">
               <nz-input formControlName="LOCATION" [nzSize]="'large'" [nzReadonly]="true">
@@ -49,7 +49,7 @@
 
           <div nz-form-item nz-row [formGroupName]="i" *ngIf="ctrl.get('PROBLEM_FLAG')?.value === 'Y'">
             <div nz-form-label nz-col [nzSpan]="6">
-              <label>問題詳述</label>
+              <label>{{'insoectionModule.issueDetail' | translate}}</label>
             </div>
             <div nz-form-control nz-col [nzSpan]="16">
               <nz-input formControlName="PROBLEM_DESC" [nzSize]="'large'" [nzReadonly]="true">
@@ -59,7 +59,7 @@
 
           <div nz-form-item nz-row [formGroupName]="i" *ngIf="myForm.get('list')?.controls[i]?.value?.PROBLEM_PICTURES">
             <div nz-form-label nz-col [nzSpan]="6">
-              <label>附圖</label>
+              <label>{{'insoectionModule.figure' | translate}}</label>
             </div>
             <div nz-form-control nz-col [nzSpan]="16">
               <app-photo-upload formControlName="PROBLEM_PICTURES" [maxCount]="9" [removable]="false" [addable]="false" [scanable]="true"></app-photo-upload>
@@ -68,7 +68,7 @@
 
           <div nz-form-item nz-row [formGroupName]="i" *ngIf="ctrl.get('PROBLEM_FLAG')?.value === 'Y'">
             <div nz-form-label nz-col [nzSpan]="6">
-              <label>負責人</label>
+              <label>{{'insoectionModule.ownerEmpno' | translate}}</label>
             </div>
             <div nz-form-control nz-col [nzSpan]="16">
               <app-colleague-searcher formControlName="OWNER_EMPNO" [miDisabled]="true" [miPlaceHolder]="''">
@@ -78,7 +78,7 @@
 
           <div nz-form-item nz-row [formGroupName]="i">
             <div nz-form-label nz-col [nzSpan]="6">
-              <label>*评分</label>
+              <label>*{{'insoectionModule.comment' | translate}}</label>
             </div>
             <div nz-form-control nz-col [nzSpan]="16">
               <nz-input-number formControlName="SCORE" [nzSize]="'large'" [nzMin]="0" [style.width]="'50%'"></nz-input-number>
@@ -90,7 +90,7 @@
 
       <div nz-form-item nz-row [style.display]="'block'">
         <button nz-button nz-col [nzOffset]="6" [nzSpan]="12" type="button" [nzType]="'primary'" [nzSize]="'large'" (click)="submitForm()"
-          [disabled]="!myForm.valid">確定</button>
+          [disabled]="!myForm.valid">{{'confirm' | translate}}</button>
       </div>
     </form>
   </ng-template>

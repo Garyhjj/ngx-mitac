@@ -7,7 +7,7 @@ export interface ServiceTimeInfo {
     REMAIN_NUMBER: number;
     START_TIME: string;
     TIME_ID: number;
-} 
+}
 
 
 export interface ReservationApplication {

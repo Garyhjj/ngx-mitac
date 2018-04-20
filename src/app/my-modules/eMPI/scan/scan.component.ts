@@ -1,7 +1,7 @@
 import { UtilService } from './../../../core/services/util.service';
 import { eMPIConfig } from './../shared/config/index';
 import { Component, OnInit } from '@angular/core';
-import { DomSanitizer, SafeUrl} from '@angular/platform-browser'
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 @Component({
   selector: 'app-scan',
   templateUrl: './scan.component.html',
@@ -9,20 +9,20 @@ import { DomSanitizer, SafeUrl} from '@angular/platform-browser'
 })
 export class ScanComponent implements OnInit {
 
-  testFileUri:string  = '/assets/123.pdf';
+  testFileUri = '/assets/123.pdf';
 
-  frameSrc:SafeUrl;
+  frameSrc: SafeUrl;
 
   constructor(
-    private domSanitizer:DomSanitizer,
+    private domSanitizer: DomSanitizer,
     private utilService: UtilService
   ) { }
 
   ngOnInit() {
-    this.updateFrameSrc(eMPIConfig.viewerUrlBase+this.testFileUri);
+    this.updateFrameSrc(eMPIConfig.viewerUrlBase + this.testFileUri);
   }
 
-  updateFrameSrc(src:string) {
+  updateFrameSrc(src: string) {
     this.frameSrc = this.domSanitizer.bypassSecurityTrustResourceUrl(src);
   }
 

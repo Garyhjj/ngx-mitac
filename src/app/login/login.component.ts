@@ -1,10 +1,10 @@
 import { UtilService } from './../core/services/util.service';
-import { myStore } from './../core/store';
+import { MyStore } from './../core/store';
 import { Store } from '@ngrx/store';
 import { AuthService } from './../core/services/auth.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, AbstractControl, Validators } from '@angular/forms';
-import { Router }            from '@angular/router';
+import { Router } from '@angular/router';
 import { NzNotificationService } from 'ng-zorro-antd';
 
 @Component({
@@ -14,26 +14,26 @@ import { NzNotificationService } from 'ng-zorro-antd';
 })
 export class LoginComponent implements OnInit, OnDestroy {
 
-  validateForm:FormGroup;
-  loading:boolean = false;
+  validateForm: FormGroup;
+  loading = false;
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private store$: Store<myStore>,
+    private store$: Store<MyStore>,
     private _notification: NzNotificationService,
     private util: UtilService
   ) { }
 
   ngOnInit() {
     this.authService.loginPageSubject.next(true);
-    this.store$.select((s) =>s.userReducer).subscribe((user) => {
+    this.store$.select((s) => s.userReducer).subscribe((user) => {
       this.validateForm = this.fb.group({
-        userName:[user.USER_NAME, Validators.required],
-        password:[user.password, Validators.required],
-        remember:[user.rememberPWD]
-      })
-    })
+        userName: [user.USER_NAME, Validators.required],
+        password: [user.password, Validators.required],
+        remember: [user.rememberPWD]
+      });
+    });
   }
 
   ngOnDestroy() {
@@ -44,9 +44,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.loading = true;
     let value = this.validateForm.value;
     this.authService.login(value).subscribe((user) => {
-      this.router.navigate(['/']);
+      this.router.navigate(['/modules']);
       this.loading = false;
-      this._notification.create('success','登录成功',`您好：${user.User.NICK_NAME}`)
-    },(err) => {this.loading = false;this.util.errDeal(err)});
+      this._notification.create('success', '登录成功', `您好：${user.User.NICK_NAME}`);
+    }, (err) => { this.loading = false; this.util.errDeal(err); });
   }
 }

@@ -1,4 +1,5 @@
 import { FileUploadComponent } from './components/inputs/file-upload/file-upload.component';
+import { MySelectComponent } from './components/inputs/my-select/my-select.component';
 import { PhotoUploadComponent } from './components/inputs/photo-upload/photo-upload.component';
 import { ColleagueSearcherComponent } from './components/inputs/colleague-searcher/colleague-searcher.component';
 import { MySwitchComponent } from './components/inputs/my-switch/my-switch.component';
@@ -13,13 +14,15 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MxSelectComponent } from './components/inputs/mx-select/mx-select.component';
 import { MxCheckboxComponent } from './components/inputs/mx-checkbox/mx-checkbox.component';
-
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
-    imports: [CommonModule, PipesModule, NgZorroAntdModule, ReactiveFormsModule, FormsModule],
+    imports: [CommonModule, PipesModule, NgZorroAntdModule,
+        ReactiveFormsModule, FormsModule, TranslateModule],
     declarations: [
         PhotoViewerComponent,
         MxSelectComponent,
+        MySelectComponent,
         MxCheckboxComponent,
         MyDatePickerComponent,
         MyTimePickerComponent,
@@ -30,6 +33,7 @@ import { MxCheckboxComponent } from './components/inputs/mx-checkbox/mx-checkbox
         FileUploadComponent
     ],
     exports: [
+        TranslateModule,
         CommonModule,
         PipesModule,
         NgZorroAntdModule,
@@ -37,6 +41,7 @@ import { MxCheckboxComponent } from './components/inputs/mx-checkbox/mx-checkbox
         ReactiveFormsModule,
         PhotoViewerComponent,
         MxSelectComponent,
+        MySelectComponent,
         MxCheckboxComponent,
         MyDatePickerComponent,
         MyTimePickerComponent,

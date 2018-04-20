@@ -77,25 +77,26 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
   }
 
   submitForm() {
-    if (!this.dataDrive.runBeforeUpdateSubmit(this.validateForm, this.globalUpdateErrSubject)) return setTimeout(() => this.globalUpdateErrSubject.next(''), 3000);
+    if (!this.dataDrive.runBeforeUpdateSubmit(this.validateForm, this.globalUpdateErrSubject)) { return setTimeout(() => this.globalUpdateErrSubject.next(''), 3000); }
     const value = this.validateForm.value;
     const cascaderProps = this.inputTypeList.filter(i => i.type === 'cascader').map(t => t.label);
     cascaderProps.forEach(c => {
       const cascaderProp = value[c];
+      // tslint:disable-next-line:no-unused-expression
       cascaderProp && Object.assign(value, cascaderProp);
       delete value[c];
-    })
+    });
     if (this.primaryKey) {
       value[this.primaryKey] = this.primaryValue;
     }
     const id = this.util.showLoading();
-    const finalFn = (id) => this.util.dismissLoading(id);
+    const finalFn = () => this.util.dismissLoading(id);
     this.dataDriveService.updateData(this.dataDrive, value).subscribe(c => {
-      finalFn(id);
+      finalFn();
       this.dataDriveService.updateViewData(this.dataDrive);
       this.util.showGlobalSucMes(this.changeIdx < 0 ? '插入成功' : '更新成功');
       setTimeout(() => this.subject1.destroy(), 500);
-    }, (err) => { this.util.errDeal(err); finalFn(id) })
+    }, (err) => { this.util.errDeal(err); finalFn(); });
   }
 
   subscribeGlErr() {
@@ -103,6 +104,7 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    // tslint:disable-next-line:no-unused-expression
     this.sub1 && this.sub1.unsubscribe();
   }
   ngOnInit() {
@@ -128,16 +130,16 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
             if (type === 'cascader') {
               const properties = s.InputOpts.more && s.InputOpts.more.properties;
               if (isArray(properties)) {
-                def = ''
+                def = '';
                 properties.forEach(p => {
                   if (typeof p === 'string') {
-                    const target = data.find(d => d.property === p);
-                    if(target) {
-                      const val = target.value;
+                    const target1 = data.find(d => d.property === p);
+                    if (target1) {
+                      const val = target1.value;
                       def += def ? ',' + val : val;
                     }
                   }
-                })
+                });
               }
             }
           }
@@ -157,8 +159,9 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
           match.fns.forEach(f => {
             const validFn = this.validExd[f.name];
             const validParmas = f.parmas || [];
+            // tslint:disable-next-line:no-unused-expression
             validFn && valid.push(validFn(...validParmas));
-          })
+          });
         }
       }
       myForm[s.property] = [def, valid];

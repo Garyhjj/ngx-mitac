@@ -1,3 +1,4 @@
+import { TableDataColumn } from './shared/models/table-data/index';
 import { Observable } from 'rxjs/Observable';
 import { DataDrive, TableDataModel } from './shared/models/index';
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, TemplateRef, ContentChild } from '@angular/core';
@@ -18,6 +19,7 @@ import { Subscription } from 'rxjs/Subscription';
 export class DataDriveComponent implements OnInit, OnDestroy {
   @ContentChild('actionRef') actionRef: TemplateRef<void>;
   @ContentChild('tableCell') tableCell: TemplateRef<void>;
+  @ContentChild('headerCellRef') headerCellRef: TemplateRef<void>;
   tableData: TableDataModel;
   dataDrive: DataDrive;
   isShowModal = Observable.of(false);
@@ -25,10 +27,13 @@ export class DataDriveComponent implements OnInit, OnDestroy {
   private _name: string;
   sub1: Subscription;
   sub2: Subscription;
+  timeID: any;
   @Input()
   set name(n: string) {
     this._name = n;
   }
+  @Input() headerCellStyle: (c: TableDataColumn) => any;
+  @Input() bodyCellStyle: (data: any, property: string) => any;
 
   @Output() dataDriveInit: EventEmitter<DataDrive> = new EventEmitter();
 
@@ -41,7 +46,9 @@ export class DataDriveComponent implements OnInit, OnDestroy {
   ) { }
 
   async ngOnInit() {
+    const loadingId = this.utilService.showLoading();
     this.dataDrive = await this.dataDriveService.initDataDrive(this._name);
+    this.utilService.dismissLoading(loadingId);
     if (!this.dataDrive) {
       return;
     }
@@ -58,10 +65,25 @@ export class DataDriveComponent implements OnInit, OnDestroy {
     }
     this.dataDrive.observeSelfUpdateTableData().subscribe(d => this.dataDriveService.initTableData(this.dataDrive, d));
     const searchSets = this.dataDrive.searchSets;
-    if ((!searchSets || searchSets.length === 0) && this.dataDrive.canAutoUpdate) {
-      this.dataDrive.observeScrollToBottom().subscribe(_ => {
-        this.dataDriveService.updateViewData(this.dataDrive);
-      });
+    const refreshDataInterval = this.tableData.refreshDataInterval;
+    if (!Number.isNaN(+refreshDataInterval)) {
+      const interval = Math.max(refreshDataInterval, 1000 * 10);
+      const updateViewData = () => {
+        if (!this.timeID) {
+          this.timeID = setTimeout(() => {
+            this.timeID = null;
+            this.dataDriveService.updateViewData(this.dataDrive);
+            updateViewData();
+          }, interval);
+        }
+      };
+      updateViewData();
+    } else {
+      if ((!searchSets || searchSets.length === 0) && this.dataDrive.canAutoUpdate) {
+        this.dataDrive.observeScrollToBottom().subscribe(_ => {
+          this.dataDriveService.updateViewData(this.dataDrive);
+        });
+      }
     }
   }
 
@@ -70,5 +92,6 @@ export class DataDriveComponent implements OnInit, OnDestroy {
     this.sub1 && this.sub1.unsubscribe();
     // tslint:disable-next-line:no-unused-expression
     this.sub2 && this.sub2.unsubscribe();
+    clearTimeout(this.timeID);
   }
 }

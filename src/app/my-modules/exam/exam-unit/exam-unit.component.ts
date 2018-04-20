@@ -29,8 +29,8 @@ export class ExamUnitComponent implements OnInit {
       name: this.auth.user.NICK_NAME,
       passScore: t.PASS_SCORE,
       time: t.TIME
-    })
-  };
+    });
+  }
   role = this.examService.role;
   constructor(
     private util: UtilService,
@@ -50,7 +50,7 @@ export class ExamUnitComponent implements OnInit {
   }
 
   alterHeaderByRole() {
-    if(this.examService.role === 2) {
+    if (this.examService.role === 2) {
       const depNo = this.auth.user.DEPTNO;
       this.headerDataDrive.updateSets = this.headerDataDrive.updateSets.filter(c => c.property !== 'REF_DEPT');
       this.headerDataDrive.onUpdateFormShow((fg) => {
@@ -58,8 +58,8 @@ export class ExamUnitComponent implements OnInit {
       });
       this.headerDataDrive.searchSets = this.headerDataDrive.searchSets.filter(c => c.property !== 'REF_DEPT');
       this.headerDataDrive.beforeSearch((data) => {
-        return Object.assign(data, {'ref_dept': depNo});
-      })
+        return Object.assign(data, { 'ref_dept': depNo });
+      });
     }
   }
 
@@ -71,43 +71,43 @@ export class ExamUnitComponent implements OnInit {
   getQuestionsDrive(d: DataDrive) {
     this.questionsDrive = d;
     this.questionsDrive.setParamsOut('加入考卷');
-    this.questionsDrive.onParamsOut((d) => {
+    this.questionsDrive.onParamsOut((ds) => {
       const send: ExamMapping = {
-        ID:0,
+        ID: 0,
         EXAM_ID: this._targetExam.ID,
-        QUESTION_ID: d.ID,
+        QUESTION_ID: ds.ID,
         NUM: 0,
         SCORE: 1,
         COMPANY_ID: ''
-      }
+      };
       this.examService.updateMapping(send).subscribe(a => {
         this.dataDriveService.updateViewData(this.contentDataDrive);
-      }, (err) =>  this.util.errDeal(err))
-    })
+      }, (err) => this.util.errDeal(err));
+    });
   }
 
   changeContentSearch() {
     this.contentDataDrive.beforeSearch((data) => {
-      return Object.assign(data, {exam_id: this._targetExam?this._targetExam.ID: 0});
-    })
+      return Object.assign(data, { exam_id: this._targetExam ? this._targetExam.ID : 0 });
+    });
   }
 
   toSetExamDetail() {
     this.headerDataDrive.onParamsOut((d) => {
       this.targetExam = d;
       this.tabIdx = 1;
-    })
+    });
   }
 
   tabChange(idx) {
-    if(idx === 1) {
-      if(!this._targetExam) {
-        this.util.showWarningConfirm({title:'您還沒有選擇要維護的考卷',content: '將返回到考卷頭維護處'},() => {
+    if (idx === 1) {
+      if (!this._targetExam) {
+        this.util.showWarningConfirm({ title: '您還沒有選擇要維護的考卷', content: '將返回到考卷頭維護處' }, () => {
           this.tabIdx = 0;
-        })
-      }else {
+        });
+      } else {
         this.dataDriveService.updateViewData(this.contentDataDrive);
-      } 
+      }
     }
   }
 

@@ -26,4 +26,5 @@ export const reservationConfig = {
      * @param {number} {dept_id}
      */
     getServiceTime: APPConfig.baseUrl + 'Service/GetServiceTimes?dept_id={dept_id}'
-}
+};
+

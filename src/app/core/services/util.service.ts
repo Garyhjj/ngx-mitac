@@ -5,6 +5,8 @@ import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 @Injectable()
 export class UtilService {
 
+    loadingId: string;
+    audio: HTMLAudioElement;
     constructor(
         private router: Router,
         private _message: NzMessageService,
@@ -76,11 +78,51 @@ export class UtilService {
     }
 
     showLoading() {
-        return this._message.loading('正在執行中', { nzDuration: 0 }).messageId;
+        // tslint:disable-next-line:no-unused-expression
+        this.loadingId && this.dismissLoading(this.loadingId);
+        this.loadingId = this._message.loading('正在執行中', { nzDuration: 0 }).messageId;
+        return this.loadingId;
     }
 
     dismissLoading(id: string) {
         this._message.remove(id);
+    }
+
+    playAudio(text: string, opts?: {
+        succFn?: () => void,
+        errFn?: (err) => void,
+        endFn?: (audio) => void,
+        single?: boolean
+    }) {
+        if (text) {
+            let audio = new Audio(`http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=2&text=${encodeURI(text)}`);
+            const isSingle = opts && opts.single;
+            audio.addEventListener('ended', () => {
+                if (opts && opts.endFn) {
+                    opts.endFn(audio);
+                }
+                audio = null;
+            });
+            if (isSingle) {
+                // tslint:disable-next-line:no-unused-expression
+                this.audio && this.audio.pause();
+            }
+            audio.play().then(() => {
+                if (opts && opts.succFn) {
+                    opts.succFn();
+                }
+            }).catch((err) => {
+                if (opts && opts.errFn) {
+                    opts.errFn(err);
+                }
+            });
+            if (isSingle) {
+                this.audio = audio;
+            } else {
+                this.audio = null;
+            }
+            return audio;
+        }
     }
 
 }

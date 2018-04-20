@@ -6,18 +6,18 @@ import * as user from '../actions/user.action';
 const initialState: UserState = (() => {
     let localUserStr = localStorage.getItem('currentUser');
     if (localUserStr) {
-        let user: UserState = Object.assign({}, JSON.parse(localUserStr));
-        if (user.modules instanceof Array) {
-            user.modules = user.modules.map((m) => {
+        let userLoc: UserState = Object.assign({}, JSON.parse(localUserStr));
+        if (userLoc.modules instanceof Array) {
+            userLoc.modules = userLoc.modules.map((m) => {
                 m.TIPS = 0;
                 return m;
-            })
+            });
         }
-        if (user.hasOwnProperty('rememberPWD') && !user.rememberPWD) {
-            user.password = '';
-            localStorage.setItem('currentUser', JSON.stringify(user));
+        if (userLoc.hasOwnProperty('rememberPWD') && !userLoc.rememberPWD) {
+            userLoc.password = '';
+            localStorage.setItem('currentUser', JSON.stringify(userLoc));
         }
-        return user;
+        return userLoc;
     } else {
         return {};
     }
@@ -31,7 +31,7 @@ export function userReducer(state = initialState, action: user.UserActions): Use
                 return update(state, action);
             } else {
                 localStorage.setItem('currentUser', JSON.stringify(action.payload));
-                return action.payload
+                return action.payload;
             }
         case user.USER_LOGOUT:
             if (state.rememberPWD) {
@@ -39,25 +39,18 @@ export function userReducer(state = initialState, action: user.UserActions): Use
             } else {
                 let new_user = Object.assign(state, { password: '' });
                 localStorage.setItem('currentUser', JSON.stringify(new_user));
-                return new_user
+                return new_user;
             }
         case user.USER_UPDATE:
             return update(state, action);
         case user.USER_CHINESECOV:
             return Object.assign(state, action.payload);
         case user.USER_CLEAR:
-            localStorage.removeItem('currentUser')
+            localStorage.removeItem('currentUser');
             return {};
         case user.USER_UPDATE_PRIVILEGE:
             let module = action.payload;
-            // state.privilege = state.privilege || [];
-            // let idx = state.privilege.findIndex((l) => l.moduleID === module.moduleID);
-            // if (idx > -1) {
-            //     state.privilege[idx] = module;
-            // } else {
-            //     state.privilege.push(module);
-            // }
-            const user1 = Object.assign({}, state, {privilege: module});
+            const user1 = Object.assign({}, state, { privilege: module });
             localStorage.setItem('currentUser', JSON.stringify(user1));
             return user1;
         case user.USER_UPDATE_MODULE:
@@ -69,7 +62,7 @@ export function userReducer(state = initialState, action: user.UserActions): Use
             let _modules = action.payload;
             _modules.forEach((m => {
                 state = updateModule(state, m);
-            }))
+            }));
             localStorage.setItem('currentUser', JSON.stringify(state));
             return Object.assign({}, state);
         default:
@@ -82,16 +75,16 @@ const updateModule = (state: UserState, m: MyModule) => {
     let index = modules.findIndex((l) => l.MODULE_ID === m.MODULE_ID);
     if (index > -1) {
         let org = state.modules[index];
-        Object.assign(org,m);
+        Object.assign(org, m);
         state.modules[index] = org;
     } else {
         state.modules.push(m);
     }
     return state;
-}
+};
 
 const update = (state: UserState, action: user.UserActions) => {
     let new_user = Object.assign(state, action.payload);
     localStorage.setItem('currentUser', JSON.stringify(new_user));
     return new_user;
-}
+};

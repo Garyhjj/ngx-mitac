@@ -14,13 +14,13 @@ export class InspectionBossService {
         private auth: AuthService
     ) {
         this.user = this.auth.user;
-        if(this.user.privilege.find(m => m.FUNCTION_ID === 124)) {
+        if (this.user.privilege.find(m => m.FUNCTION_ID === 124)) {
             this.role = 1;
         }
     }
 
     getEmployeeSchedule() {
-        const send = {company: this.user.COMPANY_ID}
+        const send = { company: this.user.COMPANY_ID };
         return this.http.get(replaceQuery(inspectionBossConfig.getEmployeeSchedule, send));
     }
 
@@ -29,7 +29,7 @@ export class InspectionBossService {
     }
 
     deleteScheduleLines(id) {
-        const send = {sechedule_line_id: id};
+        const send = { sechedule_line_id: id };
         return this.http.delete(replaceQuery(inspectionBossConfig.deleteScheduleLines, send));
     }
 
@@ -38,7 +38,7 @@ export class InspectionBossService {
     }
 
     getReport(id) {
-        const send = {header_id: id};
+        const send = { header_id: id };
         return this.http.get(replaceQuery(inspectionBossConfig.getReport, send));
     }
 

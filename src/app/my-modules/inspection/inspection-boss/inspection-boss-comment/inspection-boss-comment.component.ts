@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
 import { DataDrive } from '../../../../shared/components/data-drive/shared/models/index';
 import { isArray } from '../../../../shared/utils/index';
 import { DataDriveService } from './../../../../shared/components/data-drive/core/services/data-drive.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-inspection-boss-comment',
@@ -15,35 +16,40 @@ import { DataDriveService } from './../../../../shared/components/data-drive/cor
 export class InspectionBossCommentComponent implements OnInit {
 
   isVisible = false;
+  translateTexts: any;
   formLayout = 'horizontal';
   myForm: FormGroup;
   editData;
-  dataDrive: DataDrive
+  dataDrive: DataDrive;
   constructor(
     private inspectionBossService: InspectionBossService,
     private fb: FormBuilder,
     private validatorExtendService: NgxValidatorExtendService,
     private dataDriveService: DataDriveService,
-    private util: UtilService
+    private util: UtilService,
+    private translate: TranslateService,
   ) { }
 
   ngOnInit() {
+    this.translate.stream(['insoectionModule.comment', 'insoectionModule.commentSuccess']).subscribe((res) => {
+      this.translateTexts = res;
+    });
   }
 
   getDataDrive(d: DataDrive) {
     this.dataDrive = d;
-    d.setParamsOut('評分');
+    d.setParamsOut(this.translateTexts['insoectionModule.comment']);
     d.onParamsOut((data) => {
       const id = this.util.showLoading();
-      const finalFn = (id) => this.util.dismissLoading(id);
+      const finalFn = () => this.util.dismissLoading(id);
       this.inspectionBossService.getReport(data.HEADER_ID).subscribe(r => {
         this.intForm(r);
         this.editData = r;
         this.isVisible = true;
-        finalFn(id);
-      }, err => {this.util.errDeal(err); finalFn(id)})
-    })
-  };
+        finalFn();
+      }, err => { this.util.errDeal(err); finalFn(); });
+    });
+  }
 
   intForm(data) {
     this.myForm = null;
@@ -94,17 +100,18 @@ export class InspectionBossCommentComponent implements OnInit {
     Object.assign(this.editData.Header, { SCORE: val.SCORE, ADDITIONAL_SCORE: val.ADDITIONAL_SCORE });
     this.editData.Lines = this.editData.Lines.map(l => {
       const tar = lines.find(d => d.LINE_ID === l.LINE_ID);
+      // tslint:disable-next-line:no-unused-expression
       tar && Object.assign(l, tar);
       return l;
     });
     const id = this.util.showLoading();
-    const finalFn = (id) => this.util.dismissLoading(id);
+    const finalFn = () => this.util.dismissLoading(id);
     this.inspectionBossService.uploadReport(this.editData).subscribe(c => {
-      finalFn(id);
-      this.util.showGlobalSucMes('評分成功');
+      finalFn();
+      this.util.showGlobalSucMes(this.translateTexts['insoectionModule.commentSuccess']);
       this.isVisible = false;
       this.dataDriveService.updateViewData(this.dataDrive);
-    }, err => {this.util.errDeal(err); finalFn(id)});
+    }, err => { this.util.errDeal(err); finalFn(); });
   }
 
 }
