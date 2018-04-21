@@ -1,22 +1,30 @@
 import { NzModalService } from 'ng-zorro-antd';
 import { copyToClipboard } from './../../utils/index';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
 @Component({
   // tslint:disable-next-line:component-selector
   selector: 'app-QR',
   templateUrl: './QR.component.html',
-  styleUrls: ['./QR.component.css']
+  styleUrls: ['./QR.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class QRComponent implements OnInit {
+export class QRComponent implements OnInit, OnChanges {
   @Input() url = '';
   @Input() router = '';
   imgUrl: string;
-  constructor(private confirmServ: NzModalService) { }
-
+  constructor(private confirmServ: NzModalService, private ref: ChangeDetectorRef) { }
+  ngOnChanges() {
+    this.initQR();
+  }
   ngOnInit() {
+    this.initQR();
+  }
+
+  initQR() {
     if (AraleQRCode) {
       this.imgUrl = new AraleQRCode({ text: this.url, size: 400 }).toDataURL('image/jpeg', 0.8);
+      this.ref.markForCheck();
     }
   }
 
