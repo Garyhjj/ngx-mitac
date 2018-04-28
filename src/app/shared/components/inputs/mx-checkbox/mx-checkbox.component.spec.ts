@@ -11,9 +11,8 @@ describe('MxCheckboxComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MxCheckboxComponent ]
-    })
-    .compileComponents();
+      declarations: [MxCheckboxComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

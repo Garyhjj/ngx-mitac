@@ -11,9 +11,8 @@ describe('ITServerBoardComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ITServerBoardComponent ]
-    })
-    .compileComponents();
+      declarations: [ITServerBoardComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

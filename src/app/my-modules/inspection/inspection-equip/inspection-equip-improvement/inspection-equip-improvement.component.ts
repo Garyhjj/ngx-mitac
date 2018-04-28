@@ -5,25 +5,21 @@ import * as moment from 'moment';
 @Component({
   selector: 'app-inspection-equip-improvement',
   templateUrl: './inspection-equip-improvement.component.html',
-  styleUrls: ['./inspection-equip-improvement.component.css']
+  styleUrls: ['./inspection-equip-improvement.component.css'],
 })
 export class InspectionEquipImprovementComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   getDataDrive(d: DataDrive) {
-
-    d.onUpdateFormShow((fg) => {
+    d.onUpdateFormShow(fg => {
       fg.get('ACTION_DATE').setValue(moment(new Date()).format('YYYY-MM-DD'));
     });
 
-    d.onUpdateData((data) => {
+    d.onUpdateData(data => {
       data.PROBLEM_STATUS = 'Done';
       return data;
     });
   }
-
 }

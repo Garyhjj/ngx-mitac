@@ -5,16 +5,12 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
-import {
-  FormBuilder,
-  FormGroup,
-  FormControl
-} from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-content',
   templateUrl: './content.component.html',
-  styleUrls: ['./content.component.css']
+  styleUrls: ['./content.component.css'],
 })
 export class ContentComponent implements OnInit, OnDestroy {
   tabIdx;
@@ -23,8 +19,8 @@ export class ContentComponent implements OnInit, OnDestroy {
   constructor(
     private store$: Store<MyStore>,
     private router: Router,
-    private fb: FormBuilder
-  ) { }
+    private fb: FormBuilder,
+  ) {}
 
   show = false;
   title = 'app';
@@ -65,11 +61,13 @@ export class ContentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sub = this.store$.select((s: MyStore) => s.breadcrumbReducer).subscribe((b) => {
-      this.breadcrumb = b;
-      const idx = b.findIndex(r => r.active);
-      this.tabIdx = idx > -1 ? idx : b.length - 1;
-    });
+    this.sub = this.store$
+      .select((s: MyStore) => s.breadcrumbReducer)
+      .subscribe(b => {
+        this.breadcrumb = b;
+        const idx = b.findIndex(r => r.active);
+        this.tabIdx = idx > -1 ? idx : b.length - 1;
+      });
 
     for (let i = 1; i <= 10; i++) {
       this._dataSet.push({
@@ -107,5 +105,4 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.router.navigateByUrl('/modules');
     }
   }
-
 }

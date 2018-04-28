@@ -11,9 +11,8 @@ describe('UrgentMaterialComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UrgentMaterialComponent ]
-    })
-    .compileComponents();
+      declarations: [UrgentMaterialComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

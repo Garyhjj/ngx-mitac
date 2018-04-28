@@ -1,7 +1,16 @@
 import { TableDataColumn } from './shared/models/table-data/index';
 import { Observable } from 'rxjs/Observable';
 import { DataDrive, TableDataModel } from './shared/models/index';
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, TemplateRef, ContentChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  OnDestroy,
+  TemplateRef,
+  ContentChild,
+} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { APPConfig } from '../../../shared/config/app.config';
 import { NzModalService } from 'ng-zorro-antd';
@@ -10,15 +19,14 @@ import { DataDriveService } from './core/services/data-drive.service';
 import { UtilService } from '../../../core/services/util.service';
 import { Subscription } from 'rxjs/Subscription';
 
-
 @Component({
   selector: 'app-data-drive',
   templateUrl: './data-drive.component.html',
-  styleUrls: ['./data-drive.component.css']
+  styleUrls: ['./data-drive.component.css'],
 })
 export class DataDriveComponent implements OnInit, OnDestroy {
   @ContentChild('actionRef') actionRef: TemplateRef<void>;
-  @ContentChild('tableCell') tableCell: TemplateRef<void>;
+  @ContentChild('tableCellRef') tableCellRef: TemplateRef<void>;
   @ContentChild('headerCellRef') headerCellRef: TemplateRef<void>;
   tableData: TableDataModel;
   dataDrive: DataDrive;
@@ -42,8 +50,8 @@ export class DataDriveComponent implements OnInit, OnDestroy {
     private modalService: NzModalService,
     private _message: NzMessageService,
     private dataDriveService: DataDriveService,
-    private utilService: UtilService
-  ) { }
+    private utilService: UtilService,
+  ) {}
 
   async ngOnInit() {
     const loadingId = this.utilService.showLoading();
@@ -57,13 +65,22 @@ export class DataDriveComponent implements OnInit, OnDestroy {
     this.isShowModal = this.dataDrive.observeIsShowModal();
     if (this.tableData && !this.tableData.stopFirstInit) {
       this.dataDrive.isGetingData = true;
-      const final = () => setTimeout(() => this.dataDrive.isGetingData = false, 200);
-      this.dataDriveService.getInitData(this.dataDrive).subscribe((ds: any) => {
-        this.dataDriveService.initTableData(this.dataDrive, ds);
-        final();
-      }, (err) => { this.utilService.errDeal(err); final(); });
+      const final = () =>
+        setTimeout(() => (this.dataDrive.isGetingData = false), 200);
+      this.dataDriveService.getInitData(this.dataDrive).subscribe(
+        (ds: any) => {
+          this.dataDriveService.initTableData(this.dataDrive, ds);
+          final();
+        },
+        err => {
+          this.utilService.errDeal(err);
+          final();
+        },
+      );
     }
-    this.dataDrive.observeSelfUpdateTableData().subscribe(d => this.dataDriveService.initTableData(this.dataDrive, d));
+    this.dataDrive
+      .observeSelfUpdateTableData()
+      .subscribe(d => this.dataDriveService.initTableData(this.dataDrive, d));
     const searchSets = this.dataDrive.searchSets;
     const refreshDataInterval = this.tableData.refreshDataInterval;
     if (!Number.isNaN(+refreshDataInterval)) {
@@ -79,7 +96,10 @@ export class DataDriveComponent implements OnInit, OnDestroy {
       };
       updateViewData();
     } else {
-      if ((!searchSets || searchSets.length === 0) && this.dataDrive.canAutoUpdate) {
+      if (
+        (!searchSets || searchSets.length === 0) &&
+        this.dataDrive.canAutoUpdate
+      ) {
         this.dataDrive.observeScrollToBottom().subscribe(_ => {
           this.dataDriveService.updateViewData(this.dataDrive);
         });

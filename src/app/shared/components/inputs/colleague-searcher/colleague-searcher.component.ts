@@ -13,9 +13,9 @@ import { Subscription } from 'rxjs/Subscription';
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => ColleagueSearcherComponent),
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 export class ColleagueSearcherComponent implements OnInit, OnDestroy {
   selectedOption;
@@ -23,17 +23,13 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
   searchTerms = new Subject<string>();
   mySub: Subscription;
 
-  @Input()
-  miDisabled;
+  @Input() miDisabled;
 
   @Input() miPlaceHolder = '請輸入英文名/工號/中文名';
 
-  private propagateChange = (_: any) => { };
+  private propagateChange = (_: any) => {};
 
-  constructor(
-    private appService: AppService,
-    private util: UtilService
-  ) { }
+  constructor(private appService: AppService, private util: UtilService) {}
 
   /**
    * 给外部formControl写入数据
@@ -43,16 +39,24 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
   writeValue(value: string) {
     if (value) {
       value = value + '';
-      this.appService.getColleague(value).subscribe((data: any) => {
-        if (data.length === 1) {
-          const alter = data.map(c => c.EMPNO + ',' + c.NICK_NAME + ',' + c.USER_NAME);
-          this.searchOptions = alter;
-          this.selectedOption = alter[0];
-          this.propagateChange(data[0].EMPNO);
-        } else {
+      this.appService.getColleague(value).subscribe(
+        (data: any) => {
+          if (data.length === 1) {
+            const alter = data.map(
+              c => c.EMPNO + ',' + c.NICK_NAME + ',' + c.USER_NAME,
+            );
+            this.searchOptions = alter;
+            this.selectedOption = alter[0];
+            this.propagateChange(data[0].EMPNO);
+          } else {
+            this.propagateChange('');
+          }
+        },
+        err => {
+          this.util.errDeal(err);
           this.propagateChange('');
-        }
-      }, (err) => { this.util.errDeal(err); this.propagateChange(''); });
+        },
+      );
     }
   }
 
@@ -69,15 +73,26 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
    * 也是一样注册,当 touched 然后调用
    * @param {*} fn
    */
-  registerOnTouched(fn: any) { }
+  registerOnTouched(fn: any) {}
 
   ngOnInit() {
-    this.mySub = this.searchTerms.asObservable().debounceTime(300).distinctUntilChanged().subscribe((term: string) => {
-      const query = encodeURI(term);
-      this.appService.getColleague(term).subscribe((data: any) => {
-        this.searchOptions = data.map(c => c.EMPNO + ',' + c.NICK_NAME + ',' + c.USER_NAME);
-      }, (err) => { this.util.errDeal(err); });
-    });
+    this.mySub = this.searchTerms
+      .asObservable()
+      .debounceTime(300)
+      .distinctUntilChanged()
+      .subscribe((term: string) => {
+        const query = encodeURI(term);
+        this.appService.getColleague(term).subscribe(
+          (data: any) => {
+            this.searchOptions = data.map(
+              c => c.EMPNO + ',' + c.NICK_NAME + ',' + c.USER_NAME,
+            );
+          },
+          err => {
+            this.util.errDeal(err);
+          },
+        );
+      });
   }
 
   ngOnDestroy() {
@@ -97,5 +112,4 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
       this.propagateChange('');
     }
   }
-
 }

@@ -11,9 +11,8 @@ describe('DoExamComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DoExamComponent ]
-    })
-    .compileComponents();
+      declarations: [DoExamComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

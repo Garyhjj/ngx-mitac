@@ -1,4 +1,5 @@
-<ul nz-menu [nzMode]="isCollapsed?'vertical':'inline'" style="height:calc(100% - 48px);overflow-y:auto;overflow-x:hidden" (click)="select($event)" [class.ant-layout-sider-collapsed]="isCollapsed">
+<ul nz-menu [nzMode]="isCollapsed?'vertical':'inline'" style="height:calc(100% - 48px);overflow-y:auto;overflow-x:hidden"
+  (click)="select($event)" [class.ant-layout-sider-collapsed]="isCollapsed">
   <li nz-submenu nzOpen>
     <span title>
       <i class="anticon anticon-database"></i>
@@ -7,6 +8,7 @@
     <ul>
       <li nz-menu-item data-route="/dataDrive/list">配置查詢</li>
       <li nz-menu-item data-route="/dataDrive/edit">配置維護</li>
+      <li nz-menu-item data-route="/dataDrive/api">组件文档</li>
     </ul>
   </li>
 </ul>

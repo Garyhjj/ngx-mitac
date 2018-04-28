@@ -11,9 +11,8 @@ describe('ColleagueSearcherComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ColleagueSearcherComponent ]
-    })
-    .compileComponents();
+      declarations: [ColleagueSearcherComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

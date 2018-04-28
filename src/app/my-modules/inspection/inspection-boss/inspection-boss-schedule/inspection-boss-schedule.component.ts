@@ -15,10 +15,9 @@ import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-inspection-boss-schedule',
   templateUrl: './inspection-boss-schedule.component.html',
-  styleUrls: ['./inspection-boss-schedule.component.css']
+  styleUrls: ['./inspection-boss-schedule.component.css'],
 })
 export class InspectionBossScheduleComponent implements OnInit {
-
   isVisible = false;
   formLayout = 'horizontal';
   scheduleForm: FormGroup;
@@ -30,11 +29,11 @@ export class InspectionBossScheduleComponent implements OnInit {
   weekOption;
   timeErr = '';
   translateTexts: any;
-  changeUpdateViewer = (data) => {
+  changeUpdateViewer = data => {
     this.initForm(data);
     this.isVisible = true;
     return false;
-  }
+  };
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
@@ -43,20 +42,30 @@ export class InspectionBossScheduleComponent implements OnInit {
     private dataDriveService: DataDriveService,
     private modalService: NzModalService,
     private validatorExtendService: NgxValidatorExtendService,
-    private translate: TranslateService
-  ) { }
+    private translate: TranslateService,
+  ) {}
 
   ngOnInit() {
-    this.translate.stream(['insoectionModule.startimeBeforeEndtime', 'insoectionModule.sureDelete', 'insertSuccess', 'updateSuccess']).subscribe((res) => {
-      this.translateTexts = res;
-    });
+    this.translate
+      .stream([
+        'insoectionModule.startimeBeforeEndtime',
+        'insoectionModule.sureDelete',
+        'insertSuccess',
+        'updateSuccess',
+      ])
+      .subscribe(res => {
+        this.translateTexts = res;
+      });
   }
 
   initForm(data?) {
     if (this.tabIdx === 2 && !this.mriWeekList) {
       this.inspectionBossService.getMriWeek().subscribe(c => {
         this.mriWeekList = c;
-        this.weekOption = this.mriWeekList.map(m => ({ property: m.WEEK_ID, value: m.WEEK_DESC }));
+        this.weekOption = this.mriWeekList.map(m => ({
+          property: m.WEEK_ID,
+          value: m.WEEK_DESC,
+        }));
       });
     }
     let array = [];
@@ -73,33 +82,60 @@ export class InspectionBossScheduleComponent implements OnInit {
     this.scheduleForm = this.fb.group({
       SCHEDULE_HEADER_ID: [data.SCHEDULE_HEADER_ID],
       SCHEDULE_NAME: [
-        this.tabIdx === 2 ? (() => {
-          if (data.WEEK && data.YEAR) {
-            return data.YEAR + (+data.WEEK < 10 ? '0' + data.WEEK : data.WEEK);
-          }
-        })() : ''
-        , this.tabIdx === 2 ? this.validatorExtendService.required() : null],
-      AREA: [data.AREA, this.tabIdx === 2 ? this.validatorExtendService.required() : null],
-      FROM_DATE: [data.FROM_DATE, this.tabIdx !== 2 ? this.validatorExtendService.required() : null],
-      FROM_TIME: [data.FROM_TIME ? data.FROM_TIME : '08:00', this.validatorExtendService.required()],
-      TO_TIME: [data.TO_TIME ? data.TO_TIME : '18:00', this.validatorExtendService.required()],
-      empnos: this.fb.array(array)
+        this.tabIdx === 2
+          ? (() => {
+              if (data.WEEK && data.YEAR) {
+                return (
+                  data.YEAR + (+data.WEEK < 10 ? '0' + data.WEEK : data.WEEK)
+                );
+              }
+            })()
+          : '',
+        this.tabIdx === 2 ? this.validatorExtendService.required() : null,
+      ],
+      AREA: [
+        data.AREA,
+        this.tabIdx === 2 ? this.validatorExtendService.required() : null,
+      ],
+      FROM_DATE: [
+        data.FROM_DATE,
+        this.tabIdx !== 2 ? this.validatorExtendService.required() : null,
+      ],
+      FROM_TIME: [
+        data.FROM_TIME ? data.FROM_TIME : '08:00',
+        this.validatorExtendService.required(),
+      ],
+      TO_TIME: [
+        data.TO_TIME ? data.TO_TIME : '18:00',
+        this.validatorExtendService.required(),
+      ],
+      empnos: this.fb.array(array),
     });
     const fromTime = this.scheduleForm.get('FROM_TIME');
     const toTime = this.scheduleForm.get('TO_TIME');
     // 核對時間的合法性
-    Observable.merge(fromTime.valueChanges, toTime.valueChanges).subscribe(c => {
-      const prefix = '2018-01-01 ';
-      if (new Date(prefix + fromTime.value).getTime() - new Date(prefix + toTime.value).getTime() < 0) {
-        this.timeErr = '';
-      } else {
-        this.timeErr = this.translateTexts['insoectionModule.startimeBeforeEndtime'];
-      }
-    });
+    Observable.merge(fromTime.valueChanges, toTime.valueChanges).subscribe(
+      c => {
+        const prefix = '2018-01-01 ';
+        if (
+          new Date(prefix + fromTime.value).getTime() -
+            new Date(prefix + toTime.value).getTime() <
+          0
+        ) {
+          this.timeErr = '';
+        } else {
+          this.timeErr = this.translateTexts[
+            'insoectionModule.startimeBeforeEndtime'
+          ];
+        }
+      },
+    );
   }
 
   initEmpno(val?) {
-    return this.fb.group({ person: [val, this.validatorExtendService.required()] });
+    return this.fb.group({
+      person: [val, this.validatorExtendService.required()],
+    });
   }
 
   cancleEmp(i) {
@@ -110,20 +146,24 @@ export class InspectionBossScheduleComponent implements OnInit {
       // 刪除前對已在數據庫有的記錄進行詢問
       if (store) {
         const deleteFn = () => {
-          this.inspectionBossService.deleteScheduleLines(store.SCHEDULE_LINE_ID).subscribe(() => {
-            empnos.removeAt(i);
-            this.currentDataDrive = this.allDataDrive[this.tabIdx + 2];
-            this.dataDriveService.updateViewData(this.currentDataDrive);
-          }, err => this.util.errDeal(err));
+          this.inspectionBossService
+            .deleteScheduleLines(store.SCHEDULE_LINE_ID)
+            .subscribe(
+              () => {
+                empnos.removeAt(i);
+                this.currentDataDrive = this.allDataDrive[this.tabIdx + 2];
+                this.dataDriveService.updateViewData(this.currentDataDrive);
+              },
+              err => this.util.errDeal(err),
+            );
         };
         this.modalService.confirm({
           title: this.translateTexts['insoectionModule.sureDelete'],
           onOk() {
             deleteFn();
           },
-          onCancel() {
-          },
-          zIndex: 99999
+          onCancel() {},
+          zIndex: 99999,
         });
       } else {
         empnos.removeAt(i);
@@ -141,7 +181,9 @@ export class InspectionBossScheduleComponent implements OnInit {
   submitForm() {
     const val = this.scheduleForm.value;
     const user = this.auth.user;
-    let weekDes = val.SCHEDULE_NAME ? this.mriWeekList.find(m => m.WEEK_ID === val.SCHEDULE_NAME) : {};
+    let weekDes = val.SCHEDULE_NAME
+      ? this.mriWeekList.find(m => m.WEEK_ID === val.SCHEDULE_NAME)
+      : {};
     weekDes = weekDes || {};
     let week, year;
     // 7s有這些項目
@@ -162,7 +204,7 @@ export class InspectionBossScheduleComponent implements OnInit {
       TO_DATE: weekDes.WEEK_END_DAY || val.FROM_DATE || '',
       TO_TIME: val.TO_TIME || '',
       WEEK: week || '',
-      YEAR: year || ''
+      YEAR: year || '',
     };
     const Lines = [];
     if (val.empnos && val.empnos.length > 0) {
@@ -174,17 +216,26 @@ export class InspectionBossScheduleComponent implements OnInit {
             EMPNO: person,
             LINE_NUM: idx + 1,
             SCHEDULE_HEADER_ID: l ? l.SCHEDULE_HEADER_ID : 0,
-            SCHEDULE_LINE_ID: l ? l.SCHEDULE_LINE_ID : 0
+            SCHEDULE_LINE_ID: l ? l.SCHEDULE_LINE_ID : 0,
           });
         }
       });
     }
-    this.inspectionBossService.uploadSchedule({ Schedules: [{ Header, Lines }] }).subscribe(r => {
-      this.util.showGlobalSucMes(val.SCHEDULE_HEADER_ID < 0 ? this.translateTexts['insertSuccess'] : this.translateTexts['updateSuccess']);
-      this.isVisible = false;
-      this.currentDataDrive = this.allDataDrive[this.tabIdx + 2];
-      this.dataDriveService.updateViewData(this.currentDataDrive);
-    }, err => this.util.errDeal(err));
+    this.inspectionBossService
+      .uploadSchedule({ Schedules: [{ Header, Lines }] })
+      .subscribe(
+        r => {
+          this.util.showGlobalSucMes(
+            val.SCHEDULE_HEADER_ID < 0
+              ? this.translateTexts['insertSuccess']
+              : this.translateTexts['updateSuccess'],
+          );
+          this.isVisible = false;
+          this.currentDataDrive = this.allDataDrive[this.tabIdx + 2];
+          this.dataDriveService.updateViewData(this.currentDataDrive);
+        },
+        err => this.util.errDeal(err),
+      );
   }
   getDataDrive2(d: DataDrive) {
     const nameId = 2;
@@ -199,7 +250,7 @@ export class InspectionBossScheduleComponent implements OnInit {
   getDataDrive4(d: DataDrive) {
     const nameId = 4;
     this.alterDataDrive(d, nameId);
-    d.beforeSearch((data) => {
+    d.beforeSearch(data => {
       if (data && data.week) {
         data.week = data.week.slice(4);
       }
@@ -210,7 +261,7 @@ export class InspectionBossScheduleComponent implements OnInit {
   alterDataDrive(d: DataDrive, nameId: number) {
     this.allDataDrive[nameId] = d;
     d.addDefaultSearchParams({ nameID: nameId });
-    d.beforeInitTableData((data) => this.combineSameHeader(data));
+    d.beforeInitTableData(data => this.combineSameHeader(data));
     d.beforeUpdateShow(this.changeUpdateViewer);
   }
 
@@ -221,19 +272,22 @@ export class InspectionBossScheduleComponent implements OnInit {
       one.linesList = [one];
       one.empnoList = [one.EMPNO];
       if (data.length > 0) {
-        let same = data.filter(d => d.SCHEDULE_HEADER_ID === one.SCHEDULE_HEADER_ID);
+        let same = data.filter(
+          d => d.SCHEDULE_HEADER_ID === one.SCHEDULE_HEADER_ID,
+        );
         if (same.length > 0) {
           same.forEach(s => {
             one.NAME += ', ' + s.NAME;
             one.empnoList.push(s.EMPNO);
             one.linesList.push(s);
           });
-          data = data.filter(d => d.SCHEDULE_HEADER_ID !== one.SCHEDULE_HEADER_ID);
+          data = data.filter(
+            d => d.SCHEDULE_HEADER_ID !== one.SCHEDULE_HEADER_ID,
+          );
         }
       }
       myData.push(one);
     }
     return myData;
   }
-
 }

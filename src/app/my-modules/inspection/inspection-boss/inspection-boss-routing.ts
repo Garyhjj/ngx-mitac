@@ -11,57 +11,51 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../../../route/auth-guard.service';
 
-
-
 const bRoutes: Routes = [
-    {
-        path: '',
-        component: InspectionBossComponent,
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
-        children: [
-            {
-                canActivate: [BossGuard],
-                path: 'lines',
-                component: InspectionBossLinesComponent
-            },
-            {
-                path: 'report',
-                component: InspectionBossReportComponent,
-                resolve: {
-                    schedule: BossScheduleResolver
-                }
-            },
-            {
-                path: 'improvement',
-                component: InspectionBossImprovementComponent
-            },
-            {
-                canActivate: [BossGuard],
-                path: 'attendance',
-                component: InspectionBossAttendanceComponent
-            },
-            {
-                canActivate: [BossGuard],
-                path: 'schedule',
-                component: InspectionBossScheduleComponent
-            },
-            {
-                canActivate: [BossGuard],
-                path: 'comment',
-                component: InspectionBossCommentComponent
-            }
-        ]
-    }
+  {
+    path: '',
+    component: InspectionBossComponent,
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
+    children: [
+      {
+        canActivate: [BossGuard],
+        path: 'lines',
+        component: InspectionBossLinesComponent,
+      },
+      {
+        path: 'report',
+        component: InspectionBossReportComponent,
+        resolve: {
+          schedule: BossScheduleResolver,
+        },
+      },
+      {
+        path: 'improvement',
+        component: InspectionBossImprovementComponent,
+      },
+      {
+        canActivate: [BossGuard],
+        path: 'attendance',
+        component: InspectionBossAttendanceComponent,
+      },
+      {
+        canActivate: [BossGuard],
+        path: 'schedule',
+        component: InspectionBossScheduleComponent,
+      },
+      {
+        canActivate: [BossGuard],
+        path: 'comment',
+        component: InspectionBossCommentComponent,
+      },
+    ],
+  },
 ];
 
 @NgModule({
-    imports: [
-        RouterModule.forChild(bRoutes)
-    ],
-    exports: [
-        RouterModule
-    ],
-    providers: [BossScheduleResolver]
+  imports: [RouterModule.forChild(bRoutes)],
+  exports: [RouterModule],
+  providers: [BossScheduleResolver],
 })
-export class InspectionBossRoutingModule { }
+export class InspectionBossRoutingModule {}

@@ -4,12 +4,9 @@ import { CanActivate } from '@angular/router';
 
 @Injectable()
 export class BossGuard implements CanActivate {
-
-    constructor(private inspectionBossService: InspectionBossService) {
-    }
-    canActivate() {
-        const role = this.inspectionBossService.role;
-        return role === 1;
-    }
-
+  constructor(private inspectionBossService: InspectionBossService) {}
+  canActivate() {
+    const role = this.inspectionBossService.role;
+    return role === 1;
+  }
 }

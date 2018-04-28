@@ -4,13 +4,10 @@ import { Component, OnInit } from '@angular/core';
   // tslint:disable-next-line:component-selector
   selector: 'app-eMPI',
   templateUrl: './eMPI.component.html',
-  styleUrls: ['./eMPI.component.css']
+  styleUrls: ['./eMPI.component.css'],
 })
 export class EMPIComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

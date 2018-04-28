@@ -7,18 +7,21 @@ import { DriveListComponent } from './drive-list/drive-list.component';
 import { SharedModule } from '../../shared/shared.module';
 import { DataDriveSettingRoutingModule } from './data-drive-setting-routing.module';
 import { DriveEditComponent } from './drive-edit/drive-edit.component';
+import { DriveAPIComponent } from './drive-API/drive-API.component';
 
 @NgModule({
   imports: [
     CommonModule,
     SharedModule,
     DataDriveSettingRoutingModule,
-    DataDriveModule
+    DataDriveModule,
   ],
-  declarations: [DataDriveSettingComponent,
+  declarations: [
+    DataDriveSettingComponent,
     DriveListComponent,
-    DriveEditComponent
+    DriveEditComponent,
+    DriveAPIComponent,
   ],
-  providers: [DataDriveSettingService]
+  providers: [DataDriveSettingService],
 })
-export class DataDriveSettingModule { }
+export class DataDriveSettingModule {}

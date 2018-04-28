@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 @Pipe({ name: 'sgChineseConv' })
 export class ChineseConv implements PipeTransform {
-  constructor(private translate: TranslateService) { }
+  constructor(private translate: TranslateService) {}
   transform(value: string): string {
     if (value) {
       let currentLang = this.translate.currentLang;
@@ -28,5 +28,4 @@ export class ChineseConv implements PipeTransform {
 }
 
 {
-
 }

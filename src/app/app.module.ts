@@ -17,17 +17,14 @@ import { HeaderComponent } from './header/header.component';
 
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HeaderComponent
-],
+  declarations: [AppComponent, HeaderComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -35,16 +32,16 @@ export function createTranslateLoader(http: HttpClient) {
     SharedModule,
     AppRoutingModule,
     // ServiceWorkerModule.register('/ngsw-worker.js', {enabled: environment.production}),
-    StoreModule.forRoot({breadcrumbReducer, userReducer}),
+    StoreModule.forRoot({ breadcrumbReducer, userReducer }),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
-        deps: [HttpClient]
-      }
+        useFactory: createTranslateLoader,
+        deps: [HttpClient],
+      },
     }),
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

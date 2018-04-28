@@ -11,9 +11,8 @@ describe('ApplicationITComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ApplicationITComponent ]
-    })
-    .compileComponents();
+      declarations: [ApplicationITComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

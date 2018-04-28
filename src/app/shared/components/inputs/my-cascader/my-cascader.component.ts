@@ -7,7 +7,6 @@ import { APPConfig } from '../../../config/app.config';
 import { replaceQuery, isArray } from '../../../utils/index';
 import { AuthService } from '../../../../core/services/auth.service';
 
-
 @Component({
   selector: 'app-my-cascader',
   templateUrl: './my-cascader.component.html',
@@ -16,9 +15,9 @@ import { AuthService } from '../../../../core/services/auth.service';
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => MyCascaderComponent),
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 export class MyCascaderComponent implements OnInit {
   @Input() myPlaceHolder = '請選擇';
@@ -28,13 +27,8 @@ export class MyCascaderComponent implements OnInit {
   @Input() loadAPI: string;
   _value: any[] = null;
   user = this.auth.user;
-  private propagateChange = (_: any) => { };
-  constructor(
-    private http: HttpClient,
-    private auth: AuthService
-  ) {
-
-  }
+  private propagateChange = (_: any) => {};
+  constructor(private http: HttpClient, private auth: AuthService) {}
 
   /**
    * 给外部formControl写入数据
@@ -68,7 +62,7 @@ export class MyCascaderComponent implements OnInit {
    * 也是一样注册,当 touched 然后调用
    * @param {*} fn
    */
-  registerOnTouched(fn: any) { }
+  registerOnTouched(fn: any) {}
 
   _console(value) {
     let out: any = {};
@@ -85,7 +79,12 @@ export class MyCascaderComponent implements OnInit {
   }
 
   /** load data async */
-  loadData(e: { option: any, index: number, resolve: Function, reject: Function }): void {
+  loadData(e: {
+    option: any;
+    index: number;
+    resolve: Function;
+    reject: Function;
+  }): void {
     const idx = e.index;
     if (idx === -1) {
       e.resolve(this.myOptions);
@@ -95,21 +94,27 @@ export class MyCascaderComponent implements OnInit {
     const option = e.option;
     option.loading = true;
     const myCascaderLazySets = this.myCascaderLazySets || [];
-    const lazySet = myCascaderLazySets.find(s => s.lazyLayer === (idx + 2));
+    const lazySet = myCascaderLazySets.find(s => s.lazyLayer === idx + 2);
     if (lazySet) {
       if (this.myProperties && this.myProperties.length < idx + 2) {
         throw new Error('myProperties 数组长度不足，无法进行懒加载项目');
       }
-      this.getLazyData(lazySet, { [this.myProperties[idx]]: option.value }, (val) => {
-        e.resolve(val);
-      }, () => option.loading = false, (res) => {
-        const params = lazySet.params;
-        if (params.length > 2) {
-          return res.filter(r => r[params[2]] === option.value);
-        } else {
-          return res;
-        }
-      });
+      this.getLazyData(
+        lazySet,
+        { [this.myProperties[idx]]: option.value },
+        val => {
+          e.resolve(val);
+        },
+        () => (option.loading = false),
+        res => {
+          const params = lazySet.params;
+          if (params.length > 2) {
+            return res.filter(r => r[params[2]] === option.value);
+          } else {
+            return res;
+          }
+        },
+      );
     } else {
       option.loading = false;
       e.resolve([{ value: '', label: '空', isLeaf: true }]);
@@ -118,59 +123,69 @@ export class MyCascaderComponent implements OnInit {
 
   ngOnInit() {
     if (!isArray(this.myOptions) || this.myOptions.length === 0) {
-      if (!isArray(this.myCascaderLazySets) || this.myCascaderLazySets.length === 0) {
+      if (
+        !isArray(this.myCascaderLazySets) ||
+        this.myCascaderLazySets.length === 0
+      ) {
         throw new Error('级联组件参数不够');
       } else {
         const first = this.myCascaderLazySets[0];
-        this.getLazyData(first, {}, (val) => this.myOptions = val);
+        this.getLazyData(first, {}, val => (this.myOptions = val));
       }
     }
   }
 
-  getLazyData(set: CascaderLazySet, query: any, succ: (val) => void, final?: () => void, filter?: (res) => any[]) {
-    this.http.get(replaceQuery(APPConfig.baseUrl + set.API, query, this.user)).subscribe((c: any[]) => {
-      if (isArray(c)) {
-        if (filter) {
-          c = filter(c);
+  getLazyData(
+    set: CascaderLazySet,
+    query: any,
+    succ: (val) => void,
+    final?: () => void,
+    filter?: (res) => any[],
+  ) {
+    this.http
+      .get(replaceQuery(APPConfig.baseUrl + set.API, query, this.user))
+      .subscribe((c: any[]) => {
+        if (isArray(c)) {
+          if (filter) {
+            c = filter(c);
+          }
+          const out = c.map(r => {
+            let toParams: string[];
+            if (!isArray(set.params)) {
+              toParams = Object.keys(r);
+            } else {
+              toParams = set.params;
+            }
+            const lg = toParams.length;
+            if (lg === 0) {
+              return {
+                value: '',
+                label: '空',
+                isLeaf: true,
+              };
+            } else if (lg === 1) {
+              return {
+                value: r[toParams[0]],
+                label: r[toParams[0]],
+                isLeaf: set.isLeaf,
+              };
+            } else if (lg > 1) {
+              return {
+                value: r[toParams[0]],
+                label: r[toParams[1]],
+                isLeaf: set.isLeaf,
+              };
+            }
+          });
+          out.unshift({
+            value: '',
+            label: '空',
+            isLeaf: true,
+          });
+          succ(out);
         }
-        const out = c.map(r => {
-          let toParams: string[];
-          if (!isArray(set.params)) {
-            toParams = Object.keys(r);
-          } else {
-            toParams = set.params;
-          }
-          const lg = toParams.length;
-          if (lg === 0) {
-            return {
-              value: '',
-              label: '空',
-              isLeaf: true
-            };
-          } else if (lg === 1) {
-            return {
-              value: r[toParams[0]],
-              label: r[toParams[0]],
-              isLeaf: set.isLeaf
-            };
-          } else if (lg > 1) {
-            return {
-              value: r[toParams[0]],
-              label: r[toParams[1]],
-              isLeaf: set.isLeaf
-            };
-          }
-        });
-        out.unshift({
-          value: '',
-          label: '空',
-          isLeaf: true
-        });
-        succ(out);
-      }
-      // tslint:disable-next-line:no-unused-expression
-      final && final();
-    }, err => final && final());
+        // tslint:disable-next-line:no-unused-expression
+        final && final();
+      }, err => final && final());
   }
-
 }

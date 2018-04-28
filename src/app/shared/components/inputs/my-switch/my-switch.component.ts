@@ -9,21 +9,19 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => MySwitchComponent),
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 export class MySwitchComponent implements OnInit {
-
   _value: boolean;
   @Input() myTrueFormat: string | number = 'Y';
   @Input() myFalseFormat: string | number = 'N';
-  private propagateChange = (_: any) => { };
+  private propagateChange = (_: any) => {};
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   /**
    * 给外部formControl写入数据
@@ -52,14 +50,14 @@ export class MySwitchComponent implements OnInit {
    * 也是一样注册,当 touched 然后调用
    * @param {*} fn
    */
-  registerOnTouched(fn: any) { }
+  registerOnTouched(fn: any) {}
 
   change(value) {
     let out: any;
     if (value) {
-      out = this.myTrueFormat === void (0) ? true : this.myTrueFormat;
+      out = this.myTrueFormat === void 0 ? true : this.myTrueFormat;
     } else {
-      out = this.myFalseFormat === void (0) ? false : this.myFalseFormat;
+      out = this.myFalseFormat === void 0 ? false : this.myFalseFormat;
     }
     this.propagateChange(out);
   }

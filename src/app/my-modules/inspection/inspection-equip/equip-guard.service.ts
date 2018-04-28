@@ -4,12 +4,9 @@ import { CanActivate } from '@angular/router';
 
 @Injectable()
 export class EquipGuard implements CanActivate {
-
-    constructor(private inspectionEquipService: InspectionEquipService) {
-    }
-    canActivate() {
-        const role = this.inspectionEquipService.role;
-        return role === 1;
-    }
-
+  constructor(private inspectionEquipService: InspectionEquipService) {}
+  canActivate() {
+    const role = this.inspectionEquipService.role;
+    return role === 1;
+  }
 }

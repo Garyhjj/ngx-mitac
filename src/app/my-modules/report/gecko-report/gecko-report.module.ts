@@ -10,12 +10,16 @@ import { GeckoRepairComponent } from './gecko-repair/gecko-repair.component';
 
 @NgModule({
   imports: [
-    CommonModule, GeckoReportRoutingModule, DataDriveModule, SharedModule
+    CommonModule,
+    GeckoReportRoutingModule,
+    DataDriveModule,
+    SharedModule,
   ],
-  declarations: [GeckoReportComponent,
+  declarations: [
+    GeckoReportComponent,
     GeckoShippingComponent,
     GeckoRmaComponent,
-    GeckoRepairComponent
-  ]
+    GeckoRepairComponent,
+  ],
 })
-export class GeckoReportModule { }
+export class GeckoReportModule {}

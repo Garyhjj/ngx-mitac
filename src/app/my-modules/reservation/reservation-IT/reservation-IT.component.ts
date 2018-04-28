@@ -4,13 +4,10 @@ import { Component, OnInit } from '@angular/core';
   // tslint:disable-next-line:component-selector
   selector: 'app-reservation-IT',
   templateUrl: './reservation-IT.component.html',
-  styleUrls: ['./reservation-IT.component.css']
+  styleUrls: ['./reservation-IT.component.css'],
 })
 export class ReservationITComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

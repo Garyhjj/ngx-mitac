@@ -11,9 +11,8 @@ describe('InspectionBossImprovementComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ InspectionBossImprovementComponent ]
-    })
-    .compileComponents();
+      declarations: [InspectionBossImprovementComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

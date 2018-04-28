@@ -11,9 +11,8 @@ describe('SiderComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SiderComponent ]
-    })
-    .compileComponents();
+      declarations: [SiderComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

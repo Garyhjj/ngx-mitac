@@ -3,17 +3,21 @@ import { MyStore } from './../core/store';
 import { Store } from '@ngrx/store';
 import { AuthService } from './../core/services/auth.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, AbstractControl, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  AbstractControl,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { NzNotificationService } from 'ng-zorro-antd';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit, OnDestroy {
-
   validateForm: FormGroup;
   loading = false;
   constructor(
@@ -22,16 +26,16 @@ export class LoginComponent implements OnInit, OnDestroy {
     private router: Router,
     private store$: Store<MyStore>,
     private _notification: NzNotificationService,
-    private util: UtilService
-  ) { }
+    private util: UtilService,
+  ) {}
 
   ngOnInit() {
     this.authService.loginPageSubject.next(true);
-    this.store$.select((s) => s.userReducer).subscribe((user) => {
+    this.store$.select(s => s.userReducer).subscribe(user => {
       this.validateForm = this.fb.group({
         userName: [user.USER_NAME, Validators.required],
         password: [user.password, Validators.required],
-        remember: [user.rememberPWD]
+        remember: [user.rememberPWD],
       });
     });
   }
@@ -43,10 +47,20 @@ export class LoginComponent implements OnInit, OnDestroy {
   login() {
     this.loading = true;
     let value = this.validateForm.value;
-    this.authService.login(value).subscribe((user) => {
-      this.router.navigate(['/modules']);
-      this.loading = false;
-      this._notification.create('success', '登录成功', `您好：${user.User.NICK_NAME}`);
-    }, (err) => { this.loading = false; this.util.errDeal(err); });
+    this.authService.login(value).subscribe(
+      user => {
+        this.router.navigate(['/modules']);
+        this.loading = false;
+        this._notification.create(
+          'success',
+          '登录成功',
+          `您好：${user.User.NICK_NAME}`,
+        );
+      },
+      err => {
+        this.loading = false;
+        this.util.errDeal(err);
+      },
+    );
   }
 }

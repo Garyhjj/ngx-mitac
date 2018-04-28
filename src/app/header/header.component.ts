@@ -14,10 +14,9 @@ import { isArray } from '../shared/utils';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-
   auth: boolean;
   isLoginPage: boolean;
   user: UserState = {};
@@ -29,8 +28,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private store$: Store<MyStore>,
     private authService: AuthService,
     private route: Router,
-    private appService: AppService
-  ) { }
+    private appService: AppService,
+  ) {}
 
   ngOnInit() {
     this.mySub1 = this.authService.authSubject.subscribe(a => {
@@ -46,14 +45,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.appService.getAllTips();
       }
     });
-    this.mySub2 = this.authService.loginPageSubject.subscribe(b => { this.isLoginPage = b; });
-    this.mySub3 = this.store$.select(s => s.userReducer).subscribe((u) => this.user = u);
-    this.tips = this.store$.select(s => s.userReducer).map((user) => user.modules || []).map((ms) => ms.map((m) => m.TIPS || 0)).map(ts => {
-      if (Array.isArray(ts)) {
-        return ts.reduce((a, b) => a + b, 0);
-      }
-      return 0;
+    this.mySub2 = this.authService.loginPageSubject.subscribe(b => {
+      this.isLoginPage = b;
     });
+    this.mySub3 = this.store$
+      .select(s => s.userReducer)
+      .subscribe(u => (this.user = u));
+    this.tips = this.store$
+      .select(s => s.userReducer)
+      .map(user => user.modules || [])
+      .map(ms => ms.map(m => m.TIPS || 0))
+      .map(ts => {
+        if (Array.isArray(ts)) {
+          return ts.reduce((a, b) => a + b, 0);
+        }
+        return 0;
+      });
   }
 
   ngOnDestroy() {

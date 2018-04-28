@@ -15,16 +15,20 @@ import { InspectionEquipHistoryComponent } from './inspection-equip-history/insp
 
 @NgModule({
   imports: [
-    CommonModule, SharedModule, InspectionEquipRoutingModule, DataDriveModule,
+    CommonModule,
+    SharedModule,
+    InspectionEquipRoutingModule,
+    DataDriveModule,
   ],
-  declarations: [InspectionEquipComponent,
+  declarations: [
+    InspectionEquipComponent,
     InspectionEquipImprovementComponent,
     InspectionEquipLinesComponent,
     InspectionEquipListComponent,
     InspectionEquipCheckListComponent,
     InspectionEquipStatusComponent,
-    InspectionEquipHistoryComponent
+    InspectionEquipHistoryComponent,
   ],
-  providers: [InspectionEquipService, EquipGuard]
+  providers: [InspectionEquipService, EquipGuard],
 })
-export class InspectionEquipModule { }
+export class InspectionEquipModule {}

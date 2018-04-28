@@ -7,38 +7,31 @@ import { ReportComponent } from '../report.component';
 import { AuthGuard } from '../../../route/auth-guard.service';
 import { GeckoReportComponent } from './gecko-report.component';
 
-
-
 const eRoutes: Routes = [
-    {
-        path: '',
-        component: GeckoReportComponent,
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
-        children: [
-            {
-                path: 'geckoShipping',
-                component: GeckoShippingComponent
-            },
-            {
-                path: 'geckoRma',
-                component: GeckoRmaComponent
-            },
-            {
-                path: 'geckoRepair',
-                component: GeckoRepairComponent
-            }
-        ]
-    }
+  {
+    path: '',
+    component: GeckoReportComponent,
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
+    children: [
+      {
+        path: 'geckoShipping',
+        component: GeckoShippingComponent,
+      },
+      {
+        path: 'geckoRma',
+        component: GeckoRmaComponent,
+      },
+      {
+        path: 'geckoRepair',
+        component: GeckoRepairComponent,
+      },
+    ],
+  },
 ];
 
 @NgModule({
-    imports: [
-        RouterModule.forChild(eRoutes)
-    ],
-    exports: [
-        RouterModule
-    ]
+  imports: [RouterModule.forChild(eRoutes)],
+  exports: [RouterModule],
 })
-
-export class GeckoReportRoutingModule { }
+export class GeckoReportRoutingModule {}

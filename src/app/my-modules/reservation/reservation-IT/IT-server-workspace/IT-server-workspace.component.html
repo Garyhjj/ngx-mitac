@@ -108,7 +108,7 @@
       {{'serviceModule.ClosedService' | translate}}
     </ng-template>
     <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive5($event)">
-      <ng-template #tableCell let-data="data" let-property="property">
+      <ng-template #tableCellRef let-data="data" let-property="property">
         <button nz-button [nzType]="'primary'" *ngIf="property === impressionName" (click)="showImpressionDetail(data)">
           <span>{{'serviceModule.showDetail' | translate}}</span>
         </button>

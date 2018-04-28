@@ -12,9 +12,9 @@ import { AuthService } from '../../../../core/services/auth.service';
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => MxSelectComponent),
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 export class MxSelectComponent implements OnInit {
   _value = [];
@@ -30,11 +30,11 @@ export class MxSelectComponent implements OnInit {
   @Input() lazyParams: string[];
   @Input() lazyAPIUserMes;
 
-  private propagateChange = (_: any) => { };
+  private propagateChange = (_: any) => {};
   constructor(
     private dataDriveService: DataDriveService,
-    private auth: AuthService
-  ) { }
+    private auth: AuthService,
+  ) {}
 
   /**
    * 给外部formControl写入数据
@@ -42,7 +42,7 @@ export class MxSelectComponent implements OnInit {
    * @param {*} value
    */
   writeValue(value: any) {
-    if (value !== void (0)) {
+    if (value !== void 0) {
       this._value = value;
     }
   }
@@ -60,7 +60,7 @@ export class MxSelectComponent implements OnInit {
    * 也是一样注册,当 touched 然后调用
    * @param {*} fn
    */
-  registerOnTouched(fn: any) { }
+  registerOnTouched(fn: any) {}
 
   change() {
     this.propagateChange(this._value);
@@ -78,7 +78,10 @@ export class MxSelectComponent implements OnInit {
         // tslint:disable-next-line:forin
         for (let prop in lazyAPIUserMes) {
           const replaceMes = user[lazyAPIUserMes[prop]];
-          this.lazyAPI = this.lazyAPI.replace(`{${prop}}`, replaceMes ? replaceMes : '');
+          this.lazyAPI = this.lazyAPI.replace(
+            `{${prop}}`,
+            replaceMes ? replaceMes : '',
+          );
         }
       }
       this.dataDriveService.lazyLoad(this.lazyAPI).subscribe((r: any[]) => {
@@ -92,7 +95,8 @@ export class MxSelectComponent implements OnInit {
               }
             } else if (typeof d === 'object') {
               const params = this.lazyParams;
-              const keys = isArray(params) && params.length > 0 ? params : Object.keys(d);
+              const keys =
+                isArray(params) && params.length > 0 ? params : Object.keys(d);
               if (keys.length === 1) {
                 return { property: d[keys[0]], value: d[keys[0]] };
               } else if (keys.length > 1) {
@@ -104,5 +108,4 @@ export class MxSelectComponent implements OnInit {
       });
     }
   }
-
 }

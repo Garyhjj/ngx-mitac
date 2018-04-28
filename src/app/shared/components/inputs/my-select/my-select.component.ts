@@ -1,5 +1,12 @@
 import { isArray } from './../../../utils/index';
-import { Component, OnInit, forwardRef, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  forwardRef,
+  Input,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DataDriveService } from '../../data-drive/core/services/data-drive.service';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -12,12 +19,11 @@ import { AuthService } from '../../../../core/services/auth.service';
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => MySelectComponent),
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 export class MySelectComponent implements OnInit {
-
   @Output() emitSelectList = new EventEmitter();
   @Input()
   set options(os) {
@@ -39,13 +45,12 @@ export class MySelectComponent implements OnInit {
 
   _value = [];
   _options = [];
-  private propagateChange = (_: any) => { };
+  private propagateChange = (_: any) => {};
 
   constructor(
     private dataDriveService: DataDriveService,
-    private auth: AuthService
-  ) {
-  }
+    private auth: AuthService,
+  ) {}
 
   /**
    * 给外部formControl写入数据
@@ -53,7 +58,7 @@ export class MySelectComponent implements OnInit {
    * @param {*} value
    */
   writeValue(value: any) {
-    if (value !== void (0)) {
+    if (value !== void 0) {
       this._value = value;
     }
   }
@@ -71,7 +76,7 @@ export class MySelectComponent implements OnInit {
    * 也是一样注册,当 touched 然后调用
    * @param {*} fn
    */
-  registerOnTouched(fn: any) { }
+  registerOnTouched(fn: any) {}
 
   change() {
     this.propagateChange(this._value);
@@ -83,10 +88,9 @@ export class MySelectComponent implements OnInit {
     } else {
       this.emitSelectList.emit({
         label: this.label,
-        values: this._options
+        values: this._options,
       });
     }
-
   }
 
   lazyLoad() {
@@ -98,7 +102,10 @@ export class MySelectComponent implements OnInit {
         for (const prop in lazyAPIUserMes) {
           if (lazyAPIUserMes.hasOwnProperty(prop)) {
             const replaceMes = user[lazyAPIUserMes[prop]];
-            this.lazyAPI = this.lazyAPI.replace(`{${prop}}`, replaceMes ? replaceMes : '');
+            this.lazyAPI = this.lazyAPI.replace(
+              `{${prop}}`,
+              replaceMes ? replaceMes : '',
+            );
           }
         }
 
@@ -118,7 +125,8 @@ export class MySelectComponent implements OnInit {
               }
             } else if (typeof d === 'object') {
               const params = this.lazyParams;
-              const keys = isArray(params) && params.length > 0 ? params : Object.keys(d);
+              const keys =
+                isArray(params) && params.length > 0 ? params : Object.keys(d);
               if (keys.length === 1) {
                 return { property: d[keys[0]], value: d[keys[0]] };
               } else if (keys.length > 1) {
@@ -126,14 +134,12 @@ export class MySelectComponent implements OnInit {
               }
             }
           });
-          console.log(1, this._options);
           this.emitSelectList.emit({
             label: this.label,
-            values: this._options
+            values: this._options,
           });
         }
       });
     }
   }
-
 }

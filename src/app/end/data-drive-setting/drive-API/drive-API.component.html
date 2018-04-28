@@ -1,0 +1,237 @@
+<section class="markdown api-container">
+  <h2 id="API">
+    <span>API</span>
+  </h2>
+  <h3>
+    <span>app-data-drive</span>
+  </h3>
+  <table>
+    <thead>
+      <tr>
+        <th>参数</th>
+        <th>说明</th>
+        <th>类型</th>
+        <th>默认值</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>name</td>
+        <td>初始化必须,是获取配置的参数</td>
+        <td>string</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>headerCellStyle</td>
+        <td>改变table视图的header单位格样式</td>
+        <td>(c: TableDataColumn) => any/* 样式 */;</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>bodyCellStyle</td>
+        <td>改变table视图的body单位格样式</td>
+        <td>(data: any/* 所在行的数据 */, property: string /* 栏位位 */) => any;</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>#actionRef</td>
+        <td>
+          映射模板： table视图的action栏位
+        </td>
+        <td>ng-template</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>#tableCellRef</td>
+        <td>映射模板： table视图的数据栏位(该栏位设置为自定义时设置模板才生效)
+          <br/>例子:
+          <code>
+            {{'\
+            <ng-template ' +'#tableCellRef let-data="data" let-property="property" \>\ /* html */
+              <\/ng-template\>'}}
+          </code>
+        </td>
+        <td>ng-template</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>#headerCellRef</td>
+        <td>映射模板： table视图的第一列栏位
+          <br/>例子:
+          <code>
+            {{'\
+            <ng-template ' +'#headerCellRef let-col \>\ /* html */
+              <\/ng-template\>'}}
+          </code>
+          <td>ng-template</td>
+          <td>-</td>
+      </tr>
+      <tr>
+        <td>dataDriveInit</td>
+        <td>组件开始初始化时的回调,返回的参数是DataDrive的对象</td>
+        <td>Func</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>my-data-searcher</td>
+        <td>映射,class选择器, 插入自定义的搜索组件</td>
+        <td>html</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>my-full-screen-header</td>
+        <td>映射,class选择器, 插入全屏时的头部组件</td>
+        <td>html</td>
+        <td>-</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>
+    <span>DataDrive</span>
+  </h3>
+  <p>控制组件展示的对象</p>
+  <table>
+    <thead>
+      <tr>
+        <th>参数</th>
+        <th>说明</th>
+        <th>类型</th>
+        <th>默认值</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>beforeInitTableData</td>
+        <td>数据初始化前, 参数data, 可return 新的data</td>
+        <td>Func</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>afterDataInit</td>
+        <td>数据初始化后, 参数data</td>
+        <td>Func</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>beforeUpdateShow</td>
+        <td>组件的update视图出现前的钩子, 参数是行数据, return false 可取消update视图的显示</td>
+        <td>Func</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>onUpdateFormShow</td>
+        <td>组件的update视图初始化后的钩子, 参数是FormGroup,ErrSubject,inputDetails</td>
+        <td>Func</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>beforeUpdateSubmit</td>
+        <td>组件的update视图submit前的钩子,参数是FormGroup,ErrSubject, return false 可取消submit</td>
+        <td>Func</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>onUpdateData</td>
+        <td>发送数据更新时的钩子,可对数据对象进行操作, 参数是表单的值data, 可return 新data</td>
+        <td>Func</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>changeUpdateWay</td>
+        <td>改写组件的默认使用配置api去update的逻辑, 参数是行data, 需要return Observable类型</td>
+        <td>Func</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>beforeSearch</td>
+        <td>搜索的生命週期---搜索前,可操作data數據, 参数是搜索条件, 也可return 新的搜索條件</td>
+        <td>Func</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>addDefaultSearchParams</td>
+        <td>添加默认搜索参数</td>
+        <td>Func</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>setSearchInputDefault</td>
+        <td>设置配置的搜索框的默认值</td>
+        <td>Func</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>changeSearchWay</td>
+        <td>改写组件的默认使用配置api去搜索的逻辑, 参数是搜索条件, 需要return Observable类型</td>
+        <td>Func</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>selfUpdateTableData</td>
+        <td>自行传入新的数据给组件, 参数需要是数组类型</td>
+        <td>Func</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>setParamsOut</td>
+        <td>定义table视图action栏位的抛出的按键, setParamsOut(name: string, params?: string[]), 与onParamsOut配合使用</td>
+        <td>Func</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>onParamsOut</td>
+        <td>table视图action栏位的抛出的按键的点击钩子, onParamsOut(cb: (data) => void), 与setParamsOut配合使用</td>
+        <td>Func</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>getData</td>
+        <td>获得所有数据</td>
+        <td>Func</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>observeIsShowModal</td>
+        <td>觀察是否在全屏視圖中</td>
+        <td>Observable</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>observeScrollToBottom</td>
+        <td>订阅table的數據自動滾到底部的時候</td>
+        <td>Observable</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>observeHideLists</td>
+        <td>订阅被隱藏的列</td>
+        <td>Observable</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>setViewTempAddtion</td>
+        <td>添加額外的視圖配置，對某些視圖類型有限（如：考卷）</td>
+        <td>Func</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>isDataAddable</td>
+        <td>组件是否可新增数据</td>
+        <td>Func</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>isDataEdditable</td>
+        <td>组件是否可对数据进行修改</td>
+        <td>Func</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>isDataDeletable</td>
+        <td>组件是否可删除数据</td>
+        <td>Func</td>
+        <td>-</td>
+      </tr>
+    </tbody>
+  </table>
+</section>

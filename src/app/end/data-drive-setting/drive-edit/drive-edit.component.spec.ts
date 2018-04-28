@@ -11,9 +11,8 @@ describe('DriveEditComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DriveEditComponent ]
-    })
-    .compileComponents();
+      declarations: [DriveEditComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

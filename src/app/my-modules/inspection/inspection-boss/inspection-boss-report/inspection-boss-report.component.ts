@@ -1,3 +1,4 @@
+import { AppService } from './../../../../core/services/app.service';
 import { DataDriveService } from './../../../../shared/components/data-drive/core/services/data-drive.service';
 import { InspectionReportState } from './../../shared/models/index';
 import { InspectionService } from './../../shared/services/inspection.service';
@@ -6,14 +7,17 @@ import { DataDrive } from './../../../../shared/components/data-drive/shared/mod
 import { InspectionBossService } from './../shared/services/inspection-boss.service';
 import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
-import { InspectionReportLineState, InspectionReportHeader } from '../../shared/models/index';
+import {
+  InspectionReportLineState,
+  InspectionReportHeader,
+} from '../../shared/models/index';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-inspection-boss-report',
   templateUrl: './inspection-boss-report.component.html',
-  styleUrls: ['./inspection-boss-report.component.css']
+  styleUrls: ['./inspection-boss-report.component.css'],
 })
 export class InspectionBossReportComponent implements OnInit {
   date = moment(new Date()).format('YYYY-MM-DD');
@@ -22,11 +26,11 @@ export class InspectionBossReportComponent implements OnInit {
   tabIdx;
   dataDrive: DataDrive;
   scheduleList: {
-    INSPECT_NAME: string
-    NAME_ID: number
-    PERSON: string
-    REPORT_ID: number
-    SCHEDULE_HEADER_ID: number
+    INSPECT_NAME: string;
+    NAME_ID: number;
+    PERSON: string;
+    REPORT_ID: number;
+    SCHEDULE_HEADER_ID: number;
   }[];
   translateTexts: any;
   constructor(
@@ -34,24 +38,31 @@ export class InspectionBossReportComponent implements OnInit {
     private inspectionService: InspectionService,
     private dataDriveService: DataDriveService,
     private route: ActivatedRoute,
-    private translate: TranslateService
-  ) { }
+    private translate: TranslateService,
+    private appService: AppService
+  ) {}
 
   ngOnInit() {
-    this.route.data
-      .subscribe((data: { schedule: any }) => {
-        this.scheduleList = data.schedule;
-        this.tabIdx = 0;
-      });
-    this.translate.stream(['insoectionModule.keyProblemdes', 'insoectionModule.keyProblemType']).subscribe((res) => {
-      this.translateTexts = res;
+    this.route.data.subscribe((data: { schedule: any }) => {
+      this.scheduleList = data.schedule;
+      this.tabIdx = 0;
     });
+    this.translate
+      .stream([
+        'insoectionModule.keyProblemdes',
+        'insoectionModule.keyProblemType',
+      ])
+      .subscribe(res => {
+        this.translateTexts = res;
+      });
   }
 
   tabChange(idx) {
     if (this.dataDrive) {
       // 修改索參數
-      this.dataDrive.addDefaultSearchParams({ header_id: this.scheduleList[idx].REPORT_ID });
+      this.dataDrive.addDefaultSearchParams({
+        header_id: this.scheduleList[idx].REPORT_ID,
+      });
       // 重新獲取數據
       this.dataDriveService.updateViewData(this.dataDrive);
     }
@@ -61,7 +72,9 @@ export class InspectionBossReportComponent implements OnInit {
     this.dataDrive = d;
 
     // 配置搜索參數
-    this.dataDrive.addDefaultSearchParams({ header_id: this.scheduleList[this.tabIdx].REPORT_ID });
+    this.dataDrive.addDefaultSearchParams({
+      header_id: this.scheduleList[this.tabIdx].REPORT_ID,
+    });
 
     // 表格渲染前的計算問題數
     this.dataDrive.beforeInitTableData(data => {
@@ -72,7 +85,14 @@ export class InspectionBossReportComponent implements OnInit {
         }
       });
     });
-    const mayHide = ['PROBLEM_TYPE', 'PROBLEM_DESC', 'PROBLEM_PICTURES', 'OWNER_EMPNO'];
+    const mayHide = [
+      'PROBLEM_TYPE',
+      'PROBLEM_DESC',
+      'PROBLEM_PICTURES',
+      'OWNER_EMPNO',
+    ];
+
+    d.afterDataInit(data => this.appService.getAllTips());
 
     // update表單初始化，增加驗證及隱藏
     this.dataDrive.onUpdateFormShow((fg, sub, inputList) => {
@@ -84,7 +104,7 @@ export class InspectionBossReportComponent implements OnInit {
           }
         });
       }
-      fg.get('PROBLEM_FLAG').valueChanges.subscribe((f) => {
+      fg.get('PROBLEM_FLAG').valueChanges.subscribe(f => {
         const isHide = f !== 'Y';
         inputList.forEach(c => {
           if (mayHide.indexOf(c.property) > -1) {
@@ -119,9 +139,8 @@ export class InspectionBossReportComponent implements OnInit {
         }
       }
       if (data.PROBLEM_FLAG !== 'Y') {
-        mayHide.forEach(m => data[m] = '');
+        mayHide.forEach(m => (data[m] = ''));
       } else {
-
       }
       return data;
     });
@@ -136,16 +155,19 @@ export class InspectionBossReportComponent implements OnInit {
         COMPANY_NAME: user.COMPANY_ID,
         TYPE: 'boss',
         INSPECTOR_NAME: this.scheduleList[this.tabIdx].PERSON,
-        INSPECT_DATE: this.date
+        INSPECT_DATE: this.date,
       };
       data.COMPANY_NAME = user.COMPANY_ID;
       data.HEADER_ID = header_id;
       data.INSPECT_DATE = this.date;
       const report: InspectionReportState = {
         Header: reportHeader,
-        Lines: [data]
+        Lines: [data],
       };
-      return this.inspectionService.uploadReport(report).do((id: number) => { this.scheduleList[this.tabIdx].REPORT_ID = id; this.dataDrive.addDefaultSearchParams({ header_id: id }); });
+      return this.inspectionService.uploadReport(report).do((id: number) => {
+        this.scheduleList[this.tabIdx].REPORT_ID = id;
+        this.dataDrive.addDefaultSearchParams({ header_id: id });
+      });
     });
   }
 }

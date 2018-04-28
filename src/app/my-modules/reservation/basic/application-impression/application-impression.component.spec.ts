@@ -11,9 +11,8 @@ describe('ApplicationImpressionComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ApplicationImpressionComponent ]
-    })
-    .compileComponents();
+      declarations: [ApplicationImpressionComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

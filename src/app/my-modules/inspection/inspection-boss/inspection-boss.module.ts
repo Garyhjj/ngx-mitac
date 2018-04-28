@@ -15,7 +15,10 @@ import { InspectionBossCommentComponent } from './inspection-boss-comment/inspec
 
 @NgModule({
   imports: [
-    CommonModule, SharedModule, InspectionBossRoutingModule, DataDriveModule
+    CommonModule,
+    SharedModule,
+    InspectionBossRoutingModule,
+    DataDriveModule,
   ],
   declarations: [
     InspectionBossComponent,
@@ -24,8 +27,8 @@ import { InspectionBossCommentComponent } from './inspection-boss-comment/inspec
     InspectionBossImprovementComponent,
     InspectionBossAttendanceComponent,
     InspectionBossScheduleComponent,
-    InspectionBossCommentComponent
+    InspectionBossCommentComponent,
   ],
-  providers: [InspectionBossService, BossGuard]
+  providers: [InspectionBossService, BossGuard],
 })
-export class InspectionBossModule { }
+export class InspectionBossModule {}

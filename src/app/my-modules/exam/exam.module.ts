@@ -16,15 +16,23 @@ import { examConfig } from './shared/config';
 
 @NgModule({
   imports: [
-    CommonModule, SharedModule, ExamRoutingModule, DataDriveModule, ExamPaperModule
+    CommonModule,
+    SharedModule,
+    ExamRoutingModule,
+    DataDriveModule,
+    ExamPaperModule,
   ],
   declarations: [
     ExamComponent,
     ExamQuestionComponent,
     ExamUnitComponent,
     DoExamComponent,
-    ExamResultComponent
+    ExamResultComponent,
   ],
-  providers: [ExamService, ExamGuard, { provide: EXAM_CONFIG, useValue: examConfig }]
+  providers: [
+    ExamService,
+    ExamGuard,
+    { provide: EXAM_CONFIG, useValue: examConfig },
+  ],
 })
-export class ExamModule { }
+export class ExamModule {}

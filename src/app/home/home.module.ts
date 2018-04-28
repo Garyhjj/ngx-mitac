@@ -6,15 +6,9 @@ import { HomeRoutingModule } from './home-routing.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-
-
 @NgModule({
   imports: [CommonModule, HomeRoutingModule, SharedModule],
-  declarations: [
-    HomeComponent,
-    SiderComponent,
-    ContentComponent
-  ],
-  providers: []
+  declarations: [HomeComponent, SiderComponent, ContentComponent],
+  providers: [],
 })
-export class HomeModule { }
+export class HomeModule {}

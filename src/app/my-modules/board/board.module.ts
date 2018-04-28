@@ -8,6 +8,7 @@ import { UrgentMaterialComponent } from './urgent-material/urgent-material.compo
 import { UrgentNoComponent } from './urgent-no/urgent-no.component';
 import { EsdComponent } from './esd/esd.component';
 import { BoardService } from './shared/services/board.service';
+import { OspComponent } from './osp/osp.component';
 
 @NgModule({
   imports: [CommonModule, BoardRoutingModule, SharedModule, DataDriveModule],
@@ -15,8 +16,9 @@ import { BoardService } from './shared/services/board.service';
     BoardComponent,
     UrgentMaterialComponent,
     UrgentNoComponent,
-    EsdComponent
+    EsdComponent,
+    OspComponent,
   ],
-  providers: [BoardService]
+  providers: [BoardService],
 })
-export class BoardModule { }
+export class BoardModule {}

@@ -10,24 +10,25 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 @Component({
   selector: 'app-end-sider',
   templateUrl: './end-sider.component.html',
-  styleUrls: ['./end-sider.component.css']
+  styleUrls: ['./end-sider.component.css'],
 })
 export class EndSiderComponent implements OnInit, OnDestroy {
-
   myModules: MyModule[];
   mySub: Subscription;
   myPrivilege: Privilege[];
-  @Input()
-  isCollapsed;
+  @Input() isCollapsed;
   constructor(
     private store$: Store<MyStore>,
     private router: Router,
     private authService: AuthService,
-    private utilService: UtilService
-  ) { }
+    private utilService: UtilService,
+  ) {}
 
   ngOnInit() {
-    this.mySub = this.store$.select(s => s.userReducer).subscribe(u => { this.myModules = u.modules; this.myPrivilege = u.privilege; });
+    this.mySub = this.store$.select(s => s.userReducer).subscribe(u => {
+      this.myModules = u.modules;
+      this.myPrivilege = u.privilege;
+    });
     BreadcrumbModel.clear(this.store$);
   }
   ngOnDestroy() {
@@ -53,13 +54,20 @@ export class EndSiderComponent implements OnInit, OnDestroy {
         let routeName: string[] = [];
         if (top.className === 'ant-menu-item-group') {
           routeName.push(top.querySelector('div span').innerText);
-          routeName = routeName.concat([top.parentNode.parentNode.parentNode.querySelector('div span').innerText, target.innerText]);
+          routeName = routeName.concat([
+            top.parentNode.parentNode.parentNode.querySelector('div span')
+              .innerText,
+            target.innerText,
+          ]);
         } else {
-          routeName = [top.querySelector('div span').innerText, target.innerText];
+          routeName = [
+            top.querySelector('div span').innerText,
+            target.innerText,
+          ];
         }
         routeName.unshift('應用中心');
         let navRoute;
-        if (navRoute = target.dataset.route) {
+        if ((navRoute = target.dataset.route)) {
           const url = 'end' + navRoute;
           this.router.navigate([url]);
           let breadcrumbModel = new BreadcrumbModel([routeName, url, 1]);
@@ -70,5 +78,4 @@ export class EndSiderComponent implements OnInit, OnDestroy {
       }
     }
   }
-
 }

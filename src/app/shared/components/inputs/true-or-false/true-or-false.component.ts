@@ -9,24 +9,23 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => TrueOrFalseComponent),
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 export class TrueOrFalseComponent implements OnInit {
-
   radioValue = '';
   _myTrueFormat: string | number = 'Y';
   @Input()
   set myTrueFormat(_: string | number) {
-    if (_ !== void (0) && _ !== null) {
+    if (_ !== void 0 && _ !== null) {
       this._myTrueFormat = _;
     }
   }
   _myFalseFormat: string | number = 'N';
   @Input()
   set myFalseFormat(_: string | number) {
-    if (_ !== void (0) && _ !== null) {
+    if (_ !== void 0 && _ !== null) {
       this._myFalseFormat = _;
     }
   }
@@ -35,10 +34,7 @@ export class TrueOrFalseComponent implements OnInit {
   _result;
 
   @Input()
-  set result(r: {
-    trueAnswer: any,
-    yourAnswer: any
-  }) {
+  set result(r: { trueAnswer: any; yourAnswer: any }) {
     if (typeof r === 'object') {
       this._result = r;
       this.checkResult();
@@ -50,11 +46,10 @@ export class TrueOrFalseComponent implements OnInit {
 
   @Input() titlePrefix = '';
 
-
   @Input() question;
-  private propagateChange = (_: any) => { };
+  private propagateChange = (_: any) => {};
 
-  constructor() { }
+  constructor() {}
 
   /**
    * 给外部formControl写入数据
@@ -80,25 +75,25 @@ export class TrueOrFalseComponent implements OnInit {
    * 也是一样注册,当 touched 然后调用
    * @param {*} fn
    */
-  registerOnTouched(fn: any) { }
+  registerOnTouched(fn: any) {}
 
   change(val) {
     this.propagateChange(val);
   }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   checkResult() {
     const result = this.result;
     if (result) {
       if (result.hasOwnProperty('trueAnswer')) {
-        if ([this._myFalseFormat, this._myTrueFormat].indexOf(result.trueAnswer) > -1) {
+        if (
+          [this._myFalseFormat, this._myTrueFormat].indexOf(result.trueAnswer) >
+          -1
+        ) {
           this.radioValue = result.trueAnswer;
         }
       }
     }
   }
-
 }

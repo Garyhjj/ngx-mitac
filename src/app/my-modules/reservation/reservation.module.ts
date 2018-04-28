@@ -7,11 +7,8 @@ import { ReservationComponent } from './reservation.component';
 import { ReservationGuard } from './reservation-guard.service';
 
 @NgModule({
-  imports: [
-    CommonModule, SharedModule, ReservationRoutingModule
-  ],
-  declarations: [ReservationComponent
-  ],
-  providers: [ReservationService, ReservationGuard]
+  imports: [CommonModule, SharedModule, ReservationRoutingModule],
+  declarations: [ReservationComponent],
+  providers: [ReservationService, ReservationGuard],
 })
-export class ReservationModule { }
+export class ReservationModule {}

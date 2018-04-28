@@ -11,9 +11,8 @@ describe('UrgentNoComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UrgentNoComponent ]
-    })
-    .compileComponents();
+      declarations: [UrgentNoComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -5,7 +5,7 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 @Component({
   selector: 'app-filter-column',
   templateUrl: './filter-column.component.html',
-  styleUrls: ['./filter-column.component.css']
+  styleUrls: ['./filter-column.component.css'],
 })
 export class FilterColumnComponent implements OnInit, OnDestroy {
   private dataDrive: DataDrive;
@@ -18,7 +18,7 @@ export class FilterColumnComponent implements OnInit, OnDestroy {
   hideLists: string[] = [];
   columns;
   private sub1: Subscription;
-  checkOptionsOne: { label: string, value: string, checked: boolean }[];
+  checkOptionsOne: { label: string; value: string; checked: boolean }[];
   allChecked = false;
   indeterminate = true;
 
@@ -29,7 +29,11 @@ export class FilterColumnComponent implements OnInit, OnDestroy {
   updateCheckOptions() {
     this.checkOptionsOne = this.columns.map(c => {
       const property = c.property;
-      return { label: c.value, value: property, checked: this.hideLists.indexOf(property) > -1 ? false : true };
+      return {
+        label: c.value,
+        value: property,
+        checked: this.hideLists.indexOf(property) > -1 ? false : true,
+      };
     });
   }
 
@@ -57,7 +61,7 @@ export class FilterColumnComponent implements OnInit, OnDestroy {
   updateAllChecked() {
     this.indeterminate = false;
     if (this.allChecked) {
-      this.checkOptionsOne.forEach(item => item.checked = true);
+      this.checkOptionsOne.forEach(item => (item.checked = true));
       this.dataDrive.selfHideLists = [];
     } else {
       const hideList = [];

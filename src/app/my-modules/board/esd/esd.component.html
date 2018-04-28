@@ -1,47 +1,28 @@
-<nz-alert [nzType]="'info'" class="esd-header">
-  <nz-row alert-body [nzType]="'flex'" [nzJustify]="'space-around'">
-    <nz-col>
-      <span>日期：{{date}}</span>
-    </nz-col>
-    <nz-col>
-      <span>ESD總管控人數：{{passQuantity + notPassQuantity}}</span>
-    </nz-col>
-    <nz-col>
-      <span>測試人數：{{passQuantity}}</span>
-    </nz-col>
-    <nz-col>
-      <span>未通過人數：{{notPassQuantity}}</span>
-    </nz-col>
-  </nz-row>
-</nz-alert>
+<ng-container *ngTemplateOutlet="pageHeader"></ng-container>
 
 <app-data-drive [name]="'esd'" (dataDriveInit)="getDrive($event)">
   <nz-collapseset class="my-data-searcher" *ngIf="dataDrive">
-    <nz-collapse [nzTitle]="'檢索'">
+    <nz-collapse [nzTitle]="'boardModule.query' | translate">
       <form nz-form [formGroup]="validateForm" [nzLayout]="formLayout">
         <nz-row>
           <nz-col [nzSpan]="8">
             <div nz-form-item nz-row [style.marginBottom.px]="20" [style.width.%]="100">
               <div nz-form-label nz-col [nzSpan]="6">
-                <label>部級部門</label>
+                <label>{{'boardModule.topDept' | translate}}</label>
               </div>
               <div nz-form-control nz-col [nzSpan]="16">
-                <app-mx-select [formControlName]="'top'" [myPlaceHolder]="'請選擇部級部門'"
-                [lazyAPI]="lazyTopAPI"
-                [lazyParams]="['BU_DEPTNO', 'BU_NAME']"
-                  ></app-mx-select>
+                <app-mx-select [formControlName]="'top'" [myPlaceHolder]="'boardModule.pleaseSelectTop' | translate" [lazyAPI]="lazyTopAPI"
+                  [lazyParams]="['BU_DEPTNO', 'BU_NAME']"></app-mx-select>
               </div>
             </div>
           </nz-col>
           <nz-col [nzSpan]="16">
             <div nz-form-item nz-row [style.marginBottom.px]="20" [style.width.%]="100">
               <div nz-form-label nz-col [nzSpan]="6">
-                <label>處級部門</label>
+                <label>{{'boardModule.subDept' | translate}}</label>
               </div>
               <div nz-form-control nz-col [nzSpan]="16">
-                <app-mx-checkbox [formControlName]="'sub'" [myPlaceHolder]="'請選擇處級部門'"
-                [options]="checkBoxOptions"
-                  ></app-mx-checkbox>
+                <app-mx-checkbox [formControlName]="'sub'" [myPlaceHolder]="'boardModule.pleaseSelectSub' | translate" [options]="checkBoxOptions"></app-mx-checkbox>
               </div>
             </div>
           </nz-col>
@@ -49,31 +30,37 @@
         <nz-row [nzType]="'flex'" [nzJustify]="'center'">
           <nz-col [nzSpan]="'6'">
             <button nz-button nz-col type="submit" [nzType]="'primary'" [nzSize]="'large'" [disabled]="!validateForm.valid" (click)="submitForm()">
-              <i class="anticon anticon-search"></i>查询</button>
+              <i class="anticon anticon-search"></i>{{'query' | translate}}</button>
           </nz-col>
           <nz-col [nzSpan]="'6'">
             <button nz-button nz-col [nzType]="'primary'" type="botton" [nzSize]="'large'" (click)="reSet()">
-              <i class="anticon anticon-reload"></i>重置</button>
+              <i class="anticon anticon-reload"></i>{{'boardModule.reSet' | translate}}</button>
           </nz-col>
         </nz-row>
       </form>
     </nz-collapse>
   </nz-collapseset>
 
-  <nz-alert [nzType]="'info'" class="esd-header my-full-screen-header">
+  <div class="my-full-screen-header">
+    <ng-container *ngTemplateOutlet="pageHeader"></ng-container>
+  </div>
+</app-data-drive>
+
+<ng-template #pageHeader>
+  <nz-alert [nzType]="'info'" class="esd-header">
     <nz-row alert-body [nzType]="'flex'" [nzJustify]="'space-around'">
       <nz-col>
-        <span>日期：{{date}}</span>
+        <span>{{'boardModule.date' | translate}}：{{date}}</span>
       </nz-col>
       <nz-col>
-        <span>ESD總管控人數：{{passQuantity + notPassQuantity}}</span>
+        <span>{{'boardModule.esdTestQuality' | translate}}：{{passQuantity + notPassQuantity}}</span>
       </nz-col>
       <nz-col>
-        <span>測試人數：{{passQuantity}}</span>
+        <span>{{'boardModule.passQuantity' | translate}}：{{passQuantity}}</span>
       </nz-col>
       <nz-col>
-        <span>未通過人數：{{notPassQuantity}}</span>
+        <span>{{'boardModule.notPassQuantity' | translate}}：{{notPassQuantity}}</span>
       </nz-col>
     </nz-row>
   </nz-alert>
-</app-data-drive>
+</ng-template>

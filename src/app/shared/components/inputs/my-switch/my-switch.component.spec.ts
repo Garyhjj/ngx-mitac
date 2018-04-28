@@ -11,9 +11,8 @@ describe('MySwitchComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MySwitchComponent ]
-    })
-    .compileComponents();
+      declarations: [MySwitchComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

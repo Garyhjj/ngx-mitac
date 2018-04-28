@@ -6,11 +6,14 @@ import { CacheService } from './cache.service';
 describe('Service: Cache', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [CacheService]
+      providers: [CacheService],
     });
   });
 
-  it('should ...', inject([CacheService], (service: CacheService) => {
-    expect(service).toBeTruthy();
-  }));
+  it(
+    'should ...',
+    inject([CacheService], (service: CacheService) => {
+      expect(service).toBeTruthy();
+    }),
+  );
 });

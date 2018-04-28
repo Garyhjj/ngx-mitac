@@ -7,34 +7,27 @@ import { replaceQuery } from '../../../../shared/utils';
 
 @Injectable()
 export class BoardService {
+  user: UserState;
+  constructor(private http: HttpClient, private auth: AuthService) {
+    this.user = this.auth.user;
+  }
 
-    user: UserState;
-    constructor(
-        private http: HttpClient,
-        private auth: AuthService
-    ) {
-        this.user = this.auth.user;
-    }
+  getEsdQuantity(flag: 'Y' | 'N') {
+    const send = { flag };
+    return this.http.get(replaceQuery(boardConfig.getEsdQuantity, send));
+  }
 
-    getEsdQuantity(flag: 'Y' | 'N') {
-        const send = { flag };
-        return this.http.get(replaceQuery(boardConfig.getEsdQuantity, send));
-    }
+  getTopDep() {
+    return this.http.get(boardConfig.getTopDep);
+  }
 
-    getTopDep() {
-        return this.http.get(boardConfig.getTopDep);
-    }
+  getSubDep(bu_deptno: string) {
+    const send = { bu_deptno };
+    return this.http.get(replaceQuery(boardConfig.getSubDep, send));
+  }
 
-    getSubDep(bu_deptno: string) {
-        const send = {bu_deptno};
-        return this.http.get(replaceQuery(boardConfig.getSubDep, send));
-    }
-
-    getEsdNotPassList(chu_deptno: string) {
-        const send = {chu_deptno};
-        return this.http.get(replaceQuery(boardConfig.getEsdNotPassList, send));
-    }
-
-
+  getEsdNotPassList(chu_deptno: string) {
+    const send = { chu_deptno };
+    return this.http.get(replaceQuery(boardConfig.getEsdNotPassList, send));
+  }
 }
-

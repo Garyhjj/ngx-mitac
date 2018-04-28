@@ -8,45 +8,39 @@ import { BasicComponent } from './basic.component';
 import { ReservationDepartmentComponent } from './reservation-department/reservation-department.component';
 import { ResvationTimeComponent } from './resvation-time/resvation-time.component';
 
-
-
 const bRoutes: Routes = [
-    {
-        path: '',
-        component: BasicComponent,
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
-        children: [
-            {
-                path: 'department',
-                component: ReservationDepartmentComponent
-            },
-            {
-                path: 'person',
-                component: ReservationPersonComponent
-            },
-            {
-                path: 'time',
-                component: ResvationTimeComponent
-            },
-            {
-                path: 'impression',
-                component: ApplicationImpressionComponent
-            },
-            {
-                path: 'type',
-                component: ReservationTypeComponent
-            }
-        ]
-    }
+  {
+    path: '',
+    component: BasicComponent,
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
+    children: [
+      {
+        path: 'department',
+        component: ReservationDepartmentComponent,
+      },
+      {
+        path: 'person',
+        component: ReservationPersonComponent,
+      },
+      {
+        path: 'time',
+        component: ResvationTimeComponent,
+      },
+      {
+        path: 'impression',
+        component: ApplicationImpressionComponent,
+      },
+      {
+        path: 'type',
+        component: ReservationTypeComponent,
+      },
+    ],
+  },
 ];
 
 @NgModule({
-    imports: [
-        RouterModule.forChild(bRoutes)
-    ],
-    exports: [
-        RouterModule
-    ]
+  imports: [RouterModule.forChild(bRoutes)],
+  exports: [RouterModule],
 })
-export class BasicRoutingModule { }
+export class BasicRoutingModule {}

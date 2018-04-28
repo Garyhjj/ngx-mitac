@@ -5,14 +5,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ScanComponent } from './scan/scan.component';
 
-
-
 @NgModule({
   imports: [CommonModule, EMPIRoutingModule, SharedModule],
-  declarations: [
-    EMPIComponent,
-    ScanComponent
-  ],
-  providers: []
+  declarations: [EMPIComponent, ScanComponent],
+  providers: [],
 })
-export class EMPIModule { }
+export class EMPIModule {}

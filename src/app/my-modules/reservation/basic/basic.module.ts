@@ -11,15 +11,14 @@ import { ApplicationImpressionComponent } from './application-impression/applica
 import { ReservationTypeComponent } from './reservation-type/reservation-type.component';
 
 @NgModule({
-  imports: [
-    CommonModule, SharedModule, BasicRoutingModule, DataDriveModule
-  ],
-  declarations: [BasicComponent,
+  imports: [CommonModule, SharedModule, BasicRoutingModule, DataDriveModule],
+  declarations: [
+    BasicComponent,
     ReservationDepartmentComponent,
     ReservationPersonComponent,
     ResvationTimeComponent,
     ApplicationImpressionComponent,
-    ReservationTypeComponent
-  ]
+    ReservationTypeComponent,
+  ],
 })
-export class BasicModule { }
+export class BasicModule {}

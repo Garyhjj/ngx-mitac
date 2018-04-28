@@ -11,9 +11,8 @@ describe('MyTimePickerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MyTimePickerComponent ]
-    })
-    .compileComponents();
+      declarations: [MyTimePickerComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

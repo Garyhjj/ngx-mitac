@@ -5,18 +5,16 @@ import { isArray } from '../../../../shared/utils';
 @Component({
   selector: 'app-inspection-equip-history',
   templateUrl: './inspection-equip-history.component.html',
-  styleUrls: ['./inspection-equip-history.component.css']
+  styleUrls: ['./inspection-equip-history.component.css'],
 })
 export class InspectionEquipHistoryComponent implements OnInit {
-
   issueList: any[];
   issueDataDrive: DataDrive;
 
   tabIdx = 0;
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   getDataDrive1(d: DataDrive) {
     d.beforeInitTableData((ds: any) => {
@@ -33,11 +31,12 @@ export class InspectionEquipHistoryComponent implements OnInit {
     this.tabIdx = 1;
     if (isArray(this.issueList)) {
       const HEADER_ID = data.HEADER_ID;
-      this.issueDataDrive.selfUpdateTableData(this.issueList.filter(i => i.HEADER_ID === HEADER_ID));
+      this.issueDataDrive.selfUpdateTableData(
+        this.issueList.filter(i => i.HEADER_ID === HEADER_ID),
+      );
     }
   }
   getDataDrive2(d: DataDrive) {
     this.issueDataDrive = d;
   }
-
 }

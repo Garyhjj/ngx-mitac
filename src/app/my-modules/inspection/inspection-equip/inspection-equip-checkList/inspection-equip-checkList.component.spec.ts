@@ -11,9 +11,8 @@ describe('InspectionEquipCheckListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ InspectionEquipCheckListComponent ]
-    })
-    .compileComponents();
+      declarations: [InspectionEquipCheckListComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -11,9 +11,8 @@ describe('ResvationTimeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ResvationTimeComponent ]
-    })
-    .compileComponents();
+      declarations: [ResvationTimeComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

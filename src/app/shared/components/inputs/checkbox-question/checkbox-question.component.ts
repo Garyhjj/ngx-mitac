@@ -1,4 +1,12 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit, forwardRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+  forwardRef,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { isArray } from '../../../utils/index';
 
@@ -10,28 +18,23 @@ import { isArray } from '../../../utils/index';
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => CheckboxQuestionComponent),
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 export class CheckboxQuestionComponent implements OnInit, AfterViewInit {
-
-  @Input() checkOptions: { label: string, value: string, checked: boolean }[] = [
-  ];
+  @Input()
+  checkOptions: { label: string; value: string; checked: boolean }[] = [];
   @Input() title = '';
   @Input() fontSize = '1.6rem';
   @Input() titlePrefix = '';
-  @ViewChild('checkbox')
-  checkbox: any;
+  @ViewChild('checkbox') checkbox: any;
   _result;
   yourAnswerString = '';
-  private propagateChange = (_: any) => { };
+  private propagateChange = (_: any) => {};
 
   @Input()
-  set result(r: {
-    trueAnswer: any,
-    yourAnswer: any
-  }) {
+  set result(r: { trueAnswer: any; yourAnswer: any }) {
     if (typeof r === 'object') {
       this._result = r;
       this.checkResult();
@@ -41,7 +44,7 @@ export class CheckboxQuestionComponent implements OnInit, AfterViewInit {
     return this._result;
   }
 
-  constructor() { }
+  constructor() {}
 
   /**
    * 给外部formControl写入数据
@@ -67,19 +70,22 @@ export class CheckboxQuestionComponent implements OnInit, AfterViewInit {
    * 也是一样注册,当 touched 然后调用
    * @param {*} fn
    */
-  registerOnTouched(fn: any) { }
+  registerOnTouched(fn: any) {}
 
   updateSingleChecked() {
-    this.propagateChange(this.checkOptions.filter(c => c.checked).map(a => a.value).join(','));
+    this.propagateChange(
+      this.checkOptions
+        .filter(c => c.checked)
+        .map(a => a.value)
+        .join(','),
+    );
   }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
   ngAfterViewInit() {
     setTimeout(() => {
       const labels = this.checkbox._el.querySelectorAll('label');
-      Array.prototype.forEach.call(labels, (l) => {
+      Array.prototype.forEach.call(labels, l => {
         l.style.fontSize = this.fontSize;
       });
     }, 50);
@@ -89,7 +95,9 @@ export class CheckboxQuestionComponent implements OnInit, AfterViewInit {
     const result = this.result;
     if (result) {
       if (result.hasOwnProperty('trueAnswer')) {
-        const trueAnswer: string[] = result.trueAnswer ? result.trueAnswer.split(',') : [];
+        const trueAnswer: string[] = result.trueAnswer
+          ? result.trueAnswer.split(',')
+          : [];
         let yourAnswer = [];
         if (result.hasOwnProperty('yourAnswer')) {
           yourAnswer = result.yourAnswer ? result.yourAnswer.split(',') : [];
@@ -102,7 +110,9 @@ export class CheckboxQuestionComponent implements OnInit, AfterViewInit {
             c.checked = false;
           }
           if (yourAnswer.indexOf(c.value) > -1) {
-            this.yourAnswerString += this.yourAnswerString ? '; ' + c.value : c.value;
+            this.yourAnswerString += this.yourAnswerString
+              ? '; ' + c.value
+              : c.value;
           }
           return c;
         });
@@ -114,13 +124,17 @@ export class CheckboxQuestionComponent implements OnInit, AfterViewInit {
     const result = this.result;
     if (result) {
       if (result.hasOwnProperty('trueAnswer')) {
-        const trueAnswer: string[] = result.trueAnswer ? result.trueAnswer.split(',') : [];
+        const trueAnswer: string[] = result.trueAnswer
+          ? result.trueAnswer.split(',')
+          : [];
         let yourAnswer = [];
         if (result.hasOwnProperty('yourAnswer')) {
           yourAnswer = result.yourAnswer ? result.yourAnswer.split(',') : [];
         }
         if (yourAnswer.length === trueAnswer.length) {
-          if (new Set([...trueAnswer, ...yourAnswer]).size === trueAnswer.length) {
+          if (
+            new Set([...trueAnswer, ...yourAnswer]).size === trueAnswer.length
+          ) {
             return true;
           }
         }
@@ -128,5 +142,4 @@ export class CheckboxQuestionComponent implements OnInit, AfterViewInit {
     }
     return false;
   }
-
 }

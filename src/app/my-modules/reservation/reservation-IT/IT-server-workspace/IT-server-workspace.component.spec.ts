@@ -11,9 +11,8 @@ describe('ITServerWorkspaceComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ITServerWorkspaceComponent ]
-    })
-    .compileComponents();
+      declarations: [ITServerWorkspaceComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

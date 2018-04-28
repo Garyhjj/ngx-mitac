@@ -6,10 +6,8 @@ import { CommonModule } from '@angular/common';
 import { InspectionComponent } from './inspection.component';
 
 @NgModule({
-  imports: [
-    CommonModule, SharedModule, InspectionRoutingModule
-  ],
+  imports: [CommonModule, SharedModule, InspectionRoutingModule],
   declarations: [InspectionComponent],
-  providers: [InspectionService]
+  providers: [InspectionService],
 })
-export class InspectionModule { }
+export class InspectionModule {}

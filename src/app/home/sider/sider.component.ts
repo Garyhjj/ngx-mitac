@@ -10,23 +10,24 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 @Component({
   selector: 'app-sider',
   templateUrl: './sider.component.html',
-  styleUrls: ['./sider.component.css']
+  styleUrls: ['./sider.component.css'],
 })
 export class SiderComponent implements OnInit, OnDestroy {
-
   myModules: MyModule[];
   mySub: Subscription;
-  @Input()
-  isCollapsed;
+  @Input() isCollapsed;
   constructor(
     private store$: Store<MyStore>,
     private router: Router,
     private authService: AuthService,
-    private utilService: UtilService
-  ) { }
+    private utilService: UtilService,
+  ) {}
 
   ngOnInit() {
-    this.mySub = this.store$.select(s => s.userReducer).map(u => u.modules).subscribe(m => this.myModules = m);
+    this.mySub = this.store$
+      .select(s => s.userReducer)
+      .map(u => u.modules)
+      .subscribe(m => (this.myModules = m));
   }
   ngOnDestroy() {
     // tslint:disable-next-line:no-unused-expression
@@ -47,14 +48,18 @@ export class SiderComponent implements OnInit, OnDestroy {
         let route: string[] = [];
         if (top.className === 'ant-menu-item-group') {
           route.push(top.querySelector('div span').innerText);
-          route = route.concat([top.parentNode.parentNode.parentNode.querySelector('div span').innerText, target.innerText]);
+          route = route.concat([
+            top.parentNode.parentNode.parentNode.querySelector('div span')
+              .innerText,
+            target.innerText,
+          ]);
         } else {
           route = [top.querySelector('div span').innerText, target.innerText];
         }
         let breadcrumbModel = new BreadcrumbModel(route);
         breadcrumbModel.update(this.store$);
         let navRoute;
-        if (navRoute = target.dataset.route) {
+        if ((navRoute = target.dataset.route)) {
           this.router.navigate([navRoute]);
         }
       } catch (e) {
@@ -62,5 +67,4 @@ export class SiderComponent implements OnInit, OnDestroy {
       }
     }
   }
-
 }

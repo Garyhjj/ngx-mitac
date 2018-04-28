@@ -11,9 +11,8 @@ describe('TrueOrFalseComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TrueOrFalseComponent ]
-    })
-    .compileComponents();
+      declarations: [TrueOrFalseComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

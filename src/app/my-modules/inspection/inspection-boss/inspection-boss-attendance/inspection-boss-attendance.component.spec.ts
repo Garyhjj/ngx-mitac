@@ -11,9 +11,8 @@ describe('InspectionBossAttendanceComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ InspectionBossAttendanceComponent ]
-    })
-    .compileComponents();
+      declarations: [InspectionBossAttendanceComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

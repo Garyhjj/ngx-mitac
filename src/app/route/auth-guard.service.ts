@@ -5,9 +5,7 @@ import { CanActivate, CanActivateChild, Router } from '@angular/router';
 
 @Injectable()
 export class AuthGuard implements CanActivate, CanActivateChild {
-
-  constructor(private authService: AuthService, private router: Router) {
-  }
+  constructor(private authService: AuthService, private router: Router) {}
 
   checkAuth() {
     if (this.authService.checkAuth()) {
@@ -15,10 +13,17 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     } else {
       const user = this.authService.user;
       if (user.rememberPWD) {
-        return this.authService.login({ userName: user.USER_NAME, password: user.password, remember: user.rememberPWD }).map(() => true).catch(() => {
-          this.router.navigate(['/login']);
-          return Observable.of(false);
-        });
+        return this.authService
+          .login({
+            userName: user.USER_NAME,
+            password: user.password,
+            remember: user.rememberPWD,
+          })
+          .map(() => true)
+          .catch(() => {
+            this.router.navigate(['/login']);
+            return Observable.of(false);
+          });
       } else {
         this.router.navigate(['/login']);
         return false;
@@ -31,5 +36,4 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   canActivateChild() {
     return this.checkAuth();
   }
-
 }

@@ -11,9 +11,8 @@ describe('EsdComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EsdComponent ]
-    })
-    .compileComponents();
+      declarations: [EsdComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

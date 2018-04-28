@@ -11,9 +11,8 @@ describe('ITServerTrackComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ITServerTrackComponent ]
-    })
-    .compileComponents();
+      declarations: [ITServerTrackComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

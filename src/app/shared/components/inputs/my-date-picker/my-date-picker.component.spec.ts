@@ -11,9 +11,8 @@ describe('MyDatePickerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MyDatePickerComponent ]
-    })
-    .compileComponents();
+      declarations: [MyDatePickerComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

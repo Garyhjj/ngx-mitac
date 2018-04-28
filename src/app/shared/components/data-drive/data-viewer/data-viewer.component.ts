@@ -5,10 +5,9 @@ import { Component, OnInit, Input, TemplateRef } from '@angular/core';
 @Component({
   selector: 'app-data-viewer',
   templateUrl: './data-viewer.component.html',
-  styleUrls: ['./data-viewer.component.css']
+  styleUrls: ['./data-viewer.component.css'],
 })
 export class DataViewerComponent implements OnInit {
-
   _dataDrive: DataDrive;
   _viewSet: DataViewSet;
 
@@ -18,16 +17,15 @@ export class DataViewerComponent implements OnInit {
     this._viewSet = opts.dataViewSet;
   }
 
-  @Input()
-  isModal: boolean;
+  @Input() isModal: boolean;
 
   @Input()
   set more(m: any) {
     if (m.actionRef) {
       this.actionRef = m.actionRef;
     }
-    if (m.tableCell) {
-      this.tableCell = m.tableCell;
+    if (m.tableCellRef) {
+      this.tableCellRef = m.tableCellRef;
     }
     if (m.headerCellRef) {
       this.headerCellRef = m.headerCellRef;
@@ -39,15 +37,12 @@ export class DataViewerComponent implements OnInit {
       this.bodyCellStyle = m.bodyCellStyle;
     }
   }
-  tableCell: TemplateRef<void>;
+  tableCellRef: TemplateRef<void>;
   actionRef: TemplateRef<void>;
   headerCellRef: TemplateRef<void>;
   headerCellStyle: (TableDataColumn) => any;
   bodyCellStyle: (data: any, property: string) => any;
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-
-  }
-
+  ngOnInit() {}
 }

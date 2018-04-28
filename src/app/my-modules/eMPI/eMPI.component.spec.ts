@@ -11,9 +11,8 @@ describe('EMPIComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EMPIComponent ]
-    })
-    .compileComponents();
+      declarations: [EMPIComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

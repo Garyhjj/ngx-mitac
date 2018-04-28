@@ -11,9 +11,8 @@ describe('RadioQuestionComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RadioQuestionComponent ]
-    })
-    .compileComponents();
+      declarations: [RadioQuestionComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

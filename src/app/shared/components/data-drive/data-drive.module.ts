@@ -10,13 +10,14 @@ import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
-    CommonModule, SharedModule, DataViewerModule, DataInputerModule, TranslateModule
+    CommonModule,
+    SharedModule,
+    DataViewerModule,
+    DataInputerModule,
+    TranslateModule,
   ],
-  declarations: [
-    DataDriveComponent,
-    MenuComponent
-  ],
+  declarations: [DataDriveComponent, MenuComponent],
   exports: [DataDriveComponent, DataViewerModule],
-  providers: [DataDriveService]
+  providers: [DataDriveService],
 })
-export class DataDriveModule { }
+export class DataDriveModule {}

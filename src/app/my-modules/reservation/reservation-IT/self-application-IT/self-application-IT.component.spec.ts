@@ -11,9 +11,8 @@ describe('SelfApplicationITComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SelfApplicationITComponent ]
-    })
-    .compileComponents();
+      declarations: [SelfApplicationITComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -15,18 +15,22 @@ import { ITServerBoardComponent } from './IT-server-board/IT-server-board.compon
 
 @NgModule({
   imports: [
-    CommonModule, SharedModule, DataDriveModule, ReservationITRoutingModule
+    CommonModule,
+    SharedModule,
+    DataDriveModule,
+    ReservationITRoutingModule,
   ],
-  declarations: [ReservationITComponent,
+  declarations: [
+    ReservationITComponent,
     ApplicationITComponent,
     SelfApplicationITComponent,
     ITServerWorkspaceComponent,
     ImpressionListComponent,
     ITServerTrackComponent,
     ITServerRateComponent,
-    ITServerBoardComponent
-],
+    ITServerBoardComponent,
+  ],
   entryComponents: [ImpressionListComponent],
-  providers: [ReservationITService]
+  providers: [ReservationITService],
 })
-export class ReservationITModule { }
+export class ReservationITModule {}

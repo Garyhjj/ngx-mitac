@@ -8,9 +8,8 @@ describe('GeckoRmaComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GeckoRmaComponent ]
-    })
-    .compileComponents();
+      declarations: [GeckoRmaComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

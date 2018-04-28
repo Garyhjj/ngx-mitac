@@ -33,9 +33,9 @@
               </button>
             </div>
             <ng-container *ngSwitchCase="'self'">
-              <ng-template [ngTemplateOutlet]="tableCell" [ngTemplateOutletContext]="{data: arrayToObjectForData(i), property: item.property}"
-                *ngIf="tableCell"></ng-template>
-              <span *ngIf="!tableCell">{{item.value | myFlex: (pipes && pipes[item.property]?pipes[item.property]:'') | async }}</span>
+              <ng-template [ngTemplateOutlet]="tableCellRef" [ngTemplateOutletContext]="{data: arrayToObjectForData(i), property: item.property}"
+                *ngIf="tableCellRef"></ng-template>
+              <span *ngIf="!tableCellRef">{{item.value | myFlex: (pipes && pipes[item.property]?pipes[item.property]:'') | async }}</span>
             </ng-container>
             <span *ngSwitchDefault>{{item.value | myFlex: (pipes && pipes[item.property]?pipes[item.property]:'') | async }}</span>
           </ng-container>

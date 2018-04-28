@@ -1,16 +1,25 @@
 import { Subscription } from 'rxjs/Subscription';
-import { Component, OnInit, Input, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, OnChanges } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  OnDestroy,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  OnChanges,
+} from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-photo-viewer',
   templateUrl: './photo-viewer.component.html',
   styleUrls: ['./photo-viewer.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhotoViewerComponent implements OnInit, OnDestroy, OnChanges {
   _imgList: any[] = [];
-  @Input() set imgList(l) {
+  @Input()
+  set imgList(l) {
     this._imgList = l;
     this.ref.markForCheck();
   }
@@ -22,7 +31,7 @@ export class PhotoViewerComponent implements OnInit, OnDestroy, OnChanges {
   set previewImageIdx(idx: number) {
     if (Number.isInteger(idx) && idx > -1) {
       this._previewImageIdx = idx;
-    }else {
+    } else {
       this._previewImageIdx = 0;
     }
     this.ref.markForCheck();
@@ -31,14 +40,14 @@ export class PhotoViewerComponent implements OnInit, OnDestroy, OnChanges {
   mySub: Subscription;
   previewVisible = false;
 
-  constructor(private ref: ChangeDetectorRef) { }
+  constructor(private ref: ChangeDetectorRef) {}
 
   dismiss() {
     this.previewVisible = false;
   }
 
   ngOnChanges(d) {
-    if(!d.hasOwnProperty('previewImageIdx')) {
+    if (!d.hasOwnProperty('previewImageIdx')) {
       this._previewImageIdx = 0;
     }
   }
@@ -67,7 +76,9 @@ export class PhotoViewerComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnInit() {
     if (this.myShowInformer instanceof Observable) {
-      this.mySub = this.myShowInformer.subscribe(_ => {this.previewVisible = true;});
+      this.mySub = this.myShowInformer.subscribe(_ => {
+        this.previewVisible = true;
+      });
     }
   }
 
@@ -76,5 +87,4 @@ export class PhotoViewerComponent implements OnInit, OnDestroy, OnChanges {
       this.mySub.unsubscribe();
     }
   }
-
 }

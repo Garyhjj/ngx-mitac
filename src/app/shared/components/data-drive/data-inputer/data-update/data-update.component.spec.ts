@@ -11,9 +11,8 @@ describe('DataUpdateComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DataUpdateComponent ]
-    })
-    .compileComponents();
+      declarations: [DataUpdateComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

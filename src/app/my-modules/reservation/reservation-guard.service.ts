@@ -4,12 +4,9 @@ import { ReservationService } from './shared/services/resvation.service';
 
 @Injectable()
 export class ReservationGuard implements CanActivate {
-
-    constructor(private reservationService: ReservationService) {
-    }
-    canActivate() {
-        const role = this.reservationService.role;
-        return role === 1;
-    }
-
+  constructor(private reservationService: ReservationService) {}
+  canActivate() {
+    const role = this.reservationService.role;
+    return role === 1;
+  }
 }

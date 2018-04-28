@@ -8,43 +8,38 @@ import { ExamUnitComponent } from './exam-unit/exam-unit.component';
 import { DoExamComponent } from './do-exam/do-exam.component';
 import { ExamResultComponent } from './exam-result/exam-result.component';
 
-
 const bRoutes: Routes = [
-    {
-        path: '',
-        component: ExamComponent,
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
-        children: [
-            {
-                canActivate: [ExamGuard],
-                path: 'question',
-                component: ExamQuestionComponent
-            },
-            {
-                canActivate: [ExamGuard],
-                path: 'unit',
-                component: ExamUnitComponent
-            },
-            {
-                path: 'do/:id',
-                component: DoExamComponent
-            },
-            {
-                canActivate: [ExamGuard],
-                path: 'result',
-                component: ExamResultComponent
-            }
-        ]
-    }
+  {
+    path: '',
+    component: ExamComponent,
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
+    children: [
+      {
+        canActivate: [ExamGuard],
+        path: 'question',
+        component: ExamQuestionComponent,
+      },
+      {
+        canActivate: [ExamGuard],
+        path: 'unit',
+        component: ExamUnitComponent,
+      },
+      {
+        path: 'do/:id',
+        component: DoExamComponent,
+      },
+      {
+        canActivate: [ExamGuard],
+        path: 'result',
+        component: ExamResultComponent,
+      },
+    ],
+  },
 ];
 
 @NgModule({
-    imports: [
-        RouterModule.forChild(bRoutes)
-    ],
-    exports: [
-        RouterModule
-    ]
+  imports: [RouterModule.forChild(bRoutes)],
+  exports: [RouterModule],
 })
-export class ExamRoutingModule { }
+export class ExamRoutingModule {}

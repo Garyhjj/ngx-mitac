@@ -18,45 +18,44 @@ const maxsize = 500 * 1024;
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => PhotoUploadComponent),
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 export class PhotoUploadComponent implements OnInit {
-
-  private propagateChange = (_: any) => { };
-  _myPickerFormat:string = 'string';
-  @Input() 
-  set pickerFormat(_:string) {
-    if(_ !== void(0) && _ !== null) {
+  private propagateChange = (_: any) => {};
+  _myPickerFormat: string = 'string';
+  @Input()
+  set pickerFormat(_: string) {
+    if (_ !== void 0 && _ !== null) {
       this._myPickerFormat = _;
     }
   }
   _maxCount = 9;
-  @Input() 
-  set maxCount(_:number) {
-    if(_ !== void(0) && _ !== null) {
+  @Input()
+  set maxCount(_: number) {
+    if (_ !== void 0 && _ !== null) {
       this._maxCount = _;
     }
   }
   _removable = true;
-  @Input() 
-  set removable(_:boolean) {
-    if(_ !== void(0) && _ !== null) {
+  @Input()
+  set removable(_: boolean) {
+    if (_ !== void 0 && _ !== null) {
       this._removable = _;
     }
   }
   _addable = true;
-  @Input() 
-  set addable(_:boolean) {
-    if(_ !== void(0) && _ !== null) {
+  @Input()
+  set addable(_: boolean) {
+    if (_ !== void 0 && _ !== null) {
       this._addable = _;
     }
   }
   _scanable = true;
-  @Input() 
-  set scanable(_:boolean) {
-    if(_ !== void(0) && _ !== null) {
+  @Input()
+  set scanable(_: boolean) {
+    if (_ !== void 0 && _ !== null) {
       this._scanable = _;
     }
   }
@@ -76,36 +75,36 @@ export class PhotoUploadComponent implements OnInit {
   showInformer = new Subject<any>();
   constructor(
     private appService: AppService,
-    private modalService: NzModalService
-  ) { }
+    private modalService: NzModalService,
+  ) {}
 
   /**
    * 给外部formControl写入数据
-   * 
-   * @param {*} value 
+   *
+   * @param {*} value
    */
   writeValue(value: any) {
-    if(!value) return; 
+    if (!value) return;
     let arr;
-    if(Object.prototype.toString.call(value) !== '[object Array]') {
+    if (Object.prototype.toString.call(value) !== '[object Array]') {
       arr = value.split(',');
     }
     arr = arr || value;
-    while(arr.length > this._maxCount) {
+    while (arr.length > this._maxCount) {
       arr.pop();
     }
     this._fileList = arr.map(a => ({
       name: a,
       status: 'done',
       url: APPConfig.baseUrl + a,
-      storeUrl: a
-    }))
+      storeUrl: a,
+    }));
   }
 
   /**
    * 把外面登记的监测change的函数赋值给this.propagateChange
    * 当内部数据改变时,可使用this.propagateChange(this.imgs)去触发传递出去
-   * @param {*} fn 
+   * @param {*} fn
    */
   registerOnChange(fn: any) {
     this.propagateChange = fn;
@@ -113,16 +112,16 @@ export class PhotoUploadComponent implements OnInit {
 
   /**
    * 也是一样注册,当 touched 然后调用
-   * @param {*} fn 
+   * @param {*} fn
    */
-  registerOnTouched(fn:any) { }
+  registerOnTouched(fn: any) {}
 
-  emitOut(ls:any[]) {
+  emitOut(ls: any[]) {
     const urlList = ls.map(l => l.storeUrl).filter(url => url);
-    if(this._myPickerFormat === 'string') {
+    if (this._myPickerFormat === 'string') {
       const res = urlList.join(',');
       this.propagateChange(res);
-    }else {
+    } else {
       this.propagateChange(urlList);
     }
   }
@@ -131,40 +130,42 @@ export class PhotoUploadComponent implements OnInit {
     this.previewImageIdx = this.fileList.findIndex(f => f === file);
     this.previewVisible = true;
     this.showInformer.next(1);
-  }
+  };
 
-  remove = (file) => {
+  remove = file => {
     const that = this;
     this.modalService.confirm({
-      title  : '您是否要舍弃此图片？',
+      title: '您是否要舍弃此图片？',
       onOk() {
         that.removeSubject.next(file);
       },
-      onCancel() {
-      }
+      onCancel() {},
     });
     return false;
-  }
+  };
 
   observeRemoveAction() {
-    this.removeSubject.subscribe(file => this.fileList = this.fileList.filter(f => f !== file));
+    this.removeSubject.subscribe(
+      file => (this.fileList = this.fileList.filter(f => f !== file)),
+    );
   }
-
 
   beforeUpload = (img: File) => {
     const reader = new FileReader();
-    const upload = (base64) => {
-      this.appService.uploadPicture(base64).subscribe((url) => {
-        this.fileList = this.fileList.concat([{
-          name: img.name,
-          status: 'done',
-          url: APPConfig.baseUrl + url,
-          storeUrl: url
-        }])
-      })
-    }
+    const upload = base64 => {
+      this.appService.uploadPicture(base64).subscribe(url => {
+        this.fileList = this.fileList.concat([
+          {
+            name: img.name,
+            status: 'done',
+            url: APPConfig.baseUrl + url,
+            storeUrl: url,
+          },
+        ]);
+      });
+    };
     const that = this;
-    reader.onload = function () {
+    reader.onload = function() {
       var result = this.result;
       var img = new Image();
       img.src = result;
@@ -191,13 +192,13 @@ export class PhotoUploadComponent implements OnInit {
     reader.readAsDataURL(img);
     // 取消默认上传行为
     return false;
-  }
+  };
 
   compress(img) {
-    const canvas = document.createElement("canvas");
+    const canvas = document.createElement('canvas');
     var ctx = canvas.getContext('2d');
-    const tCanvas = document.createElement("canvas");
-    var tctx = tCanvas.getContext("2d");
+    const tCanvas = document.createElement('canvas');
+    var tctx = tCanvas.getContext('2d');
     var initSize = img.src.length;
     var width = img.width;
     var height = img.height;
@@ -213,7 +214,7 @@ export class PhotoUploadComponent implements OnInit {
     canvas.width = width;
     canvas.height = height;
     //        铺底色
-    ctx.fillStyle = "#fff";
+    ctx.fillStyle = '#fff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     //如果图片像素大于100万则使用瓦片绘制
     var count;
@@ -228,7 +229,17 @@ export class PhotoUploadComponent implements OnInit {
       // 先画一个小的tctx，然后将小的从左到右，从上到下画到大的ctx画布上
       for (var i = 0; i < count; i++) {
         for (var j = 0; j < count; j++) {
-          tctx.drawImage(img, i * nw * ratio, j * nh * ratio, nw * ratio, nh * ratio, 0, 0, nw, nh);
+          tctx.drawImage(
+            img,
+            i * nw * ratio,
+            j * nh * ratio,
+            nw * ratio,
+            nh * ratio,
+            0,
+            0,
+            nw,
+            nh,
+          );
           ctx.drawImage(tCanvas, i * nw, j * nh, nw, nh);
         }
       }
@@ -246,5 +257,4 @@ export class PhotoUploadComponent implements OnInit {
   ngOnInit() {
     this.observeRemoveAction();
   }
-
 }

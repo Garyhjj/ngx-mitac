@@ -6,11 +6,14 @@ import { ExamService } from './exam.service';
 describe('Service: Exam', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ExamService]
+      providers: [ExamService],
     });
   });
 
-  it('should ...', inject([ExamService], (service: ExamService) => {
-    expect(service).toBeTruthy();
-  }));
+  it(
+    'should ...',
+    inject([ExamService], (service: ExamService) => {
+      expect(service).toBeTruthy();
+    }),
+  );
 });

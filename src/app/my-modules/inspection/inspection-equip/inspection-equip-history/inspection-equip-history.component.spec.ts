@@ -11,9 +11,8 @@ describe('InspectionEquipHistoryComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ InspectionEquipHistoryComponent ]
-    })
-    .compileComponents();
+      declarations: [InspectionEquipHistoryComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -9,9 +9,9 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => MxCheckboxComponent),
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 export class MxCheckboxComponent implements OnInit {
   _value = [];
@@ -25,9 +25,9 @@ export class MxCheckboxComponent implements OnInit {
       this._pickerFormat = v;
     }
   }
-  private propagateChange = (_: any) => { };
+  private propagateChange = (_: any) => {};
 
-  constructor() { }
+  constructor() {}
 
   /**
    * 给外部formControl写入数据
@@ -35,8 +35,8 @@ export class MxCheckboxComponent implements OnInit {
    * @param {*} value
    */
   writeValue(value: any) {
-    if (value !== void (0)) {
-      if ((typeof value === 'string')) {
+    if (value !== void 0) {
+      if (typeof value === 'string') {
         if (this._pickerFormat === 'string') {
           this._value = value.split(',');
         } else {
@@ -69,7 +69,7 @@ export class MxCheckboxComponent implements OnInit {
    * 也是一样注册,当 touched 然后调用
    * @param {*} fn
    */
-  registerOnTouched(fn: any) { }
+  registerOnTouched(fn: any) {}
 
   change() {
     let out;
@@ -88,8 +88,5 @@ export class MxCheckboxComponent implements OnInit {
     this.first = false;
   }
 
-  ngOnInit() {
-
-  }
-
+  ngOnInit() {}
 }

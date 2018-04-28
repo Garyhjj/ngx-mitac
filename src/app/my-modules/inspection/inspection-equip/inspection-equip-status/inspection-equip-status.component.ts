@@ -4,14 +4,12 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-inspection-equip-status',
   templateUrl: './inspection-equip-status.component.html',
-  styleUrls: ['./inspection-equip-status.component.css']
+  styleUrls: ['./inspection-equip-status.component.css'],
 })
 export class InspectionEquipStatusComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   addDefaultTime(d: DataDrive) {
     const searchSets = d.searchSets;
@@ -41,5 +39,4 @@ export class InspectionEquipStatusComponent implements OnInit {
       return data.filter(ds => ds.REPORT_HEADER_ID === '');
     });
   }
-
 }

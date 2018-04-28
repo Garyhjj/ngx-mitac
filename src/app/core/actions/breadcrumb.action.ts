@@ -2,7 +2,6 @@ import { Action } from '@ngrx/store';
 
 import { BreadcrumbState } from './../store';
 
-
 export const BREADCRUMB_UPDATE = '[breadcrumb] update';
 export const BREADCRUMB_CLEAR = '[breadcrumb] clear';
 export const BREADCRUMB_CANCEL = '[breadcrumb] cancel';
@@ -17,8 +16,7 @@ export class BreadcrumbUpdate implements Action {
 export class BreadcrumbClear implements Action {
   readonly type = BREADCRUMB_CLEAR;
   payload;
-  constructor() {
-  }
+  constructor() {}
 }
 
 export class BreadcrumbCancel implements Action {
@@ -29,5 +27,7 @@ export class BreadcrumbCancel implements Action {
   }
 }
 
-
-export type BreadcrumbActions = BreadcrumbUpdate | BreadcrumbClear | BreadcrumbCancel;
+export type BreadcrumbActions =
+  | BreadcrumbUpdate
+  | BreadcrumbClear
+  | BreadcrumbCancel;

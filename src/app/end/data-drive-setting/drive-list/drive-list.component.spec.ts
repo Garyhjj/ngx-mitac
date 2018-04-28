@@ -11,9 +11,8 @@ describe('DriveListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DriveListComponent ]
-    })
-    .compileComponents();
+      declarations: [DriveListComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

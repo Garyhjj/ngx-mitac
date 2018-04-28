@@ -6,11 +6,14 @@ import { DataDriveService } from './data-drive.service';
 describe('Service: DataDrive', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [DataDriveService]
+      providers: [DataDriveService],
     });
   });
 
-  it('should ...', inject([DataDriveService], (service: DataDriveService) => {
-    expect(service).toBeTruthy();
-  }));
+  it(
+    'should ...',
+    inject([DataDriveService], (service: DataDriveService) => {
+      expect(service).toBeTruthy();
+    }),
+  );
 });

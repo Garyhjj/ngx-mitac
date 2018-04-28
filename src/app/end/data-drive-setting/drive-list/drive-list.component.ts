@@ -8,25 +8,23 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-drive-list',
   templateUrl: './drive-list.component.html',
-  styleUrls: ['./drive-list.component.css']
+  styleUrls: ['./drive-list.component.css'],
 })
 export class DriveListComponent implements OnInit {
+  constructor(private router: Router, private store$: Store<MyStore>) {}
 
-  constructor(
-    private router: Router,
-    private store$: Store<MyStore>
-  ) { }
-
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   getDataDrive(d: DataDrive) {
     d.setParamsOut('查看詳細');
-    d.onParamsOut((ds) => {
-      let breadcrumbModel = new BreadcrumbModel([['詳細配置' + ds.ID], '/end/dataDrive/edit/' + ds.ID, 1]);
+    d.onParamsOut(ds => {
+      let breadcrumbModel = new BreadcrumbModel([
+        ['詳細配置' + ds.ID],
+        '/end/dataDrive/edit/' + ds.ID,
+        1,
+      ]);
       breadcrumbModel.update(this.store$);
       // this.router.navigate(['/end/dataDrive/edit', d.ID])
-    }
-    );
+    });
   }
 }

@@ -1,19 +1,33 @@
-import { Component, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DataDrive } from '../../../shared/components/data-drive/shared/models/index';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-exam-question',
   templateUrl: './exam-question.component.html',
-  styleUrls: ['./exam-question.component.css']
+  styleUrls: ['./exam-question.component.css'],
 })
-export class ExamQuestionComponent implements OnInit {
-
+export class ExamQuestionComponent implements OnInit, OnDestroy {
   dataDrive: DataDrive;
-
-  constructor() { }
+  translateTexts: any;
+  sub: Subscription;
+  constructor(private translateService: TranslateService) {}
 
   ngOnInit() {
-
+    this.sub = this.translateService
+      .stream([
+        'examModule.radioHasOnlyAnswer',
+        'examModule.trueOrFalseWaining',
+        'examModule.choiceBoxWaining',
+        'examModule.answerRequired',
+      ])
+      .subscribe(_ => (this.translateTexts = _));
+  }
+  ngOnDestroy() {
+    if (this.sub instanceof Subscription) {
+      this.sub.unsubscribe();
+    }
   }
 
   getDrive(d: DataDrive) {
@@ -30,7 +44,7 @@ export class ExamQuestionComponent implements OnInit {
           fg.get('RIGHT_ANSWER').setValue('Y');
         } else if (d === 'RADIO') {
           if (fg.get('RIGHT_ANSWER').value.indexOf(',') > -1) {
-            sub.next('单选题应该只有一个答案');
+            sub.next(this.translateTexts['examModule.radioHasOnlyAnswer']);
           } else {
             errReset();
           }
@@ -43,7 +57,7 @@ export class ExamQuestionComponent implements OnInit {
         if (d && fg.get('TYPE').value === 'RADIO') {
           const res = d.split(',');
           if (res.length > 1) {
-            sub.next('单选题应该只有一个答案');
+            sub.next(this.translateTexts['examModule.radioHasOnlyAnswer']);
           } else {
             errReset();
           }
@@ -60,27 +74,31 @@ export class ExamQuestionComponent implements OnInit {
       setTimeout(() => sub.next(''), 2000);
       if (value.TYPE === 'TF') {
         try {
-          const options = ['OPTION_A', 'OPTION_B', 'OPTION_C', 'OPTION_D', 'OPTION_E'];
-          options.forEach((o) => fg.get(o).setValue(''));
-        } catch (e) {
-
-        }
+          const options = [
+            'OPTION_A',
+            'OPTION_B',
+            'OPTION_C',
+            'OPTION_D',
+            'OPTION_E',
+          ];
+          options.forEach(o => fg.get(o).setValue(''));
+        } catch (e) {}
         if (['Y', 'N'].indexOf(value['RIGHT_ANSWER']) < 0) {
-          sub.next('判斷題答案只能是正確或者錯誤');
+          sub.next(this.translateTexts['examModule.trueOrFalseWaining']);
           return false;
         }
       } else if (value.TYPE === 'RADIO') {
         if (!value['OPTION_A'] || !value['OPTION_B']) {
-          sub.next('前两选项不能为空');
+          sub.next(this.translateTexts['examModule.choiceBoxWaining']);
           return false;
         }
         if (!value['OPTION_' + value['RIGHT_ANSWER']]) {
-          sub.next('答案选项不应该为空');
+          sub.next(this.translateTexts['examModule.answerRequired']);
           return false;
         }
       } else if (value.TYPE === 'CHECKBOX') {
         if (!value['OPTION_A'] || !value['OPTION_B']) {
-          sub.next('前两选项不能为空');
+          sub.next(this.translateTexts['examModule.choiceBoxWaining']);
           return false;
         }
         const answers = value['RIGHT_ANSWER'].split(',');
@@ -91,7 +109,7 @@ export class ExamQuestionComponent implements OnInit {
           }
         });
         if (!isOk) {
-          sub.next('答案选项不应该为空');
+          sub.next(this.translateTexts['examModule.answerRequired']);
           return false;
         }
       }
@@ -99,5 +117,4 @@ export class ExamQuestionComponent implements OnInit {
       return true;
     });
   }
-
 }

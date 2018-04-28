@@ -11,9 +11,8 @@ describe('ITServerRateComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ITServerRateComponent ]
-    })
-    .compileComponents();
+      declarations: [ITServerRateComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

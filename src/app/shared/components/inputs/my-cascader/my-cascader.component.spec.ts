@@ -11,9 +11,8 @@ describe('MyCascaderComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MyCascaderComponent ]
-    })
-    .compileComponents();
+      declarations: [MyCascaderComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -11,9 +11,8 @@ describe('DataSearchComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DataSearchComponent ]
-    })
-    .compileComponents();
+      declarations: [DataSearchComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

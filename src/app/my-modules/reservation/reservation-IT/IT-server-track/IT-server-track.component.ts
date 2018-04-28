@@ -9,16 +9,15 @@ import { DataDrive } from '../../../../shared/components/data-drive/shared/model
   // tslint:disable-next-line:component-selector
   selector: 'app-IT-server-track',
   templateUrl: './IT-server-track.component.html',
-  styleUrls: ['./IT-server-track.component.css']
+  styleUrls: ['./IT-server-track.component.css'],
 })
 export class ITServerTrackComponent implements OnInit {
-
   impressionName = 'impression';
   translateText: string;
   constructor(
     private modalService: NzModalService,
-    private translateService: TranslateService
-  ) { }
+    private translateService: TranslateService,
+  ) {}
 
   ngOnInit() {
     this.translateService.get('serviceModule.yinxiang2').subscribe(data => {
@@ -27,7 +26,7 @@ export class ITServerTrackComponent implements OnInit {
   }
 
   getDataDrive(d: DataDrive) {
-    d.beforeInitTableData((data) => {
+    d.beforeInitTableData(data => {
       return data.map(da => {
         da[this.impressionName] = '';
         return da;
@@ -39,19 +38,15 @@ export class ITServerTrackComponent implements OnInit {
     const subscription = this.modalService.open({
       title: this.translateText,
       content: ImpressionListComponent,
-      onOk() {
-      },
-      onCancel() {
-
-      },
+      onOk() {},
+      onCancel() {},
       footer: false,
       componentParams: {
-        application: app
-      }
+        application: app,
+      },
     });
     subscription.subscribe(result => {
       // console.log(result);
     });
   }
-
 }

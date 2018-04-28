@@ -11,9 +11,8 @@ describe('ImpressionListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ImpressionListComponent ]
-    })
-    .compileComponents();
+      declarations: [ImpressionListComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

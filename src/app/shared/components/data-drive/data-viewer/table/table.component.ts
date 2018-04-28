@@ -5,11 +5,23 @@ import { QRComponent } from '../../../QR/QR.component';
 import { DataUpdateComponent } from './../../data-inputer/data-update/data-update.component';
 import { NzModalService } from 'ng-zorro-antd';
 import { DataDriveService } from './../../core/services/data-drive.service';
-import { TabelViewSetMore, TabelViewSet } from './../../../data-drive/shared/models/viewer/table';
+import {
+  TabelViewSetMore,
+  TabelViewSet,
+} from './../../../data-drive/shared/models/viewer/table';
 // tslint:disable-next-line:import-blacklist
 import { Subscription } from 'rxjs/Rx';
 import { TableData } from '../../../data-drive/shared/models/index';
-import { Component, OnInit, Input, AfterViewInit, OnDestroy, AfterViewChecked, ChangeDetectorRef, TemplateRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  AfterViewInit,
+  OnDestroy,
+  AfterViewChecked,
+  ChangeDetectorRef,
+  TemplateRef,
+} from '@angular/core';
 import { DataDrive } from '../../../data-drive/shared/models/index';
 import { throttle, isArray, sortUtils } from '../../../../utils/index';
 import { Observable } from 'rxjs/Observable';
@@ -19,9 +31,10 @@ import { APPConfig } from '../../../../config/app.config';
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
-  styleUrls: ['./table.component.css']
+  styleUrls: ['./table.component.css'],
 })
-export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterViewChecked {
+export class TableComponent
+  implements OnInit, AfterViewInit, OnDestroy, AfterViewChecked {
   _dataDrive: DataDrive;
 
   tableSet: TabelViewSet;
@@ -42,7 +55,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   showInformer = new Subject<any>();
   fileList;
   @Input() actionRef: TemplateRef<void>;
-  @Input() tableCell: TemplateRef<void>;
+  @Input() tableCellRef: TemplateRef<void>;
   @Input() headerCellRef: TemplateRef<void>;
   @Input() headerCellStyle: (column: TableDataColumn) => any;
   @Input() bodyCellStyle: (data: any, property: string) => any;
@@ -62,8 +75,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     this.subjectIsGettingData();
   }
 
-  @Input()
-  isModal: boolean;
+  @Input() isModal: boolean;
   _loading = false;
   _header = true;
 
@@ -79,10 +91,8 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     private dataDriveService: DataDriveService,
     private modalService: NzModalService,
     private util: UtilService,
-    private validatorExtendService: NgxValidatorExtendService
-  ) {
-
-  }
+    private validatorExtendService: NgxValidatorExtendService,
+  ) {}
 
   _headerCellStyle(item: TableDataColumn) {
     let def: any = {};
@@ -90,8 +100,8 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
       const header = this.setDetail.header;
       def = {
         'background-color': header.bgColor,
-        'color': header.textColor,
-        'font-size': header.textSize
+        color: header.textColor,
+        'font-size': header.textSize,
       };
     }
     let outDefine;
@@ -107,28 +117,44 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   get canDelete() {
     return this._dataDrive.isDataDeletable();
   }
-  sort(name: string, v: string, by: { name: string, params: any[] }) {
+  sort(name: string, v: string, by: { name: string; params: any[] }) {
     const isAscend = v === 'ascend';
-    this._dataDrive.tableData.data = this.tableData.data = this.tableData.data.sort((a: any, b: any) => {
-      if (!isArray(a) || !isArray(b)) { return 0; }
-      const target_a = a.find(p => p.property === name).value || '';
-      const target_b = b.find(p => p.property === name).value || '';
-      const a_value = target_a || target_a.value || '';
-      const b_value = target_b || target_b.value || '';
-      if (typeof by !== 'object') { return 0; }
-      const byWhat = sortUtils[by.name];
-      const params = by.params || [];
-      return typeof byWhat === 'function' ? byWhat(a_value, b_value, isAscend, ...params) : 0;
-    }).slice();
+    this._dataDrive.tableData.data = this.tableData.data = this.tableData.data
+      .sort((a: any, b: any) => {
+        if (!isArray(a) || !isArray(b)) {
+          return 0;
+        }
+        const target_a = a.find(p => p.property === name).value || '';
+        const target_b = b.find(p => p.property === name).value || '';
+        const a_value = target_a || target_a.value || '';
+        const b_value = target_b || target_b.value || '';
+        if (typeof by !== 'object') {
+          return 0;
+        }
+        const byWhat = sortUtils[by.name];
+        const params = by.params || [];
+        return typeof byWhat === 'function'
+          ? byWhat(a_value, b_value, isAscend, ...params)
+          : 0;
+      })
+      .slice();
   }
 
   cacalScrollHeight() {
-    if (this.setDetail && this.setDetail.fixedHeader && this.setDetail.fixedHeader.scrollHeight === 'auto') {
+    if (
+      this.setDetail &&
+      this.setDetail.fixedHeader &&
+      this.setDetail.fixedHeader.scrollHeight === 'auto'
+    ) {
       if (this.isModal) {
         const body: any = document.querySelector('.my-modal .ant-table-body');
         body.style.maxHeight = `calc(99vh)`;
       } else {
-        const otherHeight = document.querySelector('app-table table').getBoundingClientRect().bottom + 50 + 3;
+        const otherHeight =
+          document.querySelector('app-table table').getBoundingClientRect()
+            .bottom +
+          50 +
+          3;
         const body: any = document.querySelector('.main-view .ant-table-body');
         body.style.maxHeight = `calc(100vh - ${otherHeight}px)`;
       }
@@ -154,37 +180,50 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   }
 
   getPipes() {
-    this._dataDrive.tableData.columns.filter(c => c.more && c.more.pipe).forEach(f => {
-      this.pipes[f.property] = f.more.pipe;
-    });
+    this._dataDrive.tableData.columns
+      .filter(c => c.more && c.more.pipe)
+      .forEach(f => {
+        this.pipes[f.property] = f.more.pipe;
+      });
   }
   getTypes() {
-    this._dataDrive.tableData.columns.filter(c => c.more && c.more.type).forEach(f => {
-      const type = f.more.type;
-      this.types[f.property] = type ? type.name : 'text';
-    });
+    this._dataDrive.tableData.columns
+      .filter(c => c.more && c.more.type)
+      .forEach(f => {
+        const type = f.more.type;
+        this.types[f.property] = type ? type.name : 'text';
+      });
   }
 
   toDelete(idx) {
-    if (!this.canDelete) { return; }
+    if (!this.canDelete) {
+      return;
+    }
     idx = this.calIdx(idx);
     const deleteFn = () => {
       const data = this._dataDrive.getData();
-      if (!data[idx]) { return; }
+      if (!data[idx]) {
+        return;
+      }
       const id = this.util.showLoading();
-      const finalFn = (loadingID) => this.util.dismissLoading(loadingID);
-      this.dataDriveService.deleteData(this._dataDrive, data[idx]).subscribe(r => {
-        this.dataDriveService.updateViewData(this._dataDrive);
-        finalFn(id);
-      }, (err) => { this.util.errDeal(err); finalFn(id); });
+      const finalFn = loadingID => this.util.dismissLoading(loadingID);
+      this.dataDriveService.deleteData(this._dataDrive, data[idx]).subscribe(
+        r => {
+          this.dataDriveService.updateViewData(this._dataDrive);
+          finalFn(id);
+        },
+        err => {
+          this.util.errDeal(err);
+          finalFn(id);
+        },
+      );
     };
     this.modalService.confirm({
       title: '您確定要刪除這一條目嗎？',
       onOk() {
         deleteFn();
       },
-      onCancel() {
-      }
+      onCancel() {},
     });
     return false;
   }
@@ -199,22 +238,23 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   }
 
   toUpdate(idx) {
-    if (!this.canEdit) { return; }
+    if (!this.canEdit) {
+      return;
+    }
     idx = this.calIdx(idx);
-    if (!this._dataDrive.runBeforeUpdateShow(this.getDataByIdx(idx))) { return; }
+    if (!this._dataDrive.runBeforeUpdateShow(this.getDataByIdx(idx))) {
+      return;
+    }
     const subscription = this.modalService.open({
       title: '更新',
       content: DataUpdateComponent,
-      onOk() {
-      },
-      onCancel() {
-
-      },
+      onOk() {},
+      onCancel() {},
       footer: false,
       componentParams: {
         opts: this._dataDrive,
-        changeIdx: idx
-      }
+        changeIdx: idx,
+      },
     });
     subscription.subscribe(result => {
       // console.log(result);
@@ -243,11 +283,14 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   updateFilterColumns() {
     const ls = this.hideLists;
     const filter = c => ls.indexOf(c.property) < 0;
-    const filterColumns = this._dataDrive.tableData.columns.slice().filter(filter);
-    const originData = this._dataDrive.tableData.data && this._dataDrive.tableData.data.slice();
+    const filterColumns = this._dataDrive.tableData.columns
+      .slice()
+      .filter(filter);
+    const originData =
+      this._dataDrive.tableData.data && this._dataDrive.tableData.data.slice();
     let filterData = [];
     if (originData && originData.length > 0) {
-      filterData = originData.map((trs) => trs.filter(filter));
+      filterData = originData.map(trs => trs.filter(filter));
     }
     this.tableData.columns = filterColumns;
     if (filterData) {
@@ -255,8 +298,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     }
     try {
       this.ref.detectChanges();
-    } catch (err) {
-    }
+    } catch (err) {}
   }
   dataChange() {
     clearTimeout(this.timeEvent3);
@@ -265,8 +307,14 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
 
   initAutoScroll() {
     let autoScroll;
-    if (this.setDetail && this.setDetail.fixedHeader && (autoScroll = this.setDetail.fixedHeader.autoScroll)) {
-      const selector = this.isModal ? '.my-modal app-table tr' : '.main-view app-table tr';
+    if (
+      this.setDetail &&
+      this.setDetail.fixedHeader &&
+      (autoScroll = this.setDetail.fixedHeader.autoScroll)
+    ) {
+      const selector = this.isModal
+        ? '.my-modal app-table tr'
+        : '.main-view app-table tr';
       this.dataViewList = document.querySelectorAll(selector);
       this._scrollInterval = autoScroll.interval;
       this._loopScroll = autoScroll.loop;
@@ -307,9 +355,11 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
       } else {
         --idx;
       }
-      this.timeEvent1 = setTimeout(() => this.autoScroll(++idx), this._scrollInterval);
+      this.timeEvent1 = setTimeout(
+        () => this.autoScroll(++idx),
+        this._scrollInterval,
+      );
     }
-
   }
   scanImgs(imgs: string) {
     if (imgs) {
@@ -353,7 +403,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     return out;
   }
 
-  linkToPhone(params: { url: string, local: string }, idx: number) {
+  linkToPhone(params: { url: string; local: string }, idx: number) {
     let url = params.url;
     let router = params.local;
     if (typeof url === 'string') {
@@ -362,27 +412,30 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
       const reg = /(\{(\w+)\})/;
       while (reg.exec(url)) {
         const target = data.find(d => d.property === RegExp.$2);
-        url = url.replace(new RegExp(RegExp.$1, 'g'), target ? target.value : '');
+        url = url.replace(
+          new RegExp(RegExp.$1, 'g'),
+          target ? target.value : '',
+        );
       }
       if (typeof router === 'string') {
         while (reg.exec(router)) {
           const target = data.find(d => d.property === RegExp.$2);
-          router = router.replace(new RegExp(RegExp.$1, 'g'), target ? target.value : '');
+          router = router.replace(
+            new RegExp(RegExp.$1, 'g'),
+            target ? target.value : '',
+          );
         }
       }
       const subscription = this.modalService.open({
         title: '鏈接二維碼',
         content: QRComponent,
-        onOk() {
-        },
-        onCancel() {
-
-        },
+        onOk() {},
+        onCancel() {},
         footer: false,
         componentParams: {
           url: url,
-          router: router
-        }
+          router: router,
+        },
       });
       subscription.subscribe(result => {
         // console.log(result);
@@ -391,20 +444,26 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   }
 
   calIdx(idx) {
-    return this.pageIndex > -1 ? (this.pageIndex - 1) * this.pageCount + idx : idx;
+    return this.pageIndex > -1
+      ? (this.pageIndex - 1) * this.pageCount + idx
+      : idx;
   }
 
-  runRegExp(dataIdx: number, body: {
-    textColor?: string;
-    textSize?: string;
-    bgColor?: string;
-    rules?: {
-      matches: string[][];
+  runRegExp(
+    dataIdx: number,
+    body: {
       textColor?: string;
       textSize?: string;
       bgColor?: string;
-    }[]
-  }, property?: string) {
+      rules?: {
+        matches: string[][];
+        textColor?: string;
+        textSize?: string;
+        bgColor?: string;
+      }[];
+    },
+    property?: string,
+  ) {
     const cache = this.styleCache;
     dataIdx = this.calIdx(dataIdx);
     const allData = this._dataDrive.getData();
@@ -451,7 +510,10 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
                       result = false;
                       break;
                     }
-                    if (this.validatorExtendService[match[1]] && this.validatorExtendService[match[1]](...params)(t)) {
+                    if (
+                      this.validatorExtendService[match[1]] &&
+                      this.validatorExtendService[match[1]](...params)(t)
+                    ) {
                       result = false;
                       break;
                     }
@@ -472,14 +534,19 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
     types.forEach(t => cache.setCache(t, res[t]));
     const def = {
       'background-color': cache.bgColor,
-      'color': cache.textColor,
-      'font-size': cache.textSize
+      color: cache.textColor,
+      'font-size': cache.textSize,
     };
     let outStyle;
     if (this.bodyCellStyle) {
-      outStyle = this.bodyCellStyle(target, property);
+      outStyle = this.bodyCellStyle(
+        this.arrayToObjectForData(target),
+        property,
+      );
     }
-    return typeof outStyle === 'object' ? Object.assign({}, def, outStyle) : def;
+    return typeof outStyle === 'object'
+      ? Object.assign({}, def, outStyle)
+      : def;
   }
   clearTimeEvent() {
     clearTimeout(this.timeEvent1);
@@ -501,11 +568,15 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   }
 
   trackByIndex(index, item) {
-    return (typeof item === 'object') && item.hasOwnProperty('ID') ? item.ID : index;
+    return typeof item === 'object' && item.hasOwnProperty('ID')
+      ? item.ID
+      : index;
   }
   ngOnInit() {
     if (!this.isModal) {
-      this.sub3 = this._dataDrive.observeIsShowModal().subscribe(s => this.canScroll = !s);
+      this.sub3 = this._dataDrive
+        .observeIsShowModal()
+        .subscribe(s => (this.canScroll = !s));
     }
     this.updateFilterColumns();
   }
@@ -521,7 +592,6 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy, AfterVi
   ngAfterViewChecked() {
     this.timeEvent2 = throttle(this.cacalScrollHeight, this, [], 500);
   }
-
 }
 
 class StyleCache {
@@ -529,9 +599,7 @@ class StyleCache {
   bgColor: string;
   textSize: string;
   textColor: string;
-  constructor() {
-
-  }
+  constructor() {}
 
   reset(idx: number) {
     this.idx = idx;

@@ -9,9 +9,9 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => RadioQuestionComponent),
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 export class RadioQuestionComponent implements OnInit {
   @Input() radios = [];
@@ -22,10 +22,7 @@ export class RadioQuestionComponent implements OnInit {
   _result;
 
   @Input()
-  set result(r: {
-    trueAnswer: any,
-    yourAnswer: any
-  }) {
+  set result(r: { trueAnswer: any; yourAnswer: any }) {
     if (typeof r === 'object') {
       this._result = r;
       this.checkResult();
@@ -36,9 +33,9 @@ export class RadioQuestionComponent implements OnInit {
   }
   radioValue;
   yourAnswerString;
-  private propagateChange = (_: any) => { };
+  private propagateChange = (_: any) => {};
 
-  constructor() { }
+  constructor() {}
 
   /**
    * 给外部formControl写入数据
@@ -64,14 +61,12 @@ export class RadioQuestionComponent implements OnInit {
    * 也是一样注册,当 touched 然后调用
    * @param {*} fn
    */
-  registerOnTouched(fn: any) { }
+  registerOnTouched(fn: any) {}
 
   change(val) {
     this.propagateChange(val);
   }
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   checkResult() {
     const result = this.result;
@@ -85,5 +80,4 @@ export class RadioQuestionComponent implements OnInit {
       }
     }
   }
-
 }

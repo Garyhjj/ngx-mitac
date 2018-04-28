@@ -68,5 +68,12 @@ export class UserUpdate implements Action {
   }
 }
 
-
-export type UserActions = UserLogin | UserLogout | UserUpdate | UserChineseConv | UserClear | UserUpdatePrivilege | UserUpdateModule | UserUpdateModules;
+export type UserActions =
+  | UserLogin
+  | UserLogout
+  | UserUpdate
+  | UserChineseConv
+  | UserClear
+  | UserUpdatePrivilege
+  | UserUpdateModule
+  | UserUpdateModules;

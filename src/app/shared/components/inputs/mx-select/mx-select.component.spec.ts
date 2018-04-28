@@ -11,9 +11,8 @@ describe('MxSelectComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MxSelectComponent ]
-    })
-    .compileComponents();
+      declarations: [MxSelectComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

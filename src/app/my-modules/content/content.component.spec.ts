@@ -11,9 +11,8 @@ describe('ContentComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ContentComponent ]
-    })
-    .compileComponents();
+      declarations: [ContentComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -8,19 +8,20 @@ import { DataSearchComponent } from './data-search/data-search.component';
 import { DataUpdateComponent } from './data-update/data-update.component';
 import { TranslateModule } from '@ngx-translate/core';
 
-
 @NgModule({
-  imports: [
-    CommonModule, SharedModule, TranslateModule
-  ],
+  imports: [CommonModule, SharedModule, TranslateModule],
   declarations: [
     DataInputerComponent,
     DataSearchComponent,
     DataUpdateComponent,
     DataSearchbarComponent,
-    FilterColumnFlexComponent
+    FilterColumnFlexComponent,
   ],
-  exports: [DataInputerComponent, DataSearchbarComponent, FilterColumnFlexComponent],
-  entryComponents: [DataUpdateComponent]
+  exports: [
+    DataInputerComponent,
+    DataSearchbarComponent,
+    FilterColumnFlexComponent,
+  ],
+  entryComponents: [DataUpdateComponent],
 })
-export class DataInputerModule { }
+export class DataInputerModule {}

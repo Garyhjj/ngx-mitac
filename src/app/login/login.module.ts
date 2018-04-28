@@ -4,13 +4,9 @@ import { LoginRoutingModule } from './login-routing.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-
-
 @NgModule({
   imports: [CommonModule, LoginRoutingModule, SharedModule],
-  declarations: [
-    LoginComponent
-  ],
-  providers: []
+  declarations: [LoginComponent],
+  providers: [],
 })
-export class LoginModule { }
+export class LoginModule {}

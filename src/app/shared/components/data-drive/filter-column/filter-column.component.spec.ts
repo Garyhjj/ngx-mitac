@@ -11,9 +11,8 @@ describe('FilterColumnComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FilterColumnComponent ]
-    })
-    .compileComponents();
+      declarations: [FilterColumnComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

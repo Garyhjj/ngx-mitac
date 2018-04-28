@@ -6,11 +6,14 @@ import { AppService } from './app.service';
 describe('Service: App', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [AppService]
+      providers: [AppService],
     });
   });
 
-  it('should ...', inject([AppService], (service: AppService) => {
-    expect(service).toBeTruthy();
-  }));
+  it(
+    'should ...',
+    inject([AppService], (service: AppService) => {
+      expect(service).toBeTruthy();
+    }),
+  );
 });

@@ -14,6 +14,7 @@
       <span class="nav-text">{{'board' | translate}}</span>
     </span>
     <ul>
+      <li nz-menu-item data-route="/board/osp">{{'ospBoard' | translate}}</li>
       <li nz-menu-item data-route="/board/urgentMaterial">{{'urgentMaterialBoard' | translate}}</li>
       <li nz-menu-item data-route="/board/urgentNo">{{'urgentNoBoard' | translate}}</li>
       <li nz-menu-item data-route="/board/esd">{{'esd' | translate}}</li>
@@ -34,6 +35,11 @@
     <span title>
       <i class="anticon anticon-search"></i>
       <span class="nav-text">{{'inspection' | translate}}</span>
+      <nz-badge [nzCount]="allInspectionTip | async">
+        <ng-template #content>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+        </ng-template>
+      </nz-badge>
     </span>
     <ul>
       <li nz-submenu *ngIf="canSeeFunction(161)">
@@ -43,23 +49,70 @@
         </ul>
       </li>
       <li nz-submenu *ngIf="canSeeFunction(5)">
-        <span title>{{'bossInspection' | translate}}</span>
+        <span title>{{'bossInspection' | translate}}
+          <nz-badge [nzCount]="bossInspectionTip | async">
+            <ng-template #content>
+              &nbsp;&nbsp;&nbsp;&nbsp;
+            </ng-template>
+          </nz-badge>
+        </span>
         <ul>
           <li nz-menu-item data-route="/inspection/boss/schedule" *ngIf="canSeeFunction(124)">{{'schedule' | translate}}</li>
-          <li nz-menu-item data-route="/inspection/boss/report">{{'inspectionReport' | translate}}</li>
-          <li nz-menu-item data-route="/inspection/boss/improvement">{{'improvement' | translate}}</li>
-          <li nz-menu-item data-route="/inspection/boss/lines" *ngIf="canSeeFunction(103)">{{'problemResult' | translate}}</li>
+          <li nz-menu-item data-route="/inspection/boss/report">
+            <span>{{'inspectionReport' | translate}}</span>
+            <nz-badge [nzCount]="bossInspectionReportTip | async">
+              <ng-template #content>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+              </ng-template>
+            </nz-badge>
+          </li>
+          <li nz-menu-item data-route="/inspection/boss/improvement">
+            <span>{{'improvement' | translate}}</span>
+            <nz-badge [nzCount]="bossInspectionUndoneTip | async">
+              <ng-template #content>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+              </ng-template>
+            </nz-badge>
+          </li>
+          <li nz-menu-item data-route="/inspection/boss/lines" *ngIf="canSeeFunction(103)">
+            <span>{{'problemResult' | translate}}</span>
+            <nz-badge [nzCount]="bossInspectionAdminTip | async">
+              <ng-template #content>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+              </ng-template>
+            </nz-badge>
+          </li>
           <li nz-menu-item data-route="/inspection/boss/attendance" *ngIf="canSeeFunction(163)">{{'attendance' | translate}}</li>
           <li nz-menu-item data-route="/inspection/boss/comment" *ngIf="canSeeFunction(164)">{{'inspectionReportScore' | translate}}</li>
         </ul>
       </li>
       <li nz-submenu *ngIf="canSeeFunction(5)">
-        <span title>{{'eqInspection' | translate}}</span>
+        <span title>{{'eqInspection' | translate}}
+          <nz-badge [nzCount]="equipInspectionTip | async">
+            <ng-template #content>
+              &nbsp;&nbsp;&nbsp;&nbsp;
+            </ng-template>
+          </nz-badge>
+        </span>
         <ul>
           <li nz-menu-item data-route="/inspection/equip/list" *ngIf="canSeeFunction(317)">{{'eqRegistry' | translate}}</li>
           <li nz-menu-item data-route="/inspection/equip/checkList" *ngIf="canSeeFunction(343)">{{'eqCheckList' | translate}}</li>
-          <li nz-menu-item data-route="/inspection/equip/improvement">{{'improvement' | translate}}</li>
-          <li nz-menu-item data-route="/inspection/equip/lines" *ngIf="canSeeFunction(343)">{{'problemResult' | translate}}</li>
+          <li nz-menu-item data-route="/inspection/equip/improvement">
+            <span>{{'improvement' | translate}}</span>
+            <nz-badge [nzCount]="equipInspectionUndoneTip | async">
+              <ng-template #content>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+              </ng-template>
+            </nz-badge>
+          </li>
+          <li nz-menu-item data-route="/inspection/equip/lines" *ngIf="canSeeFunction(343)">
+            <span>{{'problemResult' | translate}}</span>
+            <nz-badge [nzCount]="equipInspectionAdminTip | async">
+              <ng-template #content>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+              </ng-template>
+            </nz-badge>
+          </li>
           <li nz-menu-item data-route="/inspection/equip/status" *ngIf="canSeeFunction(343)">{{'eqStatus' | translate}}</li>
           <li nz-menu-item data-route="/inspection/equip/history" *ngIf="canSeeFunction(343)">{{'eqHistory' | translate}}</li>
         </ul>
@@ -71,6 +124,11 @@
     <span title>
       <i class="anticon anticon-search"></i>
       <span class="nav-text">{{'service' | translate}}</span>
+      <nz-badge [nzCount]="allReservationTip | async">
+        <ng-template #content>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+        </ng-template>
+      </nz-badge>
     </span>
     <ul *ngIf="canSeeFunction(416)">
       <li nz-submenu>
@@ -84,11 +142,31 @@
         </ul>
       </li>
       <li nz-submenu>
-        <span title>{{'ITSupport' | translate}}</span>
+        <span title>{{'ITSupport' | translate}}
+          <nz-badge [nzCount]="allReservationTip | async">
+            <ng-template #content>
+              &nbsp;&nbsp;&nbsp;&nbsp;
+            </ng-template>
+          </nz-badge>
+        </span>
         <ul>
           <li nz-menu-item data-route="/reservation/IT/application">{{'serviceApply' | translate}}</li>
-          <li nz-menu-item data-route="/reservation/IT/self">{{'serviceApplyHistory' | translate}}</li>
-          <li nz-menu-item data-route="/reservation/IT/workspace" *ngIf="canSeeFunction(416)">{{'workspace' | translate}}</li>
+          <li nz-menu-item data-route="/reservation/IT/self">
+            <span>{{'serviceApplyHistory' | translate}}</span>
+            <nz-badge [nzCount]="ITReservationUserTip | async">
+              <ng-template #content>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+              </ng-template>
+            </nz-badge>
+          </li>
+          <li nz-menu-item data-route="/reservation/IT/workspace" *ngIf="canSeeFunction(416)">
+            <span>{{'workspace' | translate}}</span>
+            <nz-badge [nzCount]="ITReservationAdminTip | async">
+              <ng-template #content>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+              </ng-template>
+            </nz-badge>
+          </li>
           <li nz-menu-item data-route="/reservation/IT/rate" *ngIf="canSeeFunction(416)">{{'rank' | translate}}</li>
           <li nz-menu-item data-route="/reservation/IT/track" *ngIf="canSeeFunction(416)">{{'serviceTrack' | translate}}</li>
           <li nz-menu-item data-route="/reservation/IT/board" *ngIf="canSeeFunction(416)">{{'serviceOvertime' | translate}}</li>

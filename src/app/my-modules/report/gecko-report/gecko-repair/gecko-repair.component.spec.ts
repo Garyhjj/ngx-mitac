@@ -8,9 +8,8 @@ describe('GeckoRepairComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GeckoRepairComponent ]
-    })
-    .compileComponents();
+      declarations: [GeckoRepairComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

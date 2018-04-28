@@ -11,9 +11,8 @@ describe('DataViewerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DataViewerComponent ]
-    })
-    .compileComponents();
+      declarations: [DataViewerComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

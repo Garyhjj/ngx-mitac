@@ -7,11 +7,7 @@ import { SharedModule } from '../shared/shared.module';
 import { ContentComponent } from './content/content.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    SharedModule,
-    EndRoutingModule
-  ],
-  declarations: [EndComponent, EndSiderComponent, ContentComponent]
+  imports: [CommonModule, SharedModule, EndRoutingModule],
+  declarations: [EndComponent, EndSiderComponent, ContentComponent],
 })
-export class EndModule { }
+export class EndModule {}

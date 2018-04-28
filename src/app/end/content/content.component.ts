@@ -9,23 +9,22 @@ import { Subscription } from 'rxjs/Rx';
 @Component({
   selector: 'app-content',
   templateUrl: './content.component.html',
-  styleUrls: ['./content.component.css']
+  styleUrls: ['./content.component.css'],
 })
 export class ContentComponent implements OnInit, OnDestroy {
   tabIdx;
   breadcrumb: BreadcrumbState[];
   sub: Subscription;
-  constructor(
-    private store$: Store<MyStore>,
-    private router: Router
-  ) { }
+  constructor(private store$: Store<MyStore>, private router: Router) {}
 
   ngOnInit() {
-    this.sub = this.store$.select((s: MyStore) => s.breadcrumbReducer).subscribe((b) => {
-      this.breadcrumb = b;
-      const idx = b.findIndex(r => r.active);
-      this.tabIdx = idx > -1 ? idx : b.length - 1;
-    });
+    this.sub = this.store$
+      .select((s: MyStore) => s.breadcrumbReducer)
+      .subscribe(b => {
+        this.breadcrumb = b;
+        const idx = b.findIndex(r => r.active);
+        this.tabIdx = idx > -1 ? idx : b.length - 1;
+      });
   }
 
   ngOnDestroy() {
@@ -45,5 +44,4 @@ export class ContentComponent implements OnInit, OnDestroy {
       this.router.navigateByUrl('/end');
     }
   }
-
 }

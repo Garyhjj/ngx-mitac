@@ -8,14 +8,14 @@ import { CommonModule } from '@angular/common';
 import { ReportComponent } from './report/report.component';
 import { TranslateModule } from '@ngx-translate/core';
 
-
 @NgModule({
-  imports: [CommonModule, MyModulesRoutingModule, SharedModule, TranslateModule],
-  declarations: [
-    MyModulesComponent,
-    ModulesSiderComponent,
-    ContentComponent
+  imports: [
+    CommonModule,
+    MyModulesRoutingModule,
+    SharedModule,
+    TranslateModule,
   ],
-  providers: []
+  declarations: [MyModulesComponent, ModulesSiderComponent, ContentComponent],
+  providers: [],
 })
-export class MyModulesModule { }
+export class MyModulesModule {}

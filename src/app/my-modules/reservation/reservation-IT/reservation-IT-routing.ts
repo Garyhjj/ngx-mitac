@@ -10,53 +10,47 @@ import { ReservationITComponent } from './reservation-IT.component';
 import { ApplicationITComponent } from './application-IT/application-IT.component';
 import { SelfApplicationITComponent } from './self-application-IT/self-application-IT.component';
 
-
-
 const bRoutes: Routes = [
-    {
-        path: '',
-        component: ReservationITComponent,
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
-        children: [
-            {
-                path: 'application',
-                component: ApplicationITComponent
-            },
-            {
-                path: 'self',
-                component: SelfApplicationITComponent
-            },
-            {
-                canActivateChild: [ReservationGuard],
-                path: 'workspace',
-                component: ITServerWorkspaceComponent
-            },
-            {
-                canActivateChild: [ReservationGuard],
-                path: 'track',
-                component: ITServerTrackComponent
-            },
-            {
-                canActivateChild: [ReservationGuard],
-                path: 'rate',
-                component: ITServerRateComponent
-            },
-            {
-                canActivateChild: [ReservationGuard],
-                path: 'board',
-                component: ITServerBoardComponent
-            }
-        ]
-    }
+  {
+    path: '',
+    component: ReservationITComponent,
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
+    children: [
+      {
+        path: 'application',
+        component: ApplicationITComponent,
+      },
+      {
+        path: 'self',
+        component: SelfApplicationITComponent,
+      },
+      {
+        canActivateChild: [ReservationGuard],
+        path: 'workspace',
+        component: ITServerWorkspaceComponent,
+      },
+      {
+        canActivateChild: [ReservationGuard],
+        path: 'track',
+        component: ITServerTrackComponent,
+      },
+      {
+        canActivateChild: [ReservationGuard],
+        path: 'rate',
+        component: ITServerRateComponent,
+      },
+      {
+        canActivateChild: [ReservationGuard],
+        path: 'board',
+        component: ITServerBoardComponent,
+      },
+    ],
+  },
 ];
 
 @NgModule({
-    imports: [
-        RouterModule.forChild(bRoutes)
-    ],
-    exports: [
-        RouterModule
-    ]
+  imports: [RouterModule.forChild(bRoutes)],
+  exports: [RouterModule],
 })
-export class ReservationITRoutingModule { }
+export class ReservationITRoutingModule {}

@@ -6,11 +6,11 @@ import { Component, OnInit } from '@angular/core';
   // tslint:disable-next-line:component-selector
   selector: 'app-inspection-equip-checkList',
   templateUrl: './inspection-equip-checkList.component.html',
-  styleUrls: ['./inspection-equip-checkList.component.css']
+  styleUrls: ['./inspection-equip-checkList.component.css'],
 })
 export class InspectionEquipCheckListComponent implements OnInit {
   tabs;
-  constructor(private inspectionService: InspectionService) { }
+  constructor(private inspectionService: InspectionService) {}
 
   ngOnInit() {
     this.inspectionService.getMRIName('equip').subscribe(c => {
@@ -20,10 +20,9 @@ export class InspectionEquipCheckListComponent implements OnInit {
 
   getDataDrive(d: DataDrive, id: number) {
     d.addDefaultSearchParams({ name_id: id });
-    d.onUpdateData((data) => {
+    d.onUpdateData(data => {
       data.NAME_ID = id;
       return data;
     });
   }
-
 }

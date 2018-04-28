@@ -10,9 +10,9 @@ import * as moment from 'moment';
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => MyTimePickerComponent),
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 export class MyTimePickerComponent implements OnInit {
   @Input() myPickerFormat = 'HH:mm:ss';
@@ -21,13 +21,10 @@ export class MyTimePickerComponent implements OnInit {
   imgs: string[];
   _date = new Date();
   timeString = '';
-  private propagateChange = (_: string) => { };
-  constructor(
+  private propagateChange = (_: string) => {};
+  constructor() {}
 
-  ) { }
-
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   /**
    * 给外部formControl写入数据
@@ -58,12 +55,10 @@ export class MyTimePickerComponent implements OnInit {
    * 也是一样注册,当 touched 然后调用
    * @param {*} fn
    */
-  registerOnTouched(fn: any) { }
+  registerOnTouched(fn: any) {}
 
   change(val: Date) {
     this.timeString = val ? moment(val).format(this.myPickerFormat) : '';
     this.propagateChange(this.timeString); // 去触发外部监控的函数
   }
-
 }
-

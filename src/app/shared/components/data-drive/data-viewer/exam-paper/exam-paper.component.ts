@@ -2,24 +2,30 @@ import { NzModalService } from 'ng-zorro-antd';
 import { FormGroup } from '@angular/forms';
 import { isArray } from './../../../../utils/index';
 import { DataDrive } from './../../shared/models/index';
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  OnDestroy,
+} from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { AuthService } from '../../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-exam-paper',
   templateUrl: './exam-paper.component.html',
-  styleUrls: ['./exam-paper.component.css']
+  styleUrls: ['./exam-paper.component.css'],
 })
 export class ExamPaperComponent implements OnInit, OnDestroy {
-
   @Input() opts: DataDrive;
 
   @Input() content: any[];
 
   @Input() isModal;
 
-  _header: { title: string, name: string, time: number, passScore: number };
+  _header: { title: string; name: string; time: number; passScore: number };
   @Input()
   set header(f) {
     if (typeof f === 'object') {
@@ -57,7 +63,11 @@ export class ExamPaperComponent implements OnInit, OnDestroy {
 
   @Output() getResult = new EventEmitter();
   lastMark;
-  constructor(private fb: FormBuilder, private confirmServ: NzModalService, private auth: AuthService) { }
+  constructor(
+    private fb: FormBuilder,
+    private confirmServ: NzModalService,
+    private auth: AuthService,
+  ) {}
 
   ngOnInit() {
     this.keepLogin();
@@ -115,14 +125,16 @@ export class ExamPaperComponent implements OnInit, OnDestroy {
   }
 
   bindView(allQ) {
-    const alter = (name) => {
+    const alter = name => {
       if (this[name + 'List'].length > 0) {
         this.prefixMain[name] = this.subTitlePrefixs.shift();
         this.markSets[name] = { total: 0, average: 0 };
         this[name + 'List'].forEach(c => {
           this.markSets[name]['total'] += c.SCORE || 0;
         });
-        this.markSets[name]['average'] = Math.round(this.markSets[name]['total'] / this[name + 'List'].length);
+        this.markSets[name]['average'] = Math.round(
+          this.markSets[name]['total'] / this[name + 'List'].length,
+        );
       }
     };
     this.TFList = allQ.filter(a => a.TYPE === 'TF');
@@ -147,7 +159,12 @@ export class ExamPaperComponent implements OnInit, OnDestroy {
         ['A', 'B', 'C', 'D', 'E'].forEach(b => {
           const val = c[pre + b];
           // tslint:disable-next-line:no-unused-expression
-          val && c.optionList.push({ label: b + '、 ' + val, value: b, checked: false });
+          val &&
+            c.optionList.push({
+              label: b + '、 ' + val,
+              value: b,
+              checked: false,
+            });
         });
       }
       return c;
@@ -178,7 +195,7 @@ export class ExamPaperComponent implements OnInit, OnDestroy {
       this.finish();
       this.confirmServ.info({
         title: '考試時間結束',
-        content: '已自動提交試卷'
+        content: '已自動提交試卷',
       });
     }
   }
@@ -203,12 +220,12 @@ export class ExamPaperComponent implements OnInit, OnDestroy {
       return {
         EXAM_ID: c.EXAM_ID,
         QUESTION_ID: c.QUESTION_ID,
-        ANSWERS: val[c.ID]
+        ANSWERS: val[c.ID],
       };
     });
     this.getResult.emit({
       answerList,
-      lastMark: this.lastMark
+      lastMark: this.lastMark,
     });
   }
 
@@ -218,7 +235,7 @@ export class ExamPaperComponent implements OnInit, OnDestroy {
       this.content = this.content.map(c => {
         c.result = {
           trueAnswer: c.RIGHT_ANSWER,
-          yourAnswer: val[c.ID]
+          yourAnswer: val[c.ID],
         };
         return c;
       });
@@ -227,12 +244,12 @@ export class ExamPaperComponent implements OnInit, OnDestroy {
         if (this.lastMark < this._header.passScore) {
           this.confirmServ.error({
             title: `最後得分:  ${this.lastMark}`,
-            content: '考試不及格'
+            content: '考試不及格',
           });
         } else {
           this.confirmServ.success({
             title: `最後得分:  ${this.lastMark}`,
-            content: '考試通過'
+            content: '考試通過',
           });
         }
       }, 100);

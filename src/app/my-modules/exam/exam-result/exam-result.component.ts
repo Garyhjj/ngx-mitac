@@ -7,19 +7,14 @@ import { isArray } from '../../../shared/utils/index';
 @Component({
   selector: 'app-exam-result',
   templateUrl: './exam-result.component.html',
-  styleUrls: ['./exam-result.component.css']
+  styleUrls: ['./exam-result.component.css'],
 })
 export class ExamResultComponent implements OnInit {
-
   dataDrive: DataDrive;
   user = this.auth.user;
-  constructor(
-    private examService: ExamService,
-    private auth: AuthService
-  ) { }
+  constructor(private examService: ExamService, private auth: AuthService) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   getDrive(d: DataDrive) {
     this.dataDrive = d;
@@ -35,5 +30,4 @@ export class ExamResultComponent implements OnInit {
       });
     }
   }
-
 }

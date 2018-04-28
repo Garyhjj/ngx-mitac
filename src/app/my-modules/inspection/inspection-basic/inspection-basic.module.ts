@@ -8,11 +8,11 @@ import { InspectionNameComponent } from './inspection-name/inspection-name.compo
 
 @NgModule({
   imports: [
-    CommonModule, SharedModule, InspectionBasicRoutingModule, DataDriveModule
+    CommonModule,
+    SharedModule,
+    InspectionBasicRoutingModule,
+    DataDriveModule,
   ],
-  declarations: [
-    InspectionBasicComponent,
-    InspectionNameComponent
-  ]
+  declarations: [InspectionBasicComponent, InspectionNameComponent],
 })
-export class InspectionBasicModule { }
+export class InspectionBasicModule {}

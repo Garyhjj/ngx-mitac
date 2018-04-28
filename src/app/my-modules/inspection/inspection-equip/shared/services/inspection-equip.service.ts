@@ -6,17 +6,12 @@ import { replaceQuery } from '../../../../../shared/utils';
 
 @Injectable()
 export class InspectionEquipService {
-    role = 3;
-    user: UserState;
-    constructor(
-        private http: HttpClient,
-        private auth: AuthService
-    ) {
-        this.user = this.auth.user;
-        if (this.user.privilege.find(m => m.FUNCTION_ID === 343)) {
-            this.role = 1;
-        }
+  role = 3;
+  user: UserState;
+  constructor(private http: HttpClient, private auth: AuthService) {
+    this.user = this.auth.user;
+    if (this.user.privilege.find(m => m.FUNCTION_ID === 343)) {
+      this.role = 1;
     }
-
+  }
 }
-

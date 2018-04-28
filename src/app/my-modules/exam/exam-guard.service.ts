@@ -4,12 +4,9 @@ import { CanActivate } from '@angular/router';
 
 @Injectable()
 export class ExamGuard implements CanActivate {
-
-    constructor(private examService: ExamService) {
-    }
-    canActivate() {
-        const role = this.examService.role;
-        return role === 1 || role === 2;
-    }
-
+  constructor(private examService: ExamService) {}
+  canActivate() {
+    const role = this.examService.role;
+    return role === 1 || role === 2;
+  }
 }

@@ -5,6 +5,6 @@ import { MydatePipe } from './mydate.pipe';
 @NgModule({
   imports: [],
   declarations: [MydatePipe, ChineseConv],
-  exports: [MydatePipe, ChineseConv]
+  exports: [MydatePipe, ChineseConv],
 })
-export class PipesModule { }
+export class PipesModule {}

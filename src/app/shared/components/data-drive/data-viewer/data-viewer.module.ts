@@ -10,11 +10,20 @@ import { ExamPaperModule } from './exam-paper/exam-paper.module';
 import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
-  imports: [
-    CommonModule, SharedModule, ExamPaperModule,TranslateModule
+  imports: [CommonModule, SharedModule, ExamPaperModule, TranslateModule],
+  declarations: [
+    DataViewerComponent,
+    TableComponent,
+    FilterColumnComponent,
+    QRComponent,
+    MyFlexPipe,
   ],
-  declarations: [DataViewerComponent, TableComponent, FilterColumnComponent, QRComponent, MyFlexPipe,],
-  exports: [DataViewerComponent, TableComponent, FilterColumnComponent, MyFlexPipe,],
-  entryComponents: [DataViewerComponent, QRComponent]
+  exports: [
+    DataViewerComponent,
+    TableComponent,
+    FilterColumnComponent,
+    MyFlexPipe,
+  ],
+  entryComponents: [DataViewerComponent, QRComponent],
 })
-export class DataViewerModule { }
+export class DataViewerModule {}

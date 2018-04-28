@@ -11,9 +11,8 @@ describe('QRComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ QRComponent ]
-    })
-    .compileComponents();
+      declarations: [QRComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

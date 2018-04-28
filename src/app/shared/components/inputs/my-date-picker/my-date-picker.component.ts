@@ -10,12 +10,11 @@ import * as moment from 'moment';
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => MyDatePickerComponent),
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 export class MyDatePickerComponent implements OnInit {
-
   @Input() myPickerFormat = 'YYYY-MM-DD';
   @Input() myShowTime: string | boolean = false;
   @Input() myFormat = 'YYYY-MM-DD';
@@ -23,11 +22,10 @@ export class MyDatePickerComponent implements OnInit {
   @Input() myMode = 'day';
   _date: Date = null;
   dataString: string;
-  private propagateChange = (_: string) => { };
-  constructor() { }
+  private propagateChange = (_: string) => {};
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   /**
    * 给外部formControl写入数据
@@ -57,7 +55,7 @@ export class MyDatePickerComponent implements OnInit {
    * 也是一样注册,当 touched 然后调用
    * @param {*} fn
    */
-  registerOnTouched(fn: any) { }
+  registerOnTouched(fn: any) {}
 
   /**
    * 内部更改例子
@@ -67,5 +65,4 @@ export class MyDatePickerComponent implements OnInit {
     this.dataString = value ? moment(value).format(this.myPickerFormat) : '';
     this.propagateChange(this.dataString); // 去触发外部监控的函数
   }
-
 }

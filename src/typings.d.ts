@@ -4,19 +4,19 @@ interface NodeModule {
   id: string;
 }
 
-declare class ExportJsonExcel{
-  constructor(opts:ExportJsonExcelOptions);
+declare class ExportJsonExcel {
+  constructor(opts: ExportJsonExcelOptions);
   saveExcel();
 }
 interface ExportJsonExcelOptions {
-  fileName:string;
-  datas:{
-    sheetData:(string | number)[][],
-    sheetHeader:(string | number)[]
-  }[]
+  fileName: string;
+  datas: {
+    sheetData: (string | number)[][];
+    sheetHeader: (string | number)[];
+  }[];
 }
 
 declare class AraleQRCode {
-  constructor(opts:{text:string, size: number});
-  toDataURL(type,p);
+  constructor(opts: { text: string; size: number });
+  toDataURL(type, p);
 }

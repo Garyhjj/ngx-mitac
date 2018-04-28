@@ -10,55 +10,49 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../../../route/auth-guard.service';
 
-
-
 const eRoutes: Routes = [
-    {
-        path: '',
-        component: InspectionEquipComponent,
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
-        children: [
-            {
-                canActivate: [EquipGuard],
-                path: 'lines',
-                component: InspectionEquipLinesComponent
-            },
-            {
-                canActivate: [EquipGuard],
-                path: 'history',
-                component: InspectionEquipHistoryComponent
-            },
-            {
-                path: 'improvement',
-                component: InspectionEquipImprovementComponent
-            },
-            {
-                canActivate: [EquipGuard],
-                path: 'list',
-                component: InspectionEquipListComponent
-            },
-            {
-                canActivate: [EquipGuard],
-                path: 'status',
-                component: InspectionEquipStatusComponent
-            },
-            {
-                canActivate: [EquipGuard],
-                path: 'checkList',
-                component: InspectionEquipCheckListComponent
-            }
-        ]
-    }
+  {
+    path: '',
+    component: InspectionEquipComponent,
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
+    children: [
+      {
+        canActivate: [EquipGuard],
+        path: 'lines',
+        component: InspectionEquipLinesComponent,
+      },
+      {
+        canActivate: [EquipGuard],
+        path: 'history',
+        component: InspectionEquipHistoryComponent,
+      },
+      {
+        path: 'improvement',
+        component: InspectionEquipImprovementComponent,
+      },
+      {
+        canActivate: [EquipGuard],
+        path: 'list',
+        component: InspectionEquipListComponent,
+      },
+      {
+        canActivate: [EquipGuard],
+        path: 'status',
+        component: InspectionEquipStatusComponent,
+      },
+      {
+        canActivate: [EquipGuard],
+        path: 'checkList',
+        component: InspectionEquipCheckListComponent,
+      },
+    ],
+  },
 ];
 
 @NgModule({
-    imports: [
-        RouterModule.forChild(eRoutes)
-    ],
-    exports: [
-        RouterModule
-    ],
-    providers: []
+  imports: [RouterModule.forChild(eRoutes)],
+  exports: [RouterModule],
+  providers: [],
 })
-export class InspectionEquipRoutingModule { }
+export class InspectionEquipRoutingModule {}

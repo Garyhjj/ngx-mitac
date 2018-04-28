@@ -11,9 +11,8 @@ describe('PhotoViewerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PhotoViewerComponent ]
-    })
-    .compileComponents();
+      declarations: [PhotoViewerComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

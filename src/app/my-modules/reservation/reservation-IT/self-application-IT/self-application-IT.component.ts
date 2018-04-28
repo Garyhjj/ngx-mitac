@@ -17,10 +17,9 @@ import { isArray } from '../../../../shared/utils';
   // tslint:disable-next-line:component-selector
   selector: 'app-self-application-IT',
   templateUrl: './self-application-IT.component.html',
-  styleUrls: ['./self-application-IT.component.css']
+  styleUrls: ['./self-application-IT.component.css'],
 })
 export class SelfApplicationITComponent implements OnInit {
-
   tabIdx;
   timeMes;
 
@@ -47,78 +46,94 @@ export class SelfApplicationITComponent implements OnInit {
     private util: UtilService,
     private fb: FormBuilder,
     private validatorExtendService: NgxValidatorExtendService,
-    private gbService: AppService
-  ) { }
+    private gbService: AppService,
+    private appService: AppService,
+  ) {}
 
-  ngOnInit() {
+  ngOnInit() {}
 
-  }
-
-  tabChange(idx) {
-
+  tabChange(idx) {}
+  alterUpdate(d: DataDrive) {
+    d.beforeUpdateSubmit((fg, sub, ori) => {
+      return {
+        DOCNO: ori.DOCNO,
+        LAST_UPDATED_DATE: ori.LAST_UPDATED_DATE,
+      };
+    });
   }
 
   async getDataDrive1(d: DataDrive) {
+    this.alterUpdate(d);
     this.d1 = d;
-    d.tableData.columns = d.tableData.columns.filter(c => this.extralList.indexOf(c.property) < 0);
+    d.tableData.columns = d.tableData.columns.filter(
+      c => this.extralList.indexOf(c.property) < 0,
+    );
     await this.alterData(d);
     d.addDefaultSearchParams({ status: 'New' });
-    d.beforeUpdateShow((data) => {
+    d.beforeUpdateShow(data => {
       if (data.STATUS === 'New') {
         return true;
       } else {
         return false;
       }
     });
-    d.onUpdateFormShow((fg) => {
+    d.onUpdateFormShow(fg => {
       const contactInput = fg.get('CONTACT');
       contactInput.valueChanges.subscribe(v => {
-        this.gbService.getColleague(v).subscribe((cg) => {
+        this.gbService.getColleague(v).subscribe(cg => {
           if (isArray(cg) && cg.length === 1) {
             const tar = cg[0];
-            fg.get('MOBILE').setValue((() => {
-              const mobile = tar.MOBILE;
-              const telephone = tar.TELEPHONE;
-              if (mobile && telephone) {
-                return `${telephone} / ${mobile}`;
-              } else {
-                return mobile ? mobile : telephone ? telephone : '';
-              }
-            })());
+            fg.get('MOBILE').setValue(
+              (() => {
+                const mobile = tar.MOBILE;
+                const telephone = tar.TELEPHONE;
+                if (mobile && telephone) {
+                  return `${telephone} / ${mobile}`;
+                } else {
+                  return mobile ? mobile : telephone ? telephone : '';
+                }
+              })(),
+            );
           }
         });
       });
       contactInput.setValue(this.reservationITService.user.EMPNO);
     });
-    d.afterDataInit((ds) => this.newCount = ds.length);
+    d.afterDataInit(ds => (this.newCount = ds.length));
     this.dataDriveService.updateViewData(d);
   }
 
   async getDataDrive2(d: DataDrive) {
+    this.alterUpdate(d);
     this.d2 = d;
-    d.tableData.columns = d.tableData.columns.filter(c => this.extralList.indexOf(c.property) < 0);
+    d.tableData.columns = d.tableData.columns.filter(
+      c => this.extralList.indexOf(c.property) < 0,
+    );
     await this.alterData(d);
     d.addDefaultSearchParams({ status: 'Processing' });
-    d.afterDataInit((ds) => this.processingCount = ds.length);
+    d.afterDataInit(ds => (this.processingCount = ds.length));
     this.dataDriveService.updateViewData(d);
   }
 
-
   async getDataDrive3(d: DataDrive) {
+    this.alterUpdate(d);
     this.d3 = d;
     d.tableData.editable = false;
-    d.tableData.columns = d.tableData.columns.filter(c => this.extralList.indexOf(c.property) < 0);
+    d.tableData.columns = d.tableData.columns.filter(
+      c => this.extralList.indexOf(c.property) < 0,
+    );
     await this.alterData(d);
     d.addDefaultSearchParams({ status: 'Scoring' });
-    d.afterDataInit((ds) => this.commentCount = ds.length);
+    d.afterDataInit(ds => (this.commentCount = ds.length));
     this.dataDriveService.updateViewData(d);
   }
 
   async getDataDrive4(d: DataDrive) {
+    this.alterUpdate(d);
     this.d4 = d;
     d.tableData.editable = false;
     const more = d.dataViewSet.more;
-    d.beforeInitTableData((data) => {
+    d.beforeInitTableData(data => {
       return data.map(da => {
         da[this.impressionName] = '';
         return da;
@@ -158,18 +173,22 @@ export class SelfApplicationITComponent implements OnInit {
     this.dataDriveService.updateViewData(this.d2);
     this.dataDriveService.updateViewData(this.d3);
     this.dataDriveService.updateViewData(this.d4);
+    this.appService.getAllTips();
   }
 
   updateService(data: ReservationApplication) {
     const loadingID = this.util.showLoading();
     const final = () => this.util.dismissLoading(loadingID);
-    this.reservationITService.updateService(data).subscribe(() => {
-      final();
-      this.updateAllDataDrive();
-    }, err => {
-      this.util.errDeal(err);
-      final();
-    });
+    this.reservationITService.updateService(data).subscribe(
+      () => {
+        final();
+        this.updateAllDataDrive();
+      },
+      err => {
+        this.util.errDeal(err);
+        final();
+      },
+    );
   }
   cancelResvation(app: ReservationApplication) {
     const doCancel = () => {
@@ -181,8 +200,7 @@ export class SelfApplicationITComponent implements OnInit {
       onOk() {
         doCancel();
       },
-      onCancel() {
-      }
+      onCancel() {},
     });
   }
 
@@ -190,15 +208,12 @@ export class SelfApplicationITComponent implements OnInit {
     const subscription = this.modalService.open({
       title: '印象',
       content: ImpressionListComponent,
-      onOk() {
-      },
-      onCancel() {
-
-      },
+      onOk() {},
+      onCancel() {},
       footer: false,
       componentParams: {
-        application: app
-      }
+        application: app,
+      },
     });
     subscription.subscribe(result => {
       // console.log(result);
@@ -214,24 +229,26 @@ export class SelfApplicationITComponent implements OnInit {
     const final = () => {
       this.util.dismissLoading(loadingID);
     };
-    this.reservationITService.getPersonImpression(app.HANDLER).subscribe((_: any[]) => {
-      this.impressionList = _;
-      final();
-      this.myForm = this.fb.group({
-        SCORE: ['', this.validatorExtendService.required()],
-        USER_COMMENT: ['']
-      });
-      this.commentTarget = app;
-    }
-      , (err) => {
+    this.reservationITService.getPersonImpression(app.HANDLER).subscribe(
+      (_: any[]) => {
+        this.impressionList = _;
+        final();
+        this.myForm = this.fb.group({
+          SCORE: ['', this.validatorExtendService.required()],
+          USER_COMMENT: [''],
+        });
+        this.commentTarget = app;
+      },
+      err => {
         final();
         this.util.errDeal(err);
-      });
+      },
+    );
   }
 
   selectImpression(i: any) {
     this.impressionSelected[i.ID] = !this.impressionSelected[i.ID];
-    this.impressionList = this.impressionList.map((g) => {
+    this.impressionList = this.impressionList.map(g => {
       if (g === i) {
         g.QTY = this.impressionSelected[i.ID] ? g.QTY + 1 : g.QTY - 1;
       }
@@ -254,14 +271,16 @@ export class SelfApplicationITComponent implements OnInit {
     const final = () => {
       this.util.dismissLoading(loadingID);
     };
-    this.reservationITService.updateService(send).subscribe(res => {
-      final();
-      this.isCommentVisible = false;
-      this.updateAllDataDrive();
-    }, err => {
-      this.util.errDeal(err);
-      final();
-    });
+    this.reservationITService.updateService(send).subscribe(
+      res => {
+        final();
+        this.isCommentVisible = false;
+        this.updateAllDataDrive();
+      },
+      err => {
+        this.util.errDeal(err);
+        final();
+      },
+    );
   }
-
 }

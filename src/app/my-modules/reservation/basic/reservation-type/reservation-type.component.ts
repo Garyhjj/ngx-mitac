@@ -5,22 +5,19 @@ import * as moment from 'moment';
 @Component({
   selector: 'app-reservation-type',
   templateUrl: './reservation-type.component.html',
-  styleUrls: ['./reservation-type.component.css']
+  styleUrls: ['./reservation-type.component.css'],
 })
 export class ReservationTypeComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   getDataDrive(d: DataDrive) {
-    d.onUpdateData((data) => {
+    d.onUpdateData(data => {
       data.LOOKUP_TYPE = 'IT_SERVICE_TYPE';
       data.DESCRIPTION = 'N/A';
       data.ENABLED_FLAG = 'Y';
       data.START_DATE = data.START_DATE || moment().format('YYYY-MM-DD');
     });
   }
-
 }

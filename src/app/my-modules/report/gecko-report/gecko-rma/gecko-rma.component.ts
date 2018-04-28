@@ -5,13 +5,10 @@ import { DataDriveService } from '../../../../shared/components/data-drive/core/
 @Component({
   selector: 'app-gecko-rma',
   templateUrl: './gecko-rma.component.html',
-  styleUrls: ['./gecko-rma.component.css']
+  styleUrls: ['./gecko-rma.component.css'],
 })
 export class GeckoRmaComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

@@ -7,10 +7,13 @@ import { ExamPaperComponent } from './exam-paper.component';
 import { TrueOrFalseComponent } from '../../../inputs/true-or-false/true-or-false.component';
 
 @NgModule({
-  imports: [
-    CommonModule, SharedModule
+  imports: [CommonModule, SharedModule],
+  declarations: [
+    ExamPaperComponent,
+    TrueOrFalseComponent,
+    RadioQuestionComponent,
+    CheckboxQuestionComponent,
   ],
-  declarations: [ExamPaperComponent, TrueOrFalseComponent, RadioQuestionComponent, CheckboxQuestionComponent],
-  exports: [ExamPaperComponent]
+  exports: [ExamPaperComponent],
 })
-export class ExamPaperModule { }
+export class ExamPaperModule {}

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class CacheService {
   private cache: Object = {};
-  constructor() { }
+  constructor() {}
 
   get(comName: string, key: string) {
     if (this.cache[comName] && this.cache[comName][key]) {

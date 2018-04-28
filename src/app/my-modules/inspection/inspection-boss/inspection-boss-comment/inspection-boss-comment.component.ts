@@ -11,10 +11,9 @@ import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-inspection-boss-comment',
   templateUrl: './inspection-boss-comment.component.html',
-  styleUrls: ['./inspection-boss-comment.component.css']
+  styleUrls: ['./inspection-boss-comment.component.css'],
 })
 export class InspectionBossCommentComponent implements OnInit {
-
   isVisible = false;
   translateTexts: any;
   formLayout = 'horizontal';
@@ -28,26 +27,34 @@ export class InspectionBossCommentComponent implements OnInit {
     private dataDriveService: DataDriveService,
     private util: UtilService,
     private translate: TranslateService,
-  ) { }
+  ) {}
 
   ngOnInit() {
-    this.translate.stream(['insoectionModule.comment', 'insoectionModule.commentSuccess']).subscribe((res) => {
-      this.translateTexts = res;
-    });
+    this.translate
+      .stream(['insoectionModule.comment', 'insoectionModule.commentSuccess'])
+      .subscribe(res => {
+        this.translateTexts = res;
+      });
   }
 
   getDataDrive(d: DataDrive) {
     this.dataDrive = d;
     d.setParamsOut(this.translateTexts['insoectionModule.comment']);
-    d.onParamsOut((data) => {
+    d.onParamsOut(data => {
       const id = this.util.showLoading();
       const finalFn = () => this.util.dismissLoading(id);
-      this.inspectionBossService.getReport(data.HEADER_ID).subscribe(r => {
-        this.intForm(r);
-        this.editData = r;
-        this.isVisible = true;
-        finalFn();
-      }, err => { this.util.errDeal(err); finalFn(); });
+      this.inspectionBossService.getReport(data.HEADER_ID).subscribe(
+        r => {
+          this.intForm(r);
+          this.editData = r;
+          this.isVisible = true;
+          finalFn();
+        },
+        err => {
+          this.util.errDeal(err);
+          finalFn();
+        },
+      );
     });
   }
 
@@ -55,14 +62,14 @@ export class InspectionBossCommentComponent implements OnInit {
     this.myForm = null;
     const litsFormArray = [];
     if (isArray(data.Lines)) {
-      data.Lines.forEach((l) => litsFormArray.push(this.initSubForm(l)));
+      data.Lines.forEach(l => litsFormArray.push(this.initSubForm(l)));
     }
     this.myForm = this.fb.group({
-      SCORE: [data.Header && data.Header.SCORE || 0],
-      ADDITIONAL_SCORE: [data.Header && data.Header.ADDITIONAL_SCORE || 0],
-      list: this.fb.array(litsFormArray)
+      SCORE: [(data.Header && data.Header.SCORE) || 0],
+      ADDITIONAL_SCORE: [(data.Header && data.Header.ADDITIONAL_SCORE) || 0],
+      list: this.fb.array(litsFormArray),
     });
-    this.myForm.get('ADDITIONAL_SCORE').valueChanges.subscribe((c) => {
+    this.myForm.get('ADDITIONAL_SCORE').valueChanges.subscribe(c => {
       this.calTotalScore();
     });
   }
@@ -75,9 +82,9 @@ export class InspectionBossCommentComponent implements OnInit {
       PROBLEM_FLAG: [l.PROBLEM_FLAG],
       PROBLEM_PICTURES: [l.PROBLEM_PICTURES],
       OWNER_EMPNO: [l.OWNER_EMPNO],
-      SCORE: [l.SCORE, this.validatorExtendService.required()]
+      SCORE: [l.SCORE, this.validatorExtendService.required()],
     });
-    sub.get('SCORE').valueChanges.subscribe((c) => {
+    sub.get('SCORE').valueChanges.subscribe(c => {
       this.calTotalScore();
     });
     return sub;
@@ -86,7 +93,7 @@ export class InspectionBossCommentComponent implements OnInit {
   calTotalScore() {
     let list = this.myForm.get('list') as FormArray;
     let total = 0;
-    Array.prototype.forEach.call(list.controls, (c) => {
+    Array.prototype.forEach.call(list.controls, c => {
       let val = c.get('SCORE').value || 0;
       total += val;
     });
@@ -97,7 +104,10 @@ export class InspectionBossCommentComponent implements OnInit {
   submitForm() {
     const val = this.myForm.value;
     const lines = val.list;
-    Object.assign(this.editData.Header, { SCORE: val.SCORE, ADDITIONAL_SCORE: val.ADDITIONAL_SCORE });
+    Object.assign(this.editData.Header, {
+      SCORE: val.SCORE,
+      ADDITIONAL_SCORE: val.ADDITIONAL_SCORE,
+    });
     this.editData.Lines = this.editData.Lines.map(l => {
       const tar = lines.find(d => d.LINE_ID === l.LINE_ID);
       // tslint:disable-next-line:no-unused-expression
@@ -106,12 +116,19 @@ export class InspectionBossCommentComponent implements OnInit {
     });
     const id = this.util.showLoading();
     const finalFn = () => this.util.dismissLoading(id);
-    this.inspectionBossService.uploadReport(this.editData).subscribe(c => {
-      finalFn();
-      this.util.showGlobalSucMes(this.translateTexts['insoectionModule.commentSuccess']);
-      this.isVisible = false;
-      this.dataDriveService.updateViewData(this.dataDrive);
-    }, err => { this.util.errDeal(err); finalFn(); });
+    this.inspectionBossService.uploadReport(this.editData).subscribe(
+      c => {
+        finalFn();
+        this.util.showGlobalSucMes(
+          this.translateTexts['insoectionModule.commentSuccess'],
+        );
+        this.isVisible = false;
+        this.dataDriveService.updateViewData(this.dataDrive);
+      },
+      err => {
+        this.util.errDeal(err);
+        finalFn();
+      },
+    );
   }
-
 }

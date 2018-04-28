@@ -1,13 +1,13 @@
 <nz-tabset [(nzSelectedIndex)]="tabIdx" (nzSelectedIndexChange)="tabChange($event)">
   <nz-tab>
     <ng-template #nzTabHeading>
-      維護考卷頭
+      {{'examModule.maintenanceHeader' | translate}}
     </ng-template>
     <app-data-drive [name]="'examUnits'" (dataDriveInit)="getHeaderDrive($event)"></app-data-drive>
   </nz-tab>
   <nz-tab>
     <ng-template #nzTabHeading>
-      維護考卷內容
+      {{'examModule.maintenanceBody' | translate}}
       <span *ngIf="targetExam">({{targetExam.TITLE}})</span>
     </ng-template>
     <nz-row [nzType]="'flex'">
@@ -15,7 +15,7 @@
         <div class="align-right" *ngIf="!isAddingQuestion">
           <button nz-button [nzType]="'primary'" (click)="isAddingQuestion = true">
             <i class="anticon anticon-menu-fold"></i>
-            <span>插入問題</span>
+            <span>{{'examModule.addQuestion' | translate}}</span>
           </button>
         </div>
         <app-data-drive [name]="'examMapping'" (dataDriveInit)="getContentDrive($event)"></app-data-drive>
