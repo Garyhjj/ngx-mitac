@@ -1,6 +1,8 @@
+import { MyErrorHandlerService } from './myErrorHandler.service';
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
+import * as XLSX from 'xlsx';
 
 @Injectable()
 export class UtilService {
@@ -10,6 +12,7 @@ export class UtilService {
     private router: Router,
     private _message: NzMessageService,
     private modalService: NzModalService,
+    private myErrorHandlerService: MyErrorHandlerService,
   ) {}
 
   errDeal(err) {
@@ -30,6 +33,8 @@ export class UtilService {
           });
         case 0:
           return this._message.error(err.statusText, { nzDuration: 3000 });
+        default:
+          this.myErrorHandlerService.handleError(err);
       }
     }
   }
@@ -46,24 +51,33 @@ export class UtilService {
     header: (string | number)[],
     data: (string | number)[][],
   ) {
-    if (!ExportJsonExcel) {
-      this._message.error(
-        '由於瀏覽器不支持,該功能不可用,請升級瀏覽器或使用別的瀏覽器,如Chrome',
-        { nzDuration: 4000 },
-      );
-      return;
-    }
-    const option: ExportJsonExcelOptions = {} as ExportJsonExcelOptions;
+    data.unshift(header);
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(data);
 
-    option.fileName = name;
-    option.datas = [
-      {
-        sheetData: data,
-        sheetHeader: header,
-      },
-    ];
-    const toExcel = new ExportJsonExcel(option); // new
-    toExcel.saveExcel(); // 保存
+    /* generate workbook and add the worksheet */
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+    /* save to file */
+    XLSX.writeFile(wb, `${name}.xlsx`);
+    // if (!ExportJsonExcel) {
+    //   this._message.error(
+    //     '由於瀏覽器不支持,該功能不可用,請升級瀏覽器或使用別的瀏覽器,如Chrome',
+    //     { nzDuration: 4000 },
+    //   );
+    //   return;
+    // }
+    // const option: ExportJsonExcelOptions = {} as ExportJsonExcelOptions;
+
+    // option.fileName = name;
+    // option.datas = [
+    //   {
+    //     sheetData: data,
+    //     sheetHeader: header,
+    //   },
+    // ];
+    // const toExcel = new ExportJsonExcel(option); // new
+    // toExcel.saveExcel(); // 保存
     this._message.info('文件將被下載到瀏覽器的默認下載目錄中', {
       nzDuration: 4000,
     });
@@ -87,10 +101,10 @@ export class UtilService {
   ) {
     set.okText = set.okText || '收到';
     this.modalService.warning({
-      title: set.title,
-      content: set.content,
-      okText: set.okText,
-      onOk: cb,
+      nzTitle: set.title,
+      nzContent: set.content,
+      nzOkText: set.okText,
+      nzOnOk: cb,
     });
   }
 

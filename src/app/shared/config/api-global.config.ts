@@ -15,4 +15,5 @@ export const APIGlobalConfig = {
     APPConfig.baseUrl + 'Guid/GetUserFunctions?moduleID={moduleID}',
 
   getAllTips: APPConfig.baseUrl + 'users/tips',
+  uploadError: APPConfig.baseUrl + 'utils/logs',
 };

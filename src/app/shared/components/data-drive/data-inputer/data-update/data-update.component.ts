@@ -3,7 +3,6 @@ import { UtilService } from './../../../../../core/services/util.service';
 import { DataDrive, TableDataColumn } from './../../shared/models/index';
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NzModalSubject } from 'ng-zorro-antd';
 import { SearchItemSet } from '../../shared/models/searcher/index';
 import { NgxValidatorExtendService } from '../../../../../core/services/ngx-validator-extend.service';
 import { DataDriveService } from '../../core/services/data-drive.service';
@@ -60,7 +59,6 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private subject1: NzModalSubject,
     private validExd: NgxValidatorExtendService,
     private dataDriveService: DataDriveService,
     private util: UtilService,
@@ -73,9 +71,11 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
         this.validateForm,
         this.globalUpdateErrSubject,
         (() => {
-          this.orinalData.forEach(o => {
-            out[o.property] = o.value;
-          });
+          if (isArray(this.orinalData)) {
+            this.orinalData.forEach(o => {
+              out[o.property] = o.value;
+            });
+          }
           return out;
         })(),
       ))
@@ -106,7 +106,7 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
           this.util.showGlobalSucMes(
             this.changeIdx < 0 ? '插入成功' : '更新成功',
           );
-          setTimeout(() => this.subject1.destroy(), 500);
+          // setTimeout(() => this.subject1.destroy(), 500);
         },
         err => {
           this.util.errDeal(err);

@@ -8,90 +8,66 @@
 <ng-container *ngTemplateOutlet="stepButtons"></ng-container>
 <div class="steps-content">
   <ng-container *ngIf="current === 0 && dateMes">
-    <nz-calendar [nzLocale]="'zh-cn'" [nzMode]="'month'">
-      <ng-template #dateCell let-day>
-        <div class="cell-containar" (click)="selectDate(day)" *ngIf="getDetailByDate(day)>0" [class.card-select]="selectedDate === day.title">
+    <nz-calendar [nzMode]="'month'">
+      <ng-container *nzDateCell="let day">
+        <div class="cell-containar" (click)="selectDate(day)" *ngIf="getDetailByDate(day)>0">
           {{getDetailByDate(day) > -1 ? ('serviceModule.leftNum' | translate) :''}}
           <div class="align-center">{{getDetailByDate(day)}}</div>
         </div>
         <div class="cell-containar" *ngIf="getDetailByDate(day)<1">
           <div class="align-center" class="cell-disabled">无服务</div>
         </div>
-      </ng-template>
+      </ng-container>
     </nz-calendar>
   </ng-container>
 
   <ng-container *ngIf="current === 1">
-    <nz-card nzNoHovering>
-      <ng-template #title>{{'serviceModule.chooseTime' | translate}}</ng-template>
-      <ng-template #body>
-        <div nz-card-grid class="card-item" *ngFor="let item of dayInfo" [class.card-select]="selectedTimeId === item.TIME_ID" (click)="selectCard(item)"
-          [class.hasremain]="item.REMAIN_NUMBER>0" [class.noremain]="item.REMAIN_NUMBER==0">
-          <div> {{item.START_TIME + ' ~ ' + item.END_TIME}} </div>
-          {{'serviceModule.leftNum' | translate}}： {{item.REMAIN_NUMBER}}
-        </div>
-      </ng-template>
+    <nz-card nzNoHovering [nzTitle]="'serviceModule.chooseTime' | translate">
+      <div nz-card-grid class="card-item" *ngFor="let item of dayInfo" [class.card-select]="selectedTimeId === item.TIME_ID" (click)="selectCard(item)"
+        [class.hasremain]="item.REMAIN_NUMBER>0" [class.noremain]="item.REMAIN_NUMBER==0">
+        <div> {{item.START_TIME + ' ~ ' + item.END_TIME}} </div>
+        {{'serviceModule.leftNum' | translate}}： {{item.REMAIN_NUMBER}}
+      </div>
     </nz-card>
   </ng-container>
 
   <ng-container *ngIf="current === 2">
-    <form nz-form [nzLayout]="'horizontal'" [formGroup]="myForm" *ngIf="myForm">
-
-      <div nz-form-item nz-row>
-        <div nz-form-label nz-col [nzSpan]="6">
-          <label>{{'serviceModule.serviceDept' | translate}}</label>
-        </div>
-        <div nz-form-control nz-col [nzSpan]="16" [style.textAlign]="'center'">
-          {{deptId | myFlex: {name: 'lazyLoad', params: ['Service/GetServiceDepartments?dept_no={dept_no}&company_id={company_id}',
-          ['ID','DEPT_NAME']]} | async}}
-        </div>
-      </div>
-      <div nz-form-item nz-row>
-        <div nz-form-label nz-col [nzSpan]="6">
-          <label>{{'serviceModule.serviceTime' | translate}}</label>
-        </div>
-        <div nz-form-control nz-col [nzSpan]="16" [style.textAlign]="'center'" [style.textAlign]="'center'">
-          {{serviceTime}}
-        </div>
-      </div>
-
-      <div nz-form-item nz-row>
-        <div nz-form-label nz-col [nzSpan]="6">
-          <label>*{{'serviceModule.problemDesc' | translate}}</label>
-        </div>
-        <div nz-form-control nz-col [nzSpan]="16">
-          <nz-input formControlName="SERVICE_DESC" nzType="textarea" [nzAutosize]="'1'"></nz-input>
-        </div>
-      </div>
-
-      <div nz-form-item nz-row>
-        <div nz-form-label nz-col [nzSpan]="6">
-          <label>{{'serviceModule.pic' | translate}}</label>
-        </div>
-        <div nz-form-control nz-col [nzSpan]="16">
-          <app-photo-upload formControlName="IMAGES"></app-photo-upload>
-        </div>
-      </div>
-
-      <div nz-form-item nz-row>
-        <div nz-form-label nz-col [nzSpan]="6">
-          <label>*{{'serviceModule.contact' | translate}}</label>
-        </div>
-        <div nz-form-control nz-col [nzSpan]="16">
-          <app-colleague-searcher formControlName="CONTACT"></app-colleague-searcher>
-        </div>
-      </div>
-
-      <div nz-form-item nz-row>
-        <div nz-form-label nz-col [nzSpan]="6">
-          <label>*{{'serviceModule.tel' | translate}}</label>
-        </div>
-        <div nz-form-control nz-col [nzSpan]="16">
-          <nz-input formControlName="MOBILE" [nzSize]="'large'">
-          </nz-input>
-        </div>
-      </div>
-    </form>
+      <form nz-form [nzLayout]="'horizontal'" [formGroup]="myForm" *ngIf="myForm">
+          <nz-form-item>
+              <nz-form-label [nzSpan]="6">
+                  {{'serviceModule.serviceDept' | translate}}
+              </nz-form-label>
+              <nz-form-control [nzSpan]="16" [style.textAlign]="'center'">{{deptId | myFlex: {name: 'lazyLoad', params: ['Service/GetServiceDepartments?dept_no={dept_no}&company_id={company_id}',      ['ID','DEPT_NAME']]} | async}}</nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+              <nz-form-label [nzSpan]="6">{{'serviceModule.serviceTime' | translate}}</nz-form-label>
+              <nz-form-control [nzSpan]="16" [style.textAlign]="'center'">{{serviceTime}}</nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+              <nz-form-label [nzSpan]="6">*{{'serviceModule.problemDesc' | translate}}</nz-form-label>
+              <nz-form-control [nzSpan]="16">
+                  <textarea nz-input formControlName="SERVICE_DESC" [nzAutosize]="'1'"></textarea>
+              </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+              <nz-form-label [nzSpan]="6">{{'serviceModule.pic' | translate}}</nz-form-label>
+              <nz-form-control [nzSpan]="16">
+                  <app-photo-upload formControlName="IMAGES"></app-photo-upload>
+              </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+              <nz-form-label [nzSpan]="6">*{{'serviceModule.contact' | translate}}</nz-form-label>
+              <nz-form-control [nzSpan]="16">
+                  <app-colleague-searcher formControlName="CONTACT"></app-colleague-searcher>
+              </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+              <nz-form-label [nzSpan]="6">*{{'serviceModule.tel' | translate}}</nz-form-label>
+              <nz-form-control [nzSpan]="16">
+                  <input nz-input formControlName="MOBILE" [nzSize]="'large'">
+              </nz-form-control>
+          </nz-form-item>
+      </form>
   </ng-container>
 
   <ng-container *ngIf="current === 3">

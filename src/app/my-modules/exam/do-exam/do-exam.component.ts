@@ -52,23 +52,23 @@ export class DoExamComponent implements OnInit, OnDestroy {
             this.examService.getExamPaper(d[0].ID).subscribe(c => {
               const setContent = () => (this.examContent = c);
               this.confirmServ.confirm({
-                title: this.translateTexts['examModule.examOkTitle'],
-                content: `<b>${
+                nzTitle: this.translateTexts['examModule.examOkTitle'],
+                nzContent: `<b>${
                   this.translateTexts['examModule.examOkContent']
                 }</b>`,
-                onOk() {
+                nzOnOk() {
                   setContent();
                 },
-                onCancel() {
+                nzOnCancel() {
                   goBack();
                 },
               });
             });
           } else {
             this.confirmServ.error({
-              title: this.translateTexts['examModule.examErrTitle'],
-              content: this.translateTexts['examModule.examErrContent'],
-              onOk() {
+              nzTitle: this.translateTexts['examModule.examErrTitle'],
+              nzContent: this.translateTexts['examModule.examErrContent'],
+              nzOnOk() {
                 goBack();
               },
             });

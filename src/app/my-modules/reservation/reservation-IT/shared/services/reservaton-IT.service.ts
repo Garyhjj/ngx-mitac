@@ -110,4 +110,14 @@ export class ReservationITService {
       }),
     );
   }
+  getServiceTime(dept_id: number) {
+    return this.http.get(
+      replaceQuery(reservationITConfig.getServiceTime, { dept_id }),
+    );
+  }
+  getPersonList(dept_id: number) {
+    return this.http.get(
+      replaceQuery(reservationITConfig.getPersonList, { dept_id }),
+    );
+  }
 }

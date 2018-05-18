@@ -1,3 +1,4 @@
+import { AppService } from './../../../../core/services/app.service';
 import { DataDrive } from './../../../../shared/components/data-drive/shared/models/index';
 import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
@@ -8,7 +9,7 @@ import * as moment from 'moment';
   styleUrls: ['./inspection-equip-improvement.component.css'],
 })
 export class InspectionEquipImprovementComponent implements OnInit {
-  constructor() {}
+  constructor(private appService: AppService) {}
 
   ngOnInit() {}
 
@@ -21,5 +22,6 @@ export class InspectionEquipImprovementComponent implements OnInit {
       data.PROBLEM_STATUS = 'Done';
       return data;
     });
+    d.afterDataInit(_ => this.appService.getAllTips());
   }
 }

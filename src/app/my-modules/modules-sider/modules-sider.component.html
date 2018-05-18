@@ -159,17 +159,20 @@
               </ng-template>
             </nz-badge>
           </li>
-          <li nz-menu-item data-route="/reservation/IT/workspace" *ngIf="canSeeFunction(416)">
-            <span>{{'workspace' | translate}}</span>
-            <nz-badge [nzCount]="ITReservationAdminTip | async">
-              <ng-template #content>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-              </ng-template>
-            </nz-badge>
-          </li>
-          <li nz-menu-item data-route="/reservation/IT/rate" *ngIf="canSeeFunction(416)">{{'rank' | translate}}</li>
-          <li nz-menu-item data-route="/reservation/IT/track" *ngIf="canSeeFunction(416)">{{'serviceTrack' | translate}}</li>
-          <li nz-menu-item data-route="/reservation/IT/board" *ngIf="canSeeFunction(416)">{{'serviceOvertime' | translate}}</li>
+          <ng-container *ngIf="canSeeFunction(416)">
+            <li nz-menu-item data-route="/reservation/IT/workspace">
+              <span>{{'workspace' | translate}}</span>
+              <nz-badge [nzCount]="ITReservationAdminTip | async">
+                <ng-template #content>
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                </ng-template>
+              </nz-badge>
+            </li>
+            <li nz-menu-item data-route="/reservation/IT/rate">{{'rank' | translate}}</li>
+            <li nz-menu-item data-route="/reservation/IT/track">{{'serviceTrack' | translate}}</li>
+            <li nz-menu-item data-route="/reservation/IT/board">{{'serviceOvertime' | translate}}</li>
+            <li nz-menu-item data-route="/reservation/IT/add">{{'serviceAdd' | translate}}</li>
+          </ng-container>
         </ul>
       </li>
       <!-- <li nz-submenu *ngIf="canSeeFunction(5)">

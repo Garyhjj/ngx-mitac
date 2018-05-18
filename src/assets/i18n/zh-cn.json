@@ -17,6 +17,13 @@
   "viewType": "切换视图类型",
   "headerFontSize": "表头字体大小",
   "dataFontSize": "表内字体大小",
+  "mutiUpdate": "批量插入数据",
+  "selectFile": "选择文件",
+  "dealing": "处理中",
+  "submit": "提交",
+  "preview": "预览",
+  "downLoadTemplate": "下载模板",
+  "template": "模板",
   "all": "全选",
   "query": "查询",
   "reset": "重置",
@@ -62,8 +69,16 @@
   "rank": "排行榜",
   "serviceTrack": "服务追踪",
   "serviceOvertime": "超期或快超期看板",
+  "serviceAdd": "服务补登",
   "insertSuccess": "插入成功",
   "updateSuccess": "更新成功",
+  "dataDriveModule": {
+    "noPrimaryKey": "未设置更新的主键,请联系MIS",
+    "mutiUpdateErrRes": "成功插入{succCount}条,失败{errorCount}条",
+    "mutiUpdateConfirm": "此插入数据操作需用户验证数据的合法性,你确定已审核完毕吗？",
+    "readExcelFail": "无法读取此文件",
+    "noDataDrive": "必须传入 DataDrive的实例"
+  },
   "examModule": {
     "maintenanceHeader": "维护考卷头",
     "maintenanceBody": "维护考卷内容",
@@ -137,7 +152,9 @@
     "cancelService": "取消预约",
     "score": "评价",
     "sumScore": "总评价",
-    "comment": "评语"
+    "comment": "评语",
+    "serviceDate": "服务日期",
+    "handler": "处理人"
   },
   "insoectionModule": {
     "nightDuty": "小夜班",

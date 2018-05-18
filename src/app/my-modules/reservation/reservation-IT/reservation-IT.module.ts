@@ -12,6 +12,7 @@ import { ITServerWorkspaceComponent } from './IT-server-workspace/IT-server-work
 import { ITServerTrackComponent } from './IT-server-track/IT-server-track.component';
 import { ITServerRateComponent } from './IT-server-rate/IT-server-rate.component';
 import { ITServerBoardComponent } from './IT-server-board/IT-server-board.component';
+import { ITServerAddComponent } from './IT-server-add/IT-server-add.component';
 
 @NgModule({
   imports: [
@@ -29,6 +30,7 @@ import { ITServerBoardComponent } from './IT-server-board/IT-server-board.compon
     ITServerTrackComponent,
     ITServerRateComponent,
     ITServerBoardComponent,
+    ITServerAddComponent,
   ],
   entryComponents: [ImpressionListComponent],
   providers: [ReservationITService],

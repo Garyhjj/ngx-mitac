@@ -67,4 +67,20 @@ export const reservationITConfig = {
   getReservationList:
     APPConfig.baseUrl +
     'Service/GetServices?docno={docno}&status={status}&contact={contact}&handler={handler}&type={type}&company_id={*COMPANY_ID}&date_fm={date_fm}&date_to={date_to}',
+  /**
+   * URL
+   * 获取服務時間段設置信息
+   * GET
+   * 2018-05-10
+   */
+  getServiceTime:
+    APPConfig.baseUrl + 'Service/GetServiceTimes?dept_id={dept_id}',
+  /**
+   * URL
+   * 获取服務時間段設置信息
+   * GET
+   * 2018-05-10
+   */
+  getPersonList:
+    APPConfig.baseUrl + 'Service/GetServicePersons?dept_id={dept_id}',
 };

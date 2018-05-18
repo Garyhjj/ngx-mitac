@@ -118,6 +118,9 @@ export class TableComponent
     return this._dataDrive.isDataDeletable();
   }
   sort(name: string, v: string, by: { name: string; params: any[] }) {
+    if (!name || !v || !by) {
+      return;
+    }
     const isAscend = v === 'ascend';
     this._dataDrive.tableData.data = this.tableData.data = this.tableData.data
       .sort((a: any, b: any) => {
@@ -219,11 +222,11 @@ export class TableComponent
       );
     };
     this.modalService.confirm({
-      title: '您確定要刪除這一條目嗎？',
-      onOk() {
+      nzTitle: '您確定要刪除這一條目嗎？',
+      nzOnOk() {
         deleteFn();
       },
-      onCancel() {},
+      nzOnCancel() {},
     });
     return false;
   }
@@ -245,19 +248,16 @@ export class TableComponent
     if (!this._dataDrive.runBeforeUpdateShow(this.getDataByIdx(idx))) {
       return;
     }
-    const subscription = this.modalService.open({
-      title: '更新',
-      content: DataUpdateComponent,
-      onOk() {},
-      onCancel() {},
-      footer: false,
-      componentParams: {
+    const subscription = this.modalService.create({
+      nzTitle: '更新',
+      nzContent: DataUpdateComponent,
+      nzOnOk() {},
+      nzOnCancel() {},
+      nzFooter: null,
+      nzComponentParams: {
         opts: this._dataDrive,
         changeIdx: idx,
       },
-    });
-    subscription.subscribe(result => {
-      // console.log(result);
     });
     return false;
   }
@@ -397,9 +397,11 @@ export class TableComponent
     idx = this.calIdx(idx);
     const data = this._dataDrive.getData()[idx];
     const out: any = {};
-    data.forEach(d => {
-      out[d.property] = d.value;
-    });
+    if (isArray(data)) {
+      data.forEach(d => {
+        out[d.property] = d.value;
+      });
+    }
     return out;
   }
 
@@ -426,19 +428,16 @@ export class TableComponent
           );
         }
       }
-      const subscription = this.modalService.open({
-        title: '鏈接二維碼',
-        content: QRComponent,
-        onOk() {},
-        onCancel() {},
-        footer: false,
-        componentParams: {
+      const subscription = this.modalService.create({
+        nzTitle: '鏈接二維碼',
+        nzContent: QRComponent,
+        nzOnOk() {},
+        nzOnCancel() {},
+        nzFooter: null,
+        nzComponentParams: {
           url: url,
           router: router,
         },
-      });
-      subscription.subscribe(result => {
-        // console.log(result);
       });
     }
   }
@@ -540,7 +539,7 @@ export class TableComponent
     let outStyle;
     if (this.bodyCellStyle) {
       outStyle = this.bodyCellStyle(
-        this.arrayToObjectForData(target),
+        this.arrayToObjectForData(dataIdx),
         property,
       );
     }

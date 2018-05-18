@@ -1,6 +1,2 @@
-<nz-timepicker 
-(ngModelChange)="change($event)" 
-[ngModel]="_date"
-[nzFormat]="myPickerFormat"
-[nzPlaceHolder]="myPlaceHolder"
-></nz-timepicker>
+<nz-time-picker (ngModelChange)="change($event)" [ngModel]="_date" [nzFormat]="myPickerFormat" [nzPlaceHolder]="myPlaceHolder"
+  [nzDisabledHours]="myDisabledHours" [nzDisabledMinutes]="myDisabledMinutes" nzHideDisabledOptions></nz-time-picker>

@@ -28,9 +28,20 @@
       <nz-dropdown class="ul-dropdown" [nzPlacement]="'bottomRight'">
         <a class="ant-dropdown-link" nz-dropdown>
           <i class="anticon anticon-menu-fold"></i>
+          <nz-badge [nzCount]="tips | async">
+            <ng-template #content>
+              &nbsp;&nbsp;
+            </ng-template>
+          </nz-badge>
         </a>
         <ul nz-menu>
-          <li nz-menu-item>{{'message' | translate}}</li>
+          <li nz-menu-item>{{'message' | translate}}
+            <nz-badge [nzCount]="tips | async">
+              <ng-template #content>
+                &nbsp;&nbsp;
+              </ng-template>
+            </nz-badge>
+          </li>
           <li nz-menu-item>
             <nz-popconfirm [nzTitle]="'logOutTip' | translate" (nzOnConfirm)="confirm()">
               <span nz-popconfirm>{{'logOut' | translate}}</span>

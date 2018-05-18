@@ -1,8 +1,8 @@
 <ng-container *ngTemplateOutlet="pageHeader"></ng-container>
 
 <app-data-drive [name]="'esd'" (dataDriveInit)="getDrive($event)">
-  <nz-collapseset class="my-data-searcher" *ngIf="dataDrive">
-    <nz-collapse [nzTitle]="'boardModule.query' | translate">
+  <nz-collapse class="my-data-searcher" *ngIf="dataDrive">
+    <nz-collapse-panel [nzHeader]="'boardModule.query' | translate">
       <form nz-form [formGroup]="validateForm" [nzLayout]="formLayout">
         <nz-row>
           <nz-col [nzSpan]="8">
@@ -38,8 +38,8 @@
           </nz-col>
         </nz-row>
       </form>
-    </nz-collapse>
-  </nz-collapseset>
+    </nz-collapse-panel>
+  </nz-collapse>
 
   <div class="my-full-screen-header">
     <ng-container *ngTemplateOutlet="pageHeader"></ng-container>

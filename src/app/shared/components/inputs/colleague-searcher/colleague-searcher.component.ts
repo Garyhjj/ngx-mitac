@@ -26,6 +26,8 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
   @Input() miDisabled;
 
   @Input() miPlaceHolder = '請輸入英文名/工號/中文名';
+  @Input() miSearchFilter;
+  isLoading = false;
 
   private propagateChange = (_: any) => {};
 
@@ -39,24 +41,27 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
   writeValue(value: string) {
     if (value) {
       value = value + '';
-      this.appService.getColleague(value).subscribe(
-        (data: any) => {
-          if (data.length === 1) {
-            const alter = data.map(
-              c => c.EMPNO + ',' + c.NICK_NAME + ',' + c.USER_NAME,
-            );
-            this.searchOptions = alter;
-            this.selectedOption = alter[0];
-            this.propagateChange(data[0].EMPNO);
-          } else {
+      this.appService
+        .getColleague(value)
+        .map(_ => (this.miSearchFilter ? this.miSearchFilter(_) : _))
+        .subscribe(
+          (data: any) => {
+            if (data.length === 1) {
+              const alter = data.map(
+                c => c.EMPNO + ',' + c.NICK_NAME + ',' + c.USER_NAME,
+              );
+              this.searchOptions = alter;
+              this.selectedOption = alter[0];
+              this.propagateChange(data[0].EMPNO);
+            } else {
+              this.propagateChange('');
+            }
+          },
+          err => {
+            this.util.errDeal(err);
             this.propagateChange('');
-          }
-        },
-        err => {
-          this.util.errDeal(err);
-          this.propagateChange('');
-        },
-      );
+          },
+        );
     }
   }
 
@@ -80,19 +85,24 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
       .asObservable()
       .debounceTime(300)
       .distinctUntilChanged()
-      .subscribe((term: string) => {
+      .do(_ => (this.isLoading = true))
+      .switchMap((term: string) => {
         const query = encodeURI(term);
-        this.appService.getColleague(term).subscribe(
-          (data: any) => {
-            this.searchOptions = data.map(
-              c => c.EMPNO + ',' + c.NICK_NAME + ',' + c.USER_NAME,
-            );
-          },
-          err => {
-            this.util.errDeal(err);
-          },
-        );
-      });
+        return this.appService.getColleague(term);
+      })
+      .map(_ => (this.miSearchFilter ? this.miSearchFilter(_) : _))
+      .subscribe(
+        (data: any) => {
+          this.isLoading = false;
+          this.searchOptions = data.map(
+            c => c.EMPNO + ',' + c.NICK_NAME + ',' + c.USER_NAME,
+          );
+        },
+        err => {
+          this.util.errDeal(err);
+          this.isLoading = false;
+        },
+      );
   }
 
   ngOnDestroy() {

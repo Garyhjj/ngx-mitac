@@ -1,3 +1,4 @@
+import { deepClone } from './../../../../utils/index';
 import { Observable } from 'rxjs/Observable';
 import { FormGroup } from '@angular/forms';
 import { AdditionalFn } from './additionalFn/index';
@@ -72,7 +73,7 @@ export class DataDrive implements DataDriveOptions {
     selfStore = SelfStore,
     tableDataModel = TableDataModel,
   ) {
-    Object.assign(this, opts);
+    Object.assign(this, deepClone(opts));
     this.user = user;
     this.dataViewSetFactory = dataViewSetFactory;
     this.inputSetFactory = inputSetFactory;

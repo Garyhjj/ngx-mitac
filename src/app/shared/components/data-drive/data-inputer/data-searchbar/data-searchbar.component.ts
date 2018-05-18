@@ -15,6 +15,7 @@ import { NgxValidatorExtendService } from '../../../../../core/services/ngx-vali
 import { DataDriveService } from '../../core/services/data-drive.service';
 import { UtilService } from '../../../../../core/services/util.service';
 import { isArray } from '../../../../utils/index';
+import { MutiUpdateComponent } from '../../muti-update/muti-update.component';
 
 @Component({
   selector: 'app-data-searchbar',
@@ -146,7 +147,7 @@ export class DataSearchbarComponent implements OnInit {
           value.type === 'number',
       );
       this.selectedOption = this.optionList[0];
-
+      this.selectedOption.placeHolder = this.selectedOption.placeHolder || ' ';
       if (this.validateForm.valid) {
         this.notShowSearchInput = false;
       } else {
@@ -353,18 +354,15 @@ export class DataSearchbarComponent implements OnInit {
     if (!this.dataDrive.updateSets) {
       return;
     }
-    const subscription = this.modalService.open({
-      title: '新增',
-      content: DataUpdateComponent,
-      onOk() {},
-      onCancel() {},
-      footer: false,
-      componentParams: {
+    const subscription = this.modalService.create({
+      nzTitle: '新增',
+      nzContent: DataUpdateComponent,
+      nzOnOk() {},
+      nzOnCancel() {},
+      nzFooter: null,
+      nzComponentParams: {
         opts: this.dataDrive,
       },
-    });
-    subscription.subscribe(result => {
-      // console.log(result);
     });
   }
 
@@ -455,6 +453,19 @@ export class DataSearchbarComponent implements OnInit {
   getSelectList(list) {
     delete this.selectList[list];
     this.selectList.push(list);
+  }
+
+  showMutiUpdate() {
+    const subscription = this.modalService.create({
+      nzTitle: '批量插入数据',
+      nzContent: MutiUpdateComponent,
+      nzOnOk() {},
+      nzOnCancel() {},
+      nzFooter: null,
+      nzComponentParams: {
+        dataDrive: this.dataDrive,
+      },
+    });
   }
 }
 

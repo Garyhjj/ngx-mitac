@@ -212,18 +212,15 @@ export class ITServerWorkspaceComponent implements OnInit {
   }
 
   showImpressionDetail(app: ReservationApplication) {
-    const subscription = this.modalService.open({
-      title: this.yinxiangText,
-      content: ImpressionListComponent,
-      onOk() {},
-      onCancel() {},
-      footer: false,
-      componentParams: {
+    const subscription = this.modalService.create({
+      nzTitle: this.yinxiangText,
+      nzContent: ImpressionListComponent,
+      nzOnOk() {},
+      nzOnCancel() {},
+      nzFooter: '',
+      nzComponentParams: {
         application: app,
       },
-    });
-    subscription.subscribe(result => {
-      // console.log(result);
     });
   }
 
@@ -240,10 +237,16 @@ export class ITServerWorkspaceComponent implements OnInit {
       handler: empno,
     });
     d.beforeInitTableData(ds =>
-      ds.filter(
-        (t: ReservationApplication) =>
-          t.CONTACT !== empno && t.DEPT_ID === this.reservationITService.deptId,
-      ),
+      ds
+        .filter(
+          (t: ReservationApplication) =>
+            t.CONTACT !== empno &&
+            t.DEPT_ID === this.reservationITService.deptId,
+        )
+        .map(l => {
+          l.TIME_ID = l.START_TIME + ' - ' + l.END_TIME;
+          return l;
+        }),
     );
     this.dataDriveService.updateViewData(d);
   }
@@ -272,19 +275,24 @@ export class ITServerWorkspaceComponent implements OnInit {
     });
     const empno = this.user.EMPNO;
     d.beforeInitTableData(ds =>
-      ds.filter((t: ReservationApplication) => {
-        if (
-          t.HANDLER !== empno &&
-          t.DEPT_ID === this.reservationITService.deptId
-        ) {
-          const date =
-            moment(t.SERVICE_DATE).format('YYYY-MM-DD') + ' ' + t.END_TIME;
-          if (new Date().getTime() - new Date(date).getTime() > 0) {
-            return true;
+      ds
+        .filter((t: ReservationApplication) => {
+          if (
+            t.HANDLER !== empno &&
+            t.DEPT_ID === this.reservationITService.deptId
+          ) {
+            const date =
+              moment(t.SERVICE_DATE).format('YYYY-MM-DD') + ' ' + t.END_TIME;
+            if (new Date().getTime() - new Date(date).getTime() > 0) {
+              return true;
+            }
           }
-        }
-        return false;
-      }),
+          return false;
+        })
+        .map(l => {
+          l.TIME_ID = l.START_TIME + ' - ' + l.END_TIME;
+          return l;
+        }),
     );
     d.afterDataInit(ds => (this.otherOutTimeCount = ds.length));
     this.dataDriveService.updateViewData(d);
@@ -351,11 +359,11 @@ export class ITServerWorkspaceComponent implements OnInit {
       this.updateService(send);
     };
     this.modalService.confirm({
-      title: this.confirmToAccept,
-      onOk() {
+      nzTitle: this.confirmToAccept,
+      nzOnOk() {
         doReceive();
       },
-      onCancel() {},
+      nzOnCancel() {},
     });
   }
 
@@ -405,11 +413,11 @@ export class ITServerWorkspaceComponent implements OnInit {
       this.updateService(send);
     };
     this.modalService.confirm({
-      title: this.confirmToReset,
-      onOk() {
+      nzTitle: this.confirmToReset,
+      nzOnOk() {
         doReset();
       },
-      onCancel() {},
+      nzOnCancel() {},
     });
   }
 }

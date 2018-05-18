@@ -24,7 +24,7 @@
       <div class="comment-right">
         <div class="comment-name">{{i.NAME}}</div>
         <div class="comment-rate">
-          <nz-rate [nzDefaultValue]="i.SCORE" nzDisabled=true *ngIf="i.SCORE"></nz-rate>
+          <nz-rate [ngModel]="i.SCORE" nzDisabled *ngIf="i.SCORE"></nz-rate>
           <span class="comment-date">{{i.COMMENT_TIME}}</span>
         </div>
         <div class="comment-desc">{{i.USER_COMMENT}}</div>

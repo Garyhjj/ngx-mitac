@@ -194,8 +194,8 @@ export class ExamPaperComponent implements OnInit, OnDestroy {
     } else {
       this.finish();
       this.confirmServ.info({
-        title: '考試時間結束',
-        content: '已自動提交試卷',
+        nzTitle: '考試時間結束',
+        nzContent: '已自動提交試卷',
       });
     }
   }
@@ -243,13 +243,13 @@ export class ExamPaperComponent implements OnInit, OnDestroy {
       setTimeout(() => {
         if (this.lastMark < this._header.passScore) {
           this.confirmServ.error({
-            title: `最後得分:  ${this.lastMark}`,
-            content: '考試不及格',
+            nzTitle: `最後得分:  ${this.lastMark}`,
+            nzContent: '考試不及格',
           });
         } else {
           this.confirmServ.success({
-            title: `最後得分:  ${this.lastMark}`,
-            content: '考試通過',
+            nzTitle: `最後得分:  ${this.lastMark}`,
+            nzContent: '考試通過',
           });
         }
       }, 100);

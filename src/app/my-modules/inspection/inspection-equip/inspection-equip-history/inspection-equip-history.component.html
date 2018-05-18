@@ -6,7 +6,7 @@
     <app-data-drive [name]="'inspectionEquipHistory'" (dataDriveInit)="getDataDrive1($event)">
       <ng-template #actionRef let-data="data">
         <span>
-          <a *ngIf="data?.FAIL > 0" (click)="toDetail(data)">{{'insoectionModule.problemPoint' | translate}}</a>
+          <a *ngIf="data?.FAIL > 0" (click)="toDetail(data)">{{'insoectionModule.problem' | translate}}</a>
         </span>
       </ng-template>
     </app-data-drive>

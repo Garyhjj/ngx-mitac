@@ -14,19 +14,7 @@ export class InspectionBossLinesComponent implements OnInit {
   ngOnInit() {}
 
   getDataDrive(d: DataDrive) {
-    const searchSets = d.searchSets;
-    if (isArray(searchSets)) {
-      const status = searchSets.find(
-        s => s.property === 'STATUS' || s.apiProperty === 'status',
-      );
-      status.InputOpts = status.InputOpts || {};
-      status.InputOpts.default = 'New';
-    }
-    d.beforeSearch(s => {
-      s = s || {};
-      s.status = 'New';
-      return s;
-    });
+    d.setSearchInputDefault('status', 'New');
     d.afterDataInit(ds => this.appService.getAllTips());
   }
 }

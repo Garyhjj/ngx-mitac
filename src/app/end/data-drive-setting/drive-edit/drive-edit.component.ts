@@ -124,15 +124,15 @@ export class DriveEditComponent implements OnInit {
     { property: 'img', value: '圖片' },
     { property: 'self', value: '页面内自定义' },
   ];
-  // sortWayOptions = (d => {
-  //   const options = [{ property: '', value: '不設置' }];
-  //   for (const prop in d) {
-  //     if (d.hasOwnProperty(prop)) {
-  //       options.push({ property: prop, value: prop });
-  //     }
-  //   }
-  //   return options;
-  // })(sortUtils);
+  sortWayOptions = ((d: any) => {
+    const options = [{ property: '', value: '不設置' }];
+    for (const prop in d) {
+      if (d.hasOwnProperty(prop)) {
+        options.push({ property: prop, value: prop });
+      }
+    }
+    return options;
+  })(sortUtils);
   inputTypeOptions = [
     { property: 'primary', value: '定義為主鍵(不會顯示,但提交時會帶上)' },
     { property: 'text', value: '普通Input' },
@@ -162,6 +162,7 @@ export class DriveEditComponent implements OnInit {
     { property: 'addItem', value: '新增數據' },
     { property: 'filterColumn', value: '挑選列' },
     { property: 'fullScreen', value: '視圖全屏顯示' },
+    { property: 'mutiUpdate', value: '批量插入数据(读取Excel)' },
   ];
 
   viewTypeOptions = [
@@ -185,7 +186,7 @@ export class DriveEditComponent implements OnInit {
         const loading = this.util.showLoading();
         const final = ld => this.util.dismissLoading(ld);
         this.dataDriveSettingService.getSetting(id).subscribe(
-          d => {
+          (d: any) => {
             final(loading);
             if (d) {
               const drive: any = new DataDrive(d);

@@ -35,18 +35,15 @@ export class ITServerTrackComponent implements OnInit {
   }
 
   showImpressionDetail(app: ReservationApplication) {
-    const subscription = this.modalService.open({
-      title: this.translateText,
-      content: ImpressionListComponent,
-      onOk() {},
-      onCancel() {},
-      footer: false,
-      componentParams: {
+    const subscription = this.modalService.create({
+      nzTitle: this.translateText,
+      nzContent: ImpressionListComponent,
+      nzOnOk() {},
+      nzOnCancel() {},
+      nzFooter: '',
+      nzComponentParams: {
         application: app,
       },
-    });
-    subscription.subscribe(result => {
-      // console.log(result);
     });
   }
 }

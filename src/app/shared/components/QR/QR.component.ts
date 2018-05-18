@@ -47,14 +47,14 @@ export class QRComponent implements OnInit, OnChanges {
     copyToClipboard(wholeUrl)
       .then(u => {
         this.confirmServ.success({
-          title: `已把地址複製到剪切板中`,
-          zIndex: 9999,
+          nzTitle: `已把地址複製到剪切板中`,
+          nzZIndex: 9999,
         });
       })
       .catch(err =>
         this.confirmServ.error({
-          title: `複製出錯，請重試，或聯繫MIS`,
-          zIndex: 9999,
+          nzTitle: `複製出錯，請重試，或聯繫MIS`,
+          nzZIndex: 9999,
         }),
       );
   }

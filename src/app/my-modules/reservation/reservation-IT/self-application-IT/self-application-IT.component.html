@@ -1,6 +1,6 @@
 <nz-tabset [(nzSelectedIndex)]="tabIdx" (nzSelectedIndexChange)="tabChange($event)">
-  <nz-tab>
-    <ng-template #nzTabHeading>
+  <nz-tab [nzTitle]="nzTabHeading1">
+    <ng-template #nzTabHeading1>
       {{'serviceModule.waitingToAccept' | translate}}
       <nz-badge [nzCount]="newCount" *ngIf="newCount">
         <ng-template #content>
@@ -11,14 +11,14 @@
     <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive1($event)">
       <ng-template #actionRef let-data="data">
         <span>
-          <span nz-table-divider></span>
+          <nz-divider nzType="vertical"></nz-divider>
           <a (click)="cancelResvation(data)">{{'serviceModule.cancelService' | translate}}</a>
         </span>
       </ng-template>
     </app-data-drive>
   </nz-tab>
-  <nz-tab>
-    <ng-template #nzTabHeading>
+  <nz-tab [nzTitle]="nzTabHeading2">
+    <ng-template #nzTabHeading2>
       {{'serviceModule.handling' | translate}}
       <nz-badge [nzCount]="processingCount" *ngIf="processingCount">
         <ng-template #content>
@@ -29,14 +29,14 @@
     <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive2($event)">
       <ng-template #actionRef let-data="data">
         <span>
-          <span nz-table-divider></span>
+          <nz-divider nzType="vertical"></nz-divider>
           <a (click)="cancelResvation(data)">{{'serviceModule.cancelService' | translate}}</a>
         </span>
       </ng-template>
     </app-data-drive>
   </nz-tab>
-  <nz-tab>
-    <ng-template #nzTabHeading>
+  <nz-tab [nzTitle]="nzTabHeading3">
+    <ng-template #nzTabHeading3>
       {{'serviceModule.waitingScore' | translate}}
       <nz-badge [nzCount]="commentCount" *ngIf="commentCount">
         <ng-template #content>
@@ -53,8 +53,8 @@
     </app-data-drive>
   </nz-tab>
 
-  <nz-tab>
-    <ng-template #nzTabHeading>
+  <nz-tab [nzTitle]="nzTabHeading4">
+    <ng-template #nzTabHeading4>
       {{'serviceModule.ClosedService' | translate}}
     </ng-template>
     <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive4($event)">
@@ -117,7 +117,7 @@
           <label>{{'serviceModule.comment' | translate}}</label>
         </div>
         <div nz-form-control nz-col [nzSpan]="16">
-          <nz-input nzType="textarea" [nzAutosize]="'1'" formControlName="USER_COMMENT"></nz-input>
+          <textarea nz-input [nzAutosize]="'1'" formControlName="USER_COMMENT"></textarea>
         </div>
       </div>
       <div nz-form-item nz-row [style.display]="'block'">

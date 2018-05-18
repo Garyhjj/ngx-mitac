@@ -3,21 +3,21 @@
     <!-- 搜索框栏 -->
     <div class="fliter-container">
       <div class="left-container" *ngIf="!notShowSearchInput && dataDrive.tableData">
-        <nz-input [(ngModel)]="filterValue" style="width:350px" [nzPlaceHolder]="selectedOption?.placeHolder | sgChineseConv" *ngIf="dataDrive.tableData.searchable && optionList && optionList.length >0"
-          [disabled]="!validateForm.valid">
-          <ng-template #addOnBefore>
+        <nz-input-group style="width:350px"  *ngIf="dataDrive.tableData.searchable && optionList && optionList.length >0" [nzAddOnBefore]="addOnBeforeTemplate" [nzAddOnAfter]="addOnAfterTemplate">
+          <input type="text" nz-input [(ngModel)]="filterValue" [placeholder]="selectedOption?.placeHolder | sgChineseConv" [disabled]="!validateForm.valid">
+        </nz-input-group>
+        <ng-template #addOnBeforeTemplate>
             <nz-select style="width: 80px;" [(ngModel)]="selectedOption">
               <nz-option *ngFor="let option of optionList" [nzLabel]="option.label | sgChineseConv" [nzValue]="option">
               </nz-option>
             </nz-select>
           </ng-template>
-          <ng-template #addOnAfter>
+          <ng-template #addOnAfterTemplate>
             <!-- <button [disabled]="!validateForm.valid" (click)="clickSimpleSearch('simple')">
                             <i class="anticon anticon-search"></i>
                         </button> -->
             <i class="anticon anticon-search" (click)="clickSimpleSearch('simple')"></i>
           </ng-template>
-        </nz-input>
         <div class="new-button" *ngIf="dataDrive.additionalFn?.addItem">
           <button nz-button [nzType]="'primary'" (click)="addItem()">
             {{'newData' | translate}}
@@ -27,6 +27,14 @@
       <div class="right-controler">
         <a class="high-level-search" (click)="toggle()" *ngIf="!show && dataDrive.tableData  && dataDrive.tableData.searchable && dataDrive?.searchSets && dataDrive?.searchSets.length > 0">{{'queryDetailPra' | translate}}</a>
         <a class="high-level-search" (click)="toggle()" *ngIf="show">{{'queryPra' | translate}}</a>
+        <nz-tooltip [nzTitle]="'mutiUpdate' | translate" [nzPlacement]="'top'">
+          <a nz-tooltip>
+            <button nz-button [nzType]="'default'" (click)="showMutiUpdate()" *ngIf="dataDrive.tableData?.addable && dataDrive.additionalFn?.mutiUpdate">
+              <i class="anticon anticon-save"></i>
+            </button>
+          </a>
+        </nz-tooltip>
+
         <nz-tooltip [nzTitle]="'downloadExcelFile' | translate" [nzPlacement]="'top'">
           <a nz-tooltip>
             <button nz-button [nzType]="'default'" (click)="toExcel()" *ngIf="dataDrive.additionalFn?.toExcel">
@@ -85,17 +93,15 @@
       <form nz-form [formGroup]="validateForm" class="ant-advanced-search-form">
         <div nz-row [nzGutter]="40">
           <div nz-col [nzSpan]="8" *ngFor="let item of columnNameStrings;let i =index">
-            <div nz-form-item nz-row>
-              <div nz-form-label nz-col [nzSpan]="5">
-                <label [attr.for]="inputTypeList[i].label">{{inputTypeList[i].label}}</label>
-              </div>
-              <div nz-form-control nz-col [nzSpan]="19">
+            <nz-form-item>
+              <nz-form-label [nzSpan]="5" [attr.for]="inputTypeList[i].label">{{inputTypeList[i].label}}
+              </nz-form-label>
+              <nz-form-control [nzSpan]="19">
                 <!-- <nz-input [nzSize]="'large'" [nzPlaceHolder]="inputTypeList[i].placeHolder" [formControlName]="item" [nzId]="i"></nz-input> -->
-                <nz-input [formControlName]="item" [nzPlaceHolder]="inputTypeList[i].placeHolder" [nzSize]="'large'" *ngIf="inputTypeList[i]?.type === 'text'">
-                </nz-input>
+                <input nz-input [formControlName]="item" [placeholder]="inputTypeList[i].placeHolder" *ngIf="inputTypeList[i]?.type === 'text'">
 
-                <nz-input [formControlName]="item" [nzPlaceHolder]="inputTypeList[i].placeHolder" *ngIf="inputTypeList[i]?.type === 'textarea'"
-                  nzType="textarea" [nzAutosize]="'1'"></nz-input>
+                <textarea nz-input [formControlName]="item" [placeholder]="inputTypeList[i].placeHolder" *ngIf="inputTypeList[i]?.type === 'textarea'"
+                  [nzAutosize]="1"></textarea>
 
 
 
@@ -115,7 +121,7 @@
                   [myFormat]="inputTypeList[i].more?.showFormat" [myPlaceHolder]="inputTypeList[i].placeHolder">
                 </app-my-time-picker>
 
-                <nz-input-number [formControlName]="item" [nzSize]="'large'" [nzStep]="inputTypeList[i].more?.step" [nzMax]="inputTypeList[i].more?.max"
+                <nz-input-number [formControlName]="item" [nzStep]="inputTypeList[i].more?.step" [nzMax]="inputTypeList[i].more?.max"
                   [nzMin]="inputTypeList[i].more?.min" [style.width]="'50%'" *ngIf="inputTypeList[i]?.type === 'number'"></nz-input-number>
 
                 <app-my-cascader [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'cascader'" [myPlaceHolder]="inputTypeList[i].placeHolder"
@@ -130,8 +136,8 @@
                 <app-photo-upload [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'photoUpload'" [pickerFormat]="inputTypeList[i]?.more?.pickerFormat"
                   [maxCount]="inputTypeList[i]?.more?.maxCount" [removable]="inputTypeList[i]?.more?.removable" [addable]="inputTypeList[i]?.more?.addable"
                   [scanable]="inputTypeList[i]?.more?.scanable"></app-photo-upload>
-              </div>
-            </div>
+              </nz-form-control>
+            </nz-form-item>
           </div>
         </div>
         <div nz-row>

@@ -1,3 +1,4 @@
+import { CacheService } from './../../../../../core/services/cache.service';
 import { isArray, parse } from './../../../../utils/index';
 import { Observable } from 'rxjs/Observable';
 import { AuthService } from './../../../../../core/services/auth.service';
@@ -18,23 +19,34 @@ export class DataDriveService {
     private http: HttpClient,
     private utilSerive: UtilService,
     private auth: AuthService,
+    private cache: CacheService,
   ) {
     this.user = this.auth.user;
   }
 
   async initDataDrive(name: string) {
-    let pureOption = this.getDriveOption(name);
-    // tslint:disable-next-line:no-unused-expression
-    typeof pureOption === 'object' &&
-      (pureOption = JSON.parse(JSON.stringify(pureOption)));
+    const cacheName = 'DateDrive';
+    let cache, pureOption;
     let userName = this.user ? this.user.USER_NAME : '';
-    if (typeof pureOption === 'number') {
-      pureOption = await this.getSettingByNet(pureOption)
-        .toPromise()
-        .catch(err => {
-          this.utilSerive.errDeal(err);
-        });
-      pureOption = pureOption || '';
+    cache = this.cache.get(cacheName, name);
+    if (typeof cache === 'object' && cache) {
+      pureOption = cache;
+    } else {
+      pureOption = this.getDriveOption(name) || name;
+      // tslint:disable-next-line:no-unused-expression
+      typeof pureOption === 'object' &&
+        (pureOption = JSON.parse(JSON.stringify(pureOption)));
+      if (typeof pureOption === 'number') {
+        pureOption = await this.getSettingByNet(pureOption)
+          .toPromise()
+          .catch(err => {
+            this.utilSerive.errDeal(err);
+          });
+        pureOption = pureOption || '';
+        if (pureOption) {
+          this.cache.update(cacheName, name, pureOption, 60 * 1000);
+        }
+      }
     }
     if (typeof pureOption === 'object') {
       return new DataDrive(pureOption, userName);
@@ -44,37 +56,46 @@ export class DataDriveService {
   }
 
   getSettingByNet(id) {
-    return this.http
-      .get(replaceQuery(DataDriveSettingConfig.getSetting, { id }))
-      .map((d: any[]) => {
-        if (isArray(d) && d.length === 1) {
-          const opts: any = {};
-          const target = d[0];
-          opts.tableData = parse(target.TABLE_DATA);
-          opts.updateSets = parse(target.UPDATE_SETS);
-          opts.searchSets = parse(target.SEARCH_SETS);
-          if (target.MAIN_SET) {
-            Object.assign(opts, parse(target.MAIN_SET));
+    const cacheName = 'dataDriveSetting';
+    let cache = this.cache.get(cacheName, id, false);
+    if (!cache) {
+      cache = this.http
+        .get(replaceQuery(DataDriveSettingConfig.getSetting, { id }))
+        .map((d: any[]) => {
+          if (isArray(d) && d.length === 1) {
+            const opts: any = {};
+            const target = d[0];
+            opts.tableData = parse(target.TABLE_DATA);
+            opts.updateSets = parse(target.UPDATE_SETS);
+            opts.searchSets = parse(target.SEARCH_SETS);
+            if (target.MAIN_SET) {
+              Object.assign(opts, parse(target.MAIN_SET));
+            }
+            opts.id = target.ID;
+            opts.description = target.DESCRIPTION;
+            return opts;
+          } else {
+            return null;
           }
-          opts.id = target.ID;
-          opts.description = target.DESCRIPTION;
-          return opts;
-        } else {
-          return null;
-        }
-      });
+        })
+        .shareReplay();
+      this.cache.update(cacheName, id, cache, 2 * 1000);
+    }
+    return cache;
   }
 
-  getInitData(dataDrive: DataDrive) {
+  getInitData(dataDrive: DataDrive, isFirstInit = false) {
     const searchSets = dataDrive.searchSets;
     const def = {};
-    if (isArray(searchSets)) {
-      searchSets.forEach(s => {
-        const opts = s.InputOpts;
-        if (opts && opts.default !== void 0) {
-          def[s.apiProperty ? s.apiProperty : s.property] = opts.default;
-        }
-      });
+    if (isFirstInit) {
+      if (isArray(searchSets)) {
+        searchSets.forEach(s => {
+          const opts = s.InputOpts;
+          if (opts && opts.default !== void 0 && opts.default !== '') {
+            def[s.apiProperty ? s.apiProperty : s.property] = opts.default;
+          }
+        });
+      }
     }
     return this.searchData(dataDrive, def);
   }
@@ -230,7 +251,9 @@ export class DataDriveService {
   addCompanyID(send: any, otherName: string) {
     if (typeof send === 'object' && this.user) {
       const name = typeof otherName === 'string' ? otherName : 'company_id';
-      const out = Object.assign({}, send, { [name]: this.user.COMPANY_ID });
+      const out = isArray(send)
+        ? send.map(s => Object.assign({}, s, { [name]: this.user.COMPANY_ID }))
+        : Object.assign({}, send, { [name]: this.user.COMPANY_ID });
       return out;
     } else {
       return send;

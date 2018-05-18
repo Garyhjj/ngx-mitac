@@ -54,11 +54,13 @@ export class ITServerBoardComponent implements OnInit {
     d.changeSearchWay(() =>
       this.reservationITService.getUndoneReservationList(),
     );
-    d.afterDataInit(allData =>
-      this.util.playAudio(`有${allData.length}条超期或快超期的服务`, {
-        single: true,
-      }),
-    );
+    d.afterDataInit(allData => {
+      if (allData && allData.length > 0) {
+        this.util.playAudio(`有${allData.length}条超期或快超期的服务`, {
+          single: true,
+        });
+      }
+    });
     this.dataDriveService.updateViewData(d);
   }
 }

@@ -7,6 +7,7 @@ import { DataDriveService } from './core/services/data-drive.service';
 import { MenuComponent } from './menu/menu.component';
 import { DataInputerModule } from './data-inputer/data-inputer.module';
 import { TranslateModule } from '@ngx-translate/core';
+import { MutiUpdateComponent } from './muti-update/muti-update.component';
 
 @NgModule({
   imports: [
@@ -16,7 +17,8 @@ import { TranslateModule } from '@ngx-translate/core';
     DataInputerModule,
     TranslateModule,
   ],
-  declarations: [DataDriveComponent, MenuComponent],
+  declarations: [DataDriveComponent, MenuComponent, MutiUpdateComponent],
+  entryComponents: [DataDriveComponent, MutiUpdateComponent],
   exports: [DataDriveComponent, DataViewerModule],
   providers: [DataDriveService],
 })

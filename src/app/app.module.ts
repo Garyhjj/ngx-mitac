@@ -1,3 +1,4 @@
+import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { environment } from './../environments/environment';
 import { SharedModule } from './shared/shared.module';
 import { AppRoutingModule } from './route/app-routing.module';
@@ -40,6 +41,7 @@ export function createTranslateLoader(http: HttpClient) {
         deps: [HttpClient],
       },
     }),
+    NgZorroAntdModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],

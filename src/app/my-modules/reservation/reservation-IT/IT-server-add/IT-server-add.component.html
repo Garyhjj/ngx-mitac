@@ -1,0 +1,76 @@
+<nz-card style="width:50%; min-width: 700px;" [nzTitle]="'serviceAdd' | translate">
+  <form nz-form [nzLayout]="'horizontal'" [formGroup]="myForm" *ngIf="myForm" [style.marginTop.px]="20">
+    <nz-form-item>
+      <nz-form-label [nzSpan]="3">*{{'serviceModule.serviceDate' | translate}}</nz-form-label>
+      <nz-form-control [nzSpan]="20">
+        <app-my-date-picker [myPickerFormat]="'YYYY-MM-DD'" [myFormat]="'YYYY-MM-DD'" [myShowTime]="false" formControlName="SERVICE_DATE"></app-my-date-picker>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="3">*{{'insoectionModule.startTime' | translate}}</nz-form-label>
+      <nz-form-control [nzSpan]="20">
+        <app-my-time-picker [myPickerFormat]="'HH:mm'" [myFormat]="'HH:mm'" formControlName="fromTime" [myDisabledHours]="disabledHours"
+          [myDisabledMinutes]="disabledMinutes"></app-my-time-picker>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="3">*{{'insoectionModule.endTime' | translate}}</nz-form-label>
+      <nz-form-control [nzSpan]="20">
+        <app-my-time-picker [myPickerFormat]="'HH:mm'" [myFormat]="'HH:mm'" formControlName="endTime" [myDisabledHours]="disabledHours"
+          [myDisabledMinutes]="disabledMinutes"></app-my-time-picker>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="3">*{{'serviceModule.problemDesc' | translate}}</nz-form-label>
+      <nz-form-control [nzSpan]="20">
+        <input nz-input nzType="textarea" [nzAutosize]="'1'" formControlName="SERVICE_DESC" [style.width]="'50%'">
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="3">{{'serviceModule.pic' | translate}}</nz-form-label>
+      <nz-form-control [nzSpan]="20">
+        <app-photo-upload formControlName="IMAGES"></app-photo-upload>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="3">*{{'serviceModule.contact' | translate}}</nz-form-label>
+      <nz-form-control [nzSpan]="20">
+        <app-colleague-searcher formControlName="CONTACT"></app-colleague-searcher>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="3">*{{'serviceModule.tel' | translate}}</nz-form-label>
+      <nz-form-control [nzSpan]="20">
+        <input nz-input formControlName="MOBILE" [style.width]="'50%'">
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="3">*{{'serviceModule.handler' | translate}}</nz-form-label>
+      <nz-form-control [nzSpan]="20">
+        <app-colleague-searcher formControlName="HANDLER" [miSearchFilter]="searchFilter"></app-colleague-searcher>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="3">*{{'serviceModule.problemType' | translate}}</nz-form-label>
+      <nz-form-control [nzSpan]="20">
+        <app-mx-select [lazyAPI]="'IPQA/GetMRILookup?lookup_type=IT_SERVICE_TYPE'" [lazyParams]="['LOOKUP_CODE', 'LOOKUP_CODE']"
+          formControlName="TYPE"></app-mx-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="3">*{{'serviceModule.handleTime' | translate}}(h)</nz-form-label>
+      <nz-form-control [nzSpan]="20">
+        <nz-input-number [style.width]="'50%'" nzAllowClear="true" formControlName="HANDLE_TIME"></nz-input-number>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="3">{{'serviceModule.handleDesc' | translate}}</nz-form-label>
+      <nz-form-control [nzSpan]="20">
+        <textarea nz-input nzType="textarea" [nzAutosize]="'1'" formControlName="REMARK" [style.width]="'50%'"></textarea>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item style="display:block;text-align:center">
+      <button nz-button type="button" [nzType]="'primary'" style="width: 45%" (click)="submitForm()" [disabled]="myForm.invalid">{{'serviceModule.confirm' | translate}}</button>
+    </nz-form-item>
+  </form>
+</nz-card>

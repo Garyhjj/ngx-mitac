@@ -25,6 +25,9 @@ export class InspectionEquipHistoryComponent implements OnInit {
         return [];
       }
     });
+    d.afterDataInit(_ => {
+      setTimeout(__ => this.issueDataDrive.selfUpdateTableData([]), 10);
+    });
   }
 
   toDetail(data) {

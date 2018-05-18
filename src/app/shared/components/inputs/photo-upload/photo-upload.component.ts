@@ -135,11 +135,11 @@ export class PhotoUploadComponent implements OnInit {
   remove = file => {
     const that = this;
     this.modalService.confirm({
-      title: '您是否要舍弃此图片？',
-      onOk() {
+      nzTitle: '您是否要舍弃此图片？',
+      nzOnOk() {
         that.removeSubject.next(file);
       },
-      onCancel() {},
+      nzOnCancel() {},
     });
     return false;
   };

@@ -67,7 +67,7 @@ export class DataDriveComponent implements OnInit, OnDestroy {
       this.dataDrive.isGetingData = true;
       const final = () =>
         setTimeout(() => (this.dataDrive.isGetingData = false), 200);
-      this.dataDriveService.getInitData(this.dataDrive).subscribe(
+      this.dataDriveService.getInitData(this.dataDrive, true).subscribe(
         (ds: any) => {
           this.dataDriveService.initTableData(this.dataDrive, ds);
           final();

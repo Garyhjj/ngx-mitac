@@ -25,7 +25,7 @@ export class BossScheduleResolver implements Resolve<any> {
       } else {
         // id not found
         this.confirmServ.info({
-          title: this.translateTexts,
+          nzTitle: this.translateTexts,
         });
         this.router.navigate(['/']);
         return null;

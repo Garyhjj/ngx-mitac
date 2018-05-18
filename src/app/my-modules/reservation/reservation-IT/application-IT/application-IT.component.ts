@@ -12,7 +12,6 @@ import { NzMessageService } from 'ng-zorro-antd';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import * as moment from 'moment';
-import { DayInterface } from 'ng-zorro-antd/src/calendar/nz-calendar.component';
 import { isArray } from '../../../../shared/utils';
 
 @Component({
@@ -218,16 +217,16 @@ export class ApplicationITComponent implements OnInit {
     }
   }
 
-  getDetailByDate(date: DayInterface) {
+  getDetailByDate(date: any) {
     const target = this.dateMes.find(
       d =>
         moment(new Date(d.CDATE)).format(this.dateFormat) ===
-        moment(date.date).format(this.dateFormat),
+        moment(date).format(this.dateFormat),
     );
     return target ? target.REMAIN_NUMBER : 0;
   }
 
-  selectDate(date: DayInterface) {
+  selectDate(date: any) {
     if (this.getDetailByDate(date) > 0) {
       this.selectedDate = moment(date.date).format('YYYY-MM-DD');
       this.next();

@@ -158,12 +158,12 @@ export class InspectionBossScheduleComponent implements OnInit {
             );
         };
         this.modalService.confirm({
-          title: this.translateTexts['insoectionModule.sureDelete'],
-          onOk() {
+          nzTitle: this.translateTexts['insoectionModule.sureDelete'],
+          nzOnOk() {
             deleteFn();
           },
-          onCancel() {},
-          zIndex: 99999,
+          nzOnCancel() {},
+          nzZIndex: 99999,
         });
       } else {
         empnos.removeAt(i);

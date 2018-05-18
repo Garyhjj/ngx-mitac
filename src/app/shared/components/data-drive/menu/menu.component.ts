@@ -70,18 +70,15 @@ export class MenuComponent implements OnInit, OnDestroy {
     if (!this.dataDrive.updateSets) {
       return;
     }
-    const subscription = this.modalService.open({
-      title: '新增',
-      content: DataUpdateComponent,
-      onOk() {},
-      onCancel() {},
-      footer: false,
-      componentParams: {
+    const subscription = this.modalService.create({
+      nzTitle: '新增',
+      nzContent: DataUpdateComponent,
+      nzOnOk() {},
+      nzOnCancel() {},
+      nzFooter: '',
+      nzComponentParams: {
         opts: this.dataDrive,
       },
-    });
-    subscription.subscribe(result => {
-      // console.log(result);
     });
   }
 

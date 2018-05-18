@@ -196,27 +196,24 @@ export class SelfApplicationITComponent implements OnInit {
       this.updateService(send);
     };
     this.modalService.confirm({
-      title: '您確定要取消吗？',
-      onOk() {
+      nzTitle: '您確定要取消吗？',
+      nzOnOk() {
         doCancel();
       },
-      onCancel() {},
+      nzOnCancel() {},
     });
   }
 
   showImpressionDetail(app: ReservationApplication) {
-    const subscription = this.modalService.open({
-      title: '印象',
-      content: ImpressionListComponent,
-      onOk() {},
-      onCancel() {},
-      footer: false,
-      componentParams: {
+    const subscription = this.modalService.create({
+      nzTitle: '印象',
+      nzContent: ImpressionListComponent,
+      nzOnOk() {},
+      nzOnCancel() {},
+      nzFooter: null,
+      nzComponentParams: {
         application: app,
       },
-    });
-    subscription.subscribe(result => {
-      // console.log(result);
     });
   }
 

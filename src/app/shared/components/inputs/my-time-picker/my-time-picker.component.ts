@@ -18,6 +18,8 @@ export class MyTimePickerComponent implements OnInit {
   @Input() myPickerFormat = 'HH:mm:ss';
   @Input() myFormat = 'HH:mm:ss';
   @Input() myPlaceHolder = '請選擇時間';
+  @Input() myDisabledHours;
+  @Input() myDisabledMinutes;
   imgs: string[];
   _date = new Date();
   timeString = '';

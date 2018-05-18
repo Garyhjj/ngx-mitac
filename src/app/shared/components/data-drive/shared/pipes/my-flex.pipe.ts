@@ -59,7 +59,9 @@ export class MyFlexPipe implements PipeTransform {
   lazyLoad(target: string, api: string, lazyParams?: string[]) {
     if (api) {
       const bind = obList => {
-        const ob = obList.find(c => c.property === target);
+        const ob = obList.find(
+          c => c.property === target || +c.property === +target,
+        );
         if (!ob) {
           return target;
         }
