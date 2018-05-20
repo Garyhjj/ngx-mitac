@@ -5,7 +5,7 @@
 <nz-table *ngIf="_dataDrive && setDetail" #nzTable [nzScroll]="setDetail.fixedHeader?.enable?{ y: setDetail.fixedHeader.scrollHeight>0?setDetail.fixedHeader.scrollHeight: 300 }:null"
   [nzData]="tableData.data?tableData.data:[]" [nzPageSize]="setDetail.pageSet.count" [nzBordered]="setDetail.border_y.enable"
   [nzLoading]="_loading" [nzShowPagination]="setDetail.pageSet.enable" [nzFooter]="setDetail.footer.enable? '': null" [nzTitle]="null"
-  [nzSize]="setDetail.size" (nzDataChange)="dataChange()" [(nzPageIndex)]="pageIndex" [nzShowTotal]="1">
+  [nzSize]="setDetail.size" [(nzPageIndex)]="pageIndex" [nzShowTotal]="1">
   <!-- <span nz-table-title>{{tableSet.title}}</span> -->
     <thead nz-thead (nzSortChange)="sort($event)">
       <tr>

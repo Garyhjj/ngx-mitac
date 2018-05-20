@@ -91,12 +91,12 @@
     <!-- 高级搜索框 -->
     <div class="high-level-search-contianer" [style.display]="show ?'block':'none'">
       <form nz-form [formGroup]="validateForm" class="ant-advanced-search-form">
-        <div nz-row [nzGutter]="40">
+        <div nz-row [nzGutter]="10">
           <div nz-col [nzSpan]="8" *ngFor="let item of columnNameStrings;let i =index">
             <nz-form-item>
-              <nz-form-label [nzSpan]="5" [attr.for]="inputTypeList[i].label">{{inputTypeList[i].label}}
+              <nz-form-label [nzSpan]="7" [attr.for]="inputTypeList[i].label">{{inputTypeList[i].label}}
               </nz-form-label>
-              <nz-form-control [nzSpan]="19">
+              <nz-form-control [nzSpan]="17">
                 <!-- <nz-input [nzSize]="'large'" [nzPlaceHolder]="inputTypeList[i].placeHolder" [formControlName]="item" [nzId]="i"></nz-input> -->
                 <input nz-input [formControlName]="item" [placeholder]="inputTypeList[i].placeHolder" *ngIf="inputTypeList[i]?.type === 'text'">
 

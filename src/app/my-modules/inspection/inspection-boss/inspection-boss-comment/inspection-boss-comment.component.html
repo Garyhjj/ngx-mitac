@@ -4,94 +4,62 @@
   (nzOnCancel)="isVisible = false" nzWidth="760px">
   <ng-template #modalContent>
     <form nz-form [nzLayout]="formLayout" [formGroup]="myForm" *ngIf="myForm">
-
-      <div nz-form-item nz-row>
-        <div nz-form-label nz-col [nzSpan]="6">
-          <label>{{'insoectionModule.totalMark' | translate}}</label>
-        </div>
-        <div nz-form-control nz-col [nzSpan]="16">
-          <nz-input formControlName="SCORE" [nzSize]="'large'" [nzReadonly]="true">
-          </nz-input>
-        </div>
-      </div>
-
-      <div nz-form-item nz-row>
-        <div nz-form-label nz-col [nzSpan]="6">
-          <label>{{'insoectionModule.additionalMark' | translate}}</label>
-        </div>
-        <div nz-form-control nz-col [nzSpan]="16">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">{{'insoectionModule.totalMark' | translate}}</nz-form-label>
+        <nz-form-control [nzSpan]="16">
+          <input formControlName="SCORE" readonly nz-input>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">{{'insoectionModule.additionalMark' | translate}}</nz-form-label>
+        <nz-form-control [nzSpan]="16">
           <nz-input-number formControlName="ADDITIONAL_SCORE" [nzSize]="'large'" [nzMin]="0" [style.width]="'50%'"></nz-input-number>
-        </div>
-      </div>
-
-      <nz-collapseset formArrayName="list" nzAccordion>
-        <nz-collapse [nzActive]="i === 0" [nzTitle]="'位置'+(i+1) +': '+ (myForm.get('list')?.controls[i]?.value?.SCORE !== null? myForm.get('list').controls[i].value.SCORE+'分': '未評分')"
+        </nz-form-control>
+      </nz-form-item>
+      <nz-collapse formArrayName="list" nzAccordion>
+        <nz-collapse-panel [nzActive]="i === 0" [nzHeader]="'位置'+(i+1) +': '+ (myForm.get('list')?.controls[i]?.value?.SCORE !== null? myForm.get('list').controls[i].value.SCORE+'分': '未評分')"
           *ngFor="let ctrl of myForm.controls['list'].controls; let i = index;">
-          <div nz-form-item nz-row [formGroupName]="i">
-            <div nz-form-label nz-col [nzSpan]="6">
-              <label>{{'insoectionModule.checkTime' | translate}}</label>
-            </div>
-            <div nz-form-control nz-col [nzSpan]="16">
-              <nz-input formControlName="INSPECT_TIME" [nzSize]="'large'" [nzReadonly]="true">
-              </nz-input>
-            </div>
-          </div>
-
-          <div nz-form-item nz-row [formGroupName]="i">
-            <div nz-form-label nz-col [nzSpan]="6">
-              <label>{{'insoectionModule.location' | translate}}</label>
-            </div>
-            <div nz-form-control nz-col [nzSpan]="16">
-              <nz-input formControlName="LOCATION" [nzSize]="'large'" [nzReadonly]="true">
-              </nz-input>
-            </div>
-          </div>
-
-          <div nz-form-item nz-row [formGroupName]="i" *ngIf="ctrl.get('PROBLEM_FLAG')?.value === 'Y'">
-            <div nz-form-label nz-col [nzSpan]="6">
-              <label>{{'insoectionModule.issueDetail' | translate}}</label>
-            </div>
-            <div nz-form-control nz-col [nzSpan]="16">
-              <nz-input formControlName="PROBLEM_DESC" [nzSize]="'large'" [nzReadonly]="true">
-              </nz-input>
-            </div>
-          </div>
-
-          <div nz-form-item nz-row [formGroupName]="i" *ngIf="myForm.get('list')?.controls[i]?.value?.PROBLEM_PICTURES">
-            <div nz-form-label nz-col [nzSpan]="6">
-              <label>{{'insoectionModule.figure' | translate}}</label>
-            </div>
-            <div nz-form-control nz-col [nzSpan]="16">
+          <nz-form-item [formGroupName]="i">
+            <nz-form-label [nzSpan]="6">{{'insoectionModule.checkTime' | translate}}</nz-form-label>
+            <nz-form-control [nzSpan]="16">
+              <input formControlName="INSPECT_TIME" readonly nz-input>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item [formGroupName]="i">
+            <nz-form-label [nzSpan]="6">{{'insoectionModule.location' | translate}}</nz-form-label>
+            <nz-form-control [nzSpan]="16">
+              <input formControlName="LOCATION" readonly nz-input>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item [formGroupName]="i" *ngIf="ctrl.get('PROBLEM_FLAG')?.value === 'Y'">
+            <nz-form-label [nzSpan]="6">{{'insoectionModule.issueDetail' | translate}}</nz-form-label>
+            <nz-form-control [nzSpan]="16">
+              <input formControlName="PROBLEM_DESC"readonly nz-input>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item [formGroupName]="i" *ngIf="myForm.get('list')?.controls[i]?.value?.PROBLEM_PICTURES">
+            <nz-form-label [nzSpan]="6">{{'insoectionModule.figure' | translate}}</nz-form-label>
+            <nz-form-control [nzSpan]="16">
               <app-photo-upload formControlName="PROBLEM_PICTURES" [maxCount]="9" [removable]="false" [addable]="false" [scanable]="true"></app-photo-upload>
-            </div>
-          </div>
-
-          <div nz-form-item nz-row [formGroupName]="i" *ngIf="ctrl.get('PROBLEM_FLAG')?.value === 'Y'">
-            <div nz-form-label nz-col [nzSpan]="6">
-              <label>{{'insoectionModule.ownerEmpno' | translate}}</label>
-            </div>
-            <div nz-form-control nz-col [nzSpan]="16">
-              <app-colleague-searcher formControlName="OWNER_EMPNO" [miDisabled]="true" [miPlaceHolder]="''">
-              </app-colleague-searcher>
-            </div>
-          </div>
-
-          <div nz-form-item nz-row [formGroupName]="i">
-            <div nz-form-label nz-col [nzSpan]="6">
-              <label>*{{'insoectionModule.comment' | translate}}</label>
-            </div>
-            <div nz-form-control nz-col [nzSpan]="16">
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item [formGroupName]="i" *ngIf="ctrl.get('PROBLEM_FLAG')?.value === 'Y'">
+            <nz-form-label [nzSpan]="6">{{'insoectionModule.ownerEmpno' | translate}}</nz-form-label>
+            <nz-form-control [nzSpan]="16">
+              <app-colleague-searcher formControlName="OWNER_EMPNO" [miDisabled]="true" [miPlaceHolder]="''"></app-colleague-searcher>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item [formGroupName]="i">
+            <nz-form-label [nzSpan]="6">*{{'insoectionModule.comment' | translate}}</nz-form-label>
+            <nz-form-control [nzSpan]="16">
               <nz-input-number formControlName="SCORE" [nzSize]="'large'" [nzMin]="0" [style.width]="'50%'"></nz-input-number>
-            </div>
-          </div>
-        </nz-collapse>
-      </nz-collapseset>
-
-
-      <div nz-form-item nz-row [style.display]="'block'">
-        <button nz-button nz-col [nzOffset]="6" [nzSpan]="12" type="button" [nzType]="'primary'" [nzSize]="'large'" (click)="submitForm()"
-          [disabled]="!myForm.valid">{{'confirm' | translate}}</button>
-      </div>
+            </nz-form-control>
+          </nz-form-item>
+        </nz-collapse-panel>
+      </nz-collapse>
+      <nz-form-item style="display:block;text-align:center">
+        <button nz-button type="button" [nzType]="'primary'" style="width: 45%" (click)="submitForm()" [disabled]="!myForm.valid">{{'confirm' | translate}}</button>
+      </nz-form-item>
     </form>
   </ng-template>
   <ng-template #modalFooter>

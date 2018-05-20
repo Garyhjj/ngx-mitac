@@ -3,37 +3,31 @@
     <div class="login-body-box">
       <div class="login-content">
         <form nz-form [formGroup]="validateForm" class="login-form">
-          <div class="login-title">
-            登录
-          </div>
-          <div nz-form-item>
-            <div nz-form-control>
-              <nz-input formControlName="userName" [nzPlaceHolder]="'Username'" [nzSize]="'large'">
-                <ng-template #prefix>
-                  <i class="anticon anticon-user"></i>
-                </ng-template>
-              </nz-input>
-              <div nz-form-explain *ngIf="validateForm.controls.userName.dirty&&validateForm.controls.userName.hasError('required')">Please input your username!</div>
-            </div>
-          </div>
-          <div nz-form-item>
-            <div nz-form-control>
-              <nz-input formControlName="password" [nzType]="'password'" [nzPlaceHolder]="'Password'" [nzSize]="'large'">
-                <ng-template #prefix>
-                  <i class="anticon anticon-lock"></i>
-                </ng-template>
-              </nz-input>
-              <div nz-form-explain *ngIf="validateForm.controls.password.dirty&&validateForm.controls.password.hasError('required')">Please input your Password!</div>
-            </div>
-          </div>
-          <div nz-form-item>
-            <div nz-form-control>
+          <div class="login-title">登录</div>
+          <nz-form-item>
+            <nz-form-control>
+              <nz-input-group nzPrefixIcon="anticon anticon-user">
+                <input type="text" nz-input formControlName="userName" placeholder="Username">
+              </nz-input-group>
+              <nz-form-explain *ngIf="validateForm.controls.userName.dirty&&validateForm.controls.userName.hasError('required')">Please input your username!</nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-control>
+              <nz-input-group nzPrefixIcon="anticon anticon-lock">
+                <input type="password" nz-input formControlName="password" placeholder="Password">
+              </nz-input-group>
+              <nz-form-explain *ngIf="validateForm.controls.password.dirty&&validateForm.controls.password.hasError('required')">Please input your Password!</nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-control>
               <label nz-checkbox formControlName="remember">
-                    <span>Remember me</span>
-                  </label>
-              <button nz-button class="login-form-button" [nzType]="'primary'" [nzSize]="'large'" (click)="login()" [disabled]="!validateForm.valid || loading">确认</button>
-            </div>
-          </div>
+                Remember me
+              </label>
+              <button nz-button class="login-form-button" [nzType]="'primary'" (click)="login()" [disabled]="!validateForm.valid || loading">确认</button>
+            </nz-form-control>
+          </nz-form-item>
           <nz-spin *ngIf="loading"></nz-spin>
         </form>
       </div>

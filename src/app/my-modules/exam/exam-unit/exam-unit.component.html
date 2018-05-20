@@ -1,12 +1,12 @@
 <nz-tabset [(nzSelectedIndex)]="tabIdx" (nzSelectedIndexChange)="tabChange($event)">
-  <nz-tab>
-    <ng-template #nzTabHeading>
+  <nz-tab [nzTitle]="nzTabHeading1">
+    <ng-template #nzTabHeading1>
       {{'examModule.maintenanceHeader' | translate}}
     </ng-template>
     <app-data-drive [name]="'examUnits'" (dataDriveInit)="getHeaderDrive($event)"></app-data-drive>
   </nz-tab>
-  <nz-tab>
-    <ng-template #nzTabHeading>
+  <nz-tab [nzTitle]="nzTabHeading2">
+    <ng-template #nzTabHeading2>
       {{'examModule.maintenanceBody' | translate}}
       <span *ngIf="targetExam">({{targetExam.TITLE}})</span>
     </ng-template>

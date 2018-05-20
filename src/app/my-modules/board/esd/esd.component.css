@@ -1,5 +1,8 @@
 .esd-header {
     margin: 15px 0;
+    background-color: #e6f7ff;
+    border: 1px solid #91d5ff;
+    padding: 8px 15px;
 }
 
 .esd-header nz-row {

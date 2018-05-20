@@ -29,9 +29,9 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
   @Input() miSearchFilter;
   isLoading = false;
 
-  private propagateChange = (_: any) => {};
+  private propagateChange = (_: any) => { };
 
-  constructor(private appService: AppService, private util: UtilService) {}
+  constructor(private appService: AppService, private util: UtilService) { }
 
   /**
    * 给外部formControl写入数据
@@ -46,13 +46,23 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
         .map(_ => (this.miSearchFilter ? this.miSearchFilter(_) : _))
         .subscribe(
           (data: any) => {
-            if (data.length === 1) {
-              const alter = data.map(
-                c => c.EMPNO + ',' + c.NICK_NAME + ',' + c.USER_NAME,
+            if (data.length > 0) {
+              const val = data.find(
+                d =>
+                  d.EMPNO === value ||
+                  d.NICK_NAME === value ||
+                  d.USER_NAME === value,
               );
-              this.searchOptions = alter;
-              this.selectedOption = alter[0];
-              this.propagateChange(data[0].EMPNO);
+              if (val) {
+                const alter = [val].map(
+                  c => c.EMPNO + ',' + c.NICK_NAME + ',' + c.USER_NAME,
+                );
+                this.searchOptions = alter;
+                this.selectedOption = alter[0];
+                this.propagateChange(val.EMPNO);
+              } else {
+                this.propagateChange('');
+              }
             } else {
               this.propagateChange('');
             }
@@ -61,7 +71,7 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
             this.util.errDeal(err);
             this.propagateChange('');
           },
-        );
+      );
     }
   }
 
@@ -78,7 +88,7 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
    * 也是一样注册,当 touched 然后调用
    * @param {*} fn
    */
-  registerOnTouched(fn: any) {}
+  registerOnTouched(fn: any) { }
 
   ngOnInit() {
     this.mySub = this.searchTerms
@@ -102,7 +112,7 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
           this.util.errDeal(err);
           this.isLoading = false;
         },
-      );
+    );
   }
 
   ngOnDestroy() {

@@ -179,6 +179,7 @@ export class TableComponent
     this._dataDrive.afterDataInit(() => {
       // this.tableData.data = this._dataDrive.tableData.data;
       this.updateFilterColumns();
+      this.dataChange();
     });
   }
 

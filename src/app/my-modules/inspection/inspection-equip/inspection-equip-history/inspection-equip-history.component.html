@@ -1,6 +1,6 @@
 <nz-tabset [(nzSelectedIndex)]="tabIdx">
-  <nz-tab>
-    <ng-template #nzTabHeading>
+  <nz-tab [nzTitle]="nzTabHeading1">
+    <ng-template #nzTabHeading1>
       {{'insoectionModule.history' | translate}}
     </ng-template>
     <app-data-drive [name]="'inspectionEquipHistory'" (dataDriveInit)="getDataDrive1($event)">
@@ -12,8 +12,8 @@
     </app-data-drive>
   </nz-tab>
 
-  <nz-tab *ngIf="issueList?.length > 0">
-    <ng-template #nzTabHeading>
+  <nz-tab *ngIf="issueList?.length > 0" [nzTitle]="nzTabHeading2">
+    <ng-template #nzTabHeading2>
       {{'insoectionModule.problem' | translate}}
     </ng-template>
     <app-data-drive [name]="'inspectionEquipIssueList'" (dataDriveInit)="getDataDrive2($event)"></app-data-drive>
