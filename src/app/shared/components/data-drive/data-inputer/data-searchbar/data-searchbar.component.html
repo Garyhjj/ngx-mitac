@@ -3,21 +3,22 @@
     <!-- 搜索框栏 -->
     <div class="fliter-container">
       <div class="left-container" *ngIf="!notShowSearchInput && dataDrive.tableData">
-        <nz-input-group style="width:350px"  *ngIf="dataDrive.tableData.searchable && optionList && optionList.length >0" [nzAddOnBefore]="addOnBeforeTemplate" [nzAddOnAfter]="addOnAfterTemplate">
+        <nz-input-group style="width:350px" *ngIf="dataDrive.tableData.searchable && optionList && optionList.length >0" [nzAddOnBefore]="addOnBeforeTemplate"
+          [nzAddOnAfter]="addOnAfterTemplate">
           <input type="text" nz-input [(ngModel)]="filterValue" [placeholder]="selectedOption?.placeHolder | sgChineseConv" [disabled]="!validateForm.valid">
         </nz-input-group>
         <ng-template #addOnBeforeTemplate>
-            <nz-select style="width: 80px;" [(ngModel)]="selectedOption">
-              <nz-option *ngFor="let option of optionList" [nzLabel]="option.label | sgChineseConv" [nzValue]="option">
-              </nz-option>
-            </nz-select>
-          </ng-template>
-          <ng-template #addOnAfterTemplate>
-            <!-- <button [disabled]="!validateForm.valid" (click)="clickSimpleSearch('simple')">
+          <nz-select style="width: 100px;" [(ngModel)]="selectedOption">
+            <nz-option *ngFor="let option of optionList" [nzLabel]="option.label | sgChineseConv" [nzValue]="option">
+            </nz-option>
+          </nz-select>
+        </ng-template>
+        <ng-template #addOnAfterTemplate>
+          <!-- <button [disabled]="!validateForm.valid" (click)="clickSimpleSearch('simple')">
                             <i class="anticon anticon-search"></i>
                         </button> -->
-            <i class="anticon anticon-search" (click)="clickSimpleSearch('simple')"></i>
-          </ng-template>
+          <i class="anticon anticon-search" (click)="clickSimpleSearch('simple')"></i>
+        </ng-template>
         <div class="new-button" *ngIf="dataDrive.additionalFn?.addItem">
           <button nz-button [nzType]="'primary'" (click)="addItem()">
             {{'newData' | translate}}
@@ -121,8 +122,8 @@
                   [myFormat]="inputTypeList[i].more?.showFormat" [myPlaceHolder]="inputTypeList[i].placeHolder">
                 </app-my-time-picker>
 
-                <nz-input-number [formControlName]="item" [nzStep]="inputTypeList[i].more?.step" [nzMax]="inputTypeList[i].more?.max"
-                  [nzMin]="inputTypeList[i].more?.min" [style.width]="'50%'" *ngIf="inputTypeList[i]?.type === 'number'"></nz-input-number>
+                <nz-input-number [formControlName]="item" [nzStep]="inputTypeList[i].more?.step" [nzMax]="inputTypeList[i].more?.max" [nzMin]="inputTypeList[i].more?.min"
+                  [style.width]="'50%'" *ngIf="inputTypeList[i]?.type === 'number'"></nz-input-number>
 
                 <app-my-cascader [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'cascader'" [myPlaceHolder]="inputTypeList[i].placeHolder"
                   [myOptions]="inputTypeList[i].more?.options" [myCascaderLazySets]="inputTypeList[i].more?.cascaderLazySets"

@@ -11,7 +11,6 @@ import { ExamResultComponent } from './exam-result/exam-result.component';
 const bRoutes: Routes = [
   {
     path: '',
-    component: ExamComponent,
     canActivate: [AuthGuard],
     canActivateChild: [AuthGuard],
     children: [

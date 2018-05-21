@@ -1,507 +1,374 @@
 <nz-tabset (nzSelectedIndexChange)=indexChange($event)>
-  <nz-tab>
+  <nz-tab [nzTitle]="nzTabHeading">
     <ng-template #nzTabHeading>
       配置項
     </ng-template>
     <div>
       <form nz-form [nzLayout]="formLayout" [formGroup]="setForm" *ngIf="setForm">
-        <div nz-form-item nz-row>
-          <div nz-form-label nz-col [nzSpan]="4">
-            <label>描述</label>
-          </div>
-          <div nz-form-control nz-col [nzSpan]="14">
-            <nz-input formControlName="des" [nzSize]="'large'" nzPlaceHolder="可輸入描述，方便後期查詢">
-            </nz-input>
-          </div>
-        </div>
-        <nz-collapseset>
-          <nz-collapse [nzTitle]="'API配置'" [nzActive]="1" formGroupName="APIs">
-            <div nz-form-item nz-row>
-              <div nz-form-label nz-col [nzSpan]="4">
-                <label>查詢API</label>
-              </div>
-              <div nz-form-control nz-col [nzSpan]="10">
-                <nz-input formControlName="search" [nzSize]="'large'" nzPlaceHolder="大括號內的是將被替換的參數, 返回的參數有此屬性則會自動替換, 或参数前加*则会绑定用户信息">
-                </nz-input>
-              </div>
-            </div>
-            <div nz-form-item nz-row>
-              <div nz-form-label nz-col [nzSpan]="4">
-                <label>更新API</label>
-              </div>
-              <div nz-form-control nz-col [nzSpan]="10">
-                <nz-input formControlName="update" [nzSize]="'large'">
-                </nz-input>
-              </div>
-            </div>
-            <div nz-form-item nz-row>
-              <div nz-form-label nz-col [nzSpan]="4">
-                <label>删除API</label>
-              </div>
-              <div nz-form-control nz-col [nzSpan]="10">
-                <nz-input formControlName="delete" [nzSize]="'large'" nzPlaceHolder="大括號內的是將被替換的參數, 請與返回的對應參數一致, 或参数前加*则会绑定用户信息">
-                </nz-input>
-              </div>
-            </div>
-          </nz-collapse>
-
-          <nz-collapse [nzTitle]="'附加功能'" formGroupName="additionalFn">
-            <div nz-form-item nz-row>
-              <div nz-form-label nz-col [nzSpan]="4">
-                <label>視圖切換</label>
-              </div>
-              <div nz-form-control nz-col [nzSpan]="14">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="4">描述</nz-form-label>
+          <nz-form-control [nzSpan]="14">
+            <input formControlName="des" nz-input placeholder="可輸入描述，方便後期查詢">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-collapse>
+          <nz-collapse-panel [nzHeader]="'API配置'" [nzActive]="1" formGroupName="APIs">
+            <nz-form-item>
+              <nz-form-label [nzSpan]="4">查詢API</nz-form-label>
+              <nz-form-control [nzSpan]="10">
+                <input formControlName="search" nz-input placeholder="大括號內的是將被替換的參數, 返回的參數有此屬性則會自動替換, 或参数前加*则会绑定用户信息">
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label [nzSpan]="4">更新API</nz-form-label>
+              <nz-form-control [nzSpan]="10">
+                <input formControlName="update" nz-input>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label [nzSpan]="4">删除API</nz-form-label>
+              <nz-form-control [nzSpan]="10">
+                <input formControlName="delete" nz-input placeholder="大括號內的是將被替換的參數, 請與返回的對應參數一致, 或参数前加*则会绑定用户信息">
+              </nz-form-control>
+            </nz-form-item>
+          </nz-collapse-panel>
+          <nz-collapse-panel [nzHeader]="'附加功能'" formGroupName="additionalFn">
+            <nz-form-item>
+              <nz-form-label [nzSpan]="4">視圖切換</nz-form-label>
+              <nz-form-control [nzSpan]="14">
                 <app-mx-checkbox formControlName="switchViewType" [myPlaceHolder]="'請選擇'" [options]="viewTypeOptions"></app-mx-checkbox>
-              </div>
-            </div>
-            <div nz-form-item nz-row>
-              <div nz-form-label nz-col [nzSpan]="4">
-                <label>其它功能</label>
-              </div>
-              <div nz-form-control nz-col [nzSpan]="14">
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label [nzSpan]="4">其它功能</nz-form-label>
+              <nz-form-control [nzSpan]="14">
                 <app-mx-checkbox formControlName="others" [myPlaceHolder]="'請選擇'" [options]="additionalFnOptions"></app-mx-checkbox>
-              </div>
-            </div>
-          </nz-collapse>
-
-          <nz-collapse [nzTitle]="'視圖配置'" formArrayName="dataViewSetList">
-
-            <nz-tabset [nzType]="'card'" [nzTabBarExtraTemplate]="nzTabBarExtraContentView" [nzSelectedIndex]="viewIdx">
-              <nz-tab *ngFor="let ctrl of setForm.controls['dataViewSetList'].controls; let i = index;" [formGroupName]="i">
+              </nz-form-control>
+            </nz-form-item>
+          </nz-collapse-panel>
+          <nz-collapse-panel [nzHeader]="'視圖配置'" formArrayName="dataViewSetList">
+            <nz-tabset [nzType]="'card'" [nzTabBarExtraContent]="nzTabBarExtraContentView" [nzSelectedIndex]="viewIdx">
+              <nz-tab *ngFor="let ctrl of setForm.controls['dataViewSetList'].controls; let i = index;" [formGroupName]="i" [nzTitle]="nzTabHeading">
                 <ng-template #nzTabHeading>
                   <div>
                     {{i===0?'初始化視圖':'切換視圖'+(i)}}
                     <i class="anticon anticon-cross" (click)="closeViewSetTab(i)" *ngIf="i!==0"></i>
                   </div>
                 </ng-template>
-                <div nz-form-item nz-row>
-                  <div nz-form-label nz-col [nzSpan]="4">
-                    <label>類型</label>
-                  </div>
-                  <div nz-form-control nz-col [nzSpan]="14">
+                <nz-form-item>
+                  <nz-form-label [nzSpan]="4">類型</nz-form-label>
+                  <nz-form-control [nzSpan]="14">
                     <app-mx-select formControlName="type" myPlaceHolder="請選擇視圖類型" [options]="viewTypeOptions"></app-mx-select>
-                  </div>
-                </div>
-
-                <div nz-form-item nz-row *ngIf="ctrl.get('title')">
-                  <div nz-form-label nz-col [nzSpan]="4">
-                    <label>表格名</label>
-                  </div>
-                  <div nz-form-control nz-col [nzSpan]="14">
-                    <nz-input formControlName="title" [nzSize]="'large'">
-                    </nz-input>
-                  </div>
-                </div>
-
-                <div nz-row>
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item *ngIf="ctrl.get('title')">
+                  <nz-form-label [nzSpan]="4">表格名</nz-form-label>
+                  <nz-form-control [nzSpan]="14">
+                    <input formControlName="title" nz-input>
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-row>
                   <nz-col [nzSpan]="8">
-                    <div nz-form-item nz-row *ngIf="ctrl.get('showAction')">
-                      <div nz-form-label nz-col [nzSpan]="12">
-                        <label>顯示操作ACTION</label>
-                      </div>
-                      <div nz-form-control nz-col [nzSpan]="12">
+                    <nz-form-item *ngIf="ctrl.get('showAction')">
+                      <nz-form-label [nzSpan]="12">顯示操作ACTION</nz-form-label>
+                      <nz-form-control [nzSpan]="12">
                         <app-my-switch formControlName="showAction" [myTrueFormat]="true" [myFalseFormat]="false"></app-my-switch>
-                      </div>
-                    </div>
+                      </nz-form-control>
+                    </nz-form-item>
                   </nz-col>
-
                   <nz-col [nzSpan]="8">
-                    <div nz-form-item nz-row *ngIf="ctrl.get('pageSet')">
-                      <div nz-form-label nz-col [nzSpan]="12">
-                        <label>分頁</label>
-                      </div>
-                      <div nz-form-control nz-col [nzSpan]="12">
+                    <nz-form-item *ngIf="ctrl.get('pageSet')">
+                      <nz-form-label [nzSpan]="12">分頁</nz-form-label>
+                      <nz-form-control [nzSpan]="12">
                         <app-my-switch formControlName="pageSet" [myTrueFormat]="true" [myFalseFormat]="false"></app-my-switch>
-                      </div>
-                    </div>
+                      </nz-form-control>
+                    </nz-form-item>
                   </nz-col>
-
                   <nz-col [nzSpan]="8" *ngIf="ctrl.get('pageCount')">
-                    <div nz-form-item nz-row>
-                      <div nz-form-label nz-col [nzSpan]="12">
-                        <label>每頁數目</label>
-                      </div>
-                      <div nz-form-control nz-col [nzSpan]="12">
-                        <nz-input-number formControlName="pageCount" [nzSize]="'large'" [nzStep]="1" [nzMin]="3" [style.width]="'50%'"></nz-input-number>
-                      </div>
-                    </div>
+                    <nz-form-item>
+                      <nz-form-label [nzSpan]="12">每頁數目</nz-form-label>
+                      <nz-form-control [nzSpan]="12">
+                        <nz-input-number formControlName="pageCount" [nzStep]="1" [nzMin]="3" [style.width]="'50%'"></nz-input-number>
+                      </nz-form-control>
+                    </nz-form-item>
                   </nz-col>
-
                   <nz-col [nzSpan]="8">
-                    <div nz-form-item nz-row *ngIf="ctrl.get('border_y')">
-                      <div nz-form-label nz-col [nzSpan]="12">
-                        <label>內部列邊界</label>
-                      </div>
-                      <div nz-form-control nz-col [nzSpan]="12">
+                    <nz-form-item *ngIf="ctrl.get('border_y')">
+                      <nz-form-label [nzSpan]="12">內部列邊界</nz-form-label>
+                      <nz-form-control [nzSpan]="12">
                         <app-my-switch formControlName="border_y" [myTrueFormat]="true" [myFalseFormat]="false"></app-my-switch>
-                      </div>
-                    </div>
+                      </nz-form-control>
+                    </nz-form-item>
                   </nz-col>
-                </div>
-
-                <nz-collapseset *ngIf="ctrl.get('header')">
-                  <nz-collapse nzTitle="表格頭樣式" formGroupName="header">
+                </nz-row>
+                <nz-collapse *ngIf="ctrl.get('header')">
+                  <nz-collapse-panel nzHeader="表格頭樣式" formGroupName="header">
                     <ng-template [ngTemplateOutlet]="styleForm" [ngTemplateOutletContext]="{formGroup: ctrl.get('header')}" *ngIf="styleForm"></ng-template>
-                  </nz-collapse>
-                </nz-collapseset>
-
-
-                <nz-collapseset *ngIf="ctrl.get('body')">
-                  <nz-collapse nzTitle="表內主體樣式" formGroupName="body">
+                  </nz-collapse-panel>
+                </nz-collapse>
+                <nz-collapse *ngIf="ctrl.get('body')">
+                  <nz-collapse-panel nzHeader="表內主體樣式" formGroupName="body">
                     <ng-template [ngTemplateOutlet]="styleForm" [ngTemplateOutletContext]="{formGroup: ctrl.get('body')}" *ngIf="styleForm"></ng-template>
-
-                    <nz-tabset [nzType]="'card'" [nzTabBarExtraTemplate]="nzTabBarExtraContentRule" [nzSelectedIndex]="rulesIdx">
+                    <nz-tabset [nzType]="'card'" [nzTabBarExtraContent]="nzTabBarExtraContentRule" [nzSelectedIndex]="rulesIdx">
                       <ng-container formArrayName="rules" *ngIf="ctrl.get('body').get('rules')">
-                        <nz-tab *ngFor="let rule of ctrl.get('body').get('rules').controls; let j = index;">
+                        <nz-tab *ngFor="let rule of ctrl.get('body').get('rules').controls; let j = index;" [nzTitle]="nzTabHeading">
                           <ng-template #nzTabHeading>
                             <div>
                               {{'優先規則'+(j+1)}}
                               <i class="anticon anticon-cross" (click)="closeRuleTab(ctrl.get('body').get('rules'), j)"></i>
                             </div>
                           </ng-template>
-
-                          <div nz-form-item nz-row [formGroupName]="j">
-                            <div nz-form-label nz-col [nzSpan]="4">
-                              <label>規則</label>
-                            </div>
-                            <div nz-form-control nz-col [nzSpan]="14">
-                              <nz-input formControlName="matches" nzPlaceHolder="(屬性名,方法名,參數[])[]" nzType="textarea" [nzAutosize]="'1'"></nz-input>
-                            </div>
-                          </div>
+                          <nz-form-item [formGroupName]="j">
+                            <nz-form-label [nzSpan]="4">規則</nz-form-label>
+                            <nz-form-control [nzSpan]="14">
+                              <textarea formControlName="matches" [nzAutosize]="'1'" nz-input placeholder="(屬性名,方法名,參數[])[]"></textarea>
+                            </nz-form-control>
+                          </nz-form-item>
                           <ng-template [ngTemplateOutlet]="styleForm" [ngTemplateOutletContext]="{formGroup: rule}" *ngIf="styleForm"></ng-template>
-
                         </nz-tab>
                       </ng-container>
-
                       <ng-template #nzTabBarExtraContentRule>
-                        <i class="ant-tabs-new-tab anticon anticon-plus" (click)="newRuleTab(ctrl.get('body').get('rules')); rulesIdx = ctrl.get('body').get('rules').controls.length-1"></i>增加規則
+                        <i class="ant-tabs-new-tab anticon anticon-plus" (click)="newRuleTab(ctrl.get('body').get('rules')); rulesIdx = ctrl.get('body').get('rules').controls.length-1"></i>
+                        增加規則
                       </ng-template>
                     </nz-tabset>
-
-                  </nz-collapse>
-                </nz-collapseset>
-
-                <nz-collapseset *ngIf="ctrl.get('fixedHeader')">
-                  <nz-collapse nzTitle="滾動配置" formGroupName="fixedHeader">
-                    <div nz-row>
+                  </nz-collapse-panel>
+                </nz-collapse>
+                <nz-collapse *ngIf="ctrl.get('fixedHeader')">
+                  <nz-collapse-panel nzHeader="滾動配置" formGroupName="fixedHeader">
+                    <nz-row>
                       <nz-col [nzSpan]="8">
-                        <div nz-form-item nz-row>
-                          <div nz-form-label nz-col [nzSpan]="12">
-                            <label>開啟</label>
-                          </div>
-                          <div nz-form-control nz-col [nzSpan]="12">
+                        <nz-form-item>
+                          <nz-form-label [nzSpan]="12">開啟</nz-form-label>
+                          <nz-form-control [nzSpan]="12">
                             <app-my-switch formControlName="enable" [myTrueFormat]="true" [myFalseFormat]="false"></app-my-switch>
-                          </div>
-                        </div>
+                          </nz-form-control>
+                        </nz-form-item>
                       </nz-col>
-
                       <nz-col [nzSpan]="8" *ngIf="ctrl.get('fixedHeader').get('scrollHeight')">
-                        <div nz-form-item nz-row>
-                          <div nz-form-label nz-col [nzSpan]="8">
-                            <label>滾動可視高度</label>
-                          </div>
-                          <div nz-form-control nz-col [nzSpan]="16">
-                            <nz-input formControlName="scrollHeight" [nzSize]="'large'" nzPlaceHolder="可使用css樣式單位,輸入auto則自適應">
-                            </nz-input>
-                          </div>
-                        </div>
+                        <nz-form-item>
+                          <nz-form-label [nzSpan]="8">滾動可視高度</nz-form-label>
+                          <nz-form-control [nzSpan]="16">
+                            <input formControlName="scrollHeight" nz-input placeholder="可使用css樣式單位,輸入auto則自適應">
+                          </nz-form-control>
+                        </nz-form-item>
                       </nz-col>
-
                       <nz-col [nzSpan]="8">
-                        <div nz-form-item nz-row *ngIf="ctrl.get('fixedHeader').get('autoScroll')">
-                          <div nz-form-label nz-col [nzSpan]="12">
-                            <label>自動滾動</label>
-                          </div>
-                          <div nz-form-control nz-col [nzSpan]="12">
+                        <nz-form-item *ngIf="ctrl.get('fixedHeader').get('autoScroll')">
+                          <nz-form-label [nzSpan]="12">自動滾動</nz-form-label>
+                          <nz-form-control [nzSpan]="12">
                             <app-my-switch formControlName="autoScroll" [myTrueFormat]="true" [myFalseFormat]="false"></app-my-switch>
-                          </div>
-                        </div>
-
+                          </nz-form-control>
+                        </nz-form-item>
                       </nz-col>
-
                       <nz-col [nzSpan]="8" *ngIf="ctrl.get('fixedHeader').get('interval')">
-                        <div nz-form-item nz-row>
-                          <div nz-form-label nz-col [nzSpan]="12">
-                            <label>滾動間隔</label>
-                          </div>
-                          <div nz-form-control nz-col [nzSpan]="12">
-                            <nz-input-number formControlName="interval" [nzSize]="'large'" [nzStep]="100" [nzMin]="800" [style.width]="'50%'"></nz-input-number>
-                          </div>
-                        </div>
+                        <nz-form-item>
+                          <nz-form-label [nzSpan]="12">滾動間隔</nz-form-label>
+                          <nz-form-control [nzSpan]="12">
+                            <nz-input-number formControlName="interval" [nzStep]="100" [nzMin]="800" [style.width]="'50%'"></nz-input-number>
+                          </nz-form-control>
+                        </nz-form-item>
                       </nz-col>
-
                       <nz-col [nzSpan]="8">
-                        <div nz-form-item nz-row *ngIf="ctrl.get('fixedHeader').get('loop')">
-                          <div nz-form-label nz-col [nzSpan]="12">
-                            <label>循環</label>
-                          </div>
-                          <div nz-form-control nz-col [nzSpan]="12">
+                        <nz-form-item *ngIf="ctrl.get('fixedHeader').get('loop')">
+                          <nz-form-label [nzSpan]="12">循環</nz-form-label>
+                          <nz-form-control [nzSpan]="12">
                             <app-my-switch formControlName="loop" [myTrueFormat]="true" [myFalseFormat]="false"></app-my-switch>
-                          </div>
-                        </div>
-
+                          </nz-form-control>
+                        </nz-form-item>
                       </nz-col>
-                    </div>
-                  </nz-collapse>
-                </nz-collapseset>
-
-                <nz-collapseset *ngIf="ctrl.get('linkToPhone')">
-                  <nz-collapse nzTitle="二维码跳转其它网址配置" formGroupName="linkToPhone">
-                    <div nz-row>
+                    </nz-row>
+                  </nz-collapse-panel>
+                </nz-collapse>
+                <nz-collapse *ngIf="ctrl.get('linkToPhone')">
+                  <nz-collapse-panel nzHeader="二维码跳转其它网址配置" formGroupName="linkToPhone">
+                    <nz-row>
                       <nz-col [nzSpan]="8">
-                        <div nz-form-item nz-row>
-                          <div nz-form-label nz-col [nzSpan]="4">
-                            <label>名稱</label>
-                          </div>
-                          <div nz-form-control nz-col [nzSpan]="14">
-                            <nz-input formControlName="name" [nzSize]="'large'">
-                            </nz-input>
-                          </div>
-                        </div>
+                        <nz-form-item>
+                          <nz-form-label [nzSpan]="4">名稱</nz-form-label>
+                          <nz-form-control [nzSpan]="14">
+                            <input formControlName="name" nz-input>
+                          </nz-form-control>
+                        </nz-form-item>
                       </nz-col>
-
                       <nz-col [nzSpan]="8">
-                        <div nz-form-item nz-row>
-                          <div nz-form-label nz-col [nzSpan]="4">
-                            <label>跳轉地址</label>
-                          </div>
-                          <div nz-form-control nz-col [nzSpan]="14">
-                            <nz-input formControlName="url" [nzSize]="'large'" nzPlaceHolder="可以增加綁定參數，注意同樣地與數據庫返回的屬性一致">
-                            </nz-input>
-                          </div>
-                        </div>
+                        <nz-form-item>
+                          <nz-form-label [nzSpan]="4">跳轉地址</nz-form-label>
+                          <nz-form-control [nzSpan]="14">
+                            <input formControlName="url" nz-input placeholder="可以增加綁定參數，注意同樣地與數據庫返回的屬性一致">
+                          </nz-form-control>
+                        </nz-form-item>
                       </nz-col>
-
                       <nz-col [nzSpan]="8">
-                        <div nz-form-item nz-row>
-                          <div nz-form-label nz-col [nzSpan]="4">
-                            <label>本地地址</label>
-                          </div>
-                          <div nz-form-control nz-col [nzSpan]="14">
-                            <nz-input formControlName="local" [nzSize]="'large'" nzPlaceHolder="可選">
-                            </nz-input>
-                          </div>
-                        </div>
+                        <nz-form-item>
+                          <nz-form-label [nzSpan]="4">本地地址</nz-form-label>
+                          <nz-form-control [nzSpan]="14">
+                            <input formControlName="local" nz-input placeholder="可選">
+                          </nz-form-control>
+                        </nz-form-item>
                       </nz-col>
-                    </div>
-                  </nz-collapse>
-                </nz-collapseset>
-
+                    </nz-row>
+                  </nz-collapse-panel>
+                </nz-collapse>
               </nz-tab>
               <ng-template #nzTabBarExtraContentView>
-                <i class="ant-tabs-new-tab anticon anticon-plus" (click)="newViewSetTab(); viewIdx=setForm.get('dataViewSetList').controls.length-1"></i>增加切換視圖
+                <i class="ant-tabs-new-tab anticon anticon-plus" (click)="newViewSetTab(); viewIdx=setForm.get('dataViewSetList').controls.length-1"></i>
+                增加切換視圖
               </ng-template>
             </nz-tabset>
-          </nz-collapse>
-
-
-          <nz-collapse nzTitle="數據配置" formGroupName="tableData">
-            <div nz-row>
+          </nz-collapse-panel>
+          <nz-collapse-panel nzHeader="數據配置" formGroupName="tableData">
+            <nz-row>
               <nz-col [nzSpan]="8">
-                <div nz-form-item nz-row>
-                  <div nz-form-label nz-col [nzSpan]="12">
-                    <label>可查詢</label>
-                  </div>
-                  <div nz-form-control nz-col [nzSpan]="12">
+                <nz-form-item>
+                  <nz-form-label [nzSpan]="12">可查詢</nz-form-label>
+                  <nz-form-control [nzSpan]="12">
                     <app-my-switch formControlName="searchable" [myTrueFormat]="true" [myFalseFormat]="false"></app-my-switch>
-                  </div>
-                </div>
+                  </nz-form-control>
+                </nz-form-item>
               </nz-col>
-
               <nz-col [nzSpan]="8">
-                <div nz-form-item nz-row>
-                  <div nz-form-label nz-col [nzSpan]="12">
-                    <label>可新增</label>
-                  </div>
-                  <div nz-form-control nz-col [nzSpan]="12">
+                <nz-form-item>
+                  <nz-form-label [nzSpan]="12">可新增</nz-form-label>
+                  <nz-form-control [nzSpan]="12">
                     <app-my-switch formControlName="addable" [myTrueFormat]="true" [myFalseFormat]="false"></app-my-switch>
-                  </div>
-                </div>
+                  </nz-form-control>
+                </nz-form-item>
               </nz-col>
-
               <nz-col [nzSpan]="8">
-                <div nz-form-item nz-row>
-                  <div nz-form-label nz-col [nzSpan]="12">
-                    <label>可刪除</label>
-                  </div>
-                  <div nz-form-control nz-col [nzSpan]="12">
+                <nz-form-item>
+                  <nz-form-label [nzSpan]="12">可刪除</nz-form-label>
+                  <nz-form-control [nzSpan]="12">
                     <app-my-switch formControlName="deletable" [myTrueFormat]="true" [myFalseFormat]="false"></app-my-switch>
-                  </div>
-                </div>
+                  </nz-form-control>
+                </nz-form-item>
               </nz-col>
-
               <nz-col [nzSpan]="8">
-                <div nz-form-item nz-row>
-                  <div nz-form-label nz-col [nzSpan]="12">
-                    <label>可編輯</label>
-                  </div>
-                  <div nz-form-control nz-col [nzSpan]="12">
+                <nz-form-item>
+                  <nz-form-label [nzSpan]="12">可編輯</nz-form-label>
+                  <nz-form-control [nzSpan]="12">
                     <app-my-switch formControlName="editable" [myTrueFormat]="true" [myFalseFormat]="false"></app-my-switch>
-                  </div>
-                </div>
+                  </nz-form-control>
+                </nz-form-item>
               </nz-col>
-
               <nz-col [nzSpan]="8">
-                <div nz-form-item nz-row>
-                  <div nz-form-label nz-col [nzSpan]="12">
-                    <label>交互時綁定公司ID</label>
-                  </div>
-                  <div nz-form-control nz-col [nzSpan]="12">
+                <nz-form-item>
+                  <nz-form-label [nzSpan]="12">交互時綁定公司ID</nz-form-label>
+                  <nz-form-control [nzSpan]="12">
                     <app-my-switch formControlName="isCompanyLimited" [myTrueFormat]="true" [myFalseFormat]="false"></app-my-switch>
-                  </div>
-                </div>
+                  </nz-form-control>
+                </nz-form-item>
               </nz-col>
-
               <nz-col [nzSpan]="8" *ngIf="setForm.controls['tableData'].controls['companyBindName']">
-                <div nz-form-item nz-row>
-                  <div nz-form-label nz-col [nzSpan]="12">
-                    <label>綁定公司的API別名</label>
-                  </div>
-                  <div nz-form-control nz-col [nzSpan]="12">
-                    <nz-input formControlName="companyBindName" [nzSize]="'large'" nzPlaceHolder="默認為： company_id">
-                    </nz-input>
-                  </div>
-                </div>
+                <nz-form-item>
+                  <nz-form-label [nzSpan]="12">綁定公司的API別名</nz-form-label>
+                  <nz-form-control [nzSpan]="12">
+                    <input formControlName="companyBindName" nz-input placeholder="默認為： company_id">
+                  </nz-form-control>
+                </nz-form-item>
               </nz-col>
-
               <nz-col [nzSpan]="8">
-                <div nz-form-item nz-row>
-                  <div nz-form-label nz-col [nzSpan]="12">
-                    <label>取消初次数据获取</label>
-                  </div>
-                  <div nz-form-control nz-col [nzSpan]="12">
+                <nz-form-item>
+                  <nz-form-label [nzSpan]="12">取消初次数据获取</nz-form-label>
+                  <nz-form-control [nzSpan]="12">
                     <app-my-switch formControlName="stopFirstInit" [myTrueFormat]="true" [myFalseFormat]="false"></app-my-switch>
-                  </div>
-                </div>
-              </nz-col>
-
-              <nz-col [nzSpan]="8">
-                <div nz-form-item nz-row>
-                  <div nz-form-label nz-col [nzSpan]="12">
-                    <label>查詢默認參數</label>
-                  </div>
-                  <div nz-form-control nz-col [nzSpan]="12">
-                    <nz-input formControlName="defaultSearchParams" [nzSize]="'large'" nzType="textarea" [nzAutosize]="'1'" nzPlaceHolder="JSON格式，使用大括號包住的可自動綁定個人信息（如：{empno:'{EMPNO}'}）">
-                    </nz-input>
-                  </div>
-                </div>
+                  </nz-form-control>
+                </nz-form-item>
               </nz-col>
               <nz-col [nzSpan]="8">
-                <div nz-form-item nz-row>
-                  <div nz-form-label nz-col [nzSpan]="12">
-                    <label>刷新數據間隔</label>
-                  </div>
-                  <div nz-form-control nz-col [nzSpan]="12">
-                    <nz-input formControlName="refreshDataInterval" [nzSize]="'large'" nzPlaceHolder="單位為毫秒">
-                    </nz-input>
-                  </div>
-                </div>
+                <nz-form-item>
+                  <nz-form-label [nzSpan]="12">查詢默認參數</nz-form-label>
+                  <nz-form-control [nzSpan]="12">
+                    <textarea formControlName="defaultSearchParams" [nzAutosize]="'1'" nz-input placeholder="JSON格式，使用大括號包住的可自動綁定個人信息（如：{empno:'{EMPNO}'}）"></textarea>
+                  </nz-form-control>
+                </nz-form-item>
               </nz-col>
-            </div>
-
-            <nz-tabset [nzType]="'card'" [nzTabBarExtraTemplate]="nzTabBarExtraContentTable" formArrayName="columns" [nzSelectedIndex]="columnIdx">
-              <nz-tab *ngFor="let dc of setForm.controls['tableData'].controls['columns'].controls; let k = index" [formGroupName]="k">
+              <nz-col [nzSpan]="8">
+                <nz-form-item>
+                  <nz-form-label [nzSpan]="12">刷新數據間隔</nz-form-label>
+                  <nz-form-control [nzSpan]="12">
+                    <input formControlName="refreshDataInterval" nz-input placeholder="單位為毫秒">
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+            </nz-row>
+            <nz-tabset [nzType]="'card'" [nzTabBarExtraContent]="nzTabBarExtraContentTable" formArrayName="columns" [nzSelectedIndex]="columnIdx">
+              <nz-tab *ngFor="let dc of setForm.controls['tableData'].controls['columns'].controls; let k = index" [formGroupName]="k"
+                [nzTitle]="nzTabHeading">
                 <ng-template #nzTabHeading>
                   <div>
                     數據{{k+1}}
                     <i class="anticon anticon-cross" (click)="closeColumnTab(setForm.controls['tableData'].controls['columns'], k)"></i>
                   </div>
                 </ng-template>
-
-                <div nz-row>
+                <nz-row>
                   <nz-col [nzSpan]="12">
-                    <div nz-form-item nz-row>
-                      <div nz-form-label nz-col [nzSpan]="8">
-                        <label>屬性名</label>
-                      </div>
-                      <div nz-form-control nz-col [nzSpan]="14">
-                        <nz-input formControlName="property" [nzSize]="'large'">
-                        </nz-input>
-                      </div>
-                    </div>
+                    <nz-form-item>
+                      <nz-form-label [nzSpan]="8">屬性名</nz-form-label>
+                      <nz-form-control [nzSpan]="14">
+                        <input formControlName="property" nz-input>
+                      </nz-form-control>
+                    </nz-form-item>
                   </nz-col>
-
                   <nz-col [nzSpan]="12">
-                    <div nz-form-item nz-row>
-                      <div nz-form-label nz-col [nzSpan]="8">
-                        <label>屬性描述</label>
-                      </div>
-                      <div nz-form-control nz-col [nzSpan]="14">
-                        <nz-input formControlName="value" [nzSize]="'large'">
-                        </nz-input>
-                      </div>
-                    </div>
+                    <nz-form-item>
+                      <nz-form-label [nzSpan]="8">屬性描述</nz-form-label>
+                      <nz-form-control [nzSpan]="14">
+                        <input formControlName="value" nz-input>
+                      </nz-form-control>
+                    </nz-form-item>
                   </nz-col>
-
                   <nz-col [nzSpan]="12">
-                    <div nz-form-item nz-row>
-                      <div nz-form-label nz-col [nzSpan]="8">
-                        <label>排序方法</label>
-                      </div>
-                      <div nz-form-control nz-col [nzSpan]="14">
+                    <nz-form-item>
+                      <nz-form-label [nzSpan]="8">排序方法</nz-form-label>
+                      <nz-form-control [nzSpan]="14">
                         <app-mx-select formControlName="sortByName" myPlaceHolder="可添加排序方法" [options]="sortWayOptions"></app-mx-select>
-                      </div>
-                    </div>
+                      </nz-form-control>
+                    </nz-form-item>
                   </nz-col>
                   <nz-col [nzSpan]="12">
-                    <div nz-form-item nz-row>
-                      <div nz-form-label nz-col [nzSpan]="8">
-                        <label>排序額外參數</label>
-                      </div>
-                      <div nz-form-control nz-col [nzSpan]="14">
-                        <nz-input formControlName="sortByParams" [nzSize]="'large'" nzType="textarea" [nzAutosize]="'1'" nzPlaceHolder="可不填">
-                        </nz-input>
-                      </div>
-                    </div>
+                    <nz-form-item>
+                      <nz-form-label [nzSpan]="8">排序額外參數</nz-form-label>
+                      <nz-form-control [nzSpan]="14">
+                        <textarea formControlName="sortByParams" [nzAutosize]="'1'" nz-input placeholder="可不填"></textarea>
+                      </nz-form-control>
+                    </nz-form-item>
                   </nz-col>
-
                   <nz-col [nzSpan]="12">
-                    <div nz-form-item nz-row>
-                      <div nz-form-label nz-col [nzSpan]="8">
-                        <label>管道方法</label>
-                      </div>
-                      <div nz-form-control nz-col [nzSpan]="14">
+                    <nz-form-item>
+                      <nz-form-label [nzSpan]="8">管道方法</nz-form-label>
+                      <nz-form-control [nzSpan]="14">
                         <app-mx-select formControlName="pipeName" myPlaceHolder="可添加管道轉換" [options]="pipeOptions"></app-mx-select>
-                      </div>
-                    </div>
+                      </nz-form-control>
+                    </nz-form-item>
                   </nz-col>
                   <nz-col [nzSpan]="12">
-                    <div nz-form-item nz-row>
-                      <div nz-form-label nz-col [nzSpan]="8">
-                        <label>管道額外參數</label>
-                      </div>
-                      <div nz-form-control nz-col [nzSpan]="14">
-                        <nz-input formControlName="pipeParams" [nzSize]="'large'" nzType="textarea" [nzAutosize]="'1'" nzPlaceHolder="選擇管道后可选填">
-                        </nz-input>
-                      </div>
-                    </div>
+                    <nz-form-item>
+                      <nz-form-label [nzSpan]="8">管道額外參數</nz-form-label>
+                      <nz-form-control [nzSpan]="14">
+                        <textarea formControlName="pipeParams" [nzAutosize]="'1'" nz-input placeholder="選擇管道后可选填"></textarea>
+                      </nz-form-control>
+                    </nz-form-item>
                   </nz-col>
-
                   <nz-col [nzSpan]="12">
-                    <div nz-form-item nz-row>
-                      <div nz-form-label nz-col [nzSpan]="8">
-                        <label>除文本外的顯示方法</label>
-                      </div>
-                      <div nz-form-control nz-col [nzSpan]="14">
+                    <nz-form-item>
+                      <nz-form-label [nzSpan]="8">除文本外的顯示方法</nz-form-label>
+                      <nz-form-control [nzSpan]="14">
                         <app-mx-select formControlName="typeName" myPlaceHolder="可選" [options]="typeNameOptions"></app-mx-select>
-                      </div>
-                    </div>
+                      </nz-form-control>
+                    </nz-form-item>
                   </nz-col>
-                </div>
-
+                </nz-row>
               </nz-tab>
               <ng-template #nzTabBarExtraContentTable>
-                <i class="ant-tabs-new-tab anticon anticon-plus" (click)="newColumnTab(setForm.controls['tableData'].controls['columns']);columnIdx = setForm.controls['tableData'].controls['columns'].controls.length-1">
-                </i>增加數據列
+                <i class="ant-tabs-new-tab anticon anticon-plus" (click)="newColumnTab(setForm.controls['tableData'].controls['columns']);columnIdx = setForm.controls['tableData'].controls['columns'].controls.length-1"></i>
+                增加數據列
               </ng-template>
             </nz-tabset>
-
-          </nz-collapse>
-
-
-          <nz-collapse nzTitle="查詢配置">
-            <nz-tabset [nzType]="'card'" [nzTabBarExtraTemplate]="nzTabBarExtraContentSearchSets" [nzSelectedIndex]="SearchIdx">
-              <nz-tab *ngFor="let searchSet of setForm.controls['searchSets'].controls; let i = index;">
+          </nz-collapse-panel>
+          <nz-collapse-panel nzHeader="查詢配置">
+            <nz-tabset [nzType]="'card'" [nzTabBarExtraContent]="nzTabBarExtraContentSearchSets" [nzSelectedIndex]="SearchIdx">
+              <nz-tab *ngFor="let searchSet of setForm.controls['searchSets'].controls; let i = index;" [nzTitle]="nzTabHeading">
                 <ng-template #nzTabHeading>
                   <div>
                     欄位{{i+1}}
@@ -511,14 +378,14 @@
                 <ng-template [ngTemplateOutlet]="inputSetForm" [ngTemplateOutletContext]="{formGroup: searchSet, type: 1}" *ngIf="inputSetForm"></ng-template>
               </nz-tab>
               <ng-template #nzTabBarExtraContentSearchSets>
-                <i class="ant-tabs-new-tab anticon anticon-plus" (click)="newUpdateSetTab(setForm.get('searchSets')); SearchIdx=setForm.controls['searchSets'].controls.length-1"></i>增加查詢項
+                <i class="ant-tabs-new-tab anticon anticon-plus" (click)="newUpdateSetTab(setForm.get('searchSets')); SearchIdx=setForm.controls['searchSets'].controls.length-1"></i>
+                增加查詢項
               </ng-template>
             </nz-tabset>
-          </nz-collapse>
-
-          <nz-collapse nzTitle="更新及插入配置">
-            <nz-tabset [nzType]="'card'" [nzTabBarExtraTemplate]="nzTabBarExtraContentUpdateSets" [nzSelectedIndex]="updateIdx">
-              <nz-tab *ngFor="let updateSet of setForm.controls['updateSets'].controls; let i = index;">
+          </nz-collapse-panel>
+          <nz-collapse-panel nzHeader="更新及插入配置">
+            <nz-tabset [nzType]="'card'" [nzTabBarExtraContent]="nzTabBarExtraContentUpdateSets" [nzSelectedIndex]="updateIdx">
+              <nz-tab *ngFor="let updateSet of setForm.controls['updateSets'].controls; let i = index;" [nzTitle]="nzTabHeading">
                 <ng-template #nzTabHeading>
                   <div>
                     欄位{{i+1}}
@@ -528,25 +395,22 @@
                 <ng-template [ngTemplateOutlet]="inputSetForm" [ngTemplateOutletContext]="{formGroup: updateSet, type: 2}" *ngIf="inputSetForm"></ng-template>
               </nz-tab>
               <ng-template #nzTabBarExtraContentUpdateSets>
-                <i class="ant-tabs-new-tab anticon anticon-plus" (click)="newUpdateSetTab(setForm.get('updateSets')); updateIdx = setForm.controls['updateSets'].controls.length-1"></i>增加更新項
+                <i class="ant-tabs-new-tab anticon anticon-plus" (click)="newUpdateSetTab(setForm.get('updateSets')); updateIdx = setForm.controls['updateSets'].controls.length-1"></i>
+                增加更新項
               </ng-template>
             </nz-tabset>
-
-          </nz-collapse>
-        </nz-collapseset>
-
-
-        <div nz-form-item nz-row [style.display]="'block'">
-          <button nz-button nz-col [nzOffset]="3" [nzSpan]="8" type="button" [nzType]="'primary'" [nzSize]="'large'" (click)="saveToAnother()"
-            [disabled]="!setForm.valid" *ngIf="setForm.value.id > 0">另存</button>
-          <button nz-button nz-col [nzOffset]="3" [nzSpan]="8" type="button" [nzType]="'primary'" [nzSize]="'large'" (click)="submitForm()"
-            [disabled]="!setForm.valid">{{setForm.value.id > 0? '更新': '提交'}}</button>
-        </div>
+          </nz-collapse-panel>
+        </nz-collapse>
+        <nz-form-item style="display:block;text-align:center">
+          <button nz-button type="button" [nzType]="'primary'" style="width: 25%" (click)="saveToAnother()" [disabled]="!setForm.valid" *ngIf="setForm.value.id > 0">另存</button>
+          <div style="width: 10%;display:inline-block"></div>
+          <button nz-button type="button" [nzType]="'primary'" style="width: 25%" (click)="submitForm()" [disabled]="!setForm.valid">{{setForm.value.id > 0? '更新': '提交'}}</button>
+        </nz-form-item>
       </form>
     </div>
   </nz-tab>
 
-  <nz-tab *ngIf="setForm?.valid">
+  <nz-tab *ngIf="setForm?.valid" [nzTitle]="nzTabHeading">
     <ng-template #nzTabHeading>
       預覽
     </ng-template>
@@ -556,107 +420,72 @@
 
 <ng-template #inputSetForm let-formGroup="formGroup" let-type="type">
   <ng-container [formGroup]="formGroup">
-    <div nz-form-item nz-row>
-      <div nz-form-label nz-col [nzSpan]="4">
-        <label>屬性名</label>
-      </div>
-      <div nz-form-control nz-col [nzSpan]="14">
-        <nz-input formControlName="property" [nzSize]="'large'" nzPlaceHolder="請與API的屬性名一致，若數據配置中有描述，會自動替換顯示">
-        </nz-input>
-      </div>
-    </div>
-    <div nz-form-item nz-row *ngIf="type===1">
-      <div nz-form-label nz-col [nzSpan]="4">
-        <label>屬性名的API替換名字</label>
-      </div>
-      <div nz-form-control nz-col [nzSpan]="14">
-        <nz-input formControlName="apiProperty" [nzSize]="'large'" nzPlaceHolder="若屬性名與API的待替換參數不一致時，可在此設置將被替換的參數">
-        </nz-input>
-      </div>
-    </div>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="4">屬性名</nz-form-label>
+      <nz-form-control [nzSpan]="14">
+        <input formControlName="property" nz-input placeholder="請與API的屬性名一致，若數據配置中有描述，會自動替換顯示">
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item *ngIf="type===1">
+      <nz-form-label [nzSpan]="4">屬性名的API替換名字</nz-form-label>
+      <nz-form-control [nzSpan]="14">
+        <input formControlName="apiProperty" nz-input placeholder="若屬性名與API的待替換參數不一致時，可在此設置將被替換的參數">
+      </nz-form-control>
+    </nz-form-item>
     <ng-container formGroupName="InputOpts">
-      <div nz-form-item nz-row>
-        <div nz-form-label nz-col [nzSpan]="4">
-          <label>類型</label>
-        </div>
-        <div nz-form-control nz-col [nzSpan]="14">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="4">類型</nz-form-label>
+        <nz-form-control [nzSpan]="14">
           <app-mx-select formControlName="type" myPlaceHolder="輸入框類型" [options]="type===1?inputTypeOptions.slice(1): inputTypeOptions"></app-mx-select>
-        </div>
-      </div>
-      <div nz-form-item nz-row>
-        <div nz-form-label nz-col [nzSpan]="4">
-          <label>提示placeHolder</label>
-        </div>
-        <div nz-form-control nz-col [nzSpan]="14">
-          <nz-input formControlName="placeHolder" [nzSize]="'large'" nzPlaceHolder="">
-          </nz-input>
-        </div>
-      </div>
-      <div nz-form-item nz-row>
-        <div nz-form-label nz-col [nzSpan]="4">
-          <label>驗證器</label>
-        </div>
-        <div nz-form-control nz-col [nzSpan]="14">
-          <nz-input formControlName="match" [nzSize]="'large'" nzType="textarea" [nzAutosize]="'1'" nzPlaceHolder="
-                    {
-                      fns: { name: string, params?: any[]}[],
-                      err: string
-                    }">
-          </nz-input>
-        </div>
-      </div>
-
-      <div nz-form-item nz-row>
-        <div nz-form-label nz-col [nzSpan]="4">
-          <label>其他設置</label>
-        </div>
-        <div nz-form-control nz-col [nzSpan]="14">
-          <nz-input formControlName="more" [nzSize]="'large'" nzType="textarea" [nzRows]="8" [nzPlaceHolder]="
-              formGroup.get('InputOpts').myTips">
-          </nz-input>
-        </div>
-      </div>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="4">提示placeHolder</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input formControlName="placeHolder" nz-input placeholder>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="4">驗證器</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <textarea formControlName="match" [nzAutosize]="'1'" nz-input placeholder="           {            fns: { name: string, params?: any[]}[],            err: string           }"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="4">其他設置</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <textarea formControlName="more" rows="8" nz-input [placeholder]="        formGroup.get('InputOpts').myTips"></textarea>
+        </nz-form-control>
+      </nz-form-item>
     </ng-container>
-
   </ng-container>
 </ng-template>
 
 <ng-template #styleForm let-formGroup="formGroup">
-  <div nz-row [formGroup]="formGroup">
+  <nz-row [formGroup]="formGroup">
     <nz-col [nzSpan]="8">
-      <div nz-form-item nz-row>
-        <div nz-form-label nz-col [nzSpan]="4">
-          <label>字體顏色</label>
-        </div>
-        <div nz-form-control nz-col [nzSpan]="14">
-          <nz-input formControlName="textColor" [nzSize]="'large'">
-          </nz-input>
-        </div>
-      </div>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="4">字體顏色</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input formControlName="textColor" nz-input>
+        </nz-form-control>
+      </nz-form-item>
     </nz-col>
-
     <nz-col [nzSpan]="8">
-      <div nz-form-item nz-row>
-        <div nz-form-label nz-col [nzSpan]="4">
-          <label>背景顏色</label>
-        </div>
-        <div nz-form-control nz-col [nzSpan]="14">
-          <nz-input formControlName="bgColor" [nzSize]="'large'">
-          </nz-input>
-        </div>
-      </div>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="4">背景顏色</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input formControlName="bgColor" nz-input>
+        </nz-form-control>
+      </nz-form-item>
     </nz-col>
-
     <nz-col [nzSpan]="8">
-      <div nz-form-item nz-row>
-        <div nz-form-label nz-col [nzSpan]="4">
-          <label>字體大小</label>
-        </div>
-        <div nz-form-control nz-col [nzSpan]="14">
-          <nz-input formControlName="textSize" [nzSize]="'large'">
-          </nz-input>
-        </div>
-      </div>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="4">字體大小</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input formControlName="textSize" nz-input>
+        </nz-form-control>
+      </nz-form-item>
     </nz-col>
-  </div>
+  </nz-row>
 </ng-template>

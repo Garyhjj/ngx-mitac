@@ -43,13 +43,37 @@ export class EndSiderComponent implements OnInit, OnDestroy {
   canSeeFunction(id) {
     return this.myPrivilege && this.myPrivilege.find(m => m.FUNCTION_ID === id);
   }
-  select(e: any) {
+  select(directive: any) {
     if (!this.authService.checkAuth()) {
       return this.utilService.tokenTimeOut();
     }
-    let target = e.target;
+    const originalTar = directive.hostElement.nativeElement;
+    let target = originalTar;
+    const nodeName = target.nodeName.toLowerCase();
+    if (nodeName === 'nz-badge' || nodeName === 'span') {
+      target = target.parentNode;
+    } else if (nodeName === 'sup') {
+      try {
+        target = target.parentNode.parentNode;
+      } catch (e) {
+        target = originalTar;
+      }
+    } else if (nodeName === 'p') {
+      try {
+        target = target.parentNode.parentNode.parentNode.parentNode;
+      } catch (e) {
+        target = originalTar;
+      }
+    }
     if (target.nodeName.toLowerCase() === 'li') {
       try {
+        const span = target.querySelector('span');
+        let targetText;
+        if (span) {
+          targetText = span.innerText;
+        } else {
+          targetText = target.innerText;
+        }
         let top = target.parentNode.parentNode.parentNode;
         let routeName: string[] = [];
         if (top.className === 'ant-menu-item-group') {
@@ -57,15 +81,15 @@ export class EndSiderComponent implements OnInit, OnDestroy {
           routeName = routeName.concat([
             top.parentNode.parentNode.parentNode.querySelector('div span')
               .innerText,
-            target.innerText,
+            targetText,
           ]);
         } else {
           routeName = [
-            top.querySelector('div span').innerText,
-            target.innerText,
+            directive.nzSubMenuComponent.trigger.nativeElement.textContent,
+            targetText,
           ];
         }
-        routeName.unshift('應用中心');
+        routeName.unshift('后台');
         let navRoute;
         if ((navRoute = target.dataset.route)) {
           const url = 'end' + navRoute;

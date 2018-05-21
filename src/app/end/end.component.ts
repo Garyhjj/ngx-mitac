@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { DOCUMENT } from '@angular/platform-browser';
+import { Component, OnInit, Inject, ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-end',
@@ -7,7 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EndComponent implements OnInit {
   isCollapsed;
-  constructor() {}
+  private doc: Document;
+  constructor(@Inject(DOCUMENT) doc: any, private ref: ChangeDetectorRef) {
+    this.doc = doc;
+  }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this.doc.body.clientWidth < 993) {
+      this.isCollapsed = true;
+    }
+    this.ref.detectChanges();
+  }
 }

@@ -3,7 +3,7 @@
     <nz-breadcrumb-item *ngFor="let item of breadcrumb | async">{{item.routeName}}</nz-breadcrumb-item>
   </nz-breadcrumb> -->
   <nz-tabset [nzType]="'card'" *ngIf="breadcrumb?.length > 0" [nzSelectedIndex]="tabIdx" (nzSelectedIndexChange)="tabIdxChange($event)">
-    <nz-tab *ngFor="let tab of breadcrumb; let i = index">
+    <nz-tab *ngFor="let tab of breadcrumb; let i = index" [nzTitle]="nzTabHeading">
       <ng-template #nzTabHeading>
         <div>
           {{tab?.routeName[tab?.routeName?.length -1]}}

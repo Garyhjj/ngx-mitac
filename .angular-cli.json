@@ -19,7 +19,7 @@
     "prefix": "app",
     "serviceWorker": false,
     "styles": [
-      "../node_modules/ng-zorro-antd/src/ng-zorro-antd.less",
+      "../src/assets/styles/my.less",
       "styles.css"
     ],
     "scripts": ["assets/scripts/qr.js"],

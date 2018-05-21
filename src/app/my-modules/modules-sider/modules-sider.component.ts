@@ -7,7 +7,13 @@ import { Subscription, BehaviorSubject } from 'rxjs/Rx';
 import { MyStore, UserState, MyModule, Privilege } from './../../core/store';
 import { Store } from '@ngrx/store';
 import { BreadcrumbModel } from './../../core/models/breadcrumb.model';
-import { Component, OnInit, OnDestroy, Input, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Input,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { isArray } from '../../shared/utils';
 
 @Component({
@@ -36,7 +42,7 @@ export class ModulesSiderComponent implements OnInit, OnDestroy {
     private router: Router,
     private authService: AuthService,
     private utilService: UtilService,
-    private ref: ChangeDetectorRef
+    private ref: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
@@ -145,11 +151,12 @@ export class ModulesSiderComponent implements OnInit, OnDestroy {
   canSeeFunction(id) {
     return this.myPrivilege && this.myPrivilege.find(m => m.FUNCTION_ID === id);
   }
-  select(e: any) {
+  select(directive: any) {
     if (!this.authService.checkAuth()) {
       return this.utilService.tokenTimeOut();
     }
-    let target = e.target;
+    const originalTar = directive.hostElement.nativeElement;
+    let target = originalTar;
     const nodeName = target.nodeName.toLowerCase();
     if (nodeName === 'nz-badge' || nodeName === 'span') {
       target = target.parentNode;
@@ -157,13 +164,13 @@ export class ModulesSiderComponent implements OnInit, OnDestroy {
       try {
         target = target.parentNode.parentNode;
       } catch (e) {
-        target = e.target;
+        target = originalTar;
       }
     } else if (nodeName === 'p') {
       try {
         target = target.parentNode.parentNode.parentNode.parentNode;
       } catch (e) {
-        target = e.target;
+        target = originalTar;
       }
     }
     if (target.nodeName.toLowerCase() === 'li') {
@@ -185,7 +192,10 @@ export class ModulesSiderComponent implements OnInit, OnDestroy {
             targetText,
           ]);
         } else {
-          routeName = [top.querySelector('div span').innerText, targetText];
+          routeName = [
+            directive.nzSubMenuComponent.trigger.nativeElement.textContent,
+            targetText,
+          ];
         }
         routeName.unshift('應用中心');
         let navRoute;

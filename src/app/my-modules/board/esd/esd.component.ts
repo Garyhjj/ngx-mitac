@@ -92,6 +92,12 @@ export class EsdComponent implements OnInit, OnDestroy {
       .observeScrollToBottom()
       .subscribe(() => this.submitForm());
   }
+  _onReuseDestroy() {
+    this.dataDrive.modalSataus = true;
+  }
+  _onReuseInit() {
+    this.dataDrive.modalSataus = false;
+  }
 
   submitForm() {
     const value = this.validateForm.value;

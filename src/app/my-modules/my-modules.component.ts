@@ -1,6 +1,7 @@
 import { Subscription } from 'rxjs/Rx';
 import { Observable } from 'rxjs/Observable';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
+import { DOCUMENT } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-my-modules',
@@ -10,9 +11,16 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 export class MyModulesComponent implements OnInit, OnDestroy {
   mySub: Subscription;
   isCollapsed = false;
-  constructor() {}
+  private doc: Document;
+  constructor(@Inject(DOCUMENT) doc: any) {
+    this.doc = doc;
+  }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this.doc.body.clientWidth < 993) {
+      this.isCollapsed = true;
+    }
+  }
 
   ngOnDestroy() {}
 }

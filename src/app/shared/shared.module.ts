@@ -1,3 +1,4 @@
+import { MyRouteReuseStrategy } from './../route/myRouteReuseStrategy';
 import { FileUploadComponent } from './components/inputs/file-upload/file-upload.component';
 import { MySelectComponent } from './components/inputs/my-select/my-select.component';
 import { PhotoUploadComponent } from './components/inputs/photo-upload/photo-upload.component';
@@ -15,6 +16,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MxSelectComponent } from './components/inputs/mx-select/mx-select.component';
 import { MxCheckboxComponent } from './components/inputs/mx-checkbox/mx-checkbox.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { RouteReuseStrategy } from '@angular/router';
 
 @NgModule({
   imports: [
@@ -58,6 +60,6 @@ import { TranslateModule } from '@ngx-translate/core';
     FileUploadComponent,
   ],
   entryComponents: [],
-  providers: [],
+  providers: [{ provide: RouteReuseStrategy, useClass: MyRouteReuseStrategy }],
 })
 export class SharedModule {}

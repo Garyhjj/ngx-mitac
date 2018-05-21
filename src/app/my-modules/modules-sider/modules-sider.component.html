@@ -1,5 +1,5 @@
-<ul nz-menu [nzMode]="isCollapsed?'vertical':'inline'" style="height:calc(100% - 48px);overflow-y:auto;overflow-x:hidden"
-  (click)="select($event)" [class.ant-layout-sider-collapsed]="isCollapsed">
+<ul nz-menu [nzMode]="'inline'" [nzInlineCollapsed]="isCollapsed" style="height:calc(100% - 48px);overflow-y:auto;overflow-x:hidden"
+  (nzClick)="select($event)">
   <!-- <li nz-submenu>
     <span title><i class="anticon anticon-file-pdf"></i><span class="nav-text">eMPI</span></span>
     <ul>

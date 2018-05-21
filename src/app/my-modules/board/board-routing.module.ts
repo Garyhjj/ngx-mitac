@@ -10,17 +10,22 @@ import { EsdComponent } from './esd/esd.component';
 const bRoutes: Routes = [
   {
     path: '',
-    component: BoardComponent,
     canActivate: [AuthGuard],
     canActivateChild: [AuthGuard],
     children: [
       {
         path: 'urgentMaterial',
         component: UrgentMaterialComponent,
+        data: {
+          reuse: false,
+        },
       },
       {
         path: 'urgentNo',
         component: UrgentNoComponent,
+        data: {
+          reuse: false,
+        },
       },
       {
         path: 'esd',
