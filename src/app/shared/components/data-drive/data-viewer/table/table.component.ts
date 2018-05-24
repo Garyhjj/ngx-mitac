@@ -153,13 +153,14 @@ export class TableComponent
         const body: any = document.querySelector('.my-modal .ant-table-body');
         body.style.maxHeight = `calc(99vh)`;
       } else {
-        const otherHeight =
-          document.querySelector('app-table table').getBoundingClientRect()
-            .bottom +
-          50 +
-          3;
-        const body: any = document.querySelector('.main-view .ant-table-body');
-        body.style.maxHeight = `calc(100vh - ${otherHeight}px)`;
+        const table = document.querySelector('app-table table');
+        if (table) {
+          const otherHeight = table.getBoundingClientRect().bottom + 50 + 3;
+          const body: any = document.querySelector(
+            '.main-view .ant-table-body',
+          );
+          body.style.maxHeight = `calc(100vh - ${otherHeight}px)`;
+        }
       }
     }
   }
@@ -306,6 +307,15 @@ export class TableComponent
     this.timeEvent3 = setTimeout(() => this.initAutoScroll(), 50);
   }
 
+  subscribeIsInBackground() {
+    this._dataDrive.observeIsInBackground().subscribe(_ => {
+      this.clearTimeEvent();
+      if (!_) {
+        this.autoScroll();
+      }
+    });
+  }
+
   initAutoScroll() {
     let autoScroll;
     if (
@@ -345,13 +355,16 @@ export class TableComponent
   }
   autoScroll(idx: number = 0) {
     clearTimeout(this.timeEvent1);
+    const isInBackground = this._dataDrive.isInBackground;
     const lg = this.dataViewList.length;
-    if (idx >= lg && this._loopScroll) {
-      this.hasScrolledToBottom();
-      idx = 0;
+    if (!isInBackground) {
+      if (idx >= lg && this._loopScroll) {
+        this.hasScrolledToBottom();
+        idx = 0;
+      }
     }
     if (idx < lg) {
-      if (this.canScroll) {
+      if (this.canScroll && !isInBackground) {
         this.dataViewList[idx].scrollIntoView();
       } else {
         --idx;

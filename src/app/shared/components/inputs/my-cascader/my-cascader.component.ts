@@ -79,47 +79,48 @@ export class MyCascaderComponent implements OnInit {
   }
 
   /** load data async */
-  loadData(e: {
-    option: any;
-    index: number;
-    resolve: Function;
-    reject: Function;
-  }): void {
-    const idx = e.index;
-    if (idx === -1) {
-      e.resolve(this.myOptions);
-      return;
-    }
-
-    const option = e.option;
-    option.loading = true;
-    const myCascaderLazySets = this.myCascaderLazySets || [];
-    const lazySet = myCascaderLazySets.find(s => s.lazyLayer === idx + 2);
-    if (lazySet) {
-      if (this.myProperties && this.myProperties.length < idx + 2) {
-        throw new Error('myProperties 数组长度不足，无法进行懒加载项目');
+  loadData = (node: any, index: number) => {
+    return new Promise(resolve => {
+      const idx = index;
+      if (idx === -1) {
+        const first = this.myCascaderLazySets[0];
+        this.getLazyData(
+          first,
+          {},
+          val => (node.children = val),
+          () => resolve(),
+        );
       }
-      this.getLazyData(
-        lazySet,
-        { [this.myProperties[idx]]: option.value },
-        val => {
-          e.resolve(val);
-        },
-        () => (option.loading = false),
-        res => {
-          const params = lazySet.params;
-          if (params.length > 2) {
-            return res.filter(r => r[params[2]] === option.value);
-          } else {
-            return res;
-          }
-        },
-      );
-    } else {
-      option.loading = false;
-      e.resolve([{ value: '', label: '空', isLeaf: true }]);
-    }
-  }
+      const option = node;
+      const myCascaderLazySets = this.myCascaderLazySets || [];
+      const lazySet = myCascaderLazySets.find(s => s.lazyLayer === idx + 2);
+      if (lazySet) {
+        if (this.myProperties && this.myProperties.length < idx + 2) {
+          throw new Error('myProperties 数组长度不足，无法进行懒加载项目');
+        }
+        this.getLazyData(
+          lazySet,
+          { [this.myProperties[idx]]: option.value },
+          val => {
+            node.children = val;
+          },
+          () => resolve(),
+          res => {
+            const params = lazySet.params;
+            if (params.length > 2) {
+              return res.filter(r => r[params[2]] === option.value);
+            } else {
+              return res;
+            }
+          },
+        );
+      } else {
+        option.loading = false;
+        node.children = [{ value: '', label: '空', isLeaf: true }];
+        resolve();
+      }
+    });
+  };
 
   ngOnInit() {
     if (!isArray(this.myOptions) || this.myOptions.length === 0) {
@@ -128,9 +129,6 @@ export class MyCascaderComponent implements OnInit {
         this.myCascaderLazySets.length === 0
       ) {
         throw new Error('级联组件参数不够');
-      } else {
-        const first = this.myCascaderLazySets[0];
-        this.getLazyData(first, {}, val => (this.myOptions = val));
       }
     }
   }

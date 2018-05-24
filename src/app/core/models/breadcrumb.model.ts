@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import {
   BreadcrumbUpdate,
   BreadcrumbClear,
+  BreadcrumbUnshift,
 } from './../actions/breadcrumb.action';
 import { BreadcrumbState, MyStore } from './../store';
 
@@ -23,6 +24,12 @@ export class BreadcrumbModel {
     }
   }
   update(store$: Store<MyStore>) {
-    store$.dispatch(new BreadcrumbUpdate(this.breadcrumb));
+    setTimeout(
+      () => store$.dispatch(new BreadcrumbUpdate(this.breadcrumb)),
+      500,
+    );
+  }
+  unshift(store$: Store<MyStore>) {
+    store$.dispatch(new BreadcrumbUnshift(this.breadcrumb[0]));
   }
 }

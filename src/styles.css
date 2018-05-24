@@ -265,3 +265,21 @@ app-empi {
 }
 
 /* API description end*/
+
+/* scrollbar begin*/
+
+::-webkit-scrollbar {
+  height: 6px;
+  width: 6px
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #6e6e6e;
+  outline: #333 solid 1px
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, .3)
+}
+
+/* scrollbar end*/

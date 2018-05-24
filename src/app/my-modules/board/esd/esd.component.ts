@@ -93,10 +93,10 @@ export class EsdComponent implements OnInit, OnDestroy {
       .subscribe(() => this.submitForm());
   }
   _onReuseDestroy() {
-    this.dataDrive.modalSataus = true;
+    this.dataDrive.runIntoBackground();
   }
   _onReuseInit() {
-    this.dataDrive.modalSataus = false;
+    this.dataDrive.backIntoFront();
   }
 
   submitForm() {

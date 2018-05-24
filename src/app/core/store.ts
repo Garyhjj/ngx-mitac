@@ -7,6 +7,8 @@ export interface BreadcrumbState {
   routeName: string;
   routeUrl: string;
   active?: boolean;
+  _snapshot?: any;
+  _handle?: any;
 }
 
 export interface UserState {

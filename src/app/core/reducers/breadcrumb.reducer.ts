@@ -3,11 +3,16 @@ import {
   BREADCRUMB_UPDATE,
   BREADCRUMB_CLEAR,
   BREADCRUMB_CANCEL,
+  BREADCRUMB_UNSHIFT,
+  BREADCRUMB_REUSE_UPDATE,
 } from './../actions/breadcrumb.action';
 import { BreadcrumbState } from './../store';
 
 const initialState: BreadcrumbState[] = [];
-
+const isSameUrl = (a: string, b: string) => {
+  const format = (tar: string) => (tar[0] === '/' ? tar.slice(1) : tar);
+  return format(a) === format(b);
+};
 export function breadcrumbReducer(
   state = initialState,
   action: BreadcrumbActions,
@@ -19,7 +24,7 @@ export function breadcrumbReducer(
         return s;
       });
       action.payload.forEach(r => {
-        const sameUrl = copy.find(s => s.routeUrl === r.routeUrl);
+        const sameUrl = copy.find(s => isSameUrl(s.routeUrl, r.routeUrl));
         if (!sameUrl) {
           copy.push(r);
         } else {
@@ -28,10 +33,27 @@ export function breadcrumbReducer(
       });
       return copy;
     case BREADCRUMB_CLEAR:
-      return initialState;
+      return [];
     case BREADCRUMB_CANCEL:
-      const filter = state.filter(c => c.routeUrl !== action.payload.routeUrl);
+      const filter = state.filter(
+        c => !isSameUrl(c.routeUrl, action.payload.routeUrl),
+      );
       return filter;
+    case BREADCRUMB_UNSHIFT:
+      const payload1 = action.payload;
+      const tar = state.find(_ => isSameUrl(_.routeUrl, payload1.routeUrl));
+      if (!tar) {
+        state.unshift(payload1);
+      }
+      return state;
+    case BREADCRUMB_REUSE_UPDATE:
+      const payload = action.payload;
+      return state.map(c => {
+        if (isSameUrl(c.routeUrl, payload.routeUrl)) {
+          return Object.assign(c, payload);
+        }
+        return c;
+      });
     default:
       return state;
   }

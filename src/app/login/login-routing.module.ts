@@ -7,6 +7,9 @@ const loginRoutes: Routes = [
   {
     path: '',
     component: LoginComponent,
+    data: {
+      reuse: false,
+    },
   },
 ];
 

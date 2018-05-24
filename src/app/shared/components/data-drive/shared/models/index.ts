@@ -46,6 +46,8 @@ export class DataDrive implements DataDriveOptions {
   private isShowModalSubject = new BehaviorSubject<boolean>(false);
   private selfSearchDataSubject = new Subject<any[]>();
   private scrollToBottomSubject = new Subject<any>();
+  private isInBackgroundSubject = new Subject<any>();
+  isInBackground = false;
   eventSubject = new Subject<string>();
   eventsQueue = {};
   lastestSearchParams;
@@ -131,6 +133,17 @@ export class DataDrive implements DataDriveOptions {
   }
   isCompanyLimited() {
     return this.tableData.isCompanyLimited;
+  }
+  observeIsInBackground() {
+    return this.isInBackgroundSubject.asObservable();
+  }
+  runIntoBackground() {
+    this.isInBackground = true;
+    this.isInBackgroundSubject.next(true);
+  }
+  backIntoFront() {
+    this.isInBackground = false;
+    this.isInBackgroundSubject.next(false);
   }
   /**
    * 增加默認搜索參數

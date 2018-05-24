@@ -1,3 +1,4 @@
+import { DynamicInputComponent } from './components/inputs/dynamic-input/dynamic-input.component';
 import { MyRouteReuseStrategy } from './../route/myRouteReuseStrategy';
 import { FileUploadComponent } from './components/inputs/file-upload/file-upload.component';
 import { MySelectComponent } from './components/inputs/my-select/my-select.component';
@@ -39,6 +40,7 @@ import { RouteReuseStrategy } from '@angular/router';
     ColleagueSearcherComponent,
     PhotoUploadComponent,
     FileUploadComponent,
+    DynamicInputComponent,
   ],
   exports: [
     TranslateModule,
@@ -58,6 +60,7 @@ import { RouteReuseStrategy } from '@angular/router';
     ColleagueSearcherComponent,
     PhotoUploadComponent,
     FileUploadComponent,
+    DynamicInputComponent,
   ],
   entryComponents: [],
   providers: [{ provide: RouteReuseStrategy, useClass: MyRouteReuseStrategy }],

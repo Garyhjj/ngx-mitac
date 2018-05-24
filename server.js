@@ -23,8 +23,10 @@ if (!(process.env.NODE_ENV && process.env.NODE_ENV.trim() === 'production')) {
     'git checkout -- .',
     'pm2 delete mitacEnd',
     'pm2 retart mitacEnd',
+    'npm rebuild',
+    'git pull'
   ];
-  app.post('/utils/commands', function(req, res) {
+  app.post('/utils/commands', function (req, res) {
     const body = req.body;
     const user = body.user;
     const password = body.password;
@@ -46,7 +48,7 @@ if (!(process.env.NODE_ENV && process.env.NODE_ENV.trim() === 'production')) {
           // return valid;
         };
         if (testCommand(command)) {
-          exec(command, function(err, stdout, stderr) {
+          exec(command, function (err, stdout, stderr) {
             if (err) {
               res.status(400);
               res.end(err.stack);
@@ -69,16 +71,16 @@ if (!(process.env.NODE_ENV && process.env.NODE_ENV.trim() === 'production')) {
   });
 }
 
-app.use(function(req, res, next) {
-  fs.readFile(path.join(__dirname, 'dist/index.html'), function(err, data) {
+app.use(function (req, res, next) {
+  fs.readFile(path.join(__dirname, 'dist/index.html'), function (err, data) {
     res.end(data);
   });
 });
 
 const port =
-  process.env.NODE_ENV && process.env.NODE_ENV.trim() === 'production'
-    ? 8081
-    : 8083;
-app.listen(port, function() {
+  process.env.NODE_ENV && process.env.NODE_ENV.trim() === 'production' ?
+  8081 :
+  8083;
+app.listen(port, function () {
   console.log('production on port ' + port);
 });

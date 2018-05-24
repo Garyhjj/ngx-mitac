@@ -42,6 +42,7 @@ export class DataDriveComponent implements OnInit, OnDestroy {
   }
   @Input() headerCellStyle: (c: TableDataColumn) => any;
   @Input() bodyCellStyle: (data: any, property: string) => any;
+  @Input() dataDriveInit2: (d: DataDrive) => void;
 
   @Output() dataDriveInit: EventEmitter<DataDrive> = new EventEmitter();
 
@@ -59,6 +60,9 @@ export class DataDriveComponent implements OnInit, OnDestroy {
     this.utilService.dismissLoading(loadingId);
     if (!this.dataDrive) {
       return;
+    }
+    if (typeof this.dataDriveInit2 === 'function') {
+      this.dataDriveInit2(this.dataDrive);
     }
     this.dataDriveInit.emit(this.dataDrive);
     this.tableData = this.dataDrive.tableData;

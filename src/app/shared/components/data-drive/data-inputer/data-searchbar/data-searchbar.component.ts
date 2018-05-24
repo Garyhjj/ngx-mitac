@@ -30,7 +30,7 @@ export class DataSearchbarComponent implements OnInit {
     private util: UtilService,
     private modalService: NzModalService,
     private _message: NzMessageService,
-  ) { }
+  ) {}
 
   currentViewIdx = -1;
   isShowModal = false;
@@ -148,7 +148,8 @@ export class DataSearchbarComponent implements OnInit {
       );
       this.selectedOption = this.optionList[0];
       if (this.selectedOption) {
-        this.selectedOption.placeHolder = this.selectedOption.placeHolder || ' ';
+        this.selectedOption.placeHolder =
+          this.selectedOption.placeHolder || ' ';
       }
       if (this.validateForm.valid) {
         this.notShowSearchInput = false;
@@ -359,11 +360,14 @@ export class DataSearchbarComponent implements OnInit {
     const subscription = this.modalService.create({
       nzTitle: '新增',
       nzContent: DataUpdateComponent,
-      nzOnOk() { },
-      nzOnCancel() { },
+      nzOnOk() {},
+      nzOnCancel() {},
       nzFooter: null,
       nzComponentParams: {
         opts: this.dataDrive,
+        afterSubmitSuccess: () => {
+          subscription.destroy();
+        },
       },
     });
   }
@@ -461,8 +465,8 @@ export class DataSearchbarComponent implements OnInit {
     const subscription = this.modalService.create({
       nzTitle: '批量插入数据',
       nzContent: MutiUpdateComponent,
-      nzOnOk() { },
-      nzOnCancel() { },
+      nzOnOk() {},
+      nzOnCancel() {},
       nzFooter: null,
       nzComponentParams: {
         dataDrive: this.dataDrive,

@@ -7,50 +7,7 @@
 
 
       <nz-form-control [nzSpan]="isHorizontal?16:16">
-        <input nz-input [formControlName]="item" [placeholder]="inputTypeList[i].placeHolder" *ngIf="inputTypeList[i]?.type === 'text'"
-          [readonly]="!inputTypeList[i]?.more?.editable">
-
-        <textarea nz-input [formControlName]="item" [placeholder]="inputTypeList[i].placeHolder" *ngIf="inputTypeList[i]?.type === 'textarea'"
-          [nzAutosize]="1" [readonly]="!inputTypeList[i]?.more?.editable"></textarea>
-
-
-        <!-- <nz-select [formControlName]="item" [nzSize]="'large'" [nzPlaceHolder]="inputTypeList[i].placeHolder" *ngIf="inputTypeList[i]?.type === 'select'"
-                [style.minWidth]="'100px'">
-                <nz-option [nzLabel]="item.value" [nzValue]="item.property" *ngFor="let item of inputTypeList[i]?.more?.options"></nz-option>
-              </nz-select> -->
-        <app-mx-select [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'select'" [myPlaceHolder]="inputTypeList[i].placeHolder"
-          [options]="inputTypeList[i]?.more?.options" [lazyAPI]="inputTypeList[i]?.more?.lazyAPI" [lazyParams]="inputTypeList[i]?.more?.lazyParams"
-          [lazyAPIUserMes]="inputTypeList[i]?.more?.lazyAPIUserMes"></app-mx-select>
-
-        <app-mx-checkbox [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'checkbox'" [myPlaceHolder]="inputTypeList[i].placeHolder"
-          [options]="inputTypeList[i]?.more?.options"></app-mx-checkbox>
-
-        <!-- <nz-datepicker [formControlName]="item" [nzSize]="'large'" *ngIf="inputTypeList[i]?.type === 'datepicker'" nzShowTime="'hh:mm'" [nzFormat]="'YYYY-MM-DD hh:mm'">
-              </nz-datepicker> -->
-        <app-my-date-picker [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'datePicker'" [myPickerFormat]="inputTypeList[i].more?.pickerFormat"
-          [myFormat]="inputTypeList[i].more?.showFormat" [myShowTime]="inputTypeList[i].more?.showTime" [myPlaceHolder]="inputTypeList[i].placeHolder"
-          [myMode]="inputTypeList[i].more?.showMode"></app-my-date-picker>
-
-
-        <app-my-time-picker [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'timePicker'" [myPickerFormat]="inputTypeList[i].more?.pickerFormat"
-          [myFormat]="inputTypeList[i].more?.showFormat" [myPlaceHolder]="inputTypeList[i].placeHolder">
-        </app-my-time-picker>
-
-        <nz-input-number [formControlName]="item" [nzStep]="inputTypeList[i].more?.step" [nzMax]="inputTypeList[i].more?.max"
-          [nzMin]="inputTypeList[i].more?.min" [style.width]="'50%'" *ngIf="inputTypeList[i]?.type === 'number'"></nz-input-number>
-
-        <app-my-cascader [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'cascader'" [myPlaceHolder]="inputTypeList[i]?.more?.placeHolder"
-          [myOptions]="inputTypeList[i]?.more?.options" [myCascaderLazySets]="inputTypeList[i]?.more?.cascaderLazySets" [myProperties]="inputTypeList[i]?.more?.properties"></app-my-cascader>
-
-        <app-my-switch [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'switch'" [myTrueFormat]="inputTypeList[i]?.trueFormat"
-          [myFalseFormat]="inputTypeList[i]?.falseFormat"></app-my-switch>
-
-        <app-colleague-searcher [formControlName]="item" [miDisabled]="!inputTypeList[i]?.more?.editable" *ngIf="inputTypeList[i]?.type === 'colleagueSearcher'"></app-colleague-searcher>
-
-        <app-photo-upload [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'photoUpload'" [pickerFormat]="inputTypeList[i]?.more?.pickerFormat"
-          [maxCount]="inputTypeList[i]?.more?.maxCount" [removable]="inputTypeList[i]?.more?.removable" [addable]="inputTypeList[i]?.more?.addable"
-          [scanable]="inputTypeList[i]?.more?.scanable"></app-photo-upload>
-
+        <app-dynamic-input [formControlName]="item" [inputOptions]="inputTypeList[i]"></app-dynamic-input>
         <div nz-form-explain *ngIf="validateForm.controls[item].dirty&&validateForm.controls[item].errors">{{errMes[item]}}</div>
       </nz-form-control>
 
@@ -58,7 +15,7 @@
     </nz-form-item>
   </ng-container>
 
-  <div [style.display]="'block'"  [style.textAlign]="'center'">
+  <div [style.display]="'block'" [style.textAlign]="'center'">
     <button nz-button type="submit" [nzType]="'primary'" [disabled]="!validateForm.valid || globalErr" [style.width.%]="40">確定</button>
   </div>
   <div class="global-err">{{globalErr}}</div>

@@ -13,6 +13,7 @@ import { sortUtils } from '../../../../shared/utils';
   styleUrls: ['./IT-server-board.component.css'],
 })
 export class ITServerBoardComponent implements OnInit {
+  dataDrive: DataDrive;
   constructor(
     private reservationITService: ReservationITService,
     private dataDriveService: DataDriveService,
@@ -22,6 +23,7 @@ export class ITServerBoardComponent implements OnInit {
   ngOnInit() {}
 
   async getDataDrive(d: DataDrive) {
+    this.dataDrive = d;
     await this.reservationITService.getITDeptId();
     const DEPT_ID = this.reservationITService.deptId;
     d.beforeInitTableData(ds =>
@@ -62,5 +64,12 @@ export class ITServerBoardComponent implements OnInit {
       }
     });
     this.dataDriveService.updateViewData(d);
+  }
+
+  _onReuseDestroy() {
+    this.dataDrive.runIntoBackground();
+  }
+  _onReuseInit() {
+    this.dataDrive.backIntoFront();
   }
 }

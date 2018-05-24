@@ -23,7 +23,7 @@
     <nz-form-item>
       <nz-form-label [nzSpan]="3">*{{'serviceModule.problemDesc' | translate}}</nz-form-label>
       <nz-form-control [nzSpan]="20">
-        <input nz-input nzType="textarea" [nzAutosize]="'1'" formControlName="SERVICE_DESC" [style.width]="'50%'">
+        <textarea nz-input [nzAutosize]="'1'" formControlName="SERVICE_DESC" [style.width]="'50%'"></textarea>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
@@ -66,7 +66,7 @@
     <nz-form-item>
       <nz-form-label [nzSpan]="3">{{'serviceModule.handleDesc' | translate}}</nz-form-label>
       <nz-form-control [nzSpan]="20">
-        <textarea nz-input nzType="textarea" [nzAutosize]="'1'" formControlName="REMARK" [style.width]="'50%'"></textarea>
+        <textarea nz-input [nzAutosize]="'1'" formControlName="REMARK" [style.width]="'50%'"></textarea>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item style="display:block;text-align:center">

@@ -159,31 +159,26 @@ export class MutiUpdateComponent implements OnInit {
         nzFooter: null,
         nzComponentParams: {
           name: this.dataDrive.id,
+          dataDriveInit2: (d: DataDrive) => {
+            if (d instanceof DataDrive) {
+              d.additionalFn = {};
+              if (d.tableData) {
+                const tableData = d.tableData;
+                tableData.addable = tableData.editable = tableData.deletable = tableData.searchable = false;
+                tableData.stopFirstInit = true;
+              }
+              const viewSet = d.dataViewSet;
+              if (viewSet.type === 'table') {
+                viewSet.more.showAction = false;
+              }
+              setTimeout(() => {
+                d.selfUpdateTableData(res);
+              }, 20);
+            }
+          },
         },
         nzWidth: '75%',
       });
-      setTimeout(() => {
-        const instance = subscription.getContentComponent;
-        console.log(instance);
-      });
-      //   subscription.subscribe(result => {
-      //     if (result instanceof DataDrive) {
-      //       let d: DataDrive = result;
-      //       d.additionalFn = {};
-      //       if (d.tableData) {
-      //         const tableData = d.tableData;
-      //         tableData.addable = tableData.editable = tableData.deletable = tableData.searchable = false;
-      //         tableData.stopFirstInit = true;
-      //       }
-      //       const viewSet = d.dataViewSet;
-      //       if (viewSet.type === 'table') {
-      //         viewSet.more.showAction = false;
-      //       }
-      //       setTimeout(() => {
-      //         d.selfUpdateTableData(res);
-      //       }, 20);
-      //     }
-      //   });
     });
   }
 

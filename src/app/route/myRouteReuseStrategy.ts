@@ -1,3 +1,8 @@
+import { BreadcrumbReuseUpdate } from './../core/actions/breadcrumb.action';
+import { BreadcrumbModel } from './../core/models/breadcrumb.model';
+import { DOCUMENT } from '@angular/platform-browser';
+import { Injectable, Inject } from '@angular/core';
+import { MyStore, BreadcrumbState } from './../core/store';
 import {
   RouteReuseStrategy,
   DefaultUrlSerializer,
@@ -6,12 +11,38 @@ import {
   Route,
   PRIMARY_OUTLET,
 } from '@angular/router';
+import { Store } from '@ngrx/store';
 
+@Injectable()
 export class MyRouteReuseStrategy implements RouteReuseStrategy {
-  _cacheRouters: { [key: string]: any } = {};
   removeUrlBuffer;
-  _cached = [];
+  doc: Document;
+  tab: BreadcrumbState[];
+  first = true;
+  constructor(private store$: Store<MyStore>, @Inject(DOCUMENT) doc: any) {
+    this.doc = doc;
+    this.store$.select(s => s.breadcrumbReducer).subscribe(_ => (this.tab = _));
+  }
   shouldDetach(route: ActivatedRouteSnapshot) {
+    if (this.first) {
+      if (this.tab.length < 2) {
+        const url = this.getUrl(route);
+        const dataRoute = (() => {
+          const arr = url.split('/');
+          arr.splice(0, 1);
+          return '/' + arr.join('/');
+        })();
+        const tar = this.doc.querySelector(
+          `li.ant-menu-item[data-route="${dataRoute}"]`,
+        );
+        if (tar) {
+          new BreadcrumbModel([[tar.textContent.trim()], url]).unshift(
+            this.store$,
+          );
+        }
+      }
+      this.first = false;
+    }
     if (this.hasInValidRoute(route)) {
       return false;
     }
@@ -19,17 +50,12 @@ export class MyRouteReuseStrategy implements RouteReuseStrategy {
   }
   store(route: ActivatedRouteSnapshot, handle: any): void {
     let /** @type {?} */ url = this.getUrl(route);
-    let /** @type {?} */ idx = this.index(url);
     let /** @type {?} */ item = {
-      url: url,
+      routeUrl: url,
       _snapshot: route,
       _handle: handle,
     };
-    if (idx === -1) {
-      this._cached.push(item);
-    } else {
-      this._cached[idx] = item;
-    }
+    this.store$.dispatch(new BreadcrumbReuseUpdate(item));
     this.removeUrlBuffer = null;
     if (handle && handle.componentRef) {
       this.runHook('_onReuseDestroy', url, handle.componentRef);
@@ -80,17 +106,16 @@ export class MyRouteReuseStrategy implements RouteReuseStrategy {
       comp.instance[method]();
     }
   }
+  isSameUrl(a: string, b: string) {
+    const format = (tar: string) => (tar[0] === '/' ? tar.slice(1) : tar);
+    return format(a) === format(b);
+  }
   get(url) {
     return url
-      ? this._cached.find(function(w) {
-          return w.url === url;
+      ? this.tab.find(w => {
+          return this.isSameUrl(w.routeUrl, url);
         }) || null
       : null;
-  }
-  index(url) {
-    return this._cached.findIndex(function(w) {
-      return w.url === url;
-    });
   }
   hasInValidRoute(route: ActivatedRouteSnapshot) {
     return (
@@ -116,14 +141,12 @@ export class MyRouteReuseStrategy implements RouteReuseStrategy {
       segments.push(next.url.join('/'));
       next = next.parent;
     }
-    let /** @type {?} */ url =
-      '/' +
-      segments
-        .filter(function(i) {
-          return i;
-        })
-        .reverse()
-        .join('/');
+    let /** @type {?} */ url = segments
+      .filter(function(i) {
+        return i;
+      })
+      .reverse()
+      .join('/');
     return url;
   }
   getTruthRoute(route: ActivatedRouteSnapshot) {

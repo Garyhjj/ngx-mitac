@@ -22,44 +22,6 @@ export class ContentComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
   ) {}
 
-  show = false;
-  title = 'app';
-  isCollapsed = false;
-
-  isOpenOne = true;
-  isOpenTwo = false;
-  isOpenThree = false;
-
-  _dataSet = [];
-  _bordered = true;
-  _loading = false;
-  _pagination = true;
-  _header = true;
-  _title = false;
-  _footer = false;
-  _fixHeader = false;
-  _size = 'default';
-
-  // 高级搜索框
-  validateForm: FormGroup;
-  controlArray = [];
-  isCollapse = true;
-
-  toggleCollapse() {
-    this.isCollapse = !this.isCollapse;
-    console.log(this.isCollapse);
-    // this.controlArray.forEach((c, index) => {
-    //   c.show = this.isCollapse ? (index < 6) : true;
-    // });
-  }
-
-  toggle() {
-    this.show = !this.show;
-  }
-  resetForm() {
-    this.validateForm.reset();
-  }
-
   ngOnInit() {
     this.sub = this.store$
       .select((s: MyStore) => s.breadcrumbReducer)
@@ -68,23 +30,6 @@ export class ContentComponent implements OnInit, OnDestroy {
         const idx = b.findIndex(r => r.active);
         this.tabIdx = idx > -1 ? idx : b.length - 1;
       });
-
-    for (let i = 1; i <= 10; i++) {
-      this._dataSet.push({
-        key: i,
-        name: 'John Brown',
-        age: `${i}2`,
-        address: `New York No. ${i} Lake Park`,
-        description: `My name is John Brown, I am ${i}2 years old, living in New York No. ${i} Lake Park.`,
-      });
-    }
-
-    this.validateForm = this.fb.group({});
-
-    for (let i = 0; i < 3; i++) {
-      this.controlArray.push({ index: i, show: true });
-      this.validateForm.addControl(`field${i}`, new FormControl());
-    }
   }
 
   ngOnDestroy() {

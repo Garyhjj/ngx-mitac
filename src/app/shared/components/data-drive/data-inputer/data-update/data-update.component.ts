@@ -28,6 +28,7 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
   globalErr;
   sub1: Subscription;
   private globalUpdateErrSubject = new Subject<string>();
+  @Input() afterSubmitSuccess: () => {};
   @Input()
   set opts(opts: DataDrive) {
     if (!opts) {
@@ -106,7 +107,9 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
           this.util.showGlobalSucMes(
             this.changeIdx < 0 ? '插入成功' : '更新成功',
           );
-          // setTimeout(() => this.subject1.destroy(), 500);
+          if (typeof this.afterSubmitSuccess === 'function') {
+            this.afterSubmitSuccess();
+          }
         },
         err => {
           this.util.errDeal(err);

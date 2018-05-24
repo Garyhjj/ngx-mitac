@@ -1,2 +1,4 @@
 <nz-date-picker (ngModelChange)="change($event)" [ngModel]="_date" [nzFormat]="myFormat" [nzShowTime]="myShowTime" [nzPlaceholder]="myPlaceHolder"
-  [nzMode]="myMode"></nz-date-picker>
+  [nzMode]="myMode" *ngIf="myMode === 'day'"></nz-date-picker>
+<nz-month-picker (ngModelChange)="change($event)" [ngModel]="_date" [nzFormat]="myFormat" [nzPlaceholder]="myPlaceHolder"
+  *ngIf="myMode === 'month'"></nz-month-picker>
