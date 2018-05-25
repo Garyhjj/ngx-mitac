@@ -35,6 +35,10 @@ const mRoutes: Routes = [
         path: 'report',
         loadChildren: 'app/my-modules/report/report.module#ReportModule',
       },
+      {
+        path: 'project',
+        loadChildren: './project/project.module#ProjectModule',
+      },
     ],
   },
 ];

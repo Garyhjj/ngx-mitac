@@ -2,7 +2,7 @@
   <input nz-input [(ngModel)]="_value" (ngModelChange)="change()" [placeholder]="inputOptions.placeHolder?inputOptions.placeHolder:' '" *ngIf="inputOptions?.type === 'text'"
     [readonly]="!inputOptions?.more?.editable">
 
-  <textarea nz-input [(ngModel)]="_value" (ngModelChange)="change()" [placeholder]="inputOptions.placeHolder" *ngIf="inputOptions?.type === 'textarea'"
+  <textarea nz-input [(ngModel)]="_value" (ngModelChange)="change()" [placeholder]="inputOptions.placeHolder?inputOptions.placeHolder:' '" *ngIf="inputOptions?.type === 'textarea'"
     [nzAutosize]="1" [readonly]="!inputOptions?.more?.editable"></textarea>
 
 

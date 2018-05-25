@@ -18,6 +18,7 @@ import { MxSelectComponent } from './components/inputs/mx-select/mx-select.compo
 import { MxCheckboxComponent } from './components/inputs/mx-checkbox/mx-checkbox.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouteReuseStrategy } from '@angular/router';
+import { MyFlexPipe } from './components/data-drive/shared/pipes/my-flex.pipe';
 
 @NgModule({
   imports: [
@@ -41,6 +42,7 @@ import { RouteReuseStrategy } from '@angular/router';
     PhotoUploadComponent,
     FileUploadComponent,
     DynamicInputComponent,
+    MyFlexPipe,
   ],
   exports: [
     TranslateModule,
@@ -61,6 +63,7 @@ import { RouteReuseStrategy } from '@angular/router';
     PhotoUploadComponent,
     FileUploadComponent,
     DynamicInputComponent,
+    MyFlexPipe,
   ],
   entryComponents: [],
   providers: [{ provide: RouteReuseStrategy, useClass: MyRouteReuseStrategy }],

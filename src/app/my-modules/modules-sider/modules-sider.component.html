@@ -175,28 +175,6 @@
           </ng-container>
         </ul>
       </li>
-      <!-- <li nz-submenu *ngIf="canSeeFunction(5)">
-        <span title>主管巡检</span>
-        <ul>
-          <li nz-menu-item data-route="/inspection/boss/schedule" *ngIf="canSeeFunction(124)">排班</li>
-          <li nz-menu-item data-route="/inspection/boss/report">巡检报告</li>
-          <li nz-menu-item data-route="/inspection/boss/improvement">改善措施</li>
-          <li nz-menu-item data-route="/inspection/boss/lines" *ngIf="canSeeFunction(103)">问题追踪</li>
-          <li nz-menu-item data-route="/inspection/boss/attendance" *ngIf="canSeeFunction(163)">考勤記錄</li>
-          <li nz-menu-item data-route="/inspection/boss/comment" *ngIf="canSeeFunction(164)">巡檢報告評分</li>
-        </ul>
-      </li>
-      <li nz-submenu *ngIf="canSeeFunction(5)">
-        <span title>设备巡检</span>
-        <ul>
-          <li nz-menu-item data-route="/inspection/equip/list" *ngIf="canSeeFunction(317)">设备登记</li>
-          <li nz-menu-item data-route="/inspection/equip/checkList" *ngIf="canSeeFunction(343)">设备巡检项</li>
-          <li nz-menu-item data-route="/inspection/equip/improvement">改善措施</li>
-          <li nz-menu-item data-route="/inspection/equip/lines" *ngIf="canSeeFunction(343)">问题追踪</li>
-          <li nz-menu-item data-route="/inspection/equip/status" *ngIf="canSeeFunction(343)">巡检完成状况</li>
-          <li nz-menu-item data-route="/inspection/equip/history" *ngIf="canSeeFunction(343)">巡检记录查询</li>
-        </ul>
-      </li> -->
     </ul>
   </li>
   <li nz-submenu>
@@ -213,6 +191,18 @@
           <li nz-menu-item data-route="/report/geckoReport/geckoRepair">Repair Report</li>
         </ul>
       </li>
+    </ul>
+  </li>
+
+  <li nz-submenu>
+    <span title>
+      <i class="anticon anticon-solution"></i>
+      <span class="nav-text">项目管理</span>
+    </span>
+    <ul>
+      <li nz-menu-item data-route="/project/main">项目创建及维护</li>
+      <li nz-menu-item data-route="/project/task">任务维护</li>
+      <!-- <li nz-menu-item data-route="/reservation/IT/add">项目总览</li> -->
     </ul>
   </li>
 </ul>

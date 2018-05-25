@@ -16,14 +16,8 @@ import { TranslateModule } from '@ngx-translate/core';
     TableComponent,
     FilterColumnComponent,
     QRComponent,
-    MyFlexPipe,
   ],
-  exports: [
-    DataViewerComponent,
-    TableComponent,
-    FilterColumnComponent,
-    MyFlexPipe,
-  ],
+  exports: [DataViewerComponent, TableComponent, FilterColumnComponent],
   entryComponents: [DataViewerComponent, QRComponent],
 })
 export class DataViewerModule {}
