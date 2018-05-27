@@ -1,3 +1,4 @@
+import { APPConfig } from './../../../../config/app.config';
 import { Observable } from 'rxjs/Observable';
 import { Pipe, PipeTransform } from '@angular/core';
 import { DataDriveService } from '../../core/services/data-drive.service';
@@ -132,12 +133,16 @@ export class MyFlexPipe implements PipeTransform {
    * @returns
    * @memberof MyFlexPipe
    */
-  empno(target: string, format?: string) {
+  empno(target: string, format: string) {
     const cache =
       this.cachedData && this.cachedData.find(c => c.url === this.empCacheKey);
     const tranform = (val: any, _format: string) => {
       if (typeof val !== 'object' || !val) {
         return val;
+      }
+      if (format === '{AVATAR_URL}') {
+        const pic: string = val['AVATAR_URL'];
+        return pic && pic.indexOf('default.png') > -1 ? pic : APPConfig.baseUrl + pic;
       }
       const middle = replaceQuery(_format, val);
       const last = middle
