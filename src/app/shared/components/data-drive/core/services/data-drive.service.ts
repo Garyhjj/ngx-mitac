@@ -151,7 +151,13 @@ export class DataDriveService {
     }
     return DataDriveStore[name];
   }
-  updateViewData(dataDrive: DataDrive) {
+  updateViewData(dataDrive: DataDrive, isInside?: boolean) {
+    if (isInside) {
+      const res = dataDrive.runBeforeInsideUpdateView();
+      if (res === false) {
+        return;
+      }
+    }
     this.getInitData(dataDrive).subscribe(
       (c: any[]) => {
         this.initTableData(dataDrive, c);
@@ -166,7 +172,7 @@ export class DataDriveService {
     if (alterData) {
       ds = alterData;
     }
-    if (ds.length && ds.length > 0) {
+    if (isArray(ds) && ds.length > 0) {
       const sortMes = Object.keys(ds[0]);
       // 根据返回的数据筛选已配置的列
       tableData.columns = tableData.columns.filter(

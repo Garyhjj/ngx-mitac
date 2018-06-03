@@ -1,85 +1,81 @@
-<nz-tabset>
+<nz-tabset [(nzSelectedIndex)]="tabIdx">
   <nz-tab [nzTitle]="nzTabHeading1">
     <ng-template #nzTabHeading1>
       进行中
-      <nz-badge [nzCount]="1">
+      <nz-badge [nzCount]="normalTips">
         <ng-template #content>
           &nbsp;&nbsp;
         </ng-template>
       </nz-badge>
     </ng-template>
-    <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDrive1($event)">
+    <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDrive1($event)" [bodyCellStyle]="bodyCellStyle">
       <ng-template #actionRef let-data="data">
-        <span>
-          <a>重置撤回</a>
-          <nz-divider nzType="vertical"></nz-divider>
-          <a>完成</a>
-          <nz-divider nzType="vertical"></nz-divider>
-          <a>查看子信息</a>
-        </span>
+        <ng-template [ngTemplateOutlet]="openFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
       </ng-template>
     </app-data-drive>
   </nz-tab>
   <nz-tab [nzTitle]="nzTabHeading2">
     <ng-template #nzTabHeading2>
       超期未完成
-      <nz-badge [nzCount]="2">
+      <nz-badge [nzCount]="outTimeTips">
         <ng-template #content>
           &nbsp;&nbsp;
         </ng-template>
       </nz-badge>
     </ng-template>
-    <app-data-drive [name]="'projectSubTask'"></app-data-drive>
+    <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDrive2($event)" [bodyCellStyle]="bodyCellStyle">
+      <ng-template #actionRef let-data="data">
+        <ng-template [ngTemplateOutlet]="openFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
+      </ng-template>
+    </app-data-drive>
   </nz-tab>
   <nz-tab [nzTitle]="nzTabHeading3">
     <ng-template #nzTabHeading3>
-      已完成
+      待审核
+      <nz-badge [nzCount]="needConfimTips">
+        <ng-template #content>
+          &nbsp;&nbsp;
+        </ng-template>
+      </nz-badge>
     </ng-template>
-    <app-data-drive [name]="'projectSubTask'"></app-data-drive>
+    <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDrive3($event)" [bodyCellStyle]="bodyCellStyle">
+      <ng-template #actionRef let-data="data">
+        <a (click)="backToOpen(data)">取消审核</a>
+        <nz-divider nzType="vertical"></nz-divider>
+        <ng-template [ngTemplateOutlet]="seeDetailFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
+      </ng-template>
+    </app-data-drive>
+  </nz-tab>
+  <nz-tab [nzTitle]="nzTabHeading4">
+    <ng-template #nzTabHeading4>
+      已结案
+    </ng-template>
+    <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDrive4($event)" [bodyCellStyle]="bodyCellStyle">
+      <ng-template #actionRef let-data="data">
+        <ng-template [ngTemplateOutlet]="seeDetailFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
+      </ng-template>
+    </app-data-drive>
   </nz-tab>
 </nz-tabset>
-<nz-divider></nz-divider>
-<h2 style="margin-top: 16px; margin-left: 16px">
-  <span>子信息: </span>
-</h2>
-<div nz-row>
-  <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="8">
-    <nz-card nzTitle="进度更新">
-      <textarea nz-input [(ngModel)]="_value" (ngModelChange)="change()" [nzAutosize]="1"></textarea>
-      <div style="margin-top: 8px; text-align: center">
-        <button nz-button [nzType]="'primary'" style="width: 80px">
-          <span>{{'serviceModule.confirm' | translate}}</span>
-        </button>
-      </div>
-    </nz-card>
-  </div>
-  <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="8" style="padding-left: 16px">
-    <nz-card nzTitle="留言区">
-      <nz-list nzSize="large" class="activities" [nzDataSource]="comments" [nzRenderItem]="item">
-        <ng-template #item let-item>
-          <nz-list-item>
-            <nz-list-item-meta [nzAvatar]="item.USER_NAME | myFlex: {name:'empno',params:['{AVATAR_URL}']} | async" [nzTitle]="activeTitle"
-              [nzDescription]="activeDescription">
-              <ng-template #activeTitle>
-                <a class="username">{{item.USER_NAME | myFlex: {name:'empno',params:['CH']} | async}}</a>
-                &nbsp;
-                <span class="event">{{item.CONTENT}}</span>
-              </ng-template>
-              <ng-template #activeDescription>
-                <span class="datetime">{{ item.CREATION_DATE | sgMessageTime}}</span>
-              </ng-template>
-            </nz-list-item-meta>
-          </nz-list-item>
-        </ng-template>
-      </nz-list>
-    </nz-card>
-  </div>
-  <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="8" style="padding-left: 16px">
-    <nz-timeline [nzPending]="'Recording...'">
-      <nz-timeline-item>任务开始日期: 2018-05-16</nz-timeline-item>
-      <nz-timeline-item>等待XXX提供实验资料: 2018-05-17</nz-timeline-item>
-      <nz-timeline-item>完成报告整理,准备与客户沟通: 2018-05-20</nz-timeline-item>
-      <nz-timeline-item>客户提出信需求,在更改报告: 2018-05-25</nz-timeline-item>
-    </nz-timeline>
-  </div>
-</div>
+<ng-container *ngIf="targetTask">
+  <nz-divider></nz-divider>
+  <h2 style="margin-top: 16px; margin-left: 16px">
+    <span>子信息: </span>
+  </h2>
+  <app-task-detail [task]="targetTask"></app-task-detail>
+</ng-container>
+
+
+<ng-template #openFn let-data>
+  <span>
+    <a (click)="notMyTask(data)">重置撤回</a>
+    <nz-divider nzType="vertical"></nz-divider>
+    <a (click)="finished(data)">完成</a>
+    <nz-divider nzType="vertical"></nz-divider>
+    <ng-template [ngTemplateOutlet]="seeDetailFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
+  </span>
+</ng-template>
+
+<ng-template #seeDetailFn let-data>
+  <a (click)=seeDetail(data)>查看子信息</a>
+</ng-template>

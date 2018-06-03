@@ -1,0 +1,219 @@
+<div nz-row *ngIf="project">
+  <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="18">
+    <div class="sub-child">
+      <div class="card-container">
+        <nz-tabset [nzTabPosition]="'top'" [nzType]="'card'">
+          <nz-tab nzTitle="项目人员">
+            <app-data-drive [name]="'projectPeople'" (dataDriveInit)="getDataDrivePeople($event)" [bodyCellStyle]="bodyCellStyle"></app-data-drive>
+          </nz-tab>
+          <nz-tab nzTitle="项目的子任务">
+            <nz-tabset>
+              <nz-tab [nzTitle]="nzTabHeading1">
+                <ng-template #nzTabHeading1>
+                  进行中
+                  <nz-badge [nzCount]="normalTips">
+                    <ng-template #content>
+                      &nbsp;&nbsp;
+                    </ng-template>
+                  </nz-badge>
+                </ng-template>
+                <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDriveSub($event)" [bodyCellStyle]="bodyCellStyle">
+                  <ng-template #actionRef let-data="data">
+                    <span>
+                      <nz-divider nzType="vertical" *ngIf="isOwner"></nz-divider>
+                      <a (click)="seeTaskDetail(data)">细节</a>
+                    </span>
+                  </ng-template>
+                </app-data-drive>
+              </nz-tab>
+              <nz-tab [nzTitle]="nzTabHeading0">
+                <ng-template #nzTabHeading0>
+                  待分配
+                  <nz-badge [nzCount]="noAssigneeTips">
+                    <ng-template #content>
+                      &nbsp;&nbsp;
+                    </ng-template>
+                  </nz-badge>
+                </ng-template>
+                <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDriveSub0($event)" [bodyCellStyle]="bodyCellStyle">
+                  <ng-template #actionRef let-data="data">
+                    <span>
+                      <nz-divider nzType="vertical" *ngIf="isOwner"></nz-divider>
+                      <a (click)="seeTaskDetail(data)">细节</a>
+                    </span>
+                  </ng-template>
+                </app-data-drive>
+              </nz-tab>
+              <nz-tab [nzTitle]="nzTabHeading2">
+                <ng-template #nzTabHeading2>
+                  超期未完成
+                  <nz-badge [nzCount]="outTimeTips">
+                    <ng-template #content>
+                      &nbsp;&nbsp;
+                    </ng-template>
+                  </nz-badge>
+                </ng-template>
+                <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDriveSub1($event)" [bodyCellStyle]="bodyCellStyle">
+                  <ng-template #actionRef let-data="data">
+                    <span>
+                      <nz-divider nzType="vertical" *ngIf="isOwner"></nz-divider>
+                      <a (click)="seeTaskDetail(data)">细节</a>
+                    </span>
+                  </ng-template>
+                </app-data-drive>
+              </nz-tab>
+              <nz-tab [nzTitle]="nzTabHeading3">
+                <ng-template #nzTabHeading3>
+                  待审核
+                  <nz-badge [nzCount]="needConfimTips">
+                    <ng-template #content>
+                      &nbsp;&nbsp;
+                    </ng-template>
+                  </nz-badge>
+                </ng-template>
+                <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDriveSub2($event)" [bodyCellStyle]="bodyCellStyle">
+                  <ng-template #actionRef let-data="data">
+                    <span>
+                      <a (click)="CloseTask(data)">结案</a>
+                      <nz-divider nzType="vertical"></nz-divider>
+                      <a (click)="rollbackTask(data)">退回</a>
+                      <nz-divider nzType="vertical"></nz-divider>
+                      <a (click)="seeTaskDetail(data)">细节</a>
+                    </span>
+                  </ng-template>
+                </app-data-drive>
+              </nz-tab>
+              <nz-tab [nzTitle]="nzTabHeading4">
+                <ng-template #nzTabHeading4>
+                  已结案
+                </ng-template>
+                <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDriveSub3($event)">
+                  <ng-template #actionRef let-data="data">
+                    <span>
+                      <a (click)="seeTaskDetail(data)">细节</a>
+                    </span>
+                  </ng-template>
+                </app-data-drive>
+              </nz-tab>
+            </nz-tabset>
+          </nz-tab>
+        </nz-tabset>
+      </div>
+    </div>
+  </div>
+  <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="6" style="padding-left: 16px">
+    <nz-card nzTitle="动态" style="max-height: 400px;overflow: auto;">
+      <nz-list nzSize="large" class="activities" [nzDataSource]="history" [nzRenderItem]="item">
+        <ng-template #item let-item>
+          <nz-list-item>
+            <nz-list-item-meta [nzAvatar]="item.USER_NAME | myFlex: {name:'empno',params:['{AVATAR_URL}']} | async" [nzTitle]="activeTitle"
+              [nzDescription]="activeDescription">
+              <ng-template #activeTitle>
+                <a class="username">{{item.USER_NAME | myFlex: {name:'empno',params:['CH']} | async}}</a>
+                &nbsp;
+                <ng-container *ngIf="item.TARGET_TYPE === 1">
+                  <ng-container *ngIf="item.CHANGE_TYPE === 1">
+                    <span>创建项目</span>
+                  </ng-container>
+                  <ng-container *ngIf="item.CHANGE_TYPE === 3">
+                    <span>移除项目</span>
+                  </ng-container>
+                  <ng-container *ngIf="item.CHANGE_TYPE === 2">
+                    修改了项目:
+                    <div *ngFor="let di of item.DIFF" class="markdown">
+                      <ng-container [ngSwitch]="di">
+                        <span *ngSwitchCase="'NAME'">名称
+                          <ng-template [ngTemplateOutlet]="changeDetailString" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
+                        </span>
+                        <span *ngSwitchCase="'TYPE'">类别
+                          <ng-template [ngTemplateOutlet]="changeDetailString" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
+                        </span>
+                        <span *ngSwitchCase="'DESCRIPTION'">描述
+                          <ng-template [ngTemplateOutlet]="changeDetailString" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
+                        </span>
+                        <span *ngSwitchCase="'START_DATE'">开始日期
+                          <ng-template [ngTemplateOutlet]="changeDetailDate" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
+                        </span>
+                        <span *ngSwitchCase="'DUE_DATE'">截止日期
+                          <ng-template [ngTemplateOutlet]="changeDetailDate" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
+                        </span>
+                        <span *ngSwitchDefault>{{di}}
+                          <ng-template [ngTemplateOutlet]="changeDetailString" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
+                        </span>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+                </ng-container>
+                <ng-container *ngIf="item.TARGET_TYPE === 2">
+                  <ng-container *ngIf="item.CHANGE_TYPE === 1">
+                    <span>新建任务: {{item.AFTER_STORE.DESCRIPTION}}, 负责人: {{item.AFTER_STORE.ASSIGNEE | myFlex: {name:'empno',params:['CH(NO)']}
+                      | async}}</span>
+                  </ng-container>
+                  <ng-container *ngIf="item.CHANGE_TYPE === 2">
+                    修改了任务({{item.AFTER_STORE.DESCRIPTION}}):
+                    <div *ngFor="let di of item.DIFF" class="markdown">
+                      <ng-container [ngSwitch]="di">
+                        <span *ngSwitchCase="'MODEL'">产品
+                          <ng-template [ngTemplateOutlet]="changeDetailString" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
+                        </span>
+                        <span *ngSwitchCase="'BU'">单位名
+                          <ng-template [ngTemplateOutlet]="changeDetailString" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
+                        </span>
+                        <span *ngSwitchCase="'CUSTOMER'">客户
+                          <ng-template [ngTemplateOutlet]="changeDetailString" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
+                        </span>
+                        <span *ngSwitchCase="'IMPACT'">附加影响
+                          <ng-template [ngTemplateOutlet]="changeDetailString" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
+                        </span>
+                        <span *ngSwitchCase="'TYPE'">类别
+                          <ng-template [ngTemplateOutlet]="changeDetailString" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
+                        </span>
+                        <span *ngSwitchCase="'ASSIGNEE'">负责人
+                          <ng-template [ngTemplateOutlet]="changeDetailPerson" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
+                        </span>
+                        <span *ngSwitchCase="'DESCRIPTION'">描述
+                          <ng-template [ngTemplateOutlet]="changeDetailString" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
+                        </span>
+                        <span *ngSwitchCase="'START_DATE'">开始日期
+                          <ng-template [ngTemplateOutlet]="changeDetailDate" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
+                        </span>
+                        <span *ngSwitchCase="'DUE_DATE'">截止日期
+                          <ng-template [ngTemplateOutlet]="changeDetailDate" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
+                        </span>
+                        <span *ngSwitchDefault>{{di}}
+                          <ng-template [ngTemplateOutlet]="changeDetailString" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
+                        </span>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+                </ng-container>
+              </ng-template>
+              <ng-template #activeDescription>
+                <span class="datetime">{{ item.CREATION_DATE | sgMessageTime}}</span>
+              </ng-template>
+            </nz-list-item-meta>
+          </nz-list-item>
+        </ng-template>
+      </nz-list>
+    </nz-card>
+  </div>
+</div>
+
+
+<ng-template #changeDetailString let-item="item" let-di="di">
+  (从
+  <code>{{item.BEFORE_STORE[di]}}</code> 到
+  <code>{{item.AFTER_STORE[di]}}</code>)
+</ng-template>
+
+<ng-template #changeDetailDate let-item="item" let-di="di">
+  (从
+  <code>{{item.BEFORE_STORE[di] | sgMydate: 'YYYY-MM-DD'}}</code> 到
+  <code>{{item.AFTER_STORE[di] | sgMydate: 'YYYY-MM-DD'}}</code>)
+</ng-template>
+
+<ng-template #changeDetailPerson let-item="item" let-di="di">
+  (从
+  <code>{{item.BEFORE_STORE[di] | myFlex: {name:'empno',params:['CH(NO)']} | async}}</code> 到
+  <code>{{item.AFTER_STORE[di] | myFlex: {name:'empno',params:['CH(NO)']} | async}}</code>)
+</ng-template>

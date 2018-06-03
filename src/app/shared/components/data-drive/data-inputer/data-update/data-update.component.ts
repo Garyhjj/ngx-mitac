@@ -68,7 +68,7 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
   submitForm() {
     let out = {};
     if (
-      !(out = this.dataDrive.runBeforeUpdateSubmit(
+      !this.dataDrive.runBeforeUpdateSubmit(
         this.validateForm,
         this.globalUpdateErrSubject,
         (() => {
@@ -79,7 +79,7 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
           }
           return out;
         })(),
-      ))
+      )
     ) {
       return setTimeout(() => this.globalUpdateErrSubject.next(''), 3000);
     }
@@ -99,11 +99,11 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
     const id = this.util.showLoading();
     const finalFn = () => this.util.dismissLoading(id);
     this.dataDriveService
-      .updateData(this.dataDrive, Object.assign(value, out))
+      .updateData(this.dataDrive, Object.assign(out, value))
       .subscribe(
         c => {
           finalFn();
-          this.dataDriveService.updateViewData(this.dataDrive);
+          this.dataDriveService.updateViewData(this.dataDrive, true);
           this.util.showGlobalSucMes(
             this.changeIdx < 0 ? '插入成功' : '更新成功',
           );

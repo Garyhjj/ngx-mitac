@@ -1,3 +1,7 @@
+.username {
+  color: #20A0ff
+}
+
 :host ::ng-deep .ant-timeline {
   padding-top: 4px;
 }

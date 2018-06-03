@@ -20,6 +20,7 @@ export interface TableInsideData {
   property: string;
   value: string;
   hide?: boolean;
+  checked?: boolean;
 }
 export interface TableData {
   editable?: boolean;

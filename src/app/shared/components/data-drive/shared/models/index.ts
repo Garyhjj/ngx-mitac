@@ -1,3 +1,4 @@
+import { filter } from 'rxjs/operators/filter';
 import { deepClone } from './../../../../utils/index';
 import { Observable } from 'rxjs/Observable';
 import { FormGroup } from '@angular/forms';
@@ -144,6 +145,23 @@ export class DataDrive implements DataDriveOptions {
   backIntoFront() {
     this.isInBackground = false;
     this.isInBackgroundSubject.next(false);
+  }
+  /**
+   * 获得所有checkbox选中的数据
+   *
+   * @returns 数据
+   * @memberof DataDrive
+   */
+  getCheckedData() {
+    const data = this.getData().filter(d => d[0] && d[0].checked === true);
+    if (data.length > 0) {
+      return data.map(d => {
+        let out = {};
+        d.forEach(l => (out[l.property] = l.value));
+        return out;
+      });
+    }
+    return null;
   }
   /**
    * 增加默認搜索參數
@@ -353,6 +371,28 @@ export class DataDrive implements DataDriveOptions {
       return eventQueue[0](data);
     }
     return false;
+  }
+  /**
+   * 组件内部增删改后进行自动更新数据前, return false 会取消更新
+   *
+   * @param {((data: any) => Observable<any> | boolean)} cb
+   * @memberof DataDrive
+   */
+  beforeInsideUpdateView(cb: () => any) {
+    if (this.eventsQueue['beforeInsideUpdateView']) {
+      this.eventsQueue[0] = cb;
+    } else {
+      this.eventsQueue['beforeInsideUpdateView'] = [cb];
+    }
+  }
+
+  runBeforeInsideUpdateView() {
+    const eventQueue: Array<Function> =
+      this.eventsQueue['beforeInsideUpdateView'] || [];
+    if (eventQueue.length > 0) {
+      return eventQueue[0]();
+    }
+    return true;
   }
   emitAfterDataInit(data) {
     return this.onAlterData('afterDataInit', data);

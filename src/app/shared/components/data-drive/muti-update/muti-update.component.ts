@@ -68,7 +68,7 @@ export class MutiUpdateComponent implements OnInit {
               this.util.showGlobalSucMes(
                 this.translateText['serviceModule.submitSuccess'],
               );
-              this.dataDriveService.updateViewData(dataDrive);
+              this.dataDriveService.updateViewData(dataDrive, true);
             },
             err => {
               this.uploading = false;

@@ -2,17 +2,17 @@
   <nz-tab [nzTitle]="nzTabHeading1">
     <ng-template #nzTabHeading1>
       进行中
-      <nz-badge [nzCount]="1">
+      <nz-badge [nzCount]="normalTips">
         <ng-template #content>
           &nbsp;&nbsp;
         </ng-template>
       </nz-badge>
     </ng-template>
-    <app-data-drive [name]="'projectMain'" (dataDriveInit)="getDataDrive1($event)">
+    <app-data-drive [name]="'projectMain'" (dataDriveInit)="getDataDrive1($event)" [bodyCellStyle]="bodyCellStyle">
       <ng-template #actionRef let-data="data">
         <span>
           <nz-divider nzType="vertical"></nz-divider>
-          <a>查看子信息</a>
+          <a (click)="seeDetail(data)">查看子信息</a>
         </span>
       </ng-template>
     </app-data-drive>
@@ -20,59 +20,32 @@
   <nz-tab [nzTitle]="nzTabHeading2">
     <ng-template #nzTabHeading2>
       超期未完成
-      <nz-badge [nzCount]="2">
+      <nz-badge [nzCount]="outTimeTips">
         <ng-template #content>
           &nbsp;&nbsp;
         </ng-template>
       </nz-badge>
     </ng-template>
-    <app-data-drive [name]="'projectMain'"></app-data-drive>
+    <app-data-drive [name]="'projectMain'" (dataDriveInit)="getDataDrive2($event)" [bodyCellStyle]="bodyCellStyle">
+      <ng-template #actionRef let-data="data">
+        <span>
+          <nz-divider nzType="vertical"></nz-divider>
+          <a (click)="seeDetail(data)">查看子信息</a>
+        </span>
+      </ng-template>
+    </app-data-drive>
   </nz-tab>
   <nz-tab [nzTitle]="nzTabHeading3">
     <ng-template #nzTabHeading3>
       已完成
     </ng-template>
-    <app-data-drive [name]="'projectMain'"></app-data-drive>
+    <app-data-drive [name]="'projectMain'" (dataDriveInit)="getDataDrive3($event)"></app-data-drive>
   </nz-tab>
 </nz-tabset>
-<nz-divider></nz-divider>
-<h2 style="margin-top: 16px; margin-left: 16px">
-  <span>子信息: </span>
-</h2>
-<div nz-row>
-  <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="18">
-    <div class="sub-child">
-      <div class="card-container">
-        <nz-tabset [nzTabPosition]="'top'" [nzType]="'card'">
-          <nz-tab nzTitle="项目人员">
-            <app-data-drive [name]="'projectPeople'" (dataDriveInit)="getDataDrivePeople($event)"></app-data-drive>
-          </nz-tab>
-          <nz-tab nzTitle="项目的子任务">
-            <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDriveSub($event)"></app-data-drive>
-          </nz-tab>
-        </nz-tabset>
-      </div>
-    </div>
-  </div>
-  <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="6" style="padding-left: 16px">
-    <nz-card nzTitle="动态">
-      <nz-list nzSize="large" class="activities" [nzDataSource]="history" [nzRenderItem]="item">
-        <ng-template #item let-item>
-          <nz-list-item>
-            <nz-list-item-meta [nzAvatar]="item.USER_NAME | myFlex: {name:'empno',params:['{AVATAR_URL}']} | async" [nzTitle]="activeTitle"
-              [nzDescription]="activeDescription">
-              <ng-template #activeTitle>
-                <a class="username">{{item.USER_NAME | myFlex: {name:'empno',params:['CH']} | async}}</a>
-                &nbsp;
-                <span class="event">{{item.CONTENT}}</span>
-              </ng-template>
-              <ng-template #activeDescription>
-                <span class="datetime">{{ item.CREATION_DATE | sgMessageTime}}</span>
-              </ng-template>
-            </nz-list-item-meta>
-          </nz-list-item>
-        </ng-template>
-      </nz-list>
-    </nz-card>
-  </div>
-</div>
+<ng-container *ngIf="targetProject">
+  <nz-divider></nz-divider>
+  <h2 style="margin-top: 16px; margin-left: 16px">
+    <span>子信息: </span>
+  </h2>
+  <app-project-detail [project]="targetProject" [afterBigChange]="afterTasksBigChange"></app-project-detail>
+</ng-container>

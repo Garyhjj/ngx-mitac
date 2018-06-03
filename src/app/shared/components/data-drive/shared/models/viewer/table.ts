@@ -51,6 +51,7 @@ export interface TabelViewSetMore {
     url: string;
     local?: string;
   };
+  showCheckbox?: boolean;
 }
 export class TabelViewSet implements DataViewSet {
   type: DataViewType;
@@ -80,5 +81,11 @@ export class TabelViewSet implements DataViewSet {
     this.more = this.more || {};
     this.more.body = this.more.body || {};
     this.more.body.textSize = size;
+  }
+  showCheckbox() {
+    this.more.showCheckbox = true;
+  }
+  hideCheckbox() {
+    this.more.showCheckbox = false;
   }
 }

@@ -7,22 +7,25 @@
   [nzLoading]="_loading" [nzShowPagination]="setDetail.pageSet.enable" [nzFooter]="setDetail.footer.enable? '': null" [nzTitle]="null"
   [nzSize]="setDetail.size" [(nzPageIndex)]="pageIndex" [nzShowTotal]="1">
   <!-- <span nz-table-title>{{tableSet.title}}</span> -->
-    <thead nz-thead (nzSortChange)="sort($event)">
-      <tr>
-        <th nz-th *ngFor="let item of tableData.columns;let i = index" (nzSortChange)="sort(item.property,$event,item.more.sortBy)"  [nzShowSort]="!!(item.more && item.more.sortBy)" [ngStyle]="_headerCellStyle(item)"
-          [nzWidth]="setDetail.fixedHeader?.enable &&setDetail.fixedHeader?.width && setDetail.fixedHeader?.width[i]?setDetail.fixedHeader?.width[i]:!setDetail.fixedHeader?'':(100/(tableData.columns.length+additionalColNum)) + '%'">
-          <span *ngIf="!headerCellRef">{{item.value | sgChineseConv}}</span>
-          <ng-template [ngTemplateOutlet]="headerCellRef" [ngTemplateOutletContext]="{$implicit: item}" *ngIf="headerCellRef"></ng-template>
-          <!-- <nz-table-sort (nzValueChange)="sort(item.property, $event, item.more.sortBy)" *ngIf="item.more && item.more.sortBy"></nz-table-sort> -->
-        </th>
-        <th nz-th [ngStyle]="_headerCellStyle({})" [nzWidth]="setDetail.fixedHeader?.enable &&setDetail.fixedHeader?.width && setDetail.fixedHeader?.width[i]?setDetail.fixedHeader?.width[i]:!setDetail.fixedHeader?'':(100/(tableData.columns.length+additionalColNum)) + '%'"
-          *ngIf="setDetail.showAction">
-          <span>Action</span>
-        </th>
-      </tr>
-    </thead>
+  <thead nz-thead (nzSortChange)="sort($event)">
+    <tr>
+      <th nzShowCheckbox nzShowRowSelection [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)"
+        *ngIf="setDetail.showCheckbox"></th>
+      <th nz-th *ngFor="let item of tableData.columns;let i = index" (nzSortChange)="sort(item.property,$event,item.more.sortBy)"
+        [nzShowSort]="!!(item.more && item.more.sortBy)" [ngStyle]="_headerCellStyle(item)" [nzWidth]="setDetail.fixedHeader?.enable &&setDetail.fixedHeader?.width && setDetail.fixedHeader?.width[i]?setDetail.fixedHeader?.width[i]:!setDetail.fixedHeader?'':(100/(tableData.columns.length+additionalColNum)) + '%'">
+        <span *ngIf="!headerCellRef">{{item.value | sgChineseConv}}</span>
+        <ng-template [ngTemplateOutlet]="headerCellRef" [ngTemplateOutletContext]="{$implicit: item}" *ngIf="headerCellRef"></ng-template>
+        <!-- <nz-table-sort (nzValueChange)="sort(item.property, $event, item.more.sortBy)" *ngIf="item.more && item.more.sortBy"></nz-table-sort> -->
+      </th>
+      <th nz-th [ngStyle]="_headerCellStyle({})" [nzWidth]="setDetail.fixedHeader?.enable &&setDetail.fixedHeader?.width && setDetail.fixedHeader?.width[i]?setDetail.fixedHeader?.width[i]:!setDetail.fixedHeader?'':(100/(tableData.columns.length+additionalColNum)) + '%'"
+        *ngIf="setDetail.showAction">
+        <span>Action</span>
+      </th>
+    </tr>
+  </thead>
   <tbody nz-tbody (mouseenter)="mouseEnter()" (mouseleave)="mouseLeave()">
     <tr nz-tbody-tr *ngFor="let data of nzTable.data;let i = index; trackBy: trackByIndex">
+      <td nzShowCheckbox [(nzChecked)]="data[0].checked" (nzCheckedChange)="refreshChecked($event, data[0])" *ngIf="setDetail.showCheckbox"></td>
       <ng-container *ngFor="let item of data">
         <td [ngStyle]="runRegExp(i, setDetail.body, item.property)" nz-td *ngIf="!item.hide">
           <ng-container [ngSwitch]="types[item.property]">

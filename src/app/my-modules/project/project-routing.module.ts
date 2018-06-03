@@ -14,10 +14,16 @@ const bRoutes: Routes = [
       {
         path: 'main',
         component: ProjectMaintenanceComponent,
+        data: {
+          reuse: false,
+        },
       },
       {
         path: 'task',
         component: ProjectTaskComponent,
+        data: {
+          reuse: false,
+        },
       },
     ],
   },

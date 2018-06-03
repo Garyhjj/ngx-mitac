@@ -1,0 +1,68 @@
+<div nz-row *ngIf="task">
+  <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="8" *ngIf="isAssigner && task.STATUS === 'Open'">
+    <nz-card nzTitle="进度更新">
+      <nz-input-group nzSearch nzSize="large" [nzSuffix]="suffixButton">
+        <input type="text" nz-input #progressInput>
+      </nz-input-group>
+      <ng-template #suffixButton>
+        <button nz-button nzType="primary" nzSize="large" nzSearch (click)="updateProgress(progressInput.value);progressInput.value=''"
+          [disabled]="!progressInput.value">{{'serviceModule.confirm' | translate}}</button>
+      </ng-template>
+    </nz-card>
+  </div>
+  <div nz-col nzXs="24" nzSm="24" nzMd="24" [nzLg]="isAssigner && task.STATUS !== 'Closed'?8:12" style="padding-left: 16px">
+    <nz-card nzTitle="留言区" [nzExtra]="extraTemplate">
+      <nz-list nzSize="large" class="activities" [nzDataSource]="comments" [nzRenderItem]="item">
+        <ng-template #item let-item>
+          <nz-list-item>
+            <nz-list-item-meta [nzAvatar]="item.USER_NAME | myFlex: {name:'empno',params:['{AVATAR_URL}']} | async" [nzTitle]="activeTitle"
+              [nzDescription]="activeDescription">
+              <ng-template #activeTitle>
+                <a class="username" (click)="replyTo= item.USER_NAME;isCommentVisible = true">{{item.USER_NAME | myFlex: {name:'empno',params:['CH']} | async}}</a>
+                &nbsp;
+                <span class="event">
+                  <span *ngIf="item.REPLY_TO">@{{item.REPLY_TO | myFlex: {name:'empno',params:['CH']} | async}}</span> {{item.CONTENT}}</span>
+              </ng-template>
+              <ng-template #activeDescription>
+                <span class="datetime">{{ item.CREATION_DATE | sgMessageTime}}</span>
+              </ng-template>
+            </nz-list-item-meta>
+          </nz-list-item>
+        </ng-template>
+        <ng-template #extraTemplate>
+          <a (click)="isCommentVisible = true">留言</a>
+        </ng-template>
+      </nz-list>
+    </nz-card>
+  </div>
+  <div nz-col nzXs="24" nzSm="24" nzMd="24" [nzLg]="isAssigner && task.STATUS !== 'Closed'?8:12" style="padding-left: 16px; max-height: 400px;overflow: auto;">
+    <nz-timeline [nzPending]="task.STATUS === 'Open'">
+      <nz-timeline-item>任务开始日期: {{task.START_DATE | sgMydate: 'YYYY-MM-DD'}}</nz-timeline-item>
+      <nz-timeline-item *ngFor="let pro of progressList">
+        <p *ngFor="let item of pro.list;let last = last; trackBy: trackByID">
+          {{item.CONTENT}}
+          <span *ngIf="last">: {{pro.date}}</span>
+        </p>
+      </nz-timeline-item>
+      <nz-timeline-item *ngIf="task.STATUS !== 'Open'">Done!</nz-timeline-item>
+    </nz-timeline>
+  </div>
+</div>
+
+<nz-modal [nzVisible]="isCommentVisible" [nzTitle]="replyTo? '回复: '+ (replyTo | myFlex: {name:'empno',params:['CH']} | async):'留言'"
+  [nzContent]="modalContent" [nzFooter]="modalFooter" (nzOnCancel)="isCommentVisible = false" nzWidth="460px">
+  <ng-template #modalContent>
+    <div style="display:block;text-align:center">
+      <nz-input-group nzSearch nzSize="large" [nzSuffix]="suffixButton">
+        <input type="text" nz-input #commentInput>
+      </nz-input-group>
+      <ng-template #suffixButton>
+        <button nz-button nzType="primary" nzSize="large" nzSearch (click)="updateComment(commentInput.value); commentInput.value=''"
+          [disabled]="!commentInput.value">{{'serviceModule.confirm' | translate}}</button>
+      </ng-template>
+    </div>
+  </ng-template>
+  <ng-template #modalFooter>
+
+  </ng-template>
+</nz-modal>

@@ -54,6 +54,7 @@ export class TableComponent
   private types: any = {};
   showInformer = new Subject<any>();
   fileList;
+  allChecked;
   @Input() actionRef: TemplateRef<void>;
   @Input() tableCellRef: TemplateRef<void>;
   @Input() headerCellRef: TemplateRef<void>;
@@ -214,7 +215,7 @@ export class TableComponent
       const finalFn = loadingID => this.util.dismissLoading(loadingID);
       this.dataDriveService.deleteData(this._dataDrive, data[idx]).subscribe(
         r => {
-          this.dataDriveService.updateViewData(this._dataDrive);
+          this.dataDriveService.updateViewData(this._dataDrive, true);
           finalFn(id);
         },
         err => {
@@ -259,6 +260,9 @@ export class TableComponent
       nzComponentParams: {
         opts: this._dataDrive,
         changeIdx: idx,
+        afterSubmitSuccess: () => {
+          subscription.destroy();
+        },
       },
     });
     return false;
@@ -584,6 +588,16 @@ export class TableComponent
     return typeof item === 'object' && item.hasOwnProperty('ID')
       ? item.ID
       : index;
+  }
+
+  checkAll(isAll) {
+    const data = this.tableData.data;
+    data.forEach(d => d[0] && (d[0].checked = isAll));
+  }
+  refreshChecked(checked, data) {
+    data.checked = checked;
+    const allData = this.tableData.data;
+    this.allChecked = allData.every(a => a[0] && a[0].checked === true);
   }
   ngOnInit() {
     if (!this.isModal) {
