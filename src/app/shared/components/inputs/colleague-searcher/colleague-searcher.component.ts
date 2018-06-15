@@ -1,9 +1,15 @@
 import { UtilService } from './../../../../core/services/util.service';
-import { Subject } from 'rxjs/Rx';
 import { AppService } from './../../../../core/services/app.service';
 import { Component, OnInit, forwardRef, OnDestroy, Input } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Subscription } from 'rxjs/Subscription';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Subscription, Subject } from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  tap,
+  switchMap,
+  map,
+} from 'rxjs/operators';
 
 @Component({
   selector: 'app-colleague-searcher',
@@ -29,9 +35,9 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
   @Input() miSearchFilter;
   isLoading = false;
 
-  private propagateChange = (_: any) => { };
+  private propagateChange = (_: any) => {};
 
-  constructor(private appService: AppService, private util: UtilService) { }
+  constructor(private appService: AppService, private util: UtilService) {}
 
   /**
    * 给外部formControl写入数据
@@ -43,7 +49,7 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
       value = value + '';
       this.appService
         .getColleague(value)
-        .map(_ => (this.miSearchFilter ? this.miSearchFilter(_) : _))
+        .pipe(map(_ => (this.miSearchFilter ? this.miSearchFilter(_) : _)))
         .subscribe(
           (data: any) => {
             if (data.length > 0) {
@@ -71,7 +77,7 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
             this.util.errDeal(err);
             this.propagateChange('');
           },
-      );
+        );
     }
   }
 
@@ -88,19 +94,21 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
    * 也是一样注册,当 touched 然后调用
    * @param {*} fn
    */
-  registerOnTouched(fn: any) { }
+  registerOnTouched(fn: any) {}
 
   ngOnInit() {
     this.mySub = this.searchTerms
       .asObservable()
-      .debounceTime(300)
-      .distinctUntilChanged()
-      .do(_ => (this.isLoading = true))
-      .switchMap((term: string) => {
-        const query = encodeURI(term);
-        return this.appService.getColleague(term);
-      })
-      .map(_ => (this.miSearchFilter ? this.miSearchFilter(_) : _))
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        tap(_ => (this.isLoading = true)),
+        switchMap((term: string) => {
+          const query = encodeURI(term);
+          return this.appService.getColleague(term);
+        }),
+        map(_ => (this.miSearchFilter ? this.miSearchFilter(_) : _)),
+      )
       .subscribe(
         (data: any) => {
           this.isLoading = false;
@@ -112,7 +120,7 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
           this.util.errDeal(err);
           this.isLoading = false;
         },
-    );
+      );
   }
 
   ngOnDestroy() {

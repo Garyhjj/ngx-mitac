@@ -1,0 +1,15 @@
+:host ::ng-deep .ant-card-body {
+  max-height: 500px;
+  overflow: auto;
+}
+
+:host ::ng-deep .loadmore {
+  text-align: center;
+  margin-top: 12px;
+  height: 32px;
+  line-height: 32px;
+}
+
+.link {
+  color: #1890ff;
+}

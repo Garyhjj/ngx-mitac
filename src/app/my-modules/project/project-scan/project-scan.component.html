@@ -1,0 +1,59 @@
+<nz-tabset>
+  <nz-tab [nzTitle]="nzTabHeading1">
+    <ng-template #nzTabHeading1>
+      {{'projectModule.projectOpen' | translate}}
+      <nz-badge [nzCount]="normalTips">
+        <ng-template #content>
+          &nbsp;&nbsp;
+        </ng-template>
+      </nz-badge>
+    </ng-template>
+    <app-data-drive [name]="'projectMain'" (dataDriveInit)="getDataDrive1($event)" [bodyCellStyle]="bodyCellStyle">
+      <ng-template #actionRef let-data="data">
+        <span>
+          <ng-template [ngTemplateOutlet]="detailAction" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
+        </span>
+      </ng-template>
+    </app-data-drive>
+  </nz-tab>
+  <nz-tab [nzTitle]="nzTabHeading2">
+    <ng-template #nzTabHeading2>
+      {{'projectModule.projectOutTime' | translate}}
+      <nz-badge [nzCount]="outTimeTips">
+        <ng-template #content>
+          &nbsp;&nbsp;
+        </ng-template>
+      </nz-badge>
+    </ng-template>
+    <app-data-drive [name]="'projectMain'" (dataDriveInit)="getDataDrive2($event)" [bodyCellStyle]="bodyCellStyle">
+      <ng-template #actionRef let-data="data">
+        <span>
+          <ng-template [ngTemplateOutlet]="detailAction" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
+        </span>
+      </ng-template>
+    </app-data-drive>
+  </nz-tab>
+  <nz-tab [nzTitle]="nzTabHeading3">
+    <ng-template #nzTabHeading3>
+      {{'projectModule.projectClosed' | translate}}
+    </ng-template>
+    <app-data-drive [name]="'projectMain'" (dataDriveInit)="getDataDrive3($event)">
+      <ng-template #actionRef let-data="data">
+        <span>
+          <ng-template [ngTemplateOutlet]="detailAction" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
+        </span>
+      </ng-template>
+    </app-data-drive>
+  </nz-tab>
+</nz-tabset>
+<ng-container *ngIf="targetProject">
+  <nz-divider></nz-divider>
+  <h2 style="margin-top: 16px; margin-left: 16px">
+    <span>{{'projectModule.projectDetail' | translate}}: </span>
+  </h2>
+  <app-project-detail [project]="targetProject"></app-project-detail>
+</ng-container>
+
+<ng-template #detailAction let-data>
+  <a (click)="seeDetail(data)">{{'projectModule.projectDetail' | translate}}</a>
+</ng-template>

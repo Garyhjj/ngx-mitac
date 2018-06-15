@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Observable';
+import { forkJoin } from 'rxjs';
 import { ReservationITService } from './../shared/services/reservaton-IT.service';
 import { Component, OnInit } from '@angular/core';
 import { DataDrive } from '../../../../shared/components/data-drive/shared/models';
@@ -38,7 +38,7 @@ export class ITServerRateComponent implements OnInit {
     this.commentList = [];
     const loadingID = this.util.showLoading();
     const final = () => this.util.dismissLoading(loadingID);
-    Observable.forkJoin(
+    forkJoin(
       this.reservationITService.getPersonImpression(empno, 6),
       this.reservationITService.getPersonComment(deptID, empno, 5),
     ).subscribe(

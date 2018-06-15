@@ -1,7 +1,6 @@
 import { AppService } from './../../../../core/services/app.service';
 import { NgxValidatorExtendService } from './../../../../core/services/ngx-validator-extend.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
 import { UtilService } from './../../../../core/services/util.service';
 import { NzModalService } from 'ng-zorro-antd';
 import { ReservationApplication } from './../shared/models/index';

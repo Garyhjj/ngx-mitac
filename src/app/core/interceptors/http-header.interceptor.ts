@@ -1,8 +1,9 @@
-import { Subject } from 'rxjs/Rx';
+import { Subject } from 'rxjs';
+import { throttleTime } from 'rxjs/operators';
 import { Headers, RequestOptions } from '@angular/http';
 import { LoginConfig } from './../../login/shared/config/login.config';
 import { AuthService, TokenMes } from './../services/auth.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import {
   HttpEvent,
@@ -12,7 +13,9 @@ import {
 } from '@angular/common/http';
 
 const reqSubject = new Subject<any>();
-export const reqObserve = reqSubject.asObservable().throttleTime(1000 * 10);
+export const reqObserve = reqSubject
+  .asObservable()
+  .pipe(throttleTime(1000 * 10));
 
 @Injectable()
 export class HttpHeaderInterceptor implements HttpInterceptor {

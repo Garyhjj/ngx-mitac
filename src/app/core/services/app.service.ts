@@ -6,7 +6,8 @@ import { tify } from '../../shared/utils/chinese-conv';
 import { APIGlobalConfig } from './../../shared/config/api-global.config';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { replaceQuery } from '../../shared/utils/index';
 import { AuthService } from './auth.service';
 
@@ -16,10 +17,10 @@ export class AppService {
     private http: HttpClient,
     private auth: AuthService,
     private store$: Store<MyStore>,
-  ) { }
+  ) {}
 
   getColleague(name: string): Observable<any> {
-    if (!(typeof name === 'string') || !name) return Observable.of([]);
+    if (!(typeof name === 'string') || !name) return of([]);
     let emp_name = name.toUpperCase();
     emp_name = tify(emp_name)
       .replace(/^\"/g, '')
@@ -32,12 +33,12 @@ export class AppService {
   uploadPicture(img: string) {
     if (!img) return;
     img = img.replace(/data\:image\/\w+\;base64\,/, '');
-    return this.http
-      .post(APIGlobalConfig.uploadPicture, { PICTURE: img })
-      .map(res => {
+    return this.http.post(APIGlobalConfig.uploadPicture, { PICTURE: img }).pipe(
+      map(res => {
         let url = res['PICTURE_URL'];
         return url;
-      });
+      }),
+    );
   }
 
   getAllTips() {
@@ -45,11 +46,12 @@ export class AppService {
     const send = {
       empno: user.EMPNO,
       company_name: user.COMPANY_ID,
-      moduleId: [61, 26031]
-    }
-    this.http.post(APIGlobalConfig.getAllTips, send).subscribe((tips: MyModule[]) => {
-      this.store$.dispatch(new UserUpdateModules(tips));
-    })
+      moduleId: [61, 26031],
+    };
+    this.http
+      .post(APIGlobalConfig.getAllTips, send)
+      .subscribe((tips: MyModule[]) => {
+        this.store$.dispatch(new UserUpdateModules(tips));
+      });
   }
 }
-

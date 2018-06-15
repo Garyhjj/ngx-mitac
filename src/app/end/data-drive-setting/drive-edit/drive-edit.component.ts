@@ -10,7 +10,14 @@ import {
 import { AdditionalFn } from './../../../shared/components/data-drive/shared/models/additionalFn/index';
 import { NgxValidatorExtendService } from './../../../core/services/ngx-validator-extend.service';
 import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { isArray, deepClone } from '../../../shared/utils';
 
 @Component({
@@ -177,6 +184,7 @@ export class DriveEditComponent implements OnInit {
     private util: UtilService,
     private route: ActivatedRoute,
     private router: Router,
+    private ref: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
@@ -195,6 +203,7 @@ export class DriveEditComponent implements OnInit {
             } else {
               this.initForm();
             }
+            this.ref.markForCheck();
           },
           err => {
             this.util.errDeal(err);
@@ -221,6 +230,7 @@ export class DriveEditComponent implements OnInit {
       const setting = new DataDriveSetting(val);
       setTimeout(() => {
         this.preViewSetting = setting;
+        this.ref.detectChanges();
       }, 500);
     }
   }

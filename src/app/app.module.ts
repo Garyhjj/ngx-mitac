@@ -43,7 +43,7 @@ export function createTranslateLoader(http: HttpClient) {
         deps: [HttpClient],
       },
     }),
-    NgZorroAntdModule.forRoot(),
+    NgZorroAntdModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

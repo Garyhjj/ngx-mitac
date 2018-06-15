@@ -1,6 +1,8 @@
+import { NzModalService } from 'ng-zorro-antd';
 import { CacheService } from './../../../../../core/services/cache.service';
 import { isArray, parse } from './../../../../utils/index';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
+import { map, shareReplay } from 'rxjs/operators';
 import { AuthService } from './../../../../../core/services/auth.service';
 import { MyStore, UserState } from './../../../../../core/store';
 import { DataDrive } from './../../shared/models/index';
@@ -20,6 +22,7 @@ export class DataDriveService {
     private utilSerive: UtilService,
     private auth: AuthService,
     private cache: CacheService,
+    private modalService: NzModalService,
   ) {
     this.user = this.auth.user;
   }
@@ -61,24 +64,26 @@ export class DataDriveService {
     if (!cache) {
       cache = this.http
         .get(replaceQuery(DataDriveSettingConfig.getSetting, { id }))
-        .map((d: any[]) => {
-          if (isArray(d) && d.length === 1) {
-            const opts: any = {};
-            const target = d[0];
-            opts.tableData = parse(target.TABLE_DATA);
-            opts.updateSets = parse(target.UPDATE_SETS);
-            opts.searchSets = parse(target.SEARCH_SETS);
-            if (target.MAIN_SET) {
-              Object.assign(opts, parse(target.MAIN_SET));
+        .pipe(
+          map((d: any[]) => {
+            if (isArray(d) && d.length === 1) {
+              const opts: any = {};
+              const target = d[0];
+              opts.tableData = parse(target.TABLE_DATA);
+              opts.updateSets = parse(target.UPDATE_SETS);
+              opts.searchSets = parse(target.SEARCH_SETS);
+              if (target.MAIN_SET) {
+                Object.assign(opts, parse(target.MAIN_SET));
+              }
+              opts.id = target.ID;
+              opts.description = target.DESCRIPTION;
+              return opts;
+            } else {
+              return null;
             }
-            opts.id = target.ID;
-            opts.description = target.DESCRIPTION;
-            return opts;
-          } else {
-            return null;
-          }
-        })
-        .shareReplay();
+          }),
+          shareReplay(),
+        );
       this.cache.update(cacheName, id, cache, 2 * 1000);
     }
     return cache;
@@ -279,5 +284,33 @@ export class DataDriveService {
         this.user,
       ),
     );
+  }
+  getDataByIdx(dataDrive: DataDrive, idx: number) {
+    const data = dataDrive.getData()[idx];
+    const out: any = {};
+    data.forEach(d => {
+      out[d.property] = d.value;
+    });
+    return out;
+  }
+
+  toUpdate(d: DataDrive, idx: number, component: any) {
+    if (!d.runBeforeUpdateShow(this.getDataByIdx(d, idx))) {
+      return false;
+    }
+    const subscription = this.modalService.create({
+      nzTitle: '更新',
+      nzContent: component,
+      nzOnOk() {},
+      nzOnCancel() {},
+      nzFooter: null,
+      nzComponentParams: {
+        opts: d,
+        changeIdx: idx,
+        afterSubmitSuccess: () => {
+          subscription.destroy();
+        },
+      },
+    });
   }
 }

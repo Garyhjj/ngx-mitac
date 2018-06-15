@@ -1,11 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ElementRef,
-  ViewChild,
-  AfterViewInit,
-} from '@angular/core';
-import { DataDriveComponent } from '../../../shared/components/data-drive/data-drive.component';
+import { Component, OnInit } from '@angular/core';
 import { TableDataColumn } from '../../../shared/components/data-drive/shared/models';
 
 @Component({

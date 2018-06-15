@@ -1,5 +1,5 @@
 // tslint:disable-next-line:import-blacklist
-import { Subject } from 'rxjs/Rx';
+import { Subject } from 'rxjs';
 import { reservationConfig } from './../config/index';
 import { AuthService } from './../../../../core/services/auth.service';
 import { UserState } from './../../../../core/store';

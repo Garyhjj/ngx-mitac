@@ -7,7 +7,7 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DataDriveService } from '../../data-drive/core/services/data-drive.service';
 import { AuthService } from '../../../../core/services/auth.service';
 

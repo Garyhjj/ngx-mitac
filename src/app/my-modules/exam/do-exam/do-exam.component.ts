@@ -1,5 +1,6 @@
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs/Rx';
+import { Subscription } from 'rxjs';
+import { concatMap } from 'rxjs/operators';
 import { UtilService } from './../../../core/services/util.service';
 import { NzModalService } from 'ng-zorro-antd';
 import { ExamService, ExamResult } from './../shared/services/exam.service';
@@ -37,7 +38,7 @@ export class DoExamComponent implements OnInit, OnDestroy {
       ])
       .subscribe(_ => (this.translateTexts = _));
     this.route.params
-      .concatMap(params => this.examService.getExamHeader(params.id))
+      .pipe(concatMap(params => this.examService.getExamHeader(params.id)))
       .subscribe(
         (d: any[]) => {
           const goBack = () => this.router.navigate(['/']);
@@ -95,13 +96,15 @@ export class DoExamComponent implements OnInit, OnDestroy {
       };
       this.examService
         .updateExamResult(header)
-        .concatMap(id => {
-          const answerList = r.answerList.map(a => {
-            a.RESULT_ID = id;
-            return a;
-          });
-          return this.examService.updateExamAnswer(answerList);
-        })
+        .pipe(
+          concatMap(id => {
+            const answerList = r.answerList.map(a => {
+              a.RESULT_ID = id;
+              return a;
+            });
+            return this.examService.updateExamAnswer(answerList);
+          }),
+        )
         .subscribe(
           res => {
             this.status = 4;

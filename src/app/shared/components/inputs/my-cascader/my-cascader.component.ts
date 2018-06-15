@@ -1,6 +1,6 @@
 import { CascaderLazySet } from './../../data-drive/shared/models/input/index';
 import { Component, OnInit, forwardRef, Input } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CascaderOption } from '../../data-drive/shared/models/index';
 import { HttpClient } from '@angular/common/http';
 import { APPConfig } from '../../../config/app.config';

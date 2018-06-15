@@ -2,9 +2,9 @@ import { AppService } from './../core/services/app.service';
 import { BreadcrumbClear } from './../core/actions/breadcrumb.action';
 import { Router } from '@angular/router';
 import { UserLogout } from './../core/actions/user.action';
-import { Observable } from 'rxjs/Observable';
+import { Observable, Subscription } from 'rxjs';
 // tslint:disable-next-line:import-blacklist
-import { Subscription } from 'rxjs/Rx';
+import { map } from 'rxjs/operators';
 import { AuthService } from './../core/services/auth.service';
 import { MyStore, UserState } from './../core/store';
 import { Store } from '@ngrx/store';
@@ -35,14 +35,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.mySub1 = this.authService.authSubject.subscribe(a => {
       this.auth = a;
       if (!a) {
-        // const user = this.authService.user;
-        // if (user.rememberPWD) {
-        //   this.authService.login({ userName: user.USER_NAME, password: user.password, remember: user.rememberPWD }).subscribe(() => {
-        //     this.appService.getAllTips();
-        //   }, (err) => this.route.navigate(['/login']));
-        // }
       } else {
-        this.appService.getAllTips();
+        setTimeout(() => {
+          this.appService.getAllTips();
+        }, 100);
       }
     });
     this.mySub2 = this.authService.loginPageSubject.subscribe(b => {
@@ -51,16 +47,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.mySub3 = this.store$
       .select(s => s.userReducer)
       .subscribe(u => (this.user = u));
-    this.tips = this.store$
-      .select(s => s.userReducer)
-      .map(user => user.modules || [])
-      .map(ms => ms.map(m => m.TIPS || 0))
-      .map(ts => {
+    this.tips = this.store$.select(s => s.userReducer).pipe(
+      map(user => user.modules || []),
+      map(ms => ms.map(m => m.TIPS || 0)),
+      map(ts => {
         if (Array.isArray(ts)) {
           return ts.reduce((a, b) => a + b, 0);
         }
         return 0;
-      });
+      }),
+    );
   }
 
   ngOnDestroy() {

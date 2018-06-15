@@ -1,7 +1,7 @@
 import { UtilService } from './../../core/services/util.service';
 import { AuthService } from './../../core/services/auth.service';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { Subscription } from 'rxjs';
 import { MyStore, UserState, MyModule, Privilege } from './../../core/store';
 import { Store } from '@ngrx/store';
 import { BreadcrumbModel } from './../../core/models/breadcrumb.model';

@@ -1,4 +1,4 @@
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { ExamMapping } from './../shared/config/index';
 import { ExamService } from './../shared/services/exam.service';

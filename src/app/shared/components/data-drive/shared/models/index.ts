@@ -1,18 +1,27 @@
-import { filter } from 'rxjs/operators/filter';
+import { filter } from 'rxjs/operators';
 import { deepClone } from './../../../../utils/index';
-import { Observable } from 'rxjs/Observable';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { AdditionalFn } from './additionalFn/index';
 import { TableDataModel, TableData } from './table-data/index';
 import { SearchItemSet } from './searcher';
-import { DataViewSet, TabelViewSetMore, DataViewType } from './viewer/index';
+import {
+  DataViewSet,
+  TabelViewSetMore,
+  DataViewType,
+  selfComponentPrefix,
+  selfTemplateRefPrefix,
+} from './viewer/index';
 // tslint:disable-next-line:import-blacklist
-import { BehaviorSubject } from 'rxjs/Rx';
 import { bindEventForArray, isArray } from '../../../../utils/index';
-import { DataViewSetFactory } from './viewer/index';
+import {
+  DataViewSetFactory,
+  isSelfComponent,
+  isSelfTemplateRef,
+} from './viewer/index';
 import { SelfStoreSet, SelfStore } from './self-store/index';
 import { InputSetFactory } from './input/index';
-import { Subject } from 'rxjs/Subject';
+import { TemplateRef } from '@angular/core';
 export * from './viewer';
 export * from './self-store';
 export * from './table-data';
@@ -28,6 +37,12 @@ export interface DataDriveOptions {
     delete?: string;
     add?: string;
     update?: string;
+  };
+  nameSets?: {
+    delete?: string;
+    add?: string;
+    update?: string;
+    actionCol?: string;
   };
   dataViewSet?: DataViewSet;
   selfHideLists?: string[];
@@ -48,6 +63,7 @@ export class DataDrive implements DataDriveOptions {
   private selfSearchDataSubject = new Subject<any[]>();
   private scrollToBottomSubject = new Subject<any>();
   private isInBackgroundSubject = new Subject<any>();
+  viewerChange = new Subject<any>();
   isInBackground = false;
   eventSubject = new Subject<string>();
   eventsQueue = {};
@@ -63,6 +79,12 @@ export class DataDrive implements DataDriveOptions {
     delete?: string;
     add?: string;
     update?: string;
+  };
+  nameSets?: {
+    delete?: string;
+    add?: string;
+    update?: string;
+    actionCol?: string;
   };
   dataViewSet?: DataViewSet;
   allHideLists: string[];
@@ -137,6 +159,133 @@ export class DataDrive implements DataDriveOptions {
   }
   observeIsInBackground() {
     return this.isInBackgroundSubject.asObservable();
+  }
+
+  /**
+   * 注册并添加新的Viewer,支持component和TemplateRef类型
+   *
+   * @param {*} component
+   * @param {*} params
+   * @memberof DataDrive
+   */
+  viewerRegister(component, params?) {
+    const getRandom = () => {
+      return new Date().getTime() + '' + (Math.random() * 1000).toFixed(0);
+    };
+    const addViewer = (viewer, type) => {
+      this.otherDataViewSets = this.otherDataViewSets || [];
+      this.otherDataViewSets.push(viewer);
+      this.additionalFn = this.additionalFn || {};
+      const types = (this.additionalFn.switchViewType = this.additionalFn
+        .switchViewType || [this.dataViewSet.type]);
+      this.additionalFn.switchViewType = Array.from(new Set(types).add(type));
+    };
+    if (typeof component === 'function') {
+      const type = selfComponentPrefix + getRandom();
+      const viewer: DataViewSet = {
+        type,
+        container: component,
+        params,
+      };
+      addViewer(viewer, type);
+      return {
+        type,
+        drop: () => {
+          this.viewerDrop({ type });
+        },
+      };
+    } else if (component instanceof TemplateRef) {
+      const type = selfTemplateRefPrefix + getRandom();
+      const viewer: DataViewSet = {
+        type,
+        container: component,
+        params,
+      };
+      addViewer(viewer, type);
+      return {
+        type,
+        drop: () => {
+          this.viewerDrop({ type });
+        },
+      };
+    } else {
+      console.warn('not support this type of viewer');
+    }
+  }
+
+  /**
+   * 移除已有的Viewer
+   *
+   * @param {{ type?: DataViewType; container?: any }} opts
+   * @memberof DataDrive
+   */
+  viewerDrop(opts: { type?: DataViewType; container?: any }) {
+    const { type, container } = opts;
+    this.additionalFn = this.additionalFn || {};
+    const switchViewType = this.additionalFn.switchViewType;
+    if (isArray(switchViewType)) {
+      this.additionalFn.switchViewType = switchViewType.filter(s => s !== type);
+    }
+    let otherViewSets = this.otherDataViewSets;
+    if (isArray(otherViewSets) && otherViewSets.length > 0) {
+      this.otherDataViewSets = otherViewSets.filter(o => {
+        if (type && container) {
+          return o.type !== type && o.container !== container;
+        } else if (!type && container) {
+          return o.container !== container;
+        } else if (type && !container) {
+          return o.type !== type;
+        } else {
+          return true;
+        }
+      });
+    }
+    let viewerShowing = this.dataViewSet;
+    if (type && container) {
+      if (
+        viewerShowing.type === type &&
+        viewerShowing.container === container
+      ) {
+        this.dataViewSet = null;
+      }
+    } else if (!type && container) {
+      if (viewerShowing.container === container) {
+        this.dataViewSet = null;
+      }
+    } else if (type && !container) {
+      if (viewerShowing.type === type) {
+        this.dataViewSet = null;
+      }
+    }
+    otherViewSets = this.otherDataViewSets;
+    if (
+      !this.dataViewSet &&
+      isArray(otherViewSets) &&
+      otherViewSets.length > 0
+    ) {
+      const c = otherViewSets[0];
+      this.switchViewType(c.type);
+    }
+  }
+  /**
+   * 覆盖内部的命名
+   *
+   * @param {{
+   *     delete?: string;
+   *     add?: string;
+   *     update?: string;
+   *     actionCol?: string;
+   *   }} p
+   * @memberof DataDrive
+   */
+  changeNameSets(p: {
+    delete?: string;
+    add?: string;
+    update?: string;
+    actionCol?: string;
+  }) {
+    this.nameSets = this.nameSets || {};
+    Object.assign(this.nameSets, p);
   }
   runIntoBackground() {
     this.isInBackground = true;
@@ -266,7 +415,7 @@ export class DataDrive implements DataDriveOptions {
    * @memberof DataDrive
    */
   beforeUpdateSubmit(
-    cb: (fg: FormGroup, sub: Subject<string>, originalData: any) => void,
+    cb: (fg: FormGroup, sub: Subject<string>, originalData: any) => any,
   ) {
     this.on('beforeUpdateSubmit', cb);
   }
@@ -561,7 +710,10 @@ export class DataDrive implements DataDriveOptions {
         this.otherDataViewSets.push(currentView);
         target.tempAddition = currentView.tempAddition;
         this.dataViewSet = target;
-        this.initDataViewSet();
+        if (!isSelfComponent(target.type) && !isSelfTemplateRef(target.type)) {
+          this.initDataViewSet();
+        }
+        this.viewerChange.next(target);
       }
     }
   }

@@ -7,13 +7,8 @@ import { EncryptUtilService } from './encryptUtil.service';
 import { LoginConfig } from './../../login/shared/config/login.config';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/do';
-
-import { BehaviorSubject } from 'rxjs/Rx';
+import { BehaviorSubject } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { replaceQuery, isArray } from '../../shared/utils/index';
 import { UtilService } from './util.service';
 
@@ -23,7 +18,7 @@ export class AuthService {
   authSubject = new BehaviorSubject<boolean>(false);
   tokenStoreName = 'tokenMes';
   loginPageSubject = new BehaviorSubject<boolean>(false);
-  user: UserState;
+  user: UserState = {};
   tokenEffectTime: number = 1000 * 60 * 20;
   constructor(
     private http: HttpClient,
@@ -33,7 +28,9 @@ export class AuthService {
   ) {
     this.updateAuth(this.checkAuth());
     reqObserve.subscribe(a => this.updateToken());
-    this.store$.select(s => s.userReducer).subscribe(u => (this.user = u));
+    this.store$
+      .select(s => s.userReducer)
+      .subscribe(u => Object.assign(this.user, u));
     this.getSelfPrivilege();
   }
 
@@ -43,19 +40,21 @@ export class AuthService {
         LoginConfig.loginUrl,
         this.getNewToken(data.userName, data.password),
       )
-      .do((d: any) => {
-        let user: UserState = {};
-        Object.assign(user, d.User);
-        user.modules = d.Modules;
-        user.password = data.password;
-        user.rememberPWD = data.remember;
-        let expires = d.Expires;
-        this.tokenEffectTime = expires - new Date().getTime();
-        this.updateTokenMes(expires, d.Token);
-        this.auth = true;
-        this.updateAuth(true);
-        this.store$.dispatch(new UserLogin(user));
-      });
+      .pipe(
+        tap((d: any) => {
+          let user: UserState = {};
+          Object.assign(user, d.User);
+          user.modules = d.Modules;
+          user.password = data.password;
+          user.rememberPWD = data.remember;
+          let expires = d.Expires;
+          this.tokenEffectTime = expires - new Date().getTime();
+          this.updateTokenMes(expires, d.Token);
+          this.auth = true;
+          this.updateAuth(true);
+          this.store$.dispatch(new UserLogin(user));
+        }),
+      );
   }
 
   updateToken() {

@@ -1,5 +1,8 @@
 {
   "globalDependencies": {
     "moment": "registry:dt/moment#2.11.1+20161010105546"
+  },
+  "globalDevDependencies": {
+    "less": "registry:dt/less#0.0.0+20161212190028"
   }
 }

@@ -1,5 +1,4 @@
-import { Subscription } from 'rxjs/Rx';
-import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs';
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/platform-browser';
 

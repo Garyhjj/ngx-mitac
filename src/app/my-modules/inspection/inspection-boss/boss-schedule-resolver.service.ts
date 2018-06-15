@@ -1,6 +1,7 @@
 import { NzModalService } from 'ng-zorro-antd';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Router, Resolve } from '@angular/router';
 import { InspectionBossService } from './shared/services/inspection-boss.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -19,17 +20,19 @@ export class BossScheduleResolver implements Resolve<any> {
     this.translate.get('insoectionModule.scheduleNotFound').subscribe(data => {
       this.translateTexts = data;
     });
-    return this.bs.getEmployeeSchedule().map((schedule: any[]) => {
-      if (schedule && schedule.length > 0) {
-        return schedule;
-      } else {
-        // id not found
-        this.confirmServ.info({
-          nzTitle: this.translateTexts,
-        });
-        this.router.navigate(['/']);
-        return null;
-      }
-    });
+    return this.bs.getEmployeeSchedule().pipe(
+      map((schedule: any[]) => {
+        if (schedule && schedule.length > 0) {
+          return schedule;
+        } else {
+          // id not found
+          this.confirmServ.info({
+            nzTitle: this.translateTexts,
+          });
+          this.router.navigate(['/']);
+          return null;
+        }
+      }),
+    );
   }
 }

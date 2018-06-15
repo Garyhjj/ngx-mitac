@@ -1,0 +1,62 @@
+.card-title {
+  font-size: 0;
+}
+
+.card-title a {
+  color: rgba(0, 0, 0, .85);
+  margin-right: 12px;
+  line-height: 24px;
+  height: 24px;
+  display: inline-block;
+  vertical-align: top;
+  font-size: 14px;
+}
+
+.card-title a :hover {
+  color: blue;
+}
+
+.ant-card-meta-description {
+  color: rgba(0, 0, 0, .45);
+  height: 44px;
+  line-height: 22px;
+  overflow: hidden;
+}
+
+.project-item {
+  display: flex;
+  margin-top: 8px;
+  font-size: 13px;
+  height: 30px;
+  line-height: 30px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  white-space: nowrap;
+}
+
+.project-item a {
+  color: #999090;
+  display: inline-block;
+  flex: 1 1 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  white-space: nowrap;
+}
+
+.project-item .datetime {
+  color: #999090;
+  flex: 0 0 auto;
+  float: right;
+}
+
+:host ::ng-deep .ant-tree li span.ant-tree-switcher,
+.ant-tree li span.ant-tree-iconEle {
+  margin-bottom: 49px;
+}
+
+:host ::ng-deep .inMoal .ant-tree {
+  overflow: auto;
+  max-height: 75vh;
+}

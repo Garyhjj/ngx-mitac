@@ -21,7 +21,10 @@
         </ng-template>
         <div class="new-button" *ngIf="dataDrive.additionalFn?.addItem && dataDrive.tableData.addable">
           <button nz-button [nzType]="'primary'" (click)="addItem()">
-            {{'newData' | translate}}
+            <span *ngIf="dataDrive.nameSets?.add;else elseBlock ">{{dataDrive.nameSets?.add}}</span>
+            <ng-template #elseBlock>
+              <span>{{'newData' | translate}}</span>
+            </ng-template>
           </button>
         </div>
       </div>

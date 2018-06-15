@@ -1,14 +1,14 @@
 import { boardConfig } from './../shared/config/index';
 import { DataDrive } from './../../../shared/components/data-drive/shared/models/index';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
+import { Subscription, forkJoin } from 'rxjs';
+import { concatMap } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import * as moment from 'moment';
 import { BoardService } from '../shared/services/board.service';
 import { UtilService } from '../../../core/services/util.service';
 import { APPConfig } from '../../../shared/config/app.config';
 import { isArray } from '../../../shared/utils/index';
-import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-esd',
@@ -42,7 +42,7 @@ export class EsdComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.initForm();
     this.lazyChangeSubOptions();
-    Observable.forkJoin(
+    forkJoin(
       this.boardService.getEsdQuantity('N'),
       this.boardService.getEsdQuantity('Y'),
     ).subscribe(
@@ -61,12 +61,14 @@ export class EsdComponent implements OnInit, OnDestroy {
   lazyChangeSubOptions() {
     this.validateForm
       .get('top')
-      .valueChanges.concatMap(c => {
-        this.targetSubList = [];
-        this.validateForm.get('sub').setValue('');
-        this.cacheName = c;
-        return this.boardService.getSubDep(c);
-      })
+      .valueChanges.pipe(
+        concatMap(c => {
+          this.targetSubList = [];
+          this.validateForm.get('sub').setValue('');
+          this.cacheName = c;
+          return this.boardService.getSubDep(c);
+        }),
+      )
       .subscribe(a => {
         const list = a as any[];
         if (isArray(list)) {
@@ -113,7 +115,7 @@ export class EsdComponent implements OnInit, OnDestroy {
       this.targetSubList.forEach(s =>
         req.push(this.boardService.getEsdNotPassList(s)),
       );
-      Observable.forkJoin(...req).subscribe(res => {
+      forkJoin(...req).subscribe(res => {
         let all = [];
         res.forEach(r => {
           if (isArray(r)) {

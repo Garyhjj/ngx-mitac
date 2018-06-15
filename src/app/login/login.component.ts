@@ -20,6 +20,7 @@ import { NzNotificationService } from 'ng-zorro-antd';
 export class LoginComponent implements OnInit, OnDestroy {
   validateForm: FormGroup;
   loading = false;
+  year = new Date().getFullYear();
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,

@@ -3,14 +3,14 @@
     <div class="sub-child">
       <div class="card-container">
         <nz-tabset [nzTabPosition]="'top'" [nzType]="'card'">
-          <nz-tab nzTitle="项目人员">
+          <nz-tab [nzTitle]="'projectModule.projectPeople' | translate">
             <app-data-drive [name]="'projectPeople'" (dataDriveInit)="getDataDrivePeople($event)" [bodyCellStyle]="bodyCellStyle"></app-data-drive>
           </nz-tab>
-          <nz-tab nzTitle="项目的子任务">
+          <nz-tab [nzTitle]="'projectModule.projectTask' | translate">
             <nz-tabset>
               <nz-tab [nzTitle]="nzTabHeading1">
                 <ng-template #nzTabHeading1>
-                  进行中
+                  {{'projectModule.projectOpen' | translate}}
                   <nz-badge [nzCount]="normalTips">
                     <ng-template #content>
                       &nbsp;&nbsp;
@@ -21,14 +21,14 @@
                   <ng-template #actionRef let-data="data">
                     <span>
                       <nz-divider nzType="vertical" *ngIf="isOwner"></nz-divider>
-                      <a (click)="seeTaskDetail(data)">细节</a>
+                      <ng-template [ngTemplateOutlet]="seeDetailFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
                     </span>
                   </ng-template>
                 </app-data-drive>
               </nz-tab>
               <nz-tab [nzTitle]="nzTabHeading0">
                 <ng-template #nzTabHeading0>
-                  待分配
+                  {{'projectModule.taskNoAssignee' | translate}}
                   <nz-badge [nzCount]="noAssigneeTips">
                     <ng-template #content>
                       &nbsp;&nbsp;
@@ -39,14 +39,14 @@
                   <ng-template #actionRef let-data="data">
                     <span>
                       <nz-divider nzType="vertical" *ngIf="isOwner"></nz-divider>
-                      <a (click)="seeTaskDetail(data)">细节</a>
+                      <ng-template [ngTemplateOutlet]="seeDetailFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
                     </span>
                   </ng-template>
                 </app-data-drive>
               </nz-tab>
               <nz-tab [nzTitle]="nzTabHeading2">
                 <ng-template #nzTabHeading2>
-                  超期未完成
+                  {{'projectModule.projectOutTime' | translate}}
                   <nz-badge [nzCount]="outTimeTips">
                     <ng-template #content>
                       &nbsp;&nbsp;
@@ -57,14 +57,14 @@
                   <ng-template #actionRef let-data="data">
                     <span>
                       <nz-divider nzType="vertical" *ngIf="isOwner"></nz-divider>
-                      <a (click)="seeTaskDetail(data)">细节</a>
+                      <ng-template [ngTemplateOutlet]="seeDetailFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
                     </span>
                   </ng-template>
                 </app-data-drive>
               </nz-tab>
               <nz-tab [nzTitle]="nzTabHeading3">
                 <ng-template #nzTabHeading3>
-                  待审核
+                  {{'projectModule.taskFinished' | translate}}
                   <nz-badge [nzCount]="needConfimTips">
                     <ng-template #content>
                       &nbsp;&nbsp;
@@ -74,23 +74,23 @@
                 <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDriveSub2($event)" [bodyCellStyle]="bodyCellStyle">
                   <ng-template #actionRef let-data="data">
                     <span>
-                      <a (click)="CloseTask(data)">结案</a>
+                      <a (click)="closeTask(data)">{{'projectModule.closeProject' | translate}}</a>
                       <nz-divider nzType="vertical"></nz-divider>
-                      <a (click)="rollbackTask(data)">退回</a>
+                      <a (click)="rollbackTask(data)">{{'projectModule.notMyTask' | translate}}</a>
                       <nz-divider nzType="vertical"></nz-divider>
-                      <a (click)="seeTaskDetail(data)">细节</a>
+                      <ng-template [ngTemplateOutlet]="seeDetailFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
                     </span>
                   </ng-template>
                 </app-data-drive>
               </nz-tab>
               <nz-tab [nzTitle]="nzTabHeading4">
                 <ng-template #nzTabHeading4>
-                  已结案
+                  {{'projectModule.taskClosed' | translate}}
                 </ng-template>
                 <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDriveSub3($event)">
                   <ng-template #actionRef let-data="data">
                     <span>
-                      <a (click)="seeTaskDetail(data)">细节</a>
+                      <ng-template [ngTemplateOutlet]="seeDetailFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
                     </span>
                   </ng-template>
                 </app-data-drive>
@@ -102,8 +102,8 @@
     </div>
   </div>
   <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="6" style="padding-left: 16px">
-    <nz-card nzTitle="动态" style="max-height: 400px;overflow: auto;">
-      <nz-list nzSize="large" class="activities" [nzDataSource]="history" [nzRenderItem]="item">
+    <nz-card [nzTitle]="'projectModule.history' | translate">
+      <nz-list nzSize="large" class="activities" [nzDataSource]="history" [nzRenderItem]="item" [nzLoadMore]="loadMore">
         <ng-template #item let-item>
           <nz-list-item>
             <nz-list-item-meta [nzAvatar]="item.USER_NAME | myFlex: {name:'empno',params:['{AVATAR_URL}']} | async" [nzTitle]="activeTitle"
@@ -113,29 +113,55 @@
                 &nbsp;
                 <ng-container *ngIf="item.TARGET_TYPE === 1">
                   <ng-container *ngIf="item.CHANGE_TYPE === 1">
-                    <span>创建项目</span>
+                    <span>{{'projectModule.newProject' | translate}}</span>
                   </ng-container>
                   <ng-container *ngIf="item.CHANGE_TYPE === 3">
-                    <span>移除项目</span>
+                    <span>{{'projectModule.deleteProject' | translate}}</span>
                   </ng-container>
                   <ng-container *ngIf="item.CHANGE_TYPE === 2">
-                    修改了项目:
+                    {{'projectModule.alterProject' | translate}}:
                     <div *ngFor="let di of item.DIFF" class="markdown">
                       <ng-container [ngSwitch]="di">
-                        <span *ngSwitchCase="'NAME'">名称
+                        <span *ngSwitchCase="'NAME'">{{'projectModule.NAME' | translate}}
                           <ng-template [ngTemplateOutlet]="changeDetailString" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
                         </span>
-                        <span *ngSwitchCase="'TYPE'">类别
+                        <span *ngSwitchCase="'TYPE'">{{'projectModule.TYPE' | translate}}
                           <ng-template [ngTemplateOutlet]="changeDetailString" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
                         </span>
-                        <span *ngSwitchCase="'DESCRIPTION'">描述
+                        <span *ngSwitchCase="'DESCRIPTION'">{{'projectModule.DESCRIPTION' | translate}}
                           <ng-template [ngTemplateOutlet]="changeDetailString" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
                         </span>
-                        <span *ngSwitchCase="'START_DATE'">开始日期
+                        <span *ngSwitchCase="'START_DATE'">{{'projectModule.START_DATE' | translate}}
                           <ng-template [ngTemplateOutlet]="changeDetailDate" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
                         </span>
-                        <span *ngSwitchCase="'DUE_DATE'">截止日期
+                        <span *ngSwitchCase="'DUE_DATE'">{{'projectModule.DUE_DATE' | translate}}
                           <ng-template [ngTemplateOutlet]="changeDetailDate" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
+                        </span>
+                        <span *ngSwitchCase="'STATUS'">
+                          <span *ngIf="item.BEFORE_STORE[di] === 'Open' && item.AFTER_STORE[di] === 'Closed'">{{'projectModule.DoneProject' | translate}}</span>
+                        </span>
+                        <span *ngSwitchCase="'PARENT_HEADER'">
+                          <span *ngIf="!item.BEFORE_STORE[di] && item.AFTER_STORE[di]">
+                            {{'projectModule.fromFreeTo' | translate}}
+                            <code>
+                              <ng-template [ngTemplateOutlet]="projectName" [ngTemplateOutletContext]="{$implicit: item.AFTER_STORE[di]}"></ng-template>
+                            </code> {{'projectModule.children' | translate}}
+                          </span>
+                          <span *ngIf="item.BEFORE_STORE[di] && !item.AFTER_STORE[di]">
+                            {{'projectModule.from' | translate}}
+                            <code>
+                              <ng-template [ngTemplateOutlet]="projectName" [ngTemplateOutletContext]="{$implicit: item.BEFORE_STORE[di]}"></ng-template>
+                            </code> {{'projectModule.childToFree' | translate}}
+                          </span>
+                          <span *ngIf="item.BEFORE_STORE[di]&&item.AFTER_STORE[di]">
+                            ({{'projectModule.from' | translate}}
+                            <code>
+                              <ng-template [ngTemplateOutlet]="projectName" [ngTemplateOutletContext]="{$implicit: item.BEFORE_STORE[di]}"></ng-template>
+                            </code> {{'projectModule.children' | translate}}{{'projectModule.to' | translate}}
+                            <code>
+                              <ng-template [ngTemplateOutlet]="projectName" [ngTemplateOutletContext]="{$implicit: item.AFTER_STORE[di]}"></ng-template>
+                            </code> {{'projectModule.children' | translate}})
+                          </span>
                         </span>
                         <span *ngSwitchDefault>{{di}}
                           <ng-template [ngTemplateOutlet]="changeDetailString" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
@@ -146,45 +172,89 @@
                 </ng-container>
                 <ng-container *ngIf="item.TARGET_TYPE === 2">
                   <ng-container *ngIf="item.CHANGE_TYPE === 1">
-                    <span>新建任务: {{item.AFTER_STORE.DESCRIPTION}}, 负责人: {{item.AFTER_STORE.ASSIGNEE | myFlex: {name:'empno',params:['CH(NO)']}
-                      | async}}</span>
+                    <span>{{'projectModule.newTask' | translate}}:
+                      <a (click)="seeTaskDetail({ID:item.AFTER_STORE.ID})" class="link">{{item.AFTER_STORE.DESCRIPTION}}</a>, {{'projectModule.ASSIGNEE' | translate}}: {{item.AFTER_STORE.ASSIGNEE
+                      | myFlex: {name:'empno',params:['CH(NO)']} | async}}</span>
+                  </ng-container>
+                  <ng-container *ngIf="item.CHANGE_TYPE === 3">
+                    <span>{{'projectModule.deleteTask' | translate}}:
+                      <a (click)="seeTaskDetail({ID:item.AFTER_STORE.ID})" class="link" *ngIf="item.AFTER_STORE">{{item.AFTER_STORE.DESCRIPTION}}
+                      </a>
+                    </span>
                   </ng-container>
                   <ng-container *ngIf="item.CHANGE_TYPE === 2">
-                    修改了任务({{item.AFTER_STORE.DESCRIPTION}}):
+                    {{'projectModule.alterTask' | translate}} (
+                    <a (click)="seeTaskDetail({ID:item.AFTER_STORE.ID})" class="link">{{item.AFTER_STORE.DESCRIPTION}}</a>):
                     <div *ngFor="let di of item.DIFF" class="markdown">
                       <ng-container [ngSwitch]="di">
-                        <span *ngSwitchCase="'MODEL'">产品
+                        <span *ngSwitchCase="'MODEL'">{{'projectModule.MODEL' | translate}}
                           <ng-template [ngTemplateOutlet]="changeDetailString" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
                         </span>
-                        <span *ngSwitchCase="'BU'">单位名
+                        <span *ngSwitchCase="'BU'">{{'projectModule.BU' | translate}}
                           <ng-template [ngTemplateOutlet]="changeDetailString" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
                         </span>
-                        <span *ngSwitchCase="'CUSTOMER'">客户
+                        <span *ngSwitchCase="'CUSTOMER'">{{'projectModule.CUSTOMER' | translate}}
                           <ng-template [ngTemplateOutlet]="changeDetailString" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
                         </span>
-                        <span *ngSwitchCase="'IMPACT'">附加影响
+                        <span *ngSwitchCase="'IMPACT'">{{'projectModule.IMPACT' | translate}}
                           <ng-template [ngTemplateOutlet]="changeDetailString" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
                         </span>
-                        <span *ngSwitchCase="'TYPE'">类别
+                        <span *ngSwitchCase="'TYPE'">{{'projectModule.TYPE' | translate}}
                           <ng-template [ngTemplateOutlet]="changeDetailString" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
                         </span>
-                        <span *ngSwitchCase="'ASSIGNEE'">负责人
+                        <span *ngSwitchCase="'ASSIGNEE'">{{'projectModule.ASSIGNEE' | translate}}
                           <ng-template [ngTemplateOutlet]="changeDetailPerson" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
                         </span>
-                        <span *ngSwitchCase="'DESCRIPTION'">描述
+                        <span *ngSwitchCase="'DESCRIPTION'">{{'projectModule.DESCRIPTION' | translate}}
                           <ng-template [ngTemplateOutlet]="changeDetailString" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
                         </span>
-                        <span *ngSwitchCase="'START_DATE'">开始日期
+                        <span *ngSwitchCase="'WEIGHT'">{{'projectModule.WEIGHT' | translate}}
+                          <ng-template [ngTemplateOutlet]="changeDetailString" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
+                        </span>
+                        <span *ngSwitchCase="'START_DATE'">{{'projectModule.START_DATE' | translate}}
                           <ng-template [ngTemplateOutlet]="changeDetailDate" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
                         </span>
-                        <span *ngSwitchCase="'DUE_DATE'">截止日期
+                        <span *ngSwitchCase="'DUE_DATE'">{{'projectModule.DUE_DATE' | translate}}
                           <ng-template [ngTemplateOutlet]="changeDetailDate" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
+                        </span>
+                        <span *ngSwitchCase="'STATUS'">
+                          <span *ngIf="item.BEFORE_STORE[di] === 'Open' && item.AFTER_STORE[di] === 'Finished'">{{'projectModule.taskFinishConfirming' | translate}}</span>
+                          <span *ngIf="item.BEFORE_STORE[di] === 'Finished' && item.AFTER_STORE[di] === 'Open'">{{'projectModule.taskNoPass' | translate}}</span>
+                          <span *ngIf="item.BEFORE_STORE[di] === 'Finished' && item.AFTER_STORE[di] === 'Closed'">{{'projectModule.taskClosedH' | translate}}</span>
                         </span>
                         <span *ngSwitchDefault>{{di}}
                           <ng-template [ngTemplateOutlet]="changeDetailString" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
                         </span>
                       </ng-container>
                     </div>
+                  </ng-container>
+                </ng-container>
+                <ng-container *ngIf="item.TARGET_TYPE === 3">
+                  <ng-container *ngIf="item.CHANGE_TYPE === 1">
+                    {{'projectModule.newMember' | translate}}:
+                    <code>{{item.AFTER_STORE.USER_NAME | myFlex: {name:'empno',params:['CH(NO)']} | async}}</code>
+                  </ng-container>
+                  <ng-container *ngIf="item.CHANGE_TYPE === 3">
+                    {{'projectModule.deleteMemeber' | translate}}:
+                    <code>{{item.AFTER_STORE.USER_NAME | myFlex: {name:'empno',params:['CH(NO)']} | async}}</code>
+                  </ng-container>
+                </ng-container>
+                <ng-container *ngIf="item.TARGET_TYPE === 4">
+                  <ng-container *ngIf="item.CHANGE_TYPE === 1">
+                    {{'projectModule.updateTask' | translate}}(
+                    <a (click)="seeTaskDetail({
+                      ID:item.AFTER_STORE.LINE_ID
+                    })" class="link">{{item.AFTER_STORE.LINE_ID | myFlex: {name:'lazyLoad',params:['projects/lines?id='+item.AFTER_STORE.LINE_ID,['ID','DESCRIPTION']
+                      ]} | async}}</a>){{'projectModule.progress' | translate}}
+                  </ng-container>
+                </ng-container>
+                <ng-container *ngIf="item.TARGET_TYPE === 5">
+                  <ng-container *ngIf="item.CHANGE_TYPE === 1">
+                    {{'projectModule.inTask' | translate}}(
+                    <a (click)="seeTaskDetail({
+                        ID:item.AFTER_STORE.LINE_ID
+                      })" class="link">{{item.AFTER_STORE.LINE_ID | myFlex: {name:'lazyLoad',params:['projects/lines?id='+item.AFTER_STORE.LINE_ID,['ID','DESCRIPTION']
+                      ]} | async}}</a>){{'projectModule.leftComment' | translate}}
                   </ng-container>
                 </ng-container>
               </ng-template>
@@ -194,6 +264,12 @@
             </nz-list-item-meta>
           </nz-list-item>
         </ng-template>
+        <ng-template #loadMore>
+          <div class="loadmore">
+            <button nz-button *ngIf="!loadingMore" (click)="onLoadMore()">loading more</button>
+            <nz-spin *ngIf="loadingMore" [nzSpinning]="loadingMore"></nz-spin>
+          </div>
+        </ng-template>
       </nz-list>
     </nz-card>
   </div>
@@ -201,19 +277,27 @@
 
 
 <ng-template #changeDetailString let-item="item" let-di="di">
-  (从
-  <code>{{item.BEFORE_STORE[di]}}</code> 到
+  ({{'projectModule.from' | translate}}
+  <code>{{item.BEFORE_STORE[di]}}</code> {{'projectModule.to' | translate}}
   <code>{{item.AFTER_STORE[di]}}</code>)
 </ng-template>
 
 <ng-template #changeDetailDate let-item="item" let-di="di">
-  (从
-  <code>{{item.BEFORE_STORE[di] | sgMydate: 'YYYY-MM-DD'}}</code> 到
+  ({{'projectModule.from' | translate}}
+  <code>{{item.BEFORE_STORE[di] | sgMydate: 'YYYY-MM-DD'}}</code> {{'projectModule.to' | translate}}
   <code>{{item.AFTER_STORE[di] | sgMydate: 'YYYY-MM-DD'}}</code>)
 </ng-template>
 
 <ng-template #changeDetailPerson let-item="item" let-di="di">
-  (从
-  <code>{{item.BEFORE_STORE[di] | myFlex: {name:'empno',params:['CH(NO)']} | async}}</code> 到
+  ({{'projectModule.from' | translate}}
+  <code>{{item.BEFORE_STORE[di] | myFlex: {name:'empno',params:['CH(NO)']} | async}}</code> {{'projectModule.to' | translate}}
   <code>{{item.AFTER_STORE[di] | myFlex: {name:'empno',params:['CH(NO)']} | async}}</code>)
+</ng-template>
+
+<ng-template #projectName let-id>
+  {{id | myFlex: {name:'lazyLoad',params:['projects/headers',['ID','NAME'],true]} | async}}
+</ng-template>
+
+<ng-template #seeDetailFn let-data>
+  <a (click)=seeTaskDetail(data)>{{'projectModule.taskDetail' | translate}}</a>
 </ng-template>

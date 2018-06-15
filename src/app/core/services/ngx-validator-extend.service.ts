@@ -355,6 +355,80 @@ export class NgxValidatorExtendService {
   }
 
   /**
+   * 与同级栏位进行日期比对，比另一个栏位要大
+   * @param  {string}   name 同级栏位名称
+   * @return {ValidatorFn}      验证器
+   */
+  dateBigger(name: string): ValidatorFn {
+    return (ctrl: AbstractControl) => {
+      let value = ctrl.value;
+      if (!ctrl.parent) {
+        return null;
+      }
+      if (!ctrl.parent.controls[name]) {
+        throw new Error('同级栏位中没有' + name + '栏位');
+      }
+      const anotherControl: AbstractControl = ctrl.parent.controls[name];
+      let anotherVal = anotherControl.value || null;
+      if (anotherVal) {
+        if (new Date(value).getTime() - new Date(anotherVal).getTime() > 0) {
+          setTimeout(() => {
+            if (anotherControl.invalid) {
+              anotherControl.setValue(anotherVal);
+            }
+          }, 100);
+          return null;
+        } else {
+          return {
+            dateBigger: {
+              target: name,
+            },
+          };
+        }
+      } else {
+        return null;
+      }
+    };
+  }
+
+  /**
+   * 与同级栏位进行日期比对，比另一个栏位要小
+   * @param  {string}   name 同级栏位名称
+   * @return {ValidatorFn}      验证器
+   */
+  dateSmall(name: string): ValidatorFn {
+    return (ctrl: AbstractControl) => {
+      let value = ctrl.value;
+      if (!ctrl.parent) {
+        return null;
+      }
+      if (!ctrl.parent.controls[name]) {
+        throw new Error('同级栏位中没有' + name + '栏位');
+      }
+      const anotherControl: AbstractControl = ctrl.parent.controls[name];
+      let anotherVal = anotherControl.value || null;
+      if (anotherVal) {
+        if (new Date(value).getTime() - new Date(anotherVal).getTime() < 0) {
+          setTimeout(() => {
+            if (anotherControl.invalid) {
+              anotherControl.setValue(anotherVal);
+            }
+          }, 100);
+          return null;
+        } else {
+          return {
+            dateSmall: {
+              target: name,
+            },
+          };
+        }
+      } else {
+        return null;
+      }
+    };
+  }
+
+  /**
    * 检查小数位的个数
    * @param  {number} num   小数位的个数
    * @return {ValidatorFn}     验证器

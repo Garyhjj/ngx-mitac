@@ -60,7 +60,42 @@ export const projectConfig = {
    * GET
    * 2018-06-03
    * @param {number} {header_id}
+   * @param {number} {page}
    */
   getProjectHistory:
-    APPConfig.baseUrl + 'projects/history?header_id={HEADER_ID}',
+    APPConfig.baseUrl + 'projects/history?header_id={HEADER_ID}&page={page}',
+
+  /**
+   * URL
+   * 获得项目的任务
+   * GET
+   * 2018-06-05
+   * @param {number} {id}
+   */
+  getProjecLine: APPConfig.baseUrl + 'projects/lines?id={id}',
+
+  /**
+   * URL
+   * 获得项目的字任务
+   * GET
+   * 2018-06-06
+   * @param {number} {parent}
+   */
+  getProjectChildren: APPConfig.baseUrl + 'projects/headers?parent={parent}',
+
+  /**
+   * URL
+   * 获得所有项目
+   * GET
+   * 2018-06-06
+   */
+  getAllProject: APPConfig.baseUrl + 'projects/headers',
+
+  /**
+   * URL
+   * 设置项目的父项目
+   * POST
+   * 2018-06-06
+   */
+  setProjectHeader: APPConfig.baseUrl + 'projects/headers?setParent=1',
 };

@@ -28,3 +28,7 @@
   border-color: #fff;
   background: #fff;
 }
+
+:host ::ng-deep .ant-select {
+  width: 60%;
+}

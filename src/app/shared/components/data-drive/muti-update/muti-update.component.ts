@@ -1,7 +1,8 @@
 import { replaceQuery } from './../../../utils/index';
 import { TranslateService } from '@ngx-translate/core';
 import { DataDriveService } from './../core/services/data-drive.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable, forkJoin } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
 import { DataDriveComponent } from './../data-drive.component';
 import { UtilService } from './../../../../core/services/util.service';
 import { DataDrive } from './../shared/models/index';
@@ -51,17 +52,19 @@ export class MutiUpdateComponent implements OnInit {
         let succCount = 0;
         this.dataDriveService
           .updateData(dataDrive, data)
-          .catch(_ => {
-            const req = [];
-            data.forEach(d =>
-              req.push(
-                this.dataDriveService
-                  .updateData(dataDrive, d)
-                  .do(__ => succCount++),
-              ),
-            );
-            return Observable.forkJoin(req);
-          })
+          .pipe(
+            catchError(_ => {
+              const req = [];
+              data.forEach(d =>
+                req.push(
+                  this.dataDriveService
+                    .updateData(dataDrive, d)
+                    .pipe(tap(__ => succCount++)),
+                ),
+              );
+              return forkJoin(req);
+            }),
+          )
           .subscribe(
             _ => {
               this.uploading = false;

@@ -10,7 +10,7 @@ import {
   TabelViewSet,
 } from './../../../data-drive/shared/models/viewer/table';
 // tslint:disable-next-line:import-blacklist
-import { Subscription } from 'rxjs/Rx';
+import { Subscription } from 'rxjs';
 import { TableData } from '../../../data-drive/shared/models/index';
 import {
   Component,
@@ -24,8 +24,7 @@ import {
 } from '@angular/core';
 import { DataDrive } from '../../../data-drive/shared/models/index';
 import { throttle, isArray, sortUtils } from '../../../../utils/index';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { Observable, Subject } from 'rxjs';
 import { APPConfig } from '../../../../config/app.config';
 
 @Component({
@@ -248,23 +247,14 @@ export class TableComponent
       return;
     }
     idx = this.calIdx(idx);
-    if (!this._dataDrive.runBeforeUpdateShow(this.getDataByIdx(idx))) {
-      return;
+    const res = this.dataDriveService.toUpdate(
+      this._dataDrive,
+      idx,
+      DataUpdateComponent,
+    );
+    if (res === false) {
+      return false;
     }
-    const subscription = this.modalService.create({
-      nzTitle: '更新',
-      nzContent: DataUpdateComponent,
-      nzOnOk() {},
-      nzOnCancel() {},
-      nzFooter: null,
-      nzComponentParams: {
-        opts: this._dataDrive,
-        changeIdx: idx,
-        afterSubmitSuccess: () => {
-          subscription.destroy();
-        },
-      },
-    });
     return false;
   }
 

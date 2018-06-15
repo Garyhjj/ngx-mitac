@@ -1,19 +1,18 @@
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+import { UtilService } from './../../../core/services/util.service';
 import { ProjectService } from './../shared/services/project.service';
 import { DataDriveService } from './../../../shared/components/data-drive/core/services/data-drive.service';
 import { AuthService } from './../../../core/services/auth.service';
-import { Component, OnInit } from '@angular/core';
-import {
-  DataDrive,
-  TabelViewSet,
-} from '../../../shared/components/data-drive/shared/models';
-import * as moment from 'moment';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { DataDrive } from '../../../shared/components/data-drive/shared/models';
 
 @Component({
   selector: 'app-project-task',
   templateUrl: './project-task.component.html',
   styleUrls: ['./project-task.component.css'],
 })
-export class ProjectTaskComponent implements OnInit {
+export class ProjectTaskComponent implements OnInit, OnDestroy {
   progressList = [];
   unDoneDataDrive: DataDrive;
   outTimeDataDrive: DataDrive;
@@ -26,6 +25,8 @@ export class ProjectTaskComponent implements OnInit {
   outTimeTips = 0;
   needConfimTips = 0;
   tabIdx = 0;
+  translateTexts = {};
+  sub: Subscription;
   bodyCellStyle = (data, prop) => {
     if (this.targetTask && this.targetTask.ID === data.ID) {
       return {
@@ -37,11 +38,37 @@ export class ProjectTaskComponent implements OnInit {
     private auth: AuthService,
     private dataDriveService: DataDriveService,
     private projectService: ProjectService,
+    private util: UtilService,
+    private translateService: TranslateService,
   ) {}
 
-  ngOnInit() {}
-
+  getTranslation() {
+    this.sub = this.translateService
+      .stream([
+        'projectModule.actionName',
+        'projectModule.addTask',
+        'projectModule.finishTaskConfirm',
+        'projectModule.notMyTaskConfirm',
+        'projectModule.backToOpenBySelfConfirm',
+      ])
+      .subscribe(t => {
+        this.translateTexts = t;
+      });
+  }
+  ngOnInit() {
+    this.getTranslation();
+  }
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
+  changeNameSetSub(d: DataDrive) {
+    d.changeNameSets({
+      actionCol: this.translateTexts['projectModule.actionName'],
+      add: this.translateTexts['projectModule.addTask'],
+    });
+  }
   getDataDrive1(d: DataDrive) {
+    this.changeNameSetSub(d);
     this.unDoneDataDrive = d;
     d.addDefaultSearchParams({
       ASSIGNEE: this.empno,
@@ -54,16 +81,10 @@ export class ProjectTaskComponent implements OnInit {
     });
     d.afterDataInit(data => (this.normalTips = data.length));
     this.dataDriveService.updateViewData(d);
-    // setTimeout(_ => {
-    //   d.selfUpdateTableData(this.task);
-    // });
-    // let table = d.dataViewSet as TabelViewSet;
-    // if (table.type === 'table') {
-    //   table.showCheckbox();
-    // }
   }
 
   getDataDrive2(d: DataDrive) {
+    this.changeNameSetSub(d);
     this.outTimeDataDrive = d;
     d.afterDataInit(data => (this.outTimeTips = data.length));
   }
@@ -73,50 +94,94 @@ export class ProjectTaskComponent implements OnInit {
   }
 
   getDataDrive3(d: DataDrive) {
+    this.changeNameSetSub(d);
     this.doneDataDrive = d;
-    d.addDefaultSearchParams({ STATUS: 'Finished' });
+    d.addDefaultSearchParams({ ASSIGNEE: this.empno, STATUS: 'Finished' });
     d.afterDataInit(data => (this.needConfimTips = data.length));
     this.dataDriveService.updateViewData(d);
   }
   getDataDrive4(d: DataDrive) {
+    this.changeNameSetSub(d);
     this.finishedDataDrive = d;
-    d.addDefaultSearchParams({ STATUS: 'Closed' });
+    d.addDefaultSearchParams({ ASSIGNEE: this.empno, STATUS: 'Closed' });
     this.dataDriveService.updateViewData(d);
   }
 
   finished(t) {
-    t.STATUS = 'Finished';
-    if (this.targetTask && this.targetTask.ID === t.ID) {
-      this.targetTask = t;
-    }
-    this.dataDriveService.updateData(this.unDoneDataDrive, t).subscribe(res => {
-      this.updateUndone();
-      this.dataDriveService.updateViewData(this.doneDataDrive);
-      this.tabIdx = 2;
+    const okCb = () => {
+      const dismiss = this.util.showLoading2();
+      t.STATUS = 'Finished';
+      if (this.targetTask && this.targetTask.ID === t.ID) {
+        this.targetTask = t;
+      }
+      this.dataDriveService.updateData(this.unDoneDataDrive, t).subscribe(
+        res => {
+          this.updateUndone();
+          this.dataDriveService.updateViewData(this.doneDataDrive);
+          this.tabIdx = 2;
+          dismiss();
+        },
+        err => {
+          this.util.errDeal(err);
+          dismiss();
+        },
+      );
+    };
+    this.util.showBisicConfirmModal({
+      title: this.translateTexts['projectModule.finishTaskConfirm'],
+      okCb,
     });
   }
 
   notMyTask(t) {
-    t.ASSIGNEE = '';
-    this.dataDriveService.updateData(this.unDoneDataDrive, t).subscribe(res => {
-      this.updateUndone();
+    const okCb = () => {
+      const dismiss = this.util.showLoading2();
+      t.ASSIGNEE = '';
+      this.dataDriveService.updateData(this.unDoneDataDrive, t).subscribe(
+        res => {
+          this.updateUndone();
+          dismiss();
+        },
+        err => {
+          this.util.errDeal(err);
+          dismiss();
+        },
+      );
+    };
+    this.util.showBisicConfirmModal({
+      title: this.translateTexts['projectModule.notMyTaskConfirm'],
+      okCb,
     });
   }
 
   backToOpen(t) {
-    t.STATUS = 'Open';
-    if (this.targetTask && this.targetTask.ID === t.ID) {
-      this.targetTask = t;
-    }
-    this.dataDriveService.updateData(this.unDoneDataDrive, t).subscribe(res => {
-      this.updateUndone();
-      this.dataDriveService.updateViewData(this.doneDataDrive);
-      this.tabIdx =
-        new Date().getTime() -
-          (new Date(t.DUE_DATE).getTime() + 1000 * 60 * 60 * 24) >
-        0
-          ? 1
-          : 0;
+    const okCb = () => {
+      const dismiss = this.util.showLoading2();
+      t.STATUS = 'Open';
+      if (this.targetTask && this.targetTask.ID === t.ID) {
+        this.targetTask = t;
+      }
+      this.dataDriveService.updateData(this.unDoneDataDrive, t).subscribe(
+        res => {
+          this.updateUndone();
+          this.dataDriveService.updateViewData(this.doneDataDrive);
+          this.tabIdx =
+            new Date().getTime() -
+              (new Date(t.DUE_DATE).getTime() + 1000 * 60 * 60 * 24) >
+            0
+              ? 1
+              : 0;
+          dismiss();
+        },
+        err => {
+          this.util.errDeal(err);
+          dismiss();
+        },
+      );
+    };
+    this.util.showBisicConfirmModal({
+      title: this.translateTexts['projectModule.backToOpenBySelfConfirm'],
+      okCb,
     });
   }
 

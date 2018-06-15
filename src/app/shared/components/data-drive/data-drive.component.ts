@@ -1,5 +1,5 @@
 import { TableDataColumn } from './shared/models/table-data/index';
-import { Observable } from 'rxjs/Observable';
+import { Observable, Subscription } from 'rxjs';
 import { DataDrive, TableDataModel } from './shared/models/index';
 import {
   Component,
@@ -17,7 +17,7 @@ import { NzModalService } from 'ng-zorro-antd';
 import { NzMessageService } from 'ng-zorro-antd';
 import { DataDriveService } from './core/services/data-drive.service';
 import { UtilService } from '../../../core/services/util.service';
-import { Subscription } from 'rxjs/Subscription';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-data-drive',
@@ -30,7 +30,7 @@ export class DataDriveComponent implements OnInit, OnDestroy {
   @ContentChild('headerCellRef') headerCellRef: TemplateRef<void>;
   tableData: TableDataModel;
   dataDrive: DataDrive;
-  isShowModal = Observable.of(false);
+  isShowModal = of(false);
   attachFn: Function;
   private _name: string;
   sub1: Subscription;

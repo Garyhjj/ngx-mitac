@@ -1,7 +1,7 @@
 import { MyStore, BreadcrumbState } from './../../core/store';
 import { Store } from '@ngrx/store';
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-content',

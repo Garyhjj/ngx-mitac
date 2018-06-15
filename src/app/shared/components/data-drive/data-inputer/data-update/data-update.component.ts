@@ -1,4 +1,4 @@
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription ,  Subject } from 'rxjs';
 import { UtilService } from './../../../../../core/services/util.service';
 import { DataDrive, TableDataColumn } from './../../shared/models/index';
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
@@ -7,7 +7,6 @@ import { SearchItemSet } from '../../shared/models/searcher/index';
 import { NgxValidatorExtendService } from '../../../../../core/services/ngx-validator-extend.service';
 import { DataDriveService } from '../../core/services/data-drive.service';
 import { isArray } from '../../../../utils/index';
-import { Subject } from 'rxjs/Subject';
 
 @Component({
   selector: 'app-data-update',
@@ -67,21 +66,23 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
 
   submitForm() {
     let out = {};
-    if (
-      !this.dataDrive.runBeforeUpdateSubmit(
-        this.validateForm,
-        this.globalUpdateErrSubject,
-        (() => {
-          if (isArray(this.orinalData)) {
-            this.orinalData.forEach(o => {
-              out[o.property] = o.value;
-            });
-          }
-          return out;
-        })(),
-      )
-    ) {
+    let res = this.dataDrive.runBeforeUpdateSubmit(
+      this.validateForm,
+      this.globalUpdateErrSubject,
+      (() => {
+        if (isArray(this.orinalData)) {
+          this.orinalData.forEach(o => {
+            out[o.property] = o.value;
+          });
+        }
+        return out;
+      })(),
+    );
+    if (!res) {
       return setTimeout(() => this.globalUpdateErrSubject.next(''), 3000);
+    }
+    if (typeof res === 'object') {
+      Object.assign(out, res);
     }
     const value = this.validateForm.value;
     const cascaderProps = this.inputTypeList
@@ -192,9 +193,14 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
           }
         }
         myForm[s.property] = [def, valid];
+        const isRequired =
+          s.InputOpts.match &&
+          isArray(s.InputOpts.match.fns) &&
+          !!s.InputOpts.match.fns.find(_ => _.name === 'required');
+        const label = mapColumn ? mapColumn.value : s.property;
         return Object.assign(
           {
-            label: mapColumn ? mapColumn.value : s.property,
+            label: isRequired ? '*' + label : label,
             property: s.property,
           },
           s.InputOpts,

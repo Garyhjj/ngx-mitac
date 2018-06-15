@@ -1,7 +1,7 @@
 <nz-tabset>
   <nz-tab [nzTitle]="nzTabHeading1">
     <ng-template #nzTabHeading1>
-      进行中
+      {{'projectModule.projectOpen' | translate}}
       <nz-badge [nzCount]="normalTips">
         <ng-template #content>
           &nbsp;&nbsp;
@@ -12,14 +12,19 @@
       <ng-template #actionRef let-data="data">
         <span>
           <nz-divider nzType="vertical"></nz-divider>
-          <a (click)="seeDetail(data)">查看子信息</a>
+          <ng-template [ngTemplateOutlet]="detailAction" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
+          <ng-container *ngIf="data.FINISHED_PECENT >=100">
+            <nz-divider nzType="vertical"></nz-divider>
+            <ng-template [ngTemplateOutlet]="closeAction" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
+          </ng-container>
+          <ng-template [ngTemplateOutlet]="othersFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
         </span>
       </ng-template>
     </app-data-drive>
   </nz-tab>
   <nz-tab [nzTitle]="nzTabHeading2">
     <ng-template #nzTabHeading2>
-      超期未完成
+      {{'projectModule.projectOutTime' | translate}}
       <nz-badge [nzCount]="outTimeTips">
         <ng-template #content>
           &nbsp;&nbsp;
@@ -30,22 +35,77 @@
       <ng-template #actionRef let-data="data">
         <span>
           <nz-divider nzType="vertical"></nz-divider>
-          <a (click)="seeDetail(data)">查看子信息</a>
+          <ng-template [ngTemplateOutlet]="detailAction" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
+          <ng-container *ngIf="data.FINISHED_PECENT >=100">
+            <nz-divider nzType="vertical"></nz-divider>
+            <ng-template [ngTemplateOutlet]="closeAction" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
+          </ng-container>
+          <ng-template [ngTemplateOutlet]="othersFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
         </span>
       </ng-template>
     </app-data-drive>
   </nz-tab>
   <nz-tab [nzTitle]="nzTabHeading3">
     <ng-template #nzTabHeading3>
-      已完成
+      {{'projectModule.projectClosed' | translate}}
     </ng-template>
-    <app-data-drive [name]="'projectMain'" (dataDriveInit)="getDataDrive3($event)"></app-data-drive>
+    <app-data-drive [name]="'projectMain'" (dataDriveInit)="getDataDrive3($event)">
+      <ng-template #actionRef let-data="data">
+        <span>
+          <ng-template [ngTemplateOutlet]="detailAction" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
+          <ng-template [ngTemplateOutlet]="othersFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
+        </span>
+      </ng-template>
+    </app-data-drive>
   </nz-tab>
 </nz-tabset>
 <ng-container *ngIf="targetProject">
   <nz-divider></nz-divider>
   <h2 style="margin-top: 16px; margin-left: 16px">
-    <span>子信息: </span>
+    <span>{{'projectModule.projectDetail' | translate}}: </span>
   </h2>
   <app-project-detail [project]="targetProject" [afterBigChange]="afterTasksBigChange"></app-project-detail>
 </ng-container>
+
+
+<nz-modal [nzVisible]="isSetParentVisible" [nzTitle]="'projectModule.setProjectParent' | translate" [nzContent]="modalContent"
+  [nzFooter]="modalFooter" (nzOnCancel)="isSetParentVisible = false" nzWidth="460px">
+  <ng-template #modalContent>
+    <form nz-form [nzLayout]="'horizontal'">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">*{{'projectModule.parentList' | translate}}</nz-form-label>
+        <nz-form-control [nzSpan]="16">
+          <app-mx-select #parentInput [options]="parentOpts" name="p" [(ngModel)]="parentVal"></app-mx-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item style="display:block;text-align:center">
+        <button nz-button type="button" [nzType]="'primary'" style="width: 45%" (click)="setParent()" [disabled]="!parentVal">{{'serviceModule.confirm' | translate}}</button>
+      </nz-form-item>
+    </form>
+  </ng-template>
+  <ng-template #modalFooter>
+
+  </ng-template>
+</nz-modal>
+
+<ng-template #othersFn let-data>
+  <nz-divider nzType="vertical"></nz-divider>
+  <nz-dropdown [nzTrigger]="'click'">
+    <a class="ant-dropdown-link" nz-dropdown>
+      {{'projectModule.others' | translate}}
+      <i class="anticon anticon-down"></i>
+    </a>
+    <ul nz-menu>
+      <li nz-menu-item (click)="seeItTree(data)">{{'projectModule.seeProjectTree' | translate}}</li>
+      <li nz-menu-item (click)="showSetParent(data)">{{'projectModule.setProjectParent' | translate}}</li>
+    </ul>
+  </nz-dropdown>
+</ng-template>
+
+<ng-template #detailAction let-data>
+  <a (click)="seeDetail(data)">{{'projectModule.projectDetail' | translate}}</a>
+</ng-template>
+
+<ng-template #closeAction let-data>
+  <a (click)="closeProject(data)">{{'projectModule.closeProject' | translate}}</a>
+</ng-template>

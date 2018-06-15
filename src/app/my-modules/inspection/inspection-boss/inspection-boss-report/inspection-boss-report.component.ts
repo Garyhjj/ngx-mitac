@@ -2,7 +2,7 @@ import { AppService } from './../../../../core/services/app.service';
 import { DataDriveService } from './../../../../shared/components/data-drive/core/services/data-drive.service';
 import { InspectionReportState } from './../../shared/models/index';
 import { InspectionService } from './../../shared/services/inspection.service';
-import { Observable } from 'rxjs/Observable';
+import { tap } from 'rxjs/operators';
 import { DataDrive } from './../../../../shared/components/data-drive/shared/models/index';
 import { InspectionBossService } from './../shared/services/inspection-boss.service';
 import { Component, OnInit } from '@angular/core';
@@ -39,7 +39,7 @@ export class InspectionBossReportComponent implements OnInit {
     private dataDriveService: DataDriveService,
     private route: ActivatedRoute,
     private translate: TranslateService,
-    private appService: AppService
+    private appService: AppService,
   ) {}
 
   ngOnInit() {
@@ -164,10 +164,12 @@ export class InspectionBossReportComponent implements OnInit {
         Header: reportHeader,
         Lines: [data],
       };
-      return this.inspectionService.uploadReport(report).do((id: number) => {
-        this.scheduleList[this.tabIdx].REPORT_ID = id;
-        this.dataDrive.addDefaultSearchParams({ header_id: id });
-      });
+      return this.inspectionService.uploadReport(report).pipe(
+        tap((id: number) => {
+          this.scheduleList[this.tabIdx].REPORT_ID = id;
+          this.dataDrive.addDefaultSearchParams({ header_id: id });
+        }),
+      );
     });
   }
 }

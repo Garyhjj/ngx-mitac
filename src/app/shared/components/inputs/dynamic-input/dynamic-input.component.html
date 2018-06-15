@@ -1,9 +1,9 @@
 <ng-container *ngIf="inputOptions">
-  <input nz-input [(ngModel)]="_value" (ngModelChange)="change()" [placeholder]="inputOptions.placeHolder?inputOptions.placeHolder:' '" *ngIf="inputOptions?.type === 'text'"
-    [readonly]="!inputOptions?.more?.editable">
+  <input nz-input [(ngModel)]="_value" (ngModelChange)="change()" [placeholder]="inputOptions.placeHolder?inputOptions.placeHolder:' '"
+    *ngIf="inputOptions?.type === 'text'" [readonly]="!inputOptions?.more?.editable">
 
-  <textarea nz-input [(ngModel)]="_value" (ngModelChange)="change()" [placeholder]="inputOptions.placeHolder?inputOptions.placeHolder:' '" *ngIf="inputOptions?.type === 'textarea'"
-    [nzAutosize]="1" [readonly]="!inputOptions?.more?.editable"></textarea>
+  <textarea nz-input [(ngModel)]="_value" (ngModelChange)="change()" [placeholder]="inputOptions.placeHolder?inputOptions.placeHolder:' '"
+    *ngIf="inputOptions?.type === 'textarea'" [nzAutosize]="1" [readonly]="!inputOptions?.more?.editable"></textarea>
 
 
   <!-- <nz-select [(ngModel)]="_value" (ngModelChange)="change()" [nzSize]="'large'" [nzPlaceHolder]="inputOptions.placeHolder" *ngIf="inputOptions?.type === 'select'"
@@ -37,7 +37,8 @@
   <app-my-switch [(ngModel)]="_value" (ngModelChange)="change()" *ngIf="inputOptions?.type === 'switch'" [myTrueFormat]="inputOptions?.trueFormat"
     [myFalseFormat]="inputOptions?.falseFormat"></app-my-switch>
 
-  <app-colleague-searcher [(ngModel)]="_value" (ngModelChange)="change()" [miDisabled]="!inputOptions?.more?.editable" *ngIf="inputOptions?.type === 'colleagueSearcher'"></app-colleague-searcher>
+  <app-colleague-searcher [(ngModel)]="_value" (ngModelChange)="change()" [miDisabled]="!inputOptions?.more?.editable" [miSearchFilter]="inputOptions?.more?.searchFilter"
+    *ngIf="inputOptions?.type === 'colleagueSearcher'"></app-colleague-searcher>
 
   <app-photo-upload [(ngModel)]="_value" (ngModelChange)="change()" *ngIf="inputOptions?.type === 'photoUpload'" [pickerFormat]="inputOptions?.more?.pickerFormat"
     [maxCount]="inputOptions?.more?.maxCount" [removable]="inputOptions?.more?.removable" [addable]="inputOptions?.more?.addable"

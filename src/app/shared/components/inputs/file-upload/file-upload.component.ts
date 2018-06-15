@@ -1,4 +1,4 @@
-import { filter } from 'rxjs/operators/filter';
+import { filter } from 'rxjs/operators';
 // tslint:disable
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { HttpRequest, HttpClient, HttpResponse } from '@angular/common/http';

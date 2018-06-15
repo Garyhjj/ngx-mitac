@@ -1,4 +1,5 @@
-import { Observable } from 'rxjs/Observable';
+import { forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ReservationService } from './../../../shared/services/resvation.service';
 import { AuthService } from './../../../../../core/services/auth.service';
 import { UserState } from './../../../../../core/store';
@@ -59,10 +60,10 @@ export class ReservationITService {
   }
 
   getUndoneReservationList() {
-    return Observable.forkJoin(
+    return forkJoin(
       this.getReservationList({ status: 'New' }),
       this.getReservationList({ status: 'Processing' }),
-    ).map(res => res.reduce((a: any[], b: any[]) => a.concat(b), []));
+    ).pipe(map(res => res.reduce((a: any[], b: any[]) => a.concat(b), [])));
   }
   getReservationList(query: any = {}) {
     return this.http.get(

@@ -1,9 +1,9 @@
 <div>
   <span class="describe" [style.fontSize]="fontSize" *ngIf="!result || result.trueAnswer === result.yourAnswer">{{titlePrefix}}{{question.TITLE}}</span>
-  <nz-alert [nzType]="'error'" *ngIf="result && result.trueAnswer !== result.yourAnswer">
-    <span alert-body [style.fontSize]="fontSize">
+  <nz-alert [nzType]="'error'" *ngIf="result && result.trueAnswer !== result.yourAnswer" [nzMessage]="titlePrefix+ question.TITLE">
+    <!-- <span alert-body [style.fontSize]="fontSize">
       {{titlePrefix}}{{question.TITLE}}
-    </span>
+    </span> -->
   </nz-alert>
   <nz-radio-group [(ngModel)]="radioValue" (ngModelChange)="change($event)">
     <label nz-radio [nzValue]="_myTrueFormat">

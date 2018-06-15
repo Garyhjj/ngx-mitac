@@ -1,7 +1,7 @@
 import { TranslateService } from '@ngx-translate/core';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DataDrive } from '../../../shared/components/data-drive/shared/models/index';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-exam-question',

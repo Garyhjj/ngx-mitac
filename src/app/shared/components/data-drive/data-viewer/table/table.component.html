@@ -19,7 +19,10 @@
       </th>
       <th nz-th [ngStyle]="_headerCellStyle({})" [nzWidth]="setDetail.fixedHeader?.enable &&setDetail.fixedHeader?.width && setDetail.fixedHeader?.width[i]?setDetail.fixedHeader?.width[i]:!setDetail.fixedHeader?'':(100/(tableData.columns.length+additionalColNum)) + '%'"
         *ngIf="setDetail.showAction">
-        <span>Action</span>
+        <span *ngIf="_dataDrive.nameSets?.actionCol;else elseBlock ">{{_dataDrive.nameSets?.actionCol}}</span>
+        <ng-template #elseBlock>
+          <span>Action</span>
+        </ng-template>
       </th>
     </tr>
   </thead>
@@ -45,9 +48,19 @@
       </ng-container>
       <td [ngStyle]="runRegExp(i, setDetail.body,'')" nz-td *ngIf="setDetail.showAction">
         <span>
-          <a *ngIf="canEdit" (click)="toUpdate(i)">修改</a>
+          <a *ngIf="canEdit" (click)="toUpdate(i)">
+            <span *ngIf="_dataDrive.nameSets?.update;else elseBlock1 ">{{_dataDrive.nameSets?.update}}</span>
+            <ng-template #elseBlock1>
+              <span>修改</span>
+            </ng-template>
+          </a>
           <nz-divider nzType="vertical" *ngIf="canEdit && canDelete"></nz-divider>
-          <a *ngIf="canDelete" (click)="toDelete(i)">刪除</a>
+          <a *ngIf="canDelete" (click)="toDelete(i)">
+            <span *ngIf="_dataDrive.nameSets?.delete;else elseBlock2 ">{{_dataDrive.nameSets?.delete}}</span>
+            <ng-template #elseBlock2>
+              <span>删除</span>
+            </ng-template>
+          </a>
           <ng-container *ngIf="setDetail.paramsOut">
             <nz-divider nzType="vertical" *ngIf="canEdit || canDelete"></nz-divider>
             <a (click)="paramsOut(setDetail.paramsOut.params,i)">{{setDetail.paramsOut.name}}</a>
@@ -57,7 +70,8 @@
             <a (click)="linkToPhone(setDetail.linkToPhone,i)">{{setDetail.linkToPhone.name}}</a>
           </ng-container>
         </span>
-        <ng-template [ngTemplateOutlet]="actionRef" [ngTemplateOutletContext]="{data: arrayToObjectForData(i)}" *ngIf="actionRef"></ng-template>
+        <ng-template [ngTemplateOutlet]="actionRef" [ngTemplateOutletContext]="{data: arrayToObjectForData(i),index: calIdx(i)}"
+          *ngIf="actionRef"></ng-template>
       </td>
     </tr>
   </tbody>

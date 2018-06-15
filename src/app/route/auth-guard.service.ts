@@ -1,7 +1,9 @@
+import { map, catchError, tap } from 'rxjs/operators';
+import { UtilService } from './../core/services/util.service';
 import { UserUpdate } from './../core/actions/user.action';
 import { MyStore } from './../core/store';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs';
 import { AuthService } from './../core/services/auth.service';
 import { Injectable } from '@angular/core';
 import { CanActivate, CanActivateChild, Router } from '@angular/router';
@@ -12,6 +14,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     private authService: AuthService,
     private router: Router,
     private $store: Store<MyStore>,
+    private util: UtilService,
   ) {}
 
   checkAuth() {
@@ -20,20 +23,25 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     } else {
       const user = this.authService.user;
       if (user.rememberPWD) {
+        const dismiss = this.util.showLoading2();
         return this.authService
           .login({
             userName: user.USER_NAME,
             password: user.password,
             remember: user.rememberPWD,
           })
-          .map(() => true)
-          .catch(err => {
-            this.router.navigate(['/login']);
-            if (err.status === 400) {
-              this.$store.dispatch(new UserUpdate({ rememberPWD: false }));
-            }
-            return Observable.of(false);
-          });
+          .pipe(
+            map(() => true),
+            tap(() => dismiss()),
+            catchError(err => {
+              dismiss();
+              this.router.navigate(['/login']);
+              if (err.status === 400) {
+                this.$store.dispatch(new UserUpdate({ rememberPWD: false }));
+              }
+              return of(false);
+            }),
+          );
       } else {
         this.router.navigate(['/login']);
         return false;

@@ -66,9 +66,27 @@ export class ProjectService {
     return this.http.post(projectConfig.updateTaskComments, p);
   }
 
-  getProjectHistory(HEADER_ID) {
+  getProjectHistory(HEADER_ID, page = 1) {
     return this.http.get(
-      replaceQuery(projectConfig.getProjectHistory, { HEADER_ID }),
+      replaceQuery(projectConfig.getProjectHistory, { HEADER_ID, page }),
     );
+  }
+
+  getProjecLine(id) {
+    return this.http.get(replaceQuery(projectConfig.getProjecLine, { id }));
+  }
+
+  getProjectChildren(parent) {
+    return this.http.get(
+      replaceQuery(projectConfig.getProjectChildren, { parent }),
+    );
+  }
+
+  getAllProject() {
+    return this.http.get(projectConfig.getAllProject);
+  }
+
+  setProjectHeader(p) {
+    return this.http.post(projectConfig.setProjectHeader, p);
   }
 }

@@ -1,9 +1,10 @@
-import { filter } from 'rxjs/operators/filter';
-import { Observable } from 'rxjs/Observable';
+import { filter } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { UtilService } from './../../core/services/util.service';
 import { AuthService } from './../../core/services/auth.service';
 import { Router } from '@angular/router';
-import { Subscription, BehaviorSubject } from 'rxjs/Rx';
+import { Subscription, BehaviorSubject } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { MyStore, UserState, MyModule, Privilege } from './../../core/store';
 import { Store } from '@ngrx/store';
 import { BreadcrumbModel } from './../../core/models/breadcrumb.model';
@@ -48,11 +49,13 @@ export class ModulesSiderComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.mySub = this.store$
       .select(s => s.userReducer)
-      .do(user => {
-        const modules = user.modules;
-        this.observeInspection(modules);
-        this.observeReservation(modules);
-      })
+      .pipe(
+        tap(user => {
+          const modules = user.modules;
+          this.observeInspection(modules);
+          this.observeReservation(modules);
+        }),
+      )
       .subscribe(u => {
         this.myModules = u.modules;
         this.myPrivilege = u.privilege;

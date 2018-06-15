@@ -1,5 +1,5 @@
 import { NgxValidatorExtendService } from './../../../../core/services/ngx-validator-extend.service';
-import { Observable } from 'rxjs/Observable';
+import { merge } from 'rxjs';
 import { NzModalService } from 'ng-zorro-antd';
 import { DataDriveService } from './../../../../shared/components/data-drive/core/services/data-drive.service';
 import { UtilService } from './../../../../core/services/util.service';
@@ -114,22 +114,20 @@ export class InspectionBossScheduleComponent implements OnInit {
     const fromTime = this.scheduleForm.get('FROM_TIME');
     const toTime = this.scheduleForm.get('TO_TIME');
     // 核對時間的合法性
-    Observable.merge(fromTime.valueChanges, toTime.valueChanges).subscribe(
-      c => {
-        const prefix = '2018-01-01 ';
-        if (
-          new Date(prefix + fromTime.value).getTime() -
-            new Date(prefix + toTime.value).getTime() <
-          0
-        ) {
-          this.timeErr = '';
-        } else {
-          this.timeErr = this.translateTexts[
-            'insoectionModule.startimeBeforeEndtime'
-          ];
-        }
-      },
-    );
+    merge(fromTime.valueChanges, toTime.valueChanges).subscribe(c => {
+      const prefix = '2018-01-01 ';
+      if (
+        new Date(prefix + fromTime.value).getTime() -
+          new Date(prefix + toTime.value).getTime() <
+        0
+      ) {
+        this.timeErr = '';
+      } else {
+        this.timeErr = this.translateTexts[
+          'insoectionModule.startimeBeforeEndtime'
+        ];
+      }
+    });
   }
 
   initEmpno(val?) {

@@ -1,7 +1,7 @@
 <nz-tabset [(nzSelectedIndex)]="tabIdx">
   <nz-tab [nzTitle]="nzTabHeading1">
     <ng-template #nzTabHeading1>
-      进行中
+      {{'projectModule.projectOpen' | translate}}
       <nz-badge [nzCount]="normalTips">
         <ng-template #content>
           &nbsp;&nbsp;
@@ -16,7 +16,7 @@
   </nz-tab>
   <nz-tab [nzTitle]="nzTabHeading2">
     <ng-template #nzTabHeading2>
-      超期未完成
+      {{'projectModule.projectOutTime' | translate}}
       <nz-badge [nzCount]="outTimeTips">
         <ng-template #content>
           &nbsp;&nbsp;
@@ -31,7 +31,7 @@
   </nz-tab>
   <nz-tab [nzTitle]="nzTabHeading3">
     <ng-template #nzTabHeading3>
-      待审核
+      {{'projectModule.taskFinished' | translate}}
       <nz-badge [nzCount]="needConfimTips">
         <ng-template #content>
           &nbsp;&nbsp;
@@ -40,7 +40,7 @@
     </ng-template>
     <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDrive3($event)" [bodyCellStyle]="bodyCellStyle">
       <ng-template #actionRef let-data="data">
-        <a (click)="backToOpen(data)">取消审核</a>
+        <a (click)="backToOpen(data)">{{'projectModule.taskBackToOpenBySelf' | translate}}</a>
         <nz-divider nzType="vertical"></nz-divider>
         <ng-template [ngTemplateOutlet]="seeDetailFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
       </ng-template>
@@ -48,7 +48,7 @@
   </nz-tab>
   <nz-tab [nzTitle]="nzTabHeading4">
     <ng-template #nzTabHeading4>
-      已结案
+      {{'projectModule.taskClosed' | translate}}
     </ng-template>
     <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDrive4($event)" [bodyCellStyle]="bodyCellStyle">
       <ng-template #actionRef let-data="data">
@@ -60,7 +60,7 @@
 <ng-container *ngIf="targetTask">
   <nz-divider></nz-divider>
   <h2 style="margin-top: 16px; margin-left: 16px">
-    <span>子信息: </span>
+    <span>{{'projectModule.taskDetail' | translate}}: </span>
   </h2>
   <app-task-detail [task]="targetTask"></app-task-detail>
 </ng-container>
@@ -68,14 +68,14 @@
 
 <ng-template #openFn let-data>
   <span>
-    <a (click)="notMyTask(data)">重置撤回</a>
-    <nz-divider nzType="vertical"></nz-divider>
-    <a (click)="finished(data)">完成</a>
-    <nz-divider nzType="vertical"></nz-divider>
     <ng-template [ngTemplateOutlet]="seeDetailFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
+    <nz-divider nzType="vertical"></nz-divider>
+    <a (click)="finished(data)">{{'projectModule.finishTask' | translate}}</a>
+    <nz-divider nzType="vertical"></nz-divider>
+    <a (click)="notMyTask(data)">{{'projectModule.notMyTask' | translate}}</a>
   </span>
 </ng-template>
 
 <ng-template #seeDetailFn let-data>
-  <a (click)=seeDetail(data)>查看子信息</a>
+  <a (click)=seeDetail(data)>{{'projectModule.taskDetail' | translate}}</a>
 </ng-template>

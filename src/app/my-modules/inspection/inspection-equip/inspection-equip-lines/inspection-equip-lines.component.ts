@@ -1,7 +1,6 @@
 import { DataDrive } from './../../../../shared/components/data-drive/shared/models/index';
 import { AppService } from './../../../../core/services/app.service';
 import { Component, OnInit } from '@angular/core';
-import { isArray } from '../../../../shared/utils';
 
 @Component({
   selector: 'app-inspection-equip-lines',

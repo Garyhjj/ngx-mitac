@@ -1,12 +1,11 @@
 // tslint:disable
-import { Subject } from 'rxjs/Rx';
+import { Subject } from 'rxjs';
 import { Component, OnInit, forwardRef, Input } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { APIGlobalConfig } from '../../../config/api-global.config';
 import { AppService } from '../../../../core/services/app.service';
 import { APPConfig } from '../../../config/app.config';
 import { NzModalService } from 'ng-zorro-antd';
-import { bindEventForArray } from '../../../utils/index';
 
 const maxsize = 500 * 1024;
 
@@ -204,7 +203,7 @@ export class PhotoUploadComponent implements OnInit {
     var height = img.height;
     //如果图片大于四百万像素，计算压缩比并将大小压至400万以下
     var ratio;
-    if ((ratio = width * height / 4000000) > 1) {
+    if ((ratio = (width * height) / 4000000) > 1) {
       ratio = Math.sqrt(ratio);
       width /= ratio;
       height /= ratio;
@@ -218,7 +217,7 @@ export class PhotoUploadComponent implements OnInit {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     //如果图片像素大于100万则使用瓦片绘制
     var count;
-    if ((count = width * height / 1000000) > 1) {
+    if ((count = (width * height) / 1000000) > 1) {
       // ~~ 的作用类似于Math.floor(),性能会好一点
       count = ~~(Math.sqrt(count) + 1); //计算要分成多少块瓦片
       //            计算每块瓦片的宽和高

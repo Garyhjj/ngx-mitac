@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Observable';
+import { forkJoin } from 'rxjs';
 import { ReservationITService } from './../../services/reservaton-IT.service';
 import { UtilService } from './../../../../../../core/services/util.service';
 import {
@@ -23,7 +23,7 @@ export class ImpressionListComponent implements OnInit {
     this.impressionSelected = {};
     const loadingID = this.util.showLoading();
     const final = () => this.util.dismissLoading(loadingID);
-    Observable.forkJoin(
+    forkJoin(
       this.reservationITService.getPersonImpression(app.HANDLER),
       this.reservationITService.getServiceImpressionResults(app.ID),
     ).subscribe(

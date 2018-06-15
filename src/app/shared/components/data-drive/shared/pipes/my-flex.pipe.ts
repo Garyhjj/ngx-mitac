@@ -1,5 +1,6 @@
 import { APPConfig } from './../../../../config/app.config';
-import { Observable } from 'rxjs/Observable';
+import { Observable, of } from 'rxjs';
+import { map, catchError, shareReplay } from 'rxjs/operators';
 import { Pipe, PipeTransform } from '@angular/core';
 import { DataDriveService } from '../../core/services/data-drive.service';
 import { isArray, replaceQuery } from '../../../../utils/index';
@@ -42,9 +43,9 @@ export class MyFlexPipe implements PipeTransform {
       const res = this[args.name](value, ...args.params);
       return res instanceof Observable || res instanceof Promise
         ? res
-        : Observable.of(res);
+        : of(res);
     } else {
-      return Observable.of(value);
+      return of(value);
     }
   }
 
@@ -62,9 +63,17 @@ export class MyFlexPipe implements PipeTransform {
     }
     return target;
   }
-  lazyLoad(target: string, api: string, lazyParams?: string[]) {
+  lazyLoad(
+    target: string,
+    api: string,
+    lazyParams?: string[],
+    noCache?: boolean,
+  ) {
     if (api) {
       const bind = obList => {
+        if (!isArray(obList)) {
+          return obList;
+        }
         const ob = obList.find(
           c => c.property === target || +c.property === +target,
         );
@@ -73,14 +82,16 @@ export class MyFlexPipe implements PipeTransform {
         }
         return ob.value;
       };
-      const cache = this.cachedData && this.cachedData.find(c => c.url === api);
+      let cache;
+      if (!noCache) {
+        cache = this.cachedData && this.cachedData.find(c => c.url === api);
+      }
       if (cache) {
         return bind(cache.data);
       } else {
-        if (!this.lazyLoadRequest[api]) {
-          this.lazyLoadRequest[api] = this.dataDriveService
-            .lazyLoad(api)
-            .map((r: any[]) => {
+        const doRequest = () => {
+          return this.dataDriveService.lazyLoad(api).pipe(
+            map((r: any[]) => {
               if (isArray(r)) {
                 const obList = r.filter(f => f).map(d => {
                   if (isArray(d)) {
@@ -96,9 +107,23 @@ export class MyFlexPipe implements PipeTransform {
                         keys = lazyParams;
                       }
                       if (keys.length === 1) {
-                        return { property: d[keys[0]], value: d[keys[0]] };
+                        const property = d[keys[0]],
+                          value = d[keys[0]];
+                        return {
+                          property: property
+                            ? property
+                            : replaceQuery(keys[0], d),
+                          value: value ? value : replaceQuery(keys[0], d),
+                        };
                       } else if (keys.length > 1) {
-                        return { property: d[keys[0]], value: d[keys[1]] };
+                        const property = d[keys[0]],
+                          value = d[keys[1]];
+                        return {
+                          property: property
+                            ? property
+                            : replaceQuery(keys[0], d),
+                          value: value ? value : replaceQuery(keys[1], d),
+                        };
                       }
                     }
                   }
@@ -108,15 +133,28 @@ export class MyFlexPipe implements PipeTransform {
                 this.cachedData = this.cachedData.concat([
                   { url: api, data: obList },
                 ]);
-                return bind(obList);
+                return obList;
               } else {
                 return target;
               }
-            })
-            .catch(err => Observable.of(target))
-            .toPromise();
+            }),
+            catchError(err => of(target)),
+          );
+        };
+        if (noCache) {
+          let tempCache = this.cache.get('noCacheStore', api, false);
+          if (!tempCache) {
+            tempCache = doRequest().pipe(shareReplay());
+            this.cache.update('noCacheStore', api, tempCache, 2 * 1000);
+          } else {
+            return tempCache.pipe(map(d => bind(d)));
+          }
+        } else {
+          if (!this.lazyLoadRequest[api]) {
+            this.lazyLoadRequest[api] = doRequest().toPromise();
+          }
+          return this.lazyLoadRequest[api].then(d => bind(d));
         }
-        return this.lazyLoadRequest[api];
       }
     } else {
       return target;
@@ -165,35 +203,37 @@ export class MyFlexPipe implements PipeTransform {
       if (!this.colleagueRequest[target]) {
         this.colleagueRequest[target] = this.appService
           .getColleague(target)
-          .map((data: any) => {
-            if (data.length > 0) {
-              const val = data.find(
-                d =>
-                  d.EMPNO === target ||
-                  d.NICK_NAME === target ||
-                  d.USER_NAME === target,
-              );
-              if (!val) {
+          .pipe(
+            map((data: any) => {
+              if (data.length > 0) {
+                const val = data.find(
+                  d =>
+                    d.EMPNO === target ||
+                    d.NICK_NAME === target ||
+                    d.USER_NAME === target,
+                );
+                if (!val) {
+                  return target;
+                }
+                this._cachedData = this._cachedData || [];
+                const cacheSub =
+                  this.cachedData &&
+                  this.cachedData.find(c => c.url === this.empCacheKey);
+                if (cacheSub && cacheSub.data) {
+                  cacheSub.data[target] = val;
+                  this.cachedData = this.cachedData;
+                } else {
+                  this.cachedData = this._cachedData.concat([
+                    { url: this.empCacheKey, data: { [target]: val } },
+                  ]);
+                }
+                return val;
+              } else {
                 return target;
               }
-              this._cachedData = this._cachedData || [];
-              const cacheSub =
-                this.cachedData &&
-                this.cachedData.find(c => c.url === this.empCacheKey);
-              if (cacheSub && cacheSub.data) {
-                cacheSub.data[target] = val;
-                this.cachedData = this.cachedData;
-              } else {
-                this.cachedData = this._cachedData.concat([
-                  { url: this.empCacheKey, data: { [target]: val } },
-                ]);
-              }
-              return val;
-            } else {
-              return target;
-            }
-          })
-          .catch(err => Observable.of(target))
+            }),
+            catchError(err => of(target)),
+          )
           .toPromise();
       }
       return this.colleagueRequest[target].then(val => {

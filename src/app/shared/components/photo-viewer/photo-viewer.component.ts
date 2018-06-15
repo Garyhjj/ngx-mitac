@@ -1,4 +1,3 @@
-import { Subscription } from 'rxjs/Subscription';
 import {
   Component,
   OnInit,
@@ -8,7 +7,7 @@ import {
   ChangeDetectorRef,
   OnChanges,
 } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-photo-viewer',

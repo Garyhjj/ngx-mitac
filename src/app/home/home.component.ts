@@ -1,5 +1,5 @@
-import { Subscription } from 'rxjs/Rx';
-import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
 @Component({

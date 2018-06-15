@@ -1,7 +1,19 @@
 import { ExamViewSet } from './exam';
 import { TabelViewSet } from './table';
-export type DataViewType = 'table' | 'chart' | 'exam';
+export type DataViewType =
+  | 'table'
+  | 'chart'
+  | 'exam'
+  | 'selfComponent'
+  | 'selfTemplateRef'
+  | string;
 export * from './table';
+
+export const selfComponentPrefix = 'selfComponent';
+export const selfTemplateRefPrefix = 'selfTemplateRef';
+export const isSelfComponent = (t: string) => t.startsWith(selfComponentPrefix);
+export const isSelfTemplateRef = (t: string) =>
+  t.startsWith(selfTemplateRefPrefix);
 export interface DataViewSet {
   type?: DataViewType;
   subType?: string;
@@ -12,6 +24,8 @@ export interface DataViewSet {
   changeHeaderFontSize?: Function;
   changeBodyFontSize?: Function;
   hasInited?: boolean;
+  container?: any;
+  params?: any;
 }
 
 export class DataViewSetFactory {

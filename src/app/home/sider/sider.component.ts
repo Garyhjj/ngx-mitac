@@ -1,7 +1,8 @@
 import { UtilService } from './../../core/services/util.service';
 import { AuthService } from './../../core/services/auth.service';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { MyStore, UserState, MyModule } from './../../core/store';
 import { Store } from '@ngrx/store';
 import { BreadcrumbModel } from './../../core/models/breadcrumb.model';
@@ -26,7 +27,7 @@ export class SiderComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.mySub = this.store$
       .select(s => s.userReducer)
-      .map(u => u.modules)
+      .pipe(map(u => u.modules))
       .subscribe(m => (this.myModules = m));
   }
   ngOnDestroy() {

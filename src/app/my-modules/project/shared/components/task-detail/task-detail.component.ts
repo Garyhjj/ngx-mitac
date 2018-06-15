@@ -21,10 +21,29 @@ export class TaskDetailComponent implements OnInit {
   _task;
   @Input()
   set task(t) {
-    this._task = t;
-    this.getProgress(t.ID);
-    this.getComments(t.ID);
+    if (t.hasOwnProperty('STATUS')) {
+      this.getProgress(t.ID);
+      this.getComments(t.ID);
+      this._task = t;
+    } else {
+      const loadingID = this.util.showLoading();
+      const final = () => this.util.dismissLoading(loadingID);
+      this.projectService.getProjecLine(t.ID).subscribe(
+        ts => {
+          const t1 = ts[0];
+          this._task = ts[0];
+          this.getProgress(t1.ID);
+          this.getComments(t1.ID);
+          final();
+        },
+        err => {
+          this.util.errDeal(err);
+          final();
+        },
+      );
+    }
   }
+  @Input() afterUpdate: () => void;
 
   get task() {
     return this._task;
@@ -55,6 +74,7 @@ export class TaskDetailComponent implements OnInit {
   ngOnInit() {}
 
   getProgress(line_id) {
+    const dismiss = this.util.showLoading2();
     this.projectService.getTaskProgress(line_id).subscribe(
       (s: any[]) => {
         if (isArray(s)) {
@@ -74,23 +94,29 @@ export class TaskDetailComponent implements OnInit {
           );
         }
         this.ref.markForCheck();
+        dismiss();
       },
       err => {
         this.util.errDeal(err);
+        dismiss();
       },
     );
   }
 
   updateProgress(v: string) {
+    const dismiss = this.util.showLoading2();
     let nowDate = moment().format('YYYY-MM-DD');
     const LINE_ID = this.task.ID;
     const send = { LINE_ID, CONTENT: v, HEADER_ID: this.task.HEADER_ID };
     this.projectService.updateTaskProgress(send).subscribe(
       res => {
         this.getProgress(LINE_ID);
+        this.doAfterUpdate();
+        dismiss();
       },
       err => {
         this.util.errDeal(err);
+        dismiss();
       },
     );
   }
@@ -107,6 +133,7 @@ export class TaskDetailComponent implements OnInit {
   }
 
   updateComment(comment) {
+    const dismiss = this.util.showLoading2();
     this.projectService
       .updateTaskComments({
         LINE_ID: this.task.ID,
@@ -119,24 +146,26 @@ export class TaskDetailComponent implements OnInit {
         res => {
           this.isCommentVisible = false;
           this.getComments(this.task.ID);
+          this.doAfterUpdate();
           this.ref.markForCheck();
+          dismiss();
         },
         err => {
           this.util.errDeal(err);
+          dismiss();
         },
       );
     this.replyTo = null;
-    // this.comments.unshift({
-    //   USER_NAME: this.empno,
-    //   CONTENT: comment,
-    //   CREATION_DATE: new Date().getTime(),
-    //   REPLT_TO: this.replyTo,
-    // });
-    // this.comments = JSON.parse(JSON.stringify(this.comments));
   }
   trackByID(index, item) {
     if (typeof item === 'object') {
       return item.ID;
+    }
+  }
+
+  doAfterUpdate() {
+    if (typeof this.afterUpdate === 'function') {
+      this.afterUpdate();
     }
   }
 }

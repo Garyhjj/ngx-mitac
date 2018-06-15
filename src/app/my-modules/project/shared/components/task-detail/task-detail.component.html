@@ -1,6 +1,6 @@
 <div nz-row *ngIf="task">
   <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="8" *ngIf="isAssigner && task.STATUS === 'Open'">
-    <nz-card nzTitle="进度更新">
+    <nz-card [nzTitle]="'projectModule.updateTaskProgress' | translate">
       <nz-input-group nzSearch nzSize="large" [nzSuffix]="suffixButton">
         <input type="text" nz-input #progressInput>
       </nz-input-group>
@@ -11,7 +11,7 @@
     </nz-card>
   </div>
   <div nz-col nzXs="24" nzSm="24" nzMd="24" [nzLg]="isAssigner && task.STATUS !== 'Closed'?8:12" style="padding-left: 16px">
-    <nz-card nzTitle="留言区" [nzExtra]="extraTemplate">
+    <nz-card [nzTitle]="'projectModule.taskCommentArea' | translate" [nzExtra]="extraTemplate">
       <nz-list nzSize="large" class="activities" [nzDataSource]="comments" [nzRenderItem]="item">
         <ng-template #item let-item>
           <nz-list-item>
@@ -30,14 +30,14 @@
           </nz-list-item>
         </ng-template>
         <ng-template #extraTemplate>
-          <a (click)="isCommentVisible = true">留言</a>
+          <a (click)="isCommentVisible = true">{{'projectModule.comment' | translate}}</a>
         </ng-template>
       </nz-list>
     </nz-card>
   </div>
   <div nz-col nzXs="24" nzSm="24" nzMd="24" [nzLg]="isAssigner && task.STATUS !== 'Closed'?8:12" style="padding-left: 16px; max-height: 400px;overflow: auto;">
-    <nz-timeline [nzPending]="task.STATUS === 'Open'">
-      <nz-timeline-item>任务开始日期: {{task.START_DATE | sgMydate: 'YYYY-MM-DD'}}</nz-timeline-item>
+    <nz-timeline [nzPending]="task.STATUS === 'Open'&&!task.DELETE_FLAG">
+      <nz-timeline-item>{{'projectModule.taskBeginDate' | translate}}: {{task.START_DATE | sgMydate: 'YYYY-MM-DD'}}</nz-timeline-item>
       <nz-timeline-item *ngFor="let pro of progressList">
         <p *ngFor="let item of pro.list;let last = last; trackBy: trackByID">
           {{item.CONTENT}}
@@ -45,11 +45,13 @@
         </p>
       </nz-timeline-item>
       <nz-timeline-item *ngIf="task.STATUS !== 'Open'">Done!</nz-timeline-item>
+      <nz-timeline-item *ngIf="task.DELETE_FLAG">Cancel : {{task.LAST_UPDATED_DATE | sgMydate: 'YYYY-MM-DD'}}</nz-timeline-item>
     </nz-timeline>
   </div>
+  <div class="modal" *ngIf="task.DELETE_FLAG === 'Y'"></div>
 </div>
 
-<nz-modal [nzVisible]="isCommentVisible" [nzTitle]="replyTo? '回复: '+ (replyTo | myFlex: {name:'empno',params:['CH']} | async):'留言'"
+<nz-modal [nzVisible]="isCommentVisible" [nzTitle]="replyTo? ('projectModule.reply' | translate)+': '+ (replyTo | myFlex: {name:'empno',params:['CH']} | async):('projectModule.comment' | translate)"
   [nzContent]="modalContent" [nzFooter]="modalFooter" (nzOnCancel)="isCommentVisible = false" nzWidth="460px">
   <ng-template #modalContent>
     <div style="display:block;text-align:center">

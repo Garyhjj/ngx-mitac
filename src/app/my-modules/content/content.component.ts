@@ -2,10 +2,8 @@ import { BreadcrumbCancel } from './../../core/actions/breadcrumb.action';
 import { MyStore, BreadcrumbState } from './../../core/store';
 import { Store } from '@ngrx/store';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-content',
@@ -16,11 +14,8 @@ export class ContentComponent implements OnInit, OnDestroy {
   tabIdx;
   breadcrumb: BreadcrumbState[];
   sub: Subscription;
-  constructor(
-    private store$: Store<MyStore>,
-    private router: Router,
-    private fb: FormBuilder,
-  ) {}
+  year = new Date().getFullYear();
+  constructor(private store$: Store<MyStore>, private router: Router) {}
 
   ngOnInit() {
     this.sub = this.store$

@@ -1,0 +1,26 @@
+<nz-tree [(ngModel)]="nodes" [nzShowLine]="true" [nzDefaultExpandAll]="expandDefault" [class.inMoal]="isInModal">
+
+  <ng-template #nzTreeTemplate let-node>
+    <nz-card style="display: inline-block; width: 400px;margin-top: 16px">
+      <nz-card-meta [nzTitle]="noticeTitle" [nzDescription]="node.title.DESCRIPTION">
+        <ng-template #noticeTitle>
+          <div class="card-title">
+            <a>{{node.title.NAME}}</a>
+            <nz-tag [nzColor]="'#87d068'" *ngIf="node.title.STATUS === 'Closed'">{{'projectModule.closeProject' | translate}}</nz-tag>
+            <nz-tag [nzColor]="'lime'" *ngIf="node.title.STATUS === 'Open'">{{'projectModule.projectOpen' | translate}}</nz-tag>
+          </div>
+        </ng-template>
+      </nz-card-meta>
+      <div class="project-item">
+        <a>{{node.title.OWNER | myFlex: {name:'empno',params:['CH(NO)']} | async }}</a>
+        <span class="datetime" *ngIf="node.children?.length > 0">
+          {{'projectModule.childrenDoneRate' | translate}}：
+          <!-- <nz-progress [nzPercent]="getRate(node.children)" nzSize="small"></nz-progress> -->
+          <span style="width: 100px;display: inline-block;">
+            <nz-progress [nzPercent]="getRate(node.children)" nzSize="small" nzStatus="active"></nz-progress>
+          </span>
+        </span>
+      </div>
+    </nz-card>
+  </ng-template>
+</nz-tree>

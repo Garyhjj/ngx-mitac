@@ -18,6 +18,9 @@ export class UtilService {
   errDeal(err) {
     if (err && !isNaN(err.status)) {
       switch (err.status) {
+        case 401:
+          this.tokenTimeOut();
+          return;
         case 403:
           this.tokenTimeOut();
           return;
@@ -108,6 +111,26 @@ export class UtilService {
     });
   }
 
+  showBisicConfirmModal(opts: {
+    title: string;
+    okCb?: () => void;
+    cancelCb?: () => void;
+  }) {
+    this.modalService.confirm({
+      nzTitle: opts.title,
+      nzOnOk() {
+        if (opts.okCb) {
+          opts.okCb();
+        }
+      },
+      nzOnCancel() {
+        if (opts.cancelCb) {
+          opts.cancelCb();
+        }
+      },
+    });
+  }
+
   showLoading() {
     // tslint:disable-next-line:no-unused-expression
     this.loadingId && this.dismissLoading(this.loadingId);
@@ -115,6 +138,12 @@ export class UtilService {
       nzDuration: 0,
     }).messageId;
     return this.loadingId;
+  }
+
+  showLoading2() {
+    const loadindId = this.showLoading();
+    const dismiss = () => this.dismissLoading(loadindId);
+    return dismiss;
   }
 
   dismissLoading(id: string) {

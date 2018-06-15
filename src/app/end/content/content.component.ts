@@ -1,21 +1,33 @@
 import { BreadcrumbCancel } from './../../core/actions/breadcrumb.action';
 import { MyStore, BreadcrumbState } from './../../core/store';
 import { Store } from '@ngrx/store';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
+import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-content',
   templateUrl: './content.component.html',
   styleUrls: ['./content.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContentComponent implements OnInit, OnDestroy {
   tabIdx;
   breadcrumb: BreadcrumbState[];
   sub: Subscription;
-  constructor(private store$: Store<MyStore>, private router: Router) {}
+  year = new Date().getFullYear();
+  constructor(
+    private store$: Store<MyStore>,
+    private router: Router,
+    private ref: ChangeDetectorRef,
+  ) {}
 
   ngOnInit() {
     this.sub = this.store$
@@ -24,6 +36,7 @@ export class ContentComponent implements OnInit, OnDestroy {
         this.breadcrumb = b;
         const idx = b.findIndex(r => r.active);
         this.tabIdx = idx > -1 ? idx : b.length - 1;
+        this.ref.markForCheck();
       });
   }
 

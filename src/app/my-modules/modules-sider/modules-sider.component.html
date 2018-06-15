@@ -197,12 +197,13 @@
   <li nz-submenu>
     <span title>
       <i class="anticon anticon-solution"></i>
-      <span class="nav-text">项目管理</span>
+      <span class="nav-text">{{'projectModule.name' | translate}}</span>
     </span>
     <ul>
-      <li nz-menu-item data-route="/project/main">项目创建及维护</li>
-      <li nz-menu-item data-route="/project/task">任务维护</li>
-      <!-- <li nz-menu-item data-route="/reservation/IT/add">项目总览</li> -->
+      <li nz-menu-item data-route="/project/main">{{'projectModule.routeMain' | translate}}</li>
+      <li nz-menu-item data-route="/project/task">{{'projectModule.routeTask' | translate}}</li>
+      <li nz-menu-item data-route="/project/scan">{{'projectModule.routeScan' | translate}}</li>
+      <li nz-menu-item data-route="/project/net">{{'projectModule.routeNet' | translate}}</li>
     </ul>
   </li>
 </ul>

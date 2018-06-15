@@ -1,14 +1,5 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  ViewChild,
-  ElementRef,
-  AfterViewInit,
-  forwardRef,
-} from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { isArray } from '../../../utils/index';
+import { Component, OnInit, Input, ViewChild, forwardRef } from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'app-checkbox-question',
@@ -22,7 +13,7 @@ import { isArray } from '../../../utils/index';
     },
   ],
 })
-export class CheckboxQuestionComponent implements OnInit, AfterViewInit {
+export class CheckboxQuestionComponent implements OnInit {
   @Input()
   checkOptions: { label: string; value: string; checked: boolean }[] = [];
   @Input() title = '';
@@ -82,14 +73,6 @@ export class CheckboxQuestionComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {}
-  ngAfterViewInit() {
-    setTimeout(() => {
-      const labels = this.checkbox._el.querySelectorAll('label');
-      Array.prototype.forEach.call(labels, l => {
-        l.style.fontSize = this.fontSize;
-      });
-    }, 50);
-  }
 
   checkResult() {
     const result = this.result;
