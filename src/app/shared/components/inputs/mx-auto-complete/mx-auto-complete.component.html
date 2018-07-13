@@ -1,0 +1,9 @@
+<div class="example-input">
+  <input [placeholder]="myPlaceHolder?myPlaceHolder: ' '" nz-input [(ngModel)]="inputValue" (input)="onInput($event.target?.value)"
+    (focus)="onInput($event.target?.value)" [nzAutocomplete]="auto" (ngModelChange)="onChange($event)">
+  <nz-autocomplete #auto>
+    <nz-auto-option *ngFor="let option of valueOptions" [nzValue]="option">
+      {{option}}
+    </nz-auto-option>
+  </nz-autocomplete>
+</div>

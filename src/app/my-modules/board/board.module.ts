@@ -9,6 +9,7 @@ import { UrgentNoComponent } from './urgent-no/urgent-no.component';
 import { EsdComponent } from './esd/esd.component';
 import { BoardService } from './shared/services/board.service';
 import { OspComponent } from './osp/osp.component';
+import { ShippingComponent } from './shipping/shipping.component';
 
 @NgModule({
   imports: [CommonModule, BoardRoutingModule, SharedModule, DataDriveModule],
@@ -18,6 +19,7 @@ import { OspComponent } from './osp/osp.component';
     UrgentNoComponent,
     EsdComponent,
     OspComponent,
+    ShippingComponent,
   ],
   providers: [BoardService],
 })

@@ -16,6 +16,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { isArray } from '../../shared/utils';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-modules-sider',
@@ -151,8 +152,10 @@ export class ModulesSiderComponent implements OnInit, OnDestroy {
     return this.myModules && this.myModules.find(m => m.MODULE_ID === id);
   }
 
-  canSeeFunction(id) {
-    return this.myPrivilege && this.myPrivilege.find(m => m.FUNCTION_ID === id);
+  canSeeFunction(id, showInDev?) {
+    return showInDev && !environment.production
+      ? true
+      : this.myPrivilege && this.myPrivilege.find(m => m.FUNCTION_ID === id);
   }
   select(directive: any) {
     if (!this.authService.checkAuth()) {

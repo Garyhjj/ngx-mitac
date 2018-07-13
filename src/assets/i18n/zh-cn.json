@@ -36,6 +36,7 @@
   "urgentMaterialBoard": "急料看板",
   "urgentNoBoard": "急料工单看板",
   "esd": "门禁状况",
+  "shippingBoard": "产出vs出货计划",
   "exam": "训练考试",
   "question": "考试题目",
   "unit": "考卷维护",
@@ -72,12 +73,16 @@
   "serviceAdd": "服务补登",
   "insertSuccess": "插入成功",
   "updateSuccess": "更新成功",
+  "add": "新增",
+  "delete": "删除",
+  "alter": "修改",
   "dataDriveModule": {
     "noPrimaryKey": "未设置更新的主键,请联系MIS",
     "mutiUpdateErrRes": "成功插入{succCount}条,失败{errorCount}条",
     "mutiUpdateConfirm": "此插入数据操作需用户验证数据的合法性,你确定已审核完毕吗？",
     "readExcelFail": "无法读取此文件",
-    "noDataDrive": "必须传入 DataDrive的实例"
+    "noDataDrive": "必须传入 DataDrive的实例",
+    "scanPicture": "浏览图片"
   },
   "examModule": {
     "maintenanceHeader": "维护考卷头",
@@ -206,6 +211,7 @@
     "seeProjectTree": "查看项目树",
     "setProjectParent": "设置父项目",
     "parentList": "项目列表",
+    "projectCode": "项目编号",
     "actionName": "操作",
     "addProject": "新增项目",
     "closeProjectConfirm": "确定要将项目结案吗?",
@@ -267,6 +273,24 @@
     "comment": "留言",
     "taskBeginDate": "任务开始日期",
     "reply": "回复",
-    "others": "其它"
+    "others": "其它",
+    "showHistory": "显示动态",
+    "hide": "隐藏",
+    "owner": "发起人",
+    "analysisItem": "分析项目",
+    "assignee": "被指派人",
+    "noNote": "没记录",
+    "achievementRate": "达成率",
+    "analysisAll": "总计",
+    "attachment": "附件",
+    "setType": "类别设定",
+    "setBU": "单位(BU)设定",
+    "setCustomer": "客户设定",
+    "mtask": "任务清单搜寻",
+    "analysis": "统计图表"
+  },
+  "sharedModule": {
+    "uploading": "上传中",
+    "doUpload": "执行上传"
   }
 }

@@ -1,3 +1,5 @@
+import { sify, tify } from './../../shared/utils/chinese-conv/index';
+import { TranslateService } from '@ngx-translate/core';
 import { MyErrorHandlerService } from './myErrorHandler.service';
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
@@ -13,6 +15,7 @@ export class UtilService {
     private _message: NzMessageService,
     private modalService: NzModalService,
     private myErrorHandlerService: MyErrorHandlerService,
+    private translate: TranslateService,
   ) {}
 
   errDeal(err) {
@@ -194,6 +197,27 @@ export class UtilService {
         this.audio = null;
       }
       return audio;
+    }
+  }
+
+  chineseConv(value: string): string {
+    if (value) {
+      let currentLang = this.translate.currentLang;
+      if (!currentLang) {
+        return value;
+      }
+      let chinese = ['ZH-CN', 'ZH-TW'];
+      let idx = chinese.indexOf(currentLang.toUpperCase());
+      switch (idx) {
+        case 0:
+          // return sify(JSON.stringify(value)).replace(/^\"/g, '').replace(/\"$/g, '');
+          return sify(value);
+        case 1:
+          // return tify(JSON.stringify(value)).replace(/^\"/g, '').replace(/\"$/g, '');
+          return tify(value);
+        default:
+          return value;
+      }
     }
   }
 }

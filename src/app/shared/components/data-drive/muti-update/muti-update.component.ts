@@ -22,6 +22,7 @@ export class MutiUpdateComponent implements OnInit {
   primaryKey: string;
   translateText = {};
   @Input() dataDrive: DataDrive;
+  @Input() succCb: () => void;
 
   constructor(
     private util: UtilService,
@@ -67,6 +68,9 @@ export class MutiUpdateComponent implements OnInit {
           )
           .subscribe(
             _ => {
+              if (typeof this.succCb === 'function') {
+                this.succCb();
+              }
               this.uploading = false;
               this.util.showGlobalSucMes(
                 this.translateText['serviceModule.submitSuccess'],

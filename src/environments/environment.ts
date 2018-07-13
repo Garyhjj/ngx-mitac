@@ -5,4 +5,6 @@
 
 export const environment = {
   production: false,
+  fileEndUrl: 'http://webapi.mic.com.cn/',
+  fileProtocol: 'http://',
 };

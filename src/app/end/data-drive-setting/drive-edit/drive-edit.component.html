@@ -361,7 +361,7 @@
                 </nz-row>
               </nz-tab>
               <ng-template #nzTabBarExtraContentTable>
-                <i class="ant-tabs-new-tab anticon anticon-plus" (click)="newColumnTab(setForm.controls['tableData'].controls['columns']);columnIdx = setForm.controls['tableData'].controls['columns'].controls.length-1"></i>
+                <i class="ant-tabs-new-tab anticon anticon-plus" (click)="showPositonModal(setForm.controls['tableData'].controls['columns'],1);columnIdx = setForm.controls['tableData'].controls['columns'].controls.length-1"></i>
                 增加數據列
               </ng-template>
             </nz-tabset>
@@ -378,7 +378,7 @@
                 <ng-template [ngTemplateOutlet]="inputSetForm" [ngTemplateOutletContext]="{formGroup: searchSet, type: 1}" *ngIf="inputSetForm"></ng-template>
               </nz-tab>
               <ng-template #nzTabBarExtraContentSearchSets>
-                <i class="ant-tabs-new-tab anticon anticon-plus" (click)="newUpdateSetTab(setForm.get('searchSets')); SearchIdx=setForm.controls['searchSets'].controls.length-1"></i>
+                <i class="ant-tabs-new-tab anticon anticon-plus" (click)="showPositonModal(setForm.get('searchSets'),2); SearchIdx=setForm.controls['searchSets'].controls.length-1"></i>
                 增加查詢項
               </ng-template>
             </nz-tabset>
@@ -395,14 +395,15 @@
                 <ng-template [ngTemplateOutlet]="inputSetForm" [ngTemplateOutletContext]="{formGroup: updateSet, type: 2}" *ngIf="inputSetForm"></ng-template>
               </nz-tab>
               <ng-template #nzTabBarExtraContentUpdateSets>
-                <i class="ant-tabs-new-tab anticon anticon-plus" (click)="newUpdateSetTab(setForm.get('updateSets')); updateIdx = setForm.controls['updateSets'].controls.length-1"></i>
+                <i class="ant-tabs-new-tab anticon anticon-plus" (click)="showPositonModal(setForm.get('updateSets'),2); updateIdx = setForm.controls['updateSets'].controls.length-1"></i>
                 增加更新項
               </ng-template>
             </nz-tabset>
           </nz-collapse-panel>
         </nz-collapse>
         <nz-form-item style="display:block;text-align:center">
-          <button nz-button type="button" [nzType]="'primary'" style="width: 25%" (click)="saveToAnother()" [disabled]="!setForm.valid" *ngIf="setForm.value.id > 0">另存</button>
+          <button nz-button type="button" [nzType]="'primary'" style="width: 25%" (click)="saveToAnother()" [disabled]="!setForm.valid"
+            *ngIf="setForm.value.id > 0">另存</button>
           <div style="width: 10%;display:inline-block"></div>
           <button nz-button type="button" [nzType]="'primary'" style="width: 25%" (click)="submitForm()" [disabled]="!setForm.valid">{{setForm.value.id > 0? '更新': '提交'}}</button>
         </nz-form-item>
@@ -489,3 +490,21 @@
     </nz-col>
   </nz-row>
 </ng-template>
+
+
+<nz-modal [nzVisible]="isPositionVisible" [nzTitle]="'请输入插入的位置,不输入则在最后'" [nzContent]="modalContent" [nzFooter]="modalFooter"
+  (nzOnCancel)="isPositionVisible = false" nzWidth="460px">
+  <ng-template #modalContent>
+    <div style="display:block;text-align:center">
+      <nz-input-group nzSearch nzSize="large" [nzSuffix]="suffixButton">
+        <input type="text" nz-input #commentInput>
+      </nz-input-group>
+      <ng-template #suffixButton>
+        <button nz-button nzType="primary" nzSize="large" nzSearch (click)="finishSelctPosition(commentInput.value)">
+          确定</button>
+      </ng-template>
+    </div>
+  </ng-template>
+  <ng-template #modalFooter>
+  </ng-template>
+</nz-modal>

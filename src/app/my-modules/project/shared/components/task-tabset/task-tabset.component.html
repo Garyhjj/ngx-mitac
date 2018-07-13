@@ -1,0 +1,118 @@
+<nz-tabset>
+  <nz-tab [nzTitle]="nzTabHeading1">
+    <ng-template #nzTabHeading1>
+      {{'projectModule.projectOpen' | translate}}
+      <nz-badge [nzCount]="normalTips">
+        <ng-template #content>
+          &nbsp;&nbsp;
+        </ng-template>
+      </nz-badge>
+    </ng-template>
+    <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDriveSub($event)" [bodyCellStyle]="bodyCellStyle">
+      <ng-template #tableCellRef let-data="data" let-property="property">
+        <div *ngIf="property === 'ATTACHMENT' && data['ATTACHMENT']">
+          <app-file-list [fileList]="data['ATTACHMENT']"></app-file-list>
+        </div>
+      </ng-template>
+      <ng-template #actionRef let-data="data">
+        <span>
+          <nz-divider nzType="vertical" *ngIf="project?isOwner: true"></nz-divider>
+          <ng-template [ngTemplateOutlet]="seeDetailFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
+        </span>
+      </ng-template>
+    </app-data-drive>
+  </nz-tab>
+  <nz-tab [nzTitle]="nzTabHeading0">
+    <ng-template #nzTabHeading0>
+      {{'projectModule.taskNoAssignee' | translate}}
+      <nz-badge [nzCount]="noAssigneeTips">
+        <ng-template #content>
+          &nbsp;&nbsp;
+        </ng-template>
+      </nz-badge>
+    </ng-template>
+    <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDriveSub0($event)" [bodyCellStyle]="bodyCellStyle">
+      <ng-template #tableCellRef let-data="data" let-property="property">
+        <div *ngIf="property === 'ATTACHMENT' && data['ATTACHMENT']">
+          <app-file-list [fileList]="data['ATTACHMENT']"></app-file-list>
+        </div>
+      </ng-template>
+      <ng-template #actionRef let-data="data">
+        <span>
+          <nz-divider nzType="vertical" *ngIf="project?isOwner: true"></nz-divider>
+          <ng-template [ngTemplateOutlet]="seeDetailFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
+        </span>
+      </ng-template>
+    </app-data-drive>
+  </nz-tab>
+  <nz-tab [nzTitle]="nzTabHeading2">
+    <ng-template #nzTabHeading2>
+      {{'projectModule.projectOutTime' | translate}}
+      <nz-badge [nzCount]="outTimeTips">
+        <ng-template #content>
+          &nbsp;&nbsp;
+        </ng-template>
+      </nz-badge>
+    </ng-template>
+    <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDriveSub1($event)" [bodyCellStyle]="bodyCellStyle">
+      <ng-template #tableCellRef let-data="data" let-property="property">
+        <div *ngIf="property === 'ATTACHMENT' && data['ATTACHMENT']">
+          <app-file-list [fileList]="data['ATTACHMENT']"></app-file-list>
+        </div>
+      </ng-template>
+      <ng-template #actionRef let-data="data">
+        <span>
+          <nz-divider nzType="vertical" *ngIf="project?isOwner: true"></nz-divider>
+          <ng-template [ngTemplateOutlet]="seeDetailFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
+        </span>
+      </ng-template>
+    </app-data-drive>
+  </nz-tab>
+  <nz-tab [nzTitle]="nzTabHeading3">
+    <ng-template #nzTabHeading3>
+      {{'projectModule.taskFinished' | translate}}
+      <nz-badge [nzCount]="needConfimTips">
+        <ng-template #content>
+          &nbsp;&nbsp;
+        </ng-template>
+      </nz-badge>
+    </ng-template>
+    <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDriveSub2($event)" [bodyCellStyle]="bodyCellStyle">
+      <ng-template #tableCellRef let-data="data" let-property="property">
+        <div *ngIf="property === 'ATTACHMENT' && data['ATTACHMENT']">
+          <app-file-list [fileList]="data['ATTACHMENT']"></app-file-list>
+        </div>
+      </ng-template>
+      <ng-template #actionRef let-data="data">
+        <span>
+          <a (click)="closeTask(data)">{{'projectModule.closeProject' | translate}}</a>
+          <nz-divider nzType="vertical"></nz-divider>
+          <a (click)="rollbackTask(data)">{{'projectModule.notMyTask' | translate}}</a>
+          <nz-divider nzType="vertical"></nz-divider>
+          <ng-template [ngTemplateOutlet]="seeDetailFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
+        </span>
+      </ng-template>
+    </app-data-drive>
+  </nz-tab>
+  <nz-tab [nzTitle]="nzTabHeading4">
+    <ng-template #nzTabHeading4>
+      {{'projectModule.taskClosed' | translate}}
+    </ng-template>
+    <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDriveSub3($event)">
+      <ng-template #tableCellRef let-data="data" let-property="property">
+        <div *ngIf="property === 'ATTACHMENT' && data['ATTACHMENT']">
+          <app-file-list [fileList]="data['ATTACHMENT']"></app-file-list>
+        </div>
+      </ng-template>
+      <ng-template #actionRef let-data="data">
+        <span>
+          <ng-template [ngTemplateOutlet]="seeDetailFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
+        </span>
+      </ng-template>
+    </app-data-drive>
+  </nz-tab>
+</nz-tabset>
+
+<ng-template #seeDetailFn let-data>
+  <a (click)=seeTaskDetail(data)>{{'projectModule.taskDetail' | translate}}</a>
+</ng-template>

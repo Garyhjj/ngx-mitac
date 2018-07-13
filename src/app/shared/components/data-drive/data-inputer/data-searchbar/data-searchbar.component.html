@@ -3,8 +3,7 @@
     <!-- 搜索框栏 -->
     <div class="fliter-container">
       <div class="left-container" *ngIf="!notShowSearchInput && dataDrive.tableData">
-        <nz-input-group style="width:350px" *ngIf="dataDrive.tableData.searchable && optionList && optionList.length >0" [nzAddOnBefore]="addOnBeforeTemplate"
-          [nzAddOnAfter]="addOnAfterTemplate">
+        <nz-input-group style="width:350px" [nzAddOnBefore]="addOnBeforeTemplate" [nzAddOnAfter]="addOnAfterTemplate" *ngIf="dataDrive.tableData.searchable && optionList && optionList.length >0">
           <input type="text" nz-input [(ngModel)]="filterValue" [placeholder]="selectedOption?.placeHolder | sgChineseConv" [disabled]="!validateForm.valid">
         </nz-input-group>
         <ng-template #addOnBeforeTemplate>
@@ -31,53 +30,55 @@
       <div class="right-controler">
         <a class="high-level-search" (click)="toggle()" *ngIf="!show && dataDrive.tableData  && dataDrive.tableData.searchable && dataDrive?.searchSets && dataDrive?.searchSets.length > 0">{{'queryDetailPra' | translate}}</a>
         <a class="high-level-search" (click)="toggle()" *ngIf="show">{{'queryPra' | translate}}</a>
-        <nz-tooltip [nzTitle]="'mutiUpdate' | translate" [nzPlacement]="'top'">
-          <a nz-tooltip>
-            <button nz-button [nzType]="'default'" (click)="showMutiUpdate()" *ngIf="dataDrive.tableData?.addable && dataDrive.additionalFn?.mutiUpdate">
-              <i class="anticon anticon-save"></i>
-            </button>
-          </a>
-        </nz-tooltip>
+        <ng-container *ngIf="dataDrive.additionalFn?.menu">
+          <nz-tooltip [nzTitle]="'mutiUpdate' | translate" [nzPlacement]="'top'">
+            <a nz-tooltip>
+              <button nz-button [nzType]="'default'" (click)="showMutiUpdate()" *ngIf="dataDrive.tableData?.addable && dataDrive.additionalFn?.mutiUpdate">
+                <i class="anticon anticon-save"></i>
+              </button>
+            </a>
+          </nz-tooltip>
 
-        <nz-tooltip [nzTitle]="'downloadExcelFile' | translate" [nzPlacement]="'top'">
-          <a nz-tooltip>
-            <button nz-button [nzType]="'default'" (click)="toExcel()" *ngIf="dataDrive.additionalFn?.toExcel">
-              <i class="anticon anticon-download"></i>
-            </button>
-          </a>
-        </nz-tooltip>
+          <nz-tooltip [nzTitle]="'downloadExcelFile' | translate" [nzPlacement]="'top'">
+            <a nz-tooltip>
+              <button nz-button [nzType]="'default'" (click)="toExcel()" *ngIf="dataDrive.additionalFn?.toExcel">
+                <i class="anticon anticon-download"></i>
+              </button>
+            </a>
+          </nz-tooltip>
 
-        <nz-tooltip [nzTitle]="'pickColumn' | translate" [nzPlacement]="'top'">
-          <a nz-tooltip>
-            <button nz-button [nzType]="'default'" (click)="showModalTop()" *ngIf="dataDrive.additionalFn?.filterColumn">
-              <i class="anticon anticon-setting"></i>
-            </button>
-          </a>
-        </nz-tooltip>
+          <nz-tooltip [nzTitle]="'pickColumn' | translate" [nzPlacement]="'top'">
+            <a nz-tooltip>
+              <button nz-button [nzType]="'default'" (click)="showModalTop()" *ngIf="dataDrive.additionalFn?.filterColumn">
+                <i class="anticon anticon-setting"></i>
+              </button>
+            </a>
+          </nz-tooltip>
 
-        <nz-tooltip [nzTitle]="'fullScreen' | translate" [nzPlacement]="'top'">
-          <a nz-tooltip>
-            <button nz-button [nzType]="'default'" (click)="showModal()" *ngIf="dataDrive.additionalFn?.fullScreen">
-              <i class="anticon anticon-arrows-alt"></i>
-            </button>
-          </a>
-        </nz-tooltip>
+          <nz-tooltip [nzTitle]="'fullScreen' | translate" [nzPlacement]="'top'">
+            <a nz-tooltip>
+              <button nz-button [nzType]="'default'" (click)="showModal()" *ngIf="dataDrive.additionalFn?.fullScreen">
+                <i class="anticon anticon-arrows-alt"></i>
+              </button>
+            </a>
+          </nz-tooltip>
 
-        <nz-tooltip [nzTitle]="'viewType' | translate" [nzPlacement]="'top'">
-          <a nz-tooltip>
-            <button nz-button [nzType]="'default'" (click)="switchViewType(dataDrive.additionalFn.switchViewType)" *ngIf="dataDrive.additionalFn?.switchViewType">
-              <i class="anticon anticon-laptop"></i>
-            </button>
-          </a>
-        </nz-tooltip>
+          <nz-tooltip [nzTitle]="'viewType' | translate" [nzPlacement]="'top'">
+            <a nz-tooltip>
+              <button nz-button [nzType]="'default'" (click)="switchViewType(dataDrive.additionalFn.switchViewType)" *ngIf="dataDrive.additionalFn?.switchViewType">
+                <i class="anticon anticon-laptop"></i>
+              </button>
+            </a>
+          </nz-tooltip>
 
-        <nz-tooltip [nzTitle]="'changeTableFontSize' | translate" [nzPlacement]="'top'">
-          <a nz-tooltip>
-            <button nz-button [nzType]="'default'" (click)="openFontSizeModal()" *ngIf="dataDrive.additionalFn?.changeHeaderFontSize">
-              <i class="anticon anticon-info"></i>
-            </button>
-          </a>
-        </nz-tooltip>
+          <nz-tooltip [nzTitle]="'changeTableFontSize' | translate" [nzPlacement]="'top'">
+            <a nz-tooltip>
+              <button nz-button [nzType]="'default'" (click)="openFontSizeModal()" *ngIf="dataDrive.additionalFn?.changeHeaderFontSize">
+                <i class="anticon anticon-info"></i>
+              </button>
+            </a>
+          </nz-tooltip>
+        </ng-container>
       </div>
     </div>
     <!-- End 搜索框栏 -->
@@ -93,7 +94,7 @@
     <!-- End 检索项 -->
 
     <!-- 高级搜索框 -->
-    <div class="high-level-search-contianer" [style.display]="show ?'block':'none'">
+    <div class="high-level-search-contianer" [style.display]="show ?'block':'none'" *ngIf="dataDrive.tableData.searchable && inputTypeList && inputTypeList.length >0">
       <form nz-form [formGroup]="validateForm" class="ant-advanced-search-form">
         <div nz-row [nzGutter]="10">
           <div nz-col [nzSpan]="8" *ngFor="let item of columnNameStrings;let i =index">
@@ -102,10 +103,10 @@
               </nz-form-label>
               <nz-form-control [nzSpan]="17">
                 <!-- <nz-input [nzSize]="'large'" [nzPlaceHolder]="inputTypeList[i].placeHolder" [formControlName]="item" [nzId]="i"></nz-input> -->
-                <input nz-input [formControlName]="item" [placeholder]="inputTypeList[i].placeHolder" *ngIf="inputTypeList[i]?.type === 'text'">
+                <input nz-input [formControlName]="item" [placeholder]="inputTypeList[i].placeHolder?inputTypeList[i].placeHolder:' '" *ngIf="inputTypeList[i]?.type === 'text'">
 
-                <textarea nz-input [formControlName]="item" [placeholder]="inputTypeList[i].placeHolder" *ngIf="inputTypeList[i]?.type === 'textarea'"
-                  [nzAutosize]="1"></textarea>
+                <textarea nz-input [formControlName]="item" [placeholder]="inputTypeList[i].placeHolder?inputTypeList[i].placeHolder:' '"
+                  *ngIf="inputTypeList[i]?.type === 'textarea'" [nzAutosize]="1"></textarea>
 
 
 
@@ -135,7 +136,7 @@
                 <app-my-switch [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'switch'" [myTrueFormat]="inputTypeList[i]?.trueFormat"
                   [myFalseFormat]="inputTypeList[i]?.falseFormat"></app-my-switch>
 
-                <app-colleague-searcher [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'colleagueSearcher'"></app-colleague-searcher>
+                <app-dynamic-input [inputOptions]="inputTypeList[i]" [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'colleagueSearcher'"></app-dynamic-input>
 
                 <app-photo-upload [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'photoUpload'" [pickerFormat]="inputTypeList[i]?.more?.pickerFormat"
                   [maxCount]="inputTypeList[i]?.more?.maxCount" [removable]="inputTypeList[i]?.more?.removable" [addable]="inputTypeList[i]?.more?.addable"

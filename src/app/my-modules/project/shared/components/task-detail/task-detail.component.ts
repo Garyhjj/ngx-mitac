@@ -1,3 +1,5 @@
+import { Subject } from 'rxjs';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UtilService } from './../../../../../core/services/util.service';
 import { ProjectService } from './../../services/project.service';
 import { AuthService } from './../../../../../core/services/auth.service';
@@ -59,6 +61,9 @@ export class TaskDetailComponent implements OnInit {
     CREATION_DATE: Date;
     REPLY_TO: string;
   }[];
+  progressForm: FormGroup;
+  onSubmit = new Subject<any>();
+  updating = false;
 
   get isAssigner() {
     return this._task && this._task.ASSIGNEE === this.empno;
@@ -69,10 +74,19 @@ export class TaskDetailComponent implements OnInit {
     private auth: AuthService,
     private projectService: ProjectService,
     private util: UtilService,
+    private fb: FormBuilder,
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.initProgressForm();
+  }
 
+  initProgressForm() {
+    this.progressForm = this.fb.group({
+      CONTENT: ['', Validators.required],
+      ATTACHMENT: [],
+    });
+  }
   getProgress(line_id) {
     const dismiss = this.util.showLoading2();
     this.projectService.getTaskProgress(line_id).subscribe(
@@ -103,20 +117,46 @@ export class TaskDetailComponent implements OnInit {
     );
   }
 
-  updateProgress(v: string) {
+  submitProgressForm() {
+    this.updating = true;
+    this.onSubmit.next(1);
+  }
+
+  afterFileUpload(type: number, params) {
+    if (type === 2) {
+      this.util.showGlobalErrMes('文件上传出错');
+      this.updating = false;
+      this.ref.markForCheck();
+    } else if (type === 1) {
+      this.updateProgress();
+    }
+  }
+
+  updateProgress() {
     const dismiss = this.util.showLoading2();
     let nowDate = moment().format('YYYY-MM-DD');
     const LINE_ID = this.task.ID;
-    const send = { LINE_ID, CONTENT: v, HEADER_ID: this.task.HEADER_ID };
+    const { CONTENT, ATTACHMENT } = this.progressForm.value;
+    const send = {
+      LINE_ID,
+      CONTENT,
+      ATTACHMENT,
+      HEADER_ID: this.task.HEADER_ID,
+    };
     this.projectService.updateTaskProgress(send).subscribe(
       res => {
         this.getProgress(LINE_ID);
         this.doAfterUpdate();
         dismiss();
+        this.updating = false;
+        this.progressForm.reset();
+        this.ref.markForCheck();
       },
       err => {
         this.util.errDeal(err);
         dismiss();
+        this.updating = false;
+        this.ref.markForCheck();
       },
     );
   }

@@ -19,7 +19,7 @@ import {
   isSelfComponent,
   isSelfTemplateRef,
 } from './viewer/index';
-import { SelfStoreSet, SelfStore } from './self-store/index';
+import { SelfStoreSet, SelfStore, DataDriveStoreSet } from './self-store/index';
 import { InputSetFactory } from './input/index';
 import { TemplateRef } from '@angular/core';
 export * from './viewer';
@@ -112,18 +112,20 @@ export class DataDrive implements DataDriveOptions {
   }
   set selfHideLists(ls: string[]) {
     this._selfHideLists = ls;
-    bindEventForArray(this._selfHideLists, this.updateSelfStoreSet.bind(this));
-    this.updateSelfStoreSet();
+    bindEventForArray(this._selfHideLists, this.updateSelfSetStore.bind(this));
+    this.updateSelfSetStore({ prefer: this._selfHideLists });
   }
   set modalSataus(s: boolean) {
     this.isShowModalSubject.next(s);
   }
-  private updateSelfStoreSet() {
+  updateSelfSetStore(opts: DataDriveStoreSet) {
     const storeSet = new this.selfStore(this.user, [
-      { id: this.id, prefer: this._selfHideLists },
+      Object.assign({ id: this.id }, opts),
     ]);
     this.selfStoreSet.update(storeSet);
-    this.combineHideLists();
+    if (opts.prefer) {
+      this.combineHideLists();
+    }
   }
   get selfHideLists() {
     return this._selfHideLists;
@@ -139,11 +141,16 @@ export class DataDrive implements DataDriveOptions {
     this.hideListSubject.next(this.allHideLists);
   }
   private initHideLists() {
-    this._selfHideLists = this.selfStoreSet.getSetByUserAndId(
+    const prefer = this.selfStoreSet.getSetByUserAndId(
       this.user,
       this.id,
+      'prefer',
     );
+    this._selfHideLists = isArray(prefer) ? prefer : [];
     this.combineHideLists();
+  }
+  getSetStore(): DataDriveStoreSet {
+    return this.selfStoreSet.getSetByUserAndId(this.user, this.id);
   }
   isDataAddable() {
     return !!this.tableData.addable;
@@ -393,7 +400,12 @@ export class DataDrive implements DataDriveOptions {
    * @memberof DataDrive
    */
   onUpdateFormShow(
-    cb: (fg: FormGroup, sub: Subject<string>, InputList: any[]) => void,
+    cb: (
+      fg: FormGroup,
+      sub: Subject<string>,
+      InputList: any[],
+      data: any,
+    ) => void,
   ) {
     this.on('updateFormShow', cb);
   }
@@ -670,12 +682,14 @@ export class DataDrive implements DataDriveOptions {
     fg: FormGroup,
     globalUpdateErrSubject: Subject<string>,
     inputTypeList,
+    data,
   ) {
     return this.emitEvent(
       'updateFormShow',
       fg,
       globalUpdateErrSubject,
       inputTypeList,
+      data,
     );
   }
   /**

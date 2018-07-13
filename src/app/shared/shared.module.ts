@@ -1,3 +1,6 @@
+import { MxAutoCompleteComponent } from './components/inputs/mx-auto-complete/mx-auto-complete.component';
+import { FileListComponent } from './components/file-list/file-list.component';
+import { DirectivesModule } from './directives/directives.module';
 import { DynamicInputComponent } from './components/inputs/dynamic-input/dynamic-input.component';
 import { MyRouteReuseStrategy } from './../route/myRouteReuseStrategy';
 import { FileUploadComponent } from './components/inputs/file-upload/file-upload.component';
@@ -24,6 +27,7 @@ import { MyFlexPipe } from './components/data-drive/shared/pipes/my-flex.pipe';
   imports: [
     CommonModule,
     PipesModule,
+    DirectivesModule,
     NgZorroAntdModule,
     ReactiveFormsModule,
     FormsModule,
@@ -42,12 +46,15 @@ import { MyFlexPipe } from './components/data-drive/shared/pipes/my-flex.pipe';
     PhotoUploadComponent,
     FileUploadComponent,
     DynamicInputComponent,
+    FileListComponent,
     MyFlexPipe,
+    MxAutoCompleteComponent,
   ],
   exports: [
     TranslateModule,
     CommonModule,
     PipesModule,
+    DirectivesModule,
     NgZorroAntdModule,
     FormsModule,
     ReactiveFormsModule,
@@ -63,7 +70,9 @@ import { MyFlexPipe } from './components/data-drive/shared/pipes/my-flex.pipe';
     PhotoUploadComponent,
     FileUploadComponent,
     DynamicInputComponent,
+    FileListComponent,
     MyFlexPipe,
+    MxAutoCompleteComponent,
   ],
   entryComponents: [],
   providers: [{ provide: RouteReuseStrategy, useClass: MyRouteReuseStrategy }],

@@ -89,4 +89,14 @@ export class ProjectService {
   setProjectHeader(p) {
     return this.http.post(projectConfig.setProjectHeader, p);
   }
+
+  getAnalysisLines(query) {
+    return this.http.get(replaceQuery(projectConfig.getProjecLine, query));
+  }
+
+  getProjectPeople(header_id) {
+    return this.http.get(
+      replaceQuery(projectConfig.getProjectPeople, { header_id }),
+    );
+  }
 }

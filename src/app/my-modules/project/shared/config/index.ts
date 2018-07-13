@@ -72,7 +72,9 @@ export const projectConfig = {
    * 2018-06-05
    * @param {number} {id}
    */
-  getProjecLine: APPConfig.baseUrl + 'projects/lines?id={id}',
+  getProjecLine:
+    APPConfig.baseUrl +
+    'projects/lines?id={id}&startDate={startDate}&endDate={endDate}&type={type}&bu={bu}&customer={customer}&owner={owner}&assignee={assignee}&model={model}',
 
   /**
    * URL
@@ -98,4 +100,12 @@ export const projectConfig = {
    * 2018-06-06
    */
   setProjectHeader: APPConfig.baseUrl + 'projects/headers?setParent=1',
+
+  /**
+   * URL
+   * 获得项目的人员
+   * get
+   * 2018-07-06
+   */
+  getProjectPeople: APPConfig.baseUrl + 'projects/people?header_id={header_id}',
 };

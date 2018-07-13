@@ -1,13 +1,44 @@
 <div nz-row *ngIf="task">
   <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="8" *ngIf="isAssigner && task.STATUS === 'Open'">
     <nz-card [nzTitle]="'projectModule.updateTaskProgress' | translate">
-      <nz-input-group nzSearch nzSize="large" [nzSuffix]="suffixButton">
+      <!-- <nz-input-group nzSearch nzSize="large" [nzSuffix]="suffixButton">
         <input type="text" nz-input #progressInput>
       </nz-input-group>
       <ng-template #suffixButton>
         <button nz-button nzType="primary" nzSize="large" nzSearch (click)="updateProgress(progressInput.value);progressInput.value=''"
           [disabled]="!progressInput.value">{{'serviceModule.confirm' | translate}}</button>
-      </ng-template>
+      </ng-template> -->
+
+      <form nz-form [nzLayout]="'horizontal'" [formGroup]="progressForm" *ngIf="progressForm" #view>
+        <div nz-row [nzGutter]="2">
+          <div nz-col [nzSpan]="24">
+            <nz-form-item>
+              <nz-form-label [nzSpan]="6" style="text-overflow: ellipsis;">附件
+              </nz-form-label>
+              <nz-form-control [nzSpan]="16">
+                <app-file-upload formControlName="ATTACHMENT" [hideUploadButton]="true" [onSubmit]="onSubmit" (uploadSuccess)="afterFileUpload(1,$event)"
+                  (uploadError)="afterFileUpload(2,$event)"></app-file-upload>
+              </nz-form-control>
+
+            </nz-form-item>
+          </div>
+          <div nz-col [nzSpan]="24">
+            <nz-form-item>
+              <nz-form-label [nzSpan]="6" style="text-overflow: ellipsis;">备注
+              </nz-form-label>
+              <nz-form-control [nzSpan]="16">
+                <app-dynamic-input formControlName="CONTENT" [inputOptions]="{type:'text',more:{editable:true}}"></app-dynamic-input>
+              </nz-form-control>
+
+            </nz-form-item>
+          </div>
+        </div>
+        <div [style.display]="'block'" [style.textAlign]="'center'">
+          <button nz-button type="button" [nzType]="'primary'" [nzLoading]="updating" [disabled]="!progressForm.valid" [style.width.%]="40"
+            (click)="submitProgressForm()">確定</button>
+        </div>
+        <div class="global-err">{{globalErr}}</div>
+      </form>
     </nz-card>
   </div>
   <div nz-col nzXs="24" nzSm="24" nzMd="24" [nzLg]="isAssigner && task.STATUS !== 'Closed'?8:12" style="padding-left: 16px">
@@ -41,6 +72,7 @@
       <nz-timeline-item *ngFor="let pro of progressList">
         <p *ngFor="let item of pro.list;let last = last; trackBy: trackByID">
           {{item.CONTENT}}
+          <app-file-list [fileList]="item['ATTACHMENT']"></app-file-list>
           <span *ngIf="last">: {{pro.date}}</span>
         </p>
       </nz-timeline-item>

@@ -9,6 +9,11 @@
       </nz-badge>
     </ng-template>
     <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDrive1($event)" [bodyCellStyle]="bodyCellStyle">
+      <ng-template #tableCellRef let-data="data" let-property="property">
+        <div *ngIf="property === 'ATTACHMENT' && data['ATTACHMENT']">
+          <app-file-list [fileList]="data['ATTACHMENT']"></app-file-list>
+        </div>
+      </ng-template>
       <ng-template #actionRef let-data="data">
         <ng-template [ngTemplateOutlet]="openFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
       </ng-template>
@@ -24,6 +29,11 @@
       </nz-badge>
     </ng-template>
     <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDrive2($event)" [bodyCellStyle]="bodyCellStyle">
+      <ng-template #tableCellRef let-data="data" let-property="property">
+        <div *ngIf="property === 'ATTACHMENT' && data['ATTACHMENT']">
+          <app-file-list [fileList]="data['ATTACHMENT']"></app-file-list>
+        </div>
+      </ng-template>
       <ng-template #actionRef let-data="data">
         <ng-template [ngTemplateOutlet]="openFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
       </ng-template>
@@ -39,6 +49,11 @@
       </nz-badge>
     </ng-template>
     <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDrive3($event)" [bodyCellStyle]="bodyCellStyle">
+      <ng-template #tableCellRef let-data="data" let-property="property">
+        <div *ngIf="property === 'ATTACHMENT' && data['ATTACHMENT']">
+          <app-file-list [fileList]="data['ATTACHMENT']"></app-file-list>
+        </div>
+      </ng-template>
       <ng-template #actionRef let-data="data">
         <a (click)="backToOpen(data)">{{'projectModule.taskBackToOpenBySelf' | translate}}</a>
         <nz-divider nzType="vertical"></nz-divider>
@@ -51,6 +66,11 @@
       {{'projectModule.taskClosed' | translate}}
     </ng-template>
     <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDrive4($event)" [bodyCellStyle]="bodyCellStyle">
+      <ng-template #tableCellRef let-data="data" let-property="property">
+        <div *ngIf="property === 'ATTACHMENT' && data['ATTACHMENT']">
+          <app-file-list [fileList]="data['ATTACHMENT']"></app-file-list>
+        </div>
+      </ng-template>
       <ng-template #actionRef let-data="data">
         <ng-template [ngTemplateOutlet]="seeDetailFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
       </ng-template>

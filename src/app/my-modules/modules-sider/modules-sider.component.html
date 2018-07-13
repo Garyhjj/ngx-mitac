@@ -18,6 +18,7 @@
       <li nz-menu-item data-route="/board/urgentMaterial">{{'urgentMaterialBoard' | translate}}</li>
       <li nz-menu-item data-route="/board/urgentNo">{{'urgentNoBoard' | translate}}</li>
       <li nz-menu-item data-route="/board/esd">{{'esd' | translate}}</li>
+      <li nz-menu-item data-route="/board/shipping">{{'shippingBoard' | translate}}</li>
     </ul>
   </li>
   <li nz-submenu *ngIf="canSeeModule(26025)">
@@ -199,11 +200,23 @@
       <i class="anticon anticon-solution"></i>
       <span class="nav-text">{{'projectModule.name' | translate}}</span>
     </span>
+    <ul *ngIf="canSeeFunction(476, true)">
+      <li nz-submenu>
+        <span title>{{'baseSetting' | translate}}</span>
+        <ul>
+          <li nz-menu-item data-route="/project/basic/type">{{'projectModule.setType' | translate}}</li>
+          <li nz-menu-item data-route="/project/basic/bu">{{'projectModule.setBU' | translate}}</li>
+          <li nz-menu-item data-route="/project/basic/customer">{{'projectModule.setCustomer' | translate}}</li>
+        </ul>
+      </li>
+    </ul>
     <ul>
-      <li nz-menu-item data-route="/project/main">{{'projectModule.routeMain' | translate}}</li>
+      <li nz-menu-item data-route="/project/main" *ngIf="canSeeFunction(476, true)">{{'projectModule.routeMain' | translate}}</li>
       <li nz-menu-item data-route="/project/task">{{'projectModule.routeTask' | translate}}</li>
+      <li nz-menu-item data-route="/project/mtask" *ngIf="canSeeFunction(476, true)">{{'projectModule.mtask' | translate}}</li>
       <li nz-menu-item data-route="/project/scan">{{'projectModule.routeScan' | translate}}</li>
-      <li nz-menu-item data-route="/project/net">{{'projectModule.routeNet' | translate}}</li>
+      <li nz-menu-item data-route="/project/net" *ngIf="canSeeFunction(476, true)">{{'projectModule.routeNet' | translate}}</li>
+      <li nz-menu-item data-route="/project/analysis" *ngIf="canSeeFunction(476, true)">{{'projectModule.analysis' | translate}}</li>
     </ul>
   </li>
 </ul>

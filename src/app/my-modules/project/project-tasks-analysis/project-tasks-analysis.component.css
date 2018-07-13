@@ -1,0 +1,8 @@
+:host ::ng-deep form .ant-select,
+form .ant-cascader-picker {
+  width: 220px !important;
+}
+
+:host ::ng-deep .ant-input {
+  width: 220px;
+}

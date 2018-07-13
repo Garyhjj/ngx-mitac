@@ -1,3 +1,4 @@
+import { TaskTabsetComponent } from './shared/components/task-tabset/task-tabset.component';
 import { ProjectTreeComponent } from './shared/components/project-tree/project-tree.component';
 import { ProjectService } from './shared/services/project.service';
 import { ProjectDetailComponent } from './shared/components/project-detail/project-detail.component';
@@ -12,6 +13,8 @@ import { ProjectMaintenanceComponent } from './project-maintenance/project-maint
 import { ProjectTaskComponent } from './project-task/project-task.component';
 import { ProjectScanComponent } from './project-scan/project-scan.component';
 import { ProjectNetComponent } from './project-net/project-net.component';
+import { MyProjectsTaskComponent } from './my-projects-task/my-projects-task.component';
+import { ProjectTasksAnalysisComponent } from './project-tasks-analysis/project-tasks-analysis.component';
 
 @NgModule({
   imports: [CommonModule, ProjectRoutingModule, SharedModule, DataDriveModule],
@@ -23,12 +26,16 @@ import { ProjectNetComponent } from './project-net/project-net.component';
     ProjectDetailComponent,
     ProjectScanComponent,
     ProjectTreeComponent,
-    ProjectNetComponent
-],
+    ProjectNetComponent,
+    MyProjectsTaskComponent,
+    ProjectTasksAnalysisComponent,
+    TaskTabsetComponent,
+  ],
   entryComponents: [
     TaskDetailComponent,
     ProjectDetailComponent,
     ProjectTreeComponent,
+    TaskTabsetComponent,
   ],
   providers: [ProjectService],
 })

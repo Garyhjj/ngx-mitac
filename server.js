@@ -24,7 +24,8 @@ if (!(process.env.NODE_ENV && process.env.NODE_ENV.trim() === 'production')) {
     'pm2 delete mitacEnd',
     'pm2 retart mitacEnd',
     'npm rebuild',
-    'git pull'
+    'git pull',
+    'npm run reload'
   ];
   app.post('/utils/commands', function (req, res) {
     const body = req.body;
@@ -48,7 +49,9 @@ if (!(process.env.NODE_ENV && process.env.NODE_ENV.trim() === 'production')) {
           // return valid;
         };
         if (testCommand(command)) {
-          exec(command, function (err, stdout, stderr) {
+          exec(command, {
+            maxBuffer: 1024 * 1024 * 3
+          }, function (err, stdout, stderr) {
             if (err) {
               res.status(400);
               res.end(err.stack);

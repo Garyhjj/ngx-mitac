@@ -5,9 +5,17 @@ import { UtilService } from './../../../core/services/util.service';
 import { ProjectService } from './../shared/services/project.service';
 import { DataDriveService } from './../../../shared/components/data-drive/core/services/data-drive.service';
 import { AuthService } from './../../../core/services/auth.service';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { DataDrive } from '../../../shared/components/data-drive/shared/models';
 import { ProjectTreeComponent } from '../shared/components/project-tree/project-tree.component';
+import { Project } from '../shared/models';
+import { isArray } from '../../../shared/utils';
 
 @Component({
   selector: 'app-project-maintenance',
@@ -27,6 +35,7 @@ export class ProjectMaintenanceComponent implements OnInit, OnDestroy {
   projectForSetParent;
   translateTexts = {};
   sub: Subscription;
+  @ViewChild('detialView') detailView: ElementRef;
   bodyCellStyle = (data, prop) => {
     if (this.targetProject && this.targetProject.ID === data.ID) {
       return {
@@ -119,6 +128,9 @@ export class ProjectMaintenanceComponent implements OnInit, OnDestroy {
   getDataDrive3(d: DataDrive) {
     this.changeNameSet(d);
     d.tableData.searchable = true;
+    if (isArray(d.searchSets)) {
+      d.searchSets = d.searchSets.filter(s => s.property !== 'OWNER');
+    }
     d.beforeSearch(data => {
       data = data || {};
       data.status = 'Closed';
@@ -128,6 +140,11 @@ export class ProjectMaintenanceComponent implements OnInit, OnDestroy {
 
   seeDetail(d) {
     this.targetProject = d;
+    setTimeout(() => {
+      try {
+        this.detailView.nativeElement.scrollIntoView();
+      } catch (e) {}
+    }, 100);
   }
 
   closeProject(d) {
@@ -161,7 +178,8 @@ export class ProjectMaintenanceComponent implements OnInit, OnDestroy {
     project.title = project;
     project.key = project.ID;
     const dismiss = this.util.showLoading2();
-    this.projectService.getProjectChildren(project.ID).subscribe(
+    console.log(project);
+    this.projectService.getProjectChildren(project.CODE).subscribe(
       res => {
         this.showProjectTree(Object.assign(project, { children: res }));
         dismiss();
@@ -188,10 +206,10 @@ export class ProjectMaintenanceComponent implements OnInit, OnDestroy {
     });
   }
 
-  showSetParent(project) {
+  showSetParent(project: Project) {
     this.isSetParentVisible = true;
     this.projectForSetParent = project;
-    this.parentVal = null;
+    this.parentVal = project.PARENT_HEADER ? project.PARENT_HEADER : null;
     const id = project.ID;
     this.parentOpts = [];
     const dismiss = this.util.showLoading2();
@@ -239,7 +257,8 @@ export class ProjectMaintenanceComponent implements OnInit, OnDestroy {
     this.projectService
       .setProjectHeader({
         ID: this.projectForSetParent.ID,
-        PARENT_HEADER: this.parentVal,
+        PARENT_HEADER: this.parentVal ? this.parentVal : '',
+        CODE: this.projectForSetParent.CODE,
         LAST_UPDATED_DATE: this.projectForSetParent.LAST_UPDATED_DATE,
       })
       .subscribe(

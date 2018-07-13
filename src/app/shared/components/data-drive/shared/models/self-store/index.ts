@@ -1,7 +1,14 @@
+export interface DataDriveStoreSet {
+  id?: string | number;
+  prefer?: any;
+  headerFontSize?: string;
+  bodyFontSize?: string;
+}
+
 export class SelfStore {
   user: string;
-  set: { id: string | number; prefer: any }[];
-  constructor(user: string, set: { id: string | number; prefer: any }[]) {
+  set: DataDriveStoreSet[];
+  constructor(user: string, set: DataDriveStoreSet[]) {
     this.user = user;
     this.set = set;
   }
@@ -11,16 +18,10 @@ export class SelfStore {
       this.set.forEach(s => {
         const idx = other.set.findIndex(o => o.id === s.id);
         if (idx > -1) {
-          other.set.splice(idx, 1, s);
+          other.set[idx] = Object.assign(other.set[idx], s);
         } else {
           other.set.push(s);
         }
-        other.set = other.set.map(o => {
-          if (o.id === s.id) {
-            o.prefer = s.prefer;
-          }
-          return o;
-        });
       });
       return other;
     } else {
@@ -33,7 +34,7 @@ export class SelfStoreSet {
   private _maxUser: number;
   constructor() {
     this.store = this.getStore();
-    this._maxUser = 3;
+    this._maxUser = 5;
   }
 
   get selfStoreName() {
@@ -55,19 +56,19 @@ export class SelfStoreSet {
     }
     return [];
   }
-  getSetByUserAndId(user: string, id: string | number) {
+  getSetByUserAndId(user: string, id: string | number, prop?: string) {
     const all = this.getStore().find(s => s && s.user === user);
     if (all && all.set.length > 0) {
       const set = all.set.find(s => s.id === id);
-      return set ? set.prefer : [];
+      return set ? (prop ? set[prop] : set) : null;
     }
-    return [];
+    return {};
   }
   update(set: SelfStore) {
     let store = this.getStore();
     const targetIdx = store.findIndex(s => s && s.user === set.user);
     if (targetIdx < 0) {
-      while (store.length > 2) {
+      while (store.length > this._maxUser) {
         store.shift();
       }
       store.push(set);

@@ -17,6 +17,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { isArray } from '../../../../../shared/utils';
+import { nbind } from 'q';
 
 @Component({
   selector: 'app-project-detail',
@@ -27,20 +28,12 @@ import { isArray } from '../../../../../shared/utils';
 export class ProjectDetailComponent implements OnInit, OnDestroy {
   history;
   empno = this.auth.user.EMPNO;
-  dataDriveSub: DataDrive;
   dataDrivePeople: DataDrive;
-  dataDriveNoAssignee: DataDrive;
-  dataDriveOutTime: DataDrive;
-  dataDriveClosed: DataDrive;
-  dataDriveFinished: DataDrive;
-  noAssigneeTips = 0;
-  normalTips = 0;
-  outTimeTips = 0;
-  needConfimTips = 0;
   loadingMore;
   page = 1;
   _project;
   targetTask;
+  isHistoryFold = true;
   @Input() afterBigChange: () => void;
   @Input()
   set project(p) {
@@ -55,16 +48,19 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
       this.dataDriveService.updateViewData(d);
     };
     this.getHistory(p.ID);
-    if (this.dataDriveSub) {
-      update(this.dataDriveSub);
-    }
     if (this.dataDrivePeople) {
       update(this.dataDrivePeople);
     }
   }
   translateTexts = {};
   sub: Subscription;
-
+  get peopleList() {
+    if (this.dataDrivePeople) {
+      return this.dataDrivePeople.getData();
+    } else {
+      return [];
+    }
+  }
   get project() {
     return this._project;
   }
@@ -72,12 +68,10 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
   get isOwner() {
     return this.project && this.project.OWNER === this.empno;
   }
-  bodyCellStyle = (data, prop) => {
-    if (this.targetTask && this.targetTask.ID === data.ID) {
-      return {
-        'background-color': '#e6f7ff',
-      };
-    }
+
+  afterTaskTabChange = () => {
+    this.getHistory(this.project.ID);
+    this.updateParent();
   };
   constructor(
     private modalService: NzModalService,
@@ -91,15 +85,7 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
 
   getTranslation() {
     this.sub = this.translateService
-      .stream([
-        'projectModule.actionName',
-        'projectModule.addTask',
-        'projectModule.addPerson',
-        'projectModule.weightSetError',
-        'projectModule.taskDetail',
-        'projectModule.closeTaskConfirm',
-        'projectModule.rollbackTaskConfirm',
-      ])
+      .stream(['projectModule.actionName', 'projectModule.addPerson'])
       .subscribe(t => {
         this.translateTexts = t;
       });
@@ -111,56 +97,6 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
-  }
-
-  validateWeight(d: DataDrive) {
-    d.beforeUpdateSubmit((fg, sub, ori) => {
-      const { WEIGHT } = fg.value;
-      const ID = ori ? ori.ID : 0;
-      const taskWeight = this.dataDriveSub
-        .getData()
-        .concat(this.dataDriveClosed.getData())
-        .concat(this.dataDriveFinished.getData())
-        .concat(this.dataDriveNoAssignee.getData())
-        .concat(this.dataDriveOutTime.getData())
-        .filter(data => {
-          const id = data.find(_ => _.property === 'ID');
-          if (id) {
-            return id.value !== ID;
-          }
-          return true;
-        })
-        .map(data => data.find(_ => _.property === 'WEIGHT'))
-        .filter(data => data)
-        .map(data => data.value)
-        .reduce((a, b) => {
-          a = a || 0;
-          b = b || 0;
-          return a + b;
-        }, 0);
-      if (WEIGHT > 100 - taskWeight) {
-        sub.next(
-          this.translateTexts['projectModule.weightSetError']
-            ? replaceQuery(
-                this.translateTexts['projectModule.weightSetError'],
-                {
-                  weight: 100 - taskWeight,
-                },
-              )
-            : '',
-        );
-        return false;
-      } else {
-        sub.next('');
-        return true;
-      }
-    });
-  }
-  changeNameSetSub(d: DataDrive) {
-    d.changeNameSets({
-      actionCol: this.translateTexts['projectModule.actionName'],
-      add: this.translateTexts['projectModule.addTask'],
-    });
   }
 
   changeNameSetPeople(d: DataDrive) {
@@ -218,198 +154,13 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
       data.HEADER_ID = this.project.ID;
       return data;
     });
-    d.afterDataInit(() => {
+    d.afterDataInit(data => {
       setTimeout(() => {
         this.getHistory(this.project.ID);
       }, 500);
     });
     this.dataDriveService.updateViewData(d);
   }
-
-  getDataDriveSub(d: DataDrive) {
-    this.validateWeight(d);
-    this.changeNameSetSub(d);
-    this.filterEmpno(d);
-    this.dataDriveSub = d;
-    d.tableData.addable = d.tableData.editable = d.tableData.deletable = this.isOwner;
-    d.onUpdateData(data => {
-      data.HEADER_ID = this.project.ID;
-      return data;
-    });
-    d.afterDataInit(() => {
-      setTimeout(() => {
-        this.getHistory(this.project.ID);
-      }, 500);
-    });
-    d.afterDataInit(data => (this.normalTips = data.length));
-    d.onUpdateData(data => {
-      data.ASSIGNER = this.empno;
-      data.STATUS = data.STATUS || 'Open';
-      data.HEADER_ID = this.project.ID;
-      return data;
-    });
-    d.beforeSearch(data => {
-      data = data || {};
-      data.HEADER_ID = this.project.ID;
-      return data;
-    });
-    d.beforeInsideUpdateView(() => {
-      this.updateParent();
-    });
-    d.beforeInitTableData(data => {
-      let noAssignee = [],
-        outTime = [],
-        normal = [],
-        finished = [],
-        closed = [];
-      if (isArray(data)) {
-        data.forEach(l => {
-          const status = l.STATUS;
-          switch (status) {
-            case 'Open':
-              if (l.DUE_DATE) {
-                if (
-                  new Date().getTime() -
-                    (new Date(l.DUE_DATE).getTime() + 1000 * 60 * 60 * 24) >
-                  0
-                ) {
-                  outTime.push(l);
-                } else {
-                  if (l.ASSIGNEE) {
-                    normal.push(l);
-                  } else {
-                    noAssignee.push(l);
-                  }
-                }
-              } else {
-                if (l.ASSIGNEE) {
-                  normal.push(l);
-                } else {
-                  noAssignee.push(l);
-                }
-              }
-              break;
-            case 'Finished':
-              finished.push(l);
-              break;
-            case 'Closed':
-              closed.push(l);
-              break;
-          }
-        });
-      }
-      this.dataDriveNoAssignee.selfUpdateTableData(noAssignee);
-      this.dataDriveOutTime.selfUpdateTableData(outTime);
-      this.dataDriveFinished.selfUpdateTableData(finished);
-      this.dataDriveClosed.selfUpdateTableData(closed);
-      return normal;
-    });
-    this.dataDriveService.updateViewData(d);
-  }
-  getDataDriveSub0(d: DataDrive) {
-    this.validateWeight(d);
-    this.changeNameSetSub(d);
-    this.filterEmpno(d);
-    d.tableData.editable = d.tableData.deletable = this.isOwner;
-    this.dataDriveNoAssignee = d;
-    d.afterDataInit(data => (this.noAssigneeTips = data.length));
-    this.stopInsideUpdate(d);
-  }
-  getDataDriveSub1(d: DataDrive) {
-    this.validateWeight(d);
-    this.changeNameSetSub(d);
-    this.filterEmpno(d);
-    d.tableData.editable = d.tableData.deletable = this.isOwner;
-    this.dataDriveOutTime = d;
-    d.afterDataInit(data => (this.outTimeTips = data.length));
-    this.stopInsideUpdate(d);
-  }
-  getDataDriveSub2(d: DataDrive) {
-    this.validateWeight(d);
-    this.changeNameSetSub(d);
-    this.filterEmpno(d);
-    this.dataDriveFinished = d;
-    d.afterDataInit(data => (this.needConfimTips = data.length));
-    this.stopInsideUpdate(d);
-  }
-  getDataDriveSub3(d: DataDrive) {
-    this.validateWeight(d);
-    this.changeNameSetSub(d);
-    this.filterEmpno(d);
-    this.dataDriveClosed = d;
-    this.stopInsideUpdate(d);
-  }
-  stopInsideUpdate(d: DataDrive) {
-    d.beforeInsideUpdateView(() => {
-      this.updateSubData();
-      return false;
-    });
-  }
-  updateSubData() {
-    this.dataDriveService.updateViewData(this.dataDriveSub);
-  }
-  seeTaskDetail(data) {
-    this.targetTask = data;
-    const subscription = this.modalService.create({
-      nzTitle: this.translateTexts['projectModule.taskDetail'],
-      nzContent: TaskDetailComponent,
-      nzOnOk() {},
-      nzOnCancel() {},
-      nzFooter: null,
-      nzComponentParams: {
-        task: data,
-        afterUpdate: () => {
-          setTimeout(_ => {
-            this.getHistory(this.project.ID);
-          }, 500);
-        },
-      },
-      nzWidth: '80vw',
-    });
-    subscription.afterClose.subscribe(_ => (this.targetTask = null));
-  }
-  closeTask(t) {
-    const okCb = () => {
-      const dismiss = this.util.showLoading2();
-      t.STATUS = 'Closed';
-      this.dataDriveService.updateData(this.dataDriveSub, t).subscribe(
-        () => {
-          this.updateSubData();
-          this.updateParent();
-          dismiss();
-        },
-        err => {
-          this.util.errDeal(err);
-          dismiss();
-        },
-      );
-    };
-    this.util.showBisicConfirmModal({
-      title: this.translateTexts['projectModule.closeTaskConfirm'],
-      okCb,
-    });
-  }
-  rollbackTask(t) {
-    const okCb = () => {
-      const dismiss = this.util.showLoading2();
-      t.STATUS = 'Open';
-      this.dataDriveService.updateData(this.dataDriveSub, t).subscribe(
-        () => {
-          this.updateSubData();
-          dismiss();
-        },
-        err => {
-          this.util.errDeal(err);
-          dismiss();
-        },
-      );
-    };
-    this.util.showBisicConfirmModal({
-      title: this.translateTexts['projectModule.rollbackTaskConfirm'],
-      okCb,
-    });
-  }
-
   updateParent() {
     if (typeof this.afterBigChange === 'function') {
       this.afterBigChange();
@@ -432,26 +183,24 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
     );
   }
 
-  filterEmpno(d: DataDrive) {
-    const updateSets = d.updateSets;
-    const target = updateSets.find(s => s.property === 'ASSIGNEE');
-    if (target) {
-      target.InputOpts = target.InputOpts || {};
-      target.InputOpts.more = target.InputOpts.more || {};
-      target.InputOpts.more.searchFilter = data => {
-        return data.filter(
-          e =>
-            e.EMPNO === this.project.OWNER ||
-            this.dataDrivePeople.getData().find(s => {
-              if (isArray(s)) {
-                return s.find(
-                  _ => _.property === 'USER_NAME' && _.value === e.EMPNO,
-                );
-              }
-              return false;
-            }),
-        );
-      };
+  /**
+   * 生成页面历史记录中附件变化的内容
+   *
+   * @param {string[]} now
+   * @param {string[]} before
+   * @param {number} type
+   * @returns
+   * @memberof ProjectDetailComponent
+   */
+  getAttachemntChangeDetail(now: string[], before: string[], type: number) {
+    now = isArray(now) ? now : [];
+    before = isArray(before) ? before : [];
+    if (type === 1) {
+      const addOne = now.filter(n => before.indexOf(n) < 0);
+      return addOne.length > 0 ? addOne : null;
+    } else {
+      const deleteOne = before.filter(b => now.indexOf(b) < 0);
+      return deleteOne.length > 0 ? deleteOne : null;
     }
   }
 }

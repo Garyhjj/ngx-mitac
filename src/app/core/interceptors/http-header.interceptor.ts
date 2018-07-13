@@ -1,3 +1,4 @@
+import { environment } from './../../../environments/environment';
 import { Subject } from 'rxjs';
 import { throttleTime } from 'rxjs/operators';
 import { Headers, RequestOptions } from '@angular/http';
@@ -23,22 +24,31 @@ export class HttpHeaderInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler,
   ): Observable<HttpEvent<any>> {
+    if (req.url === environment.fileEndUrl + 'SystemOperation/UploadFiles') {
+      let fileReq = this.addToken(req);
+      return next.handle(fileReq);
+    }
     let authReq = req.clone({
       setHeaders: { 'Content-Type': 'application/json; charset=utf-8' },
     });
     if (this.isNeedToken(req.url)) {
-      let tokenStr = localStorage.getItem('tokenMes');
-      if (tokenStr) {
-        let tokenMes: TokenMes = JSON.parse(tokenStr);
-        if (typeof tokenMes === 'object') {
-          authReq = authReq.clone({
-            setHeaders: { access_token: tokenMes.token },
-          });
-        }
-      }
+      authReq = this.addToken(authReq);
       reqSubject.next(1);
     }
     return next.handle(authReq);
+  }
+
+  addToken(req: HttpRequest<any>) {
+    let tokenStr = localStorage.getItem('tokenMes');
+    if (tokenStr) {
+      let tokenMes: TokenMes = JSON.parse(tokenStr);
+      if (typeof tokenMes === 'object') {
+        req = req.clone({
+          setHeaders: { access_token: tokenMes.token },
+        });
+      }
+    }
+    return req;
   }
 
   isNeedToken(url: string) {

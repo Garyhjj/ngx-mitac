@@ -1,8 +1,10 @@
-import { isArray } from './../../../utils/index';
+import { CacheService } from './../../../../core/services/cache.service';
+import { isArray, sortUtils } from './../../../utils/index';
 import { Component, OnInit, forwardRef, Input } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DataDriveService } from '../../data-drive/core/services/data-drive.service';
 import { AuthService } from '../../../../core/services/auth.service';
+import { shareReplay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-mx-select',
@@ -34,6 +36,7 @@ export class MxSelectComponent implements OnInit {
   constructor(
     private dataDriveService: DataDriveService,
     private auth: AuthService,
+    private cache: CacheService,
   ) {}
 
   /**
@@ -84,26 +87,40 @@ export class MxSelectComponent implements OnInit {
           );
         }
       }
-      this.dataDriveService.lazyLoad(this.lazyAPI).subscribe((r: any[]) => {
+      const cacheName = 'mxSelectLazy';
+      let cache = this.cache.get(cacheName, this.lazyAPI, false);
+      if (!cache) {
+        cache = this.dataDriveService
+          .lazyLoad(this.lazyAPI)
+          .pipe(shareReplay());
+        this.cache.update(cacheName, this.lazyAPI, cache, 2 * 1000);
+      }
+      cache.subscribe((r: any[]) => {
         if (isArray(r)) {
-          this._options = r.filter(f => f).map(d => {
-            if (isArray(d)) {
-              if (d.length === 1) {
-                return { property: d[0], value: d[0] };
-              } else if (d.length > 1) {
-                return { property: d[0], value: d[1] };
+          const options = r
+            .filter(f => f)
+            .map(d => {
+              if (isArray(d)) {
+                if (d.length === 1) {
+                  return { property: d[0], value: d[0] };
+                } else if (d.length > 1) {
+                  return { property: d[0], value: d[1] };
+                }
+              } else if (typeof d === 'object') {
+                const params = this.lazyParams;
+                const keys =
+                  isArray(params) && params.length > 0
+                    ? params
+                    : Object.keys(d);
+                if (keys.length === 1) {
+                  return { property: d[keys[0]], value: d[keys[0]] };
+                } else if (keys.length > 1) {
+                  return { property: d[keys[0]], value: d[keys[1]] };
+                }
               }
-            } else if (typeof d === 'object') {
-              const params = this.lazyParams;
-              const keys =
-                isArray(params) && params.length > 0 ? params : Object.keys(d);
-              if (keys.length === 1) {
-                return { property: d[keys[0]], value: d[keys[0]] };
-              } else if (keys.length > 1) {
-                return { property: d[keys[0]], value: d[keys[1]] };
-              }
-            }
-          });
+            })
+            .sort((a, b) => sortUtils.byCharCode(a.value, b.value));
+          this._options = options;
         }
       });
     }

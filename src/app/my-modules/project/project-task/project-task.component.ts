@@ -6,6 +6,7 @@ import { DataDriveService } from './../../../shared/components/data-drive/core/s
 import { AuthService } from './../../../core/services/auth.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DataDrive } from '../../../shared/components/data-drive/shared/models';
+import { isArray } from '../../../shared/utils';
 
 @Component({
   selector: 'app-project-task',
@@ -67,7 +68,12 @@ export class ProjectTaskComponent implements OnInit, OnDestroy {
       add: this.translateTexts['projectModule.addTask'],
     });
   }
+  hideStatusTemp(d: DataDrive) {
+    d.allHideLists.push('STATUS');
+  }
+
   getDataDrive1(d: DataDrive) {
+    this.hideStatusTemp(d);
     this.changeNameSetSub(d);
     this.unDoneDataDrive = d;
     d.addDefaultSearchParams({
@@ -84,6 +90,7 @@ export class ProjectTaskComponent implements OnInit, OnDestroy {
   }
 
   getDataDrive2(d: DataDrive) {
+    this.hideStatusTemp(d);
     this.changeNameSetSub(d);
     this.outTimeDataDrive = d;
     d.afterDataInit(data => (this.outTimeTips = data.length));
@@ -94,6 +101,7 @@ export class ProjectTaskComponent implements OnInit, OnDestroy {
   }
 
   getDataDrive3(d: DataDrive) {
+    this.hideStatusTemp(d);
     this.changeNameSetSub(d);
     this.doneDataDrive = d;
     d.addDefaultSearchParams({ ASSIGNEE: this.empno, STATUS: 'Finished' });
@@ -101,10 +109,15 @@ export class ProjectTaskComponent implements OnInit, OnDestroy {
     this.dataDriveService.updateViewData(d);
   }
   getDataDrive4(d: DataDrive) {
+    this.hideStatusTemp(d);
     this.changeNameSetSub(d);
     this.finishedDataDrive = d;
+    d.tableData.searchable = true;
     d.addDefaultSearchParams({ ASSIGNEE: this.empno, STATUS: 'Closed' });
-    this.dataDriveService.updateViewData(d);
+    if (isArray(d.searchSets)) {
+      d.searchSets = d.searchSets.filter(s => s.property !== 'ASSIGNEE');
+    }
+    // this.dataDriveService.updateViewData(d);
   }
 
   finished(t) {

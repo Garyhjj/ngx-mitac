@@ -1,8 +1,8 @@
-import { Subscription ,  Subject } from 'rxjs';
+import { Subscription, Subject } from 'rxjs';
 import { UtilService } from './../../../../../core/services/util.service';
 import { DataDrive, TableDataColumn } from './../../shared/models/index';
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { SearchItemSet } from '../../shared/models/searcher/index';
 import { NgxValidatorExtendService } from '../../../../../core/services/ngx-validator-extend.service';
 import { DataDriveService } from '../../core/services/data-drive.service';
@@ -27,6 +27,9 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
   globalErr;
   sub1: Subscription;
   private globalUpdateErrSubject = new Subject<string>();
+  onSubmit = new Subject<number>();
+  colNum;
+  sendValue;
   @Input() afterSubmitSuccess: () => {};
   @Input()
   set opts(opts: DataDrive) {
@@ -48,10 +51,12 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
       }
     });
     this.columnNameStrings = this.notPrimarySets.map(c => c.property);
+    this.colNum = Math.ceil(this.columnNameStrings.length / 8);
   }
   @Input() changeIdx = -1;
   orinalData: any;
   validateForm: FormGroup;
+  updating = false;
 
   get isHorizontal() {
     return this.formLayout === 'horizontal';
@@ -65,6 +70,7 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
   ) {}
 
   submitForm() {
+    this.updating = true;
     let out = {};
     let res = this.dataDrive.runBeforeUpdateSubmit(
       this.validateForm,
@@ -97,32 +103,60 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
     if (this.primaryKey) {
       value[this.primaryKey] = this.primaryValue;
     }
+    this.sendValue = Object.assign(out, value);
+    const hasFileUpload = !!this.inputTypeList.find(
+      i => i.type === 'fileUpload',
+    );
+    if (hasFileUpload) {
+      this.onSubmit.next(1);
+    } else {
+      this.doUpdate();
+    }
+  }
+
+  afterFileUpload(type: number, params) {
+    if (type === 2) {
+      this.util.showGlobalErrMes('文件上传出错');
+      this.updating = false;
+    } else if (type === 1) {
+      const fileSet = this.inputTypeList.find(i => i.type === 'fileUpload');
+      const fileProperty = fileSet ? fileSet.property : '';
+      if (fileProperty) {
+        this.sendValue[fileProperty] = params;
+      }
+      this.doUpdate();
+    }
+  }
+
+  doUpdate() {
     const id = this.util.showLoading();
-    const finalFn = () => this.util.dismissLoading(id);
-    this.dataDriveService
-      .updateData(this.dataDrive, Object.assign(out, value))
-      .subscribe(
-        c => {
-          finalFn();
-          this.dataDriveService.updateViewData(this.dataDrive, true);
-          this.util.showGlobalSucMes(
-            this.changeIdx < 0 ? '插入成功' : '更新成功',
-          );
-          if (typeof this.afterSubmitSuccess === 'function') {
-            this.afterSubmitSuccess();
-          }
-        },
-        err => {
-          this.util.errDeal(err);
-          finalFn();
-        },
-      );
+    const finalFn = () => {
+      this.util.dismissLoading(id);
+      this.updating = false;
+    };
+    this.dataDriveService.updateData(this.dataDrive, this.sendValue).subscribe(
+      c => {
+        finalFn();
+        this.dataDriveService.updateViewData(this.dataDrive, true);
+        this.util.showGlobalSucMes(
+          this.changeIdx < 0 ? '插入成功' : '更新成功',
+        );
+        if (typeof this.afterSubmitSuccess === 'function') {
+          this.afterSubmitSuccess();
+        }
+      },
+      err => {
+        this.util.errDeal(err);
+        finalFn();
+      },
+    );
   }
 
   subscribeGlErr() {
-    this.sub1 = this.globalUpdateErrSubject.subscribe(
-      err => (this.globalErr = err),
-    );
+    this.sub1 = this.globalUpdateErrSubject.subscribe(err => {
+      this.globalErr = err;
+      this.updating = false;
+    });
   }
 
   ngOnDestroy() {
@@ -215,6 +249,7 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
       this.validateForm,
       this.globalUpdateErrSubject,
       this.inputTypeList,
+      this.orinalData,
     );
   }
 }

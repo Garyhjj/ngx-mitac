@@ -1,0 +1,100 @@
+<!-- <app-dynamic-input [inputOptions]="{type:'datePicker',more:{showMode: 'day'}}"></app-dynamic-input>
+
+<app-dynamic-input [inputOptions]="{type:'datePicker',more:{showMode: 'day'}}"></app-dynamic-input>
+<app-dynamic-input [inputOptions]="{type:'colleagueSearcher',more:{editable: true}}"></app-dynamic-input> -->
+
+
+
+<nz-collapse>
+  <nz-collapse-panel nzHeader="分析条件" nzActive="1">
+    <form nz-form [nzLayout]="'horizontal'" [formGroup]="searchForm" *ngIf="searchForm">
+      <div nz-row [nzGutter]="2">
+        <div nz-col [nzSpan]="12">
+          <nz-form-item>
+            <nz-form-label [nzSpan]="8" style="text-overflow: ellipsis;">{{'insoectionModule.startTime' | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSpan]="16">
+              <app-dynamic-input [inputOptions]="{type:'datePicker',more:{showMode: 'day',showFormat:'YYYY-MM-DD',pickerFormat:'YYYY-MM-DD'}}"
+                formControlName="startDate"></app-dynamic-input>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="8">
+          <nz-form-item>
+            <nz-form-label [nzSpan]="8" style="text-overflow: ellipsis;">{{'insoectionModule.endTime' | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSpan]="16">
+              <app-dynamic-input [inputOptions]="{type:'datePicker',more:{showMode: 'day',showFormat:'YYYY-MM-DD',pickerFormat:'YYYY-MM-DD'}}"
+                formControlName="endDate"></app-dynamic-input>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="12">
+          <nz-form-item>
+            <nz-form-label [nzSpan]="8" style="text-overflow: ellipsis;">{{'projectModule.owner' | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSpan]="16">
+              <div>
+                <nz-tag nzMode="closeable" (nzAfterClose)="afterTabClose(item)" *ngFor="let item of ownerLists">{{item | myFlex: {name:'empno',params:['CH(NO)']} | async }}</nz-tag>
+              </div>
+              <app-dynamic-input [inputOptions]="{type:'colleagueSearcher',more:{editable: true}}" formControlName="owner"></app-dynamic-input>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <div nz-col [nzSpan]="8">
+          <nz-form-item>
+            <nz-form-label [nzSpan]="8" style="text-overflow: ellipsis;">*{{'projectModule.analysisItem' | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSpan]="16">
+              <nz-radio-group formControlName="mType" style="max-width: 300px;">
+                <label nz-radio nzValue="customer">
+                  <span style="width: 78px; display: inline-block;">{{'projectModule.CUSTOMER' | translate}}：</span>
+                  <app-dynamic-input formControlName="customer" [inputOptions]="{type:'select',more:{lazyAPI:'IPQA/GetMRILookup?lookup_type=PROJECT_CUSTOMER',lazyParams:['LOOKUP_CODE']}}"></app-dynamic-input>
+                </label>
+                <label nz-radio nzValue="bu">
+                  <span style="width: 78px; display: inline-block;">{{'projectModule.BU' | translate}}：</span>
+                  <app-dynamic-input formControlName="bu" [inputOptions]="{type:'select',more:{lazyAPI:'IPQA/GetMRILookup?lookup_type=PROJECT_BU',lazyParams:['LOOKUP_CODE']}}"></app-dynamic-input>
+                </label>
+                <label nz-radio nzValue="type">
+                  <span style="width: 78px; display: inline-block;">{{'projectModule.TYPE' | translate}}：</span>
+                  <app-dynamic-input formControlName="type" [inputOptions]="{type:'select',more:{lazyAPI:'IPQA/GetMRILookup?lookup_type=PROJECT_TYPE',lazyParams:['LOOKUP_CODE']}}"></app-dynamic-input>
+                </label>
+                <label nz-radio nzValue="model">
+                  <span style="width: 78px; display: inline-block;">{{'projectModule.MODEL' | translate}}：</span>
+                  <app-dynamic-input formControlName="model" [inputOptions]="{type:'text',more:{editable: true}}"></app-dynamic-input>
+                </label>
+                <!-- <label nz-radio nzValue="assignee">
+                  <span style="width: 78px; display: inline-block;">{{'projectModule.assignee' | translate}}：</span>
+                  <app-dynamic-input formControlName="assignee" [inputOptions]="{type:'colleagueSearcher',more:{editable: true}}"></app-dynamic-input>
+                </label> -->
+              </nz-radio-group>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+      <div nz-row>
+        <div nz-col [nzSpan]="24" style="text-align: right;">
+          <button nz-button [nzType]="'primary'" [disabled]="!searchForm.valid" (click)="submitForm()">{{'query' | translate}}</button>
+          <button nz-button (click)="reSet()" style="margin-left: 16px">{{'reset' | translate}}</button>
+        </div>
+      </div>
+    </form>
+  </nz-collapse-panel>
+</nz-collapse>
+<div style="margin: 16px 0" #chartBegin>
+  <nz-alert nzType="info" [nzMessage]="rate === -1?('projectModule.noNote' | translate):('projectModule.achievementRate' | translate) + ' :  '+(rate)+ '%'"
+    *ngIf="rate >=-1"></nz-alert>
+</div>
+
+<app-data-drive [name]="'projectAnalysis'" (dataDriveInit)="getDataDrive($event)" [headerCellStyle]="headerCellStyle"></app-data-drive>
+
+
+<div nz-row>
+  <div nz-col [nzSpan]="12">
+    <div appEcharts [chartOption]="pipeOption"></div>
+  </div>
+  <div nz-col [nzSpan]="12">
+    <div appEcharts [chartOption]="barOption"></div>
+  </div>
+</div>

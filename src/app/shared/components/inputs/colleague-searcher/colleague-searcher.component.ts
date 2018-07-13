@@ -2,14 +2,16 @@ import { UtilService } from './../../../../core/services/util.service';
 import { AppService } from './../../../../core/services/app.service';
 import { Component, OnInit, forwardRef, OnDestroy, Input } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Subscription, Subject } from 'rxjs';
+import { Subscription, Subject, of, Observable } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
   tap,
   switchMap,
   map,
+  mergeMap,
 } from 'rxjs/operators';
+import { replaceQuery } from '../../../utils';
 
 @Component({
   selector: 'app-colleague-searcher',
@@ -33,12 +35,25 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
 
   @Input() miPlaceHolder = '請輸入英文名/工號/中文名';
   @Input() miSearchFilter;
+  @Input() miPickerFormat = '{EMPNO}';
   isLoading = false;
 
   private propagateChange = (_: any) => {};
 
   constructor(private appService: AppService, private util: UtilService) {}
 
+  doFilter(_) {
+    if (typeof this.miSearchFilter === 'function') {
+      const res = this.miSearchFilter(_);
+      if (res instanceof Observable) {
+        return res;
+      } else {
+        return of(res);
+      }
+    } else {
+      return of(_);
+    }
+  }
   /**
    * 给外部formControl写入数据
    *
@@ -49,7 +64,11 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
       value = value + '';
       this.appService
         .getColleague(value)
-        .pipe(map(_ => (this.miSearchFilter ? this.miSearchFilter(_) : _)))
+        .pipe(
+          mergeMap(_ => {
+            return this.doFilter(_);
+          }),
+        )
         .subscribe(
           (data: any) => {
             if (data.length > 0) {
@@ -60,14 +79,13 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
                   d.USER_NAME === value,
               );
               if (val) {
-                const alter = [val].map(
-                  c => c.EMPNO + ',' + c.NICK_NAME + ',' + c.USER_NAME,
-                );
+                const alter = [val].map(c => ({
+                  value: c.EMPNO + ',' + c.NICK_NAME + ',' + c.USER_NAME,
+                  property: c,
+                }));
                 this.searchOptions = alter;
-                this.selectedOption = alter[0];
-                this.propagateChange(val.EMPNO);
-              } else {
-                this.propagateChange('');
+                this.selectedOption = alter[0].property;
+                this.emitColleagueOut(val);
               }
             } else {
               this.propagateChange('');
@@ -107,14 +125,17 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
           const query = encodeURI(term);
           return this.appService.getColleague(term);
         }),
-        map(_ => (this.miSearchFilter ? this.miSearchFilter(_) : _)),
+        mergeMap(_ => {
+          return this.doFilter(_);
+        }),
       )
       .subscribe(
         (data: any) => {
           this.isLoading = false;
-          this.searchOptions = data.map(
-            c => c.EMPNO + ',' + c.NICK_NAME + ',' + c.USER_NAME,
-          );
+          this.searchOptions = data.map(c => ({
+            value: c.EMPNO + ',' + c.NICK_NAME + ',' + c.USER_NAME,
+            property: c,
+          }));
         },
         err => {
           this.util.errDeal(err);
@@ -123,6 +144,17 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
       );
   }
 
+  emitColleagueOut(val: any) {
+    let out = val.EMPNO;
+    const miPickerFormat = this.miPickerFormat;
+    if (typeof miPickerFormat === 'string' && miPickerFormat) {
+      const p = replaceQuery(miPickerFormat, val);
+      if (p) {
+        out = p;
+      }
+    }
+    this.propagateChange(out);
+  }
   ngOnDestroy() {
     // tslint:disable-next-line:no-unused-expression
     this.mySub && this.mySub.unsubscribe();
@@ -132,10 +164,9 @@ export class ColleagueSearcherComponent implements OnInit, OnDestroy {
     this.searchTerms.next(searchText);
   }
 
-  change(val: string) {
+  change(val: any) {
     if (val) {
-      const empo = val.split(',')[0];
-      this.propagateChange(empo);
+      this.emitColleagueOut(val);
     } else {
       this.propagateChange('');
     }

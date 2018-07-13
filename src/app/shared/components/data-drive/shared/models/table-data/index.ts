@@ -34,6 +34,10 @@ export interface TableData {
   refreshDataInterval?: number;
   columns: TableDataColumn[];
   data?: TableInsideData[][];
+  endPagination?: {
+    enable?: boolean;
+    pageSize?: number;
+  };
 }
 
 export class TableDataModel implements TableData {
@@ -48,6 +52,10 @@ export class TableDataModel implements TableData {
   refreshDataInterval?: number;
   columns: TableDataColumn[];
   data?: TableInsideData[][];
+  endPagination?: {
+    enable?: boolean;
+    pageSize?: number;
+  };
   private inputSetFactory;
   constructor(opts: TableData) {
     this.editable = false;

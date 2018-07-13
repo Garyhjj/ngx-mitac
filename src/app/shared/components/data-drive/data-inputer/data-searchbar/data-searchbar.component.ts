@@ -98,6 +98,17 @@ export class DataSearchbarComponent implements OnInit {
   }
 
   ngOnInit() {
+    const setStore = this.dataDrive.getSetStore();
+    if (typeof setStore === 'object' && setStore) {
+      if (setStore.headerFontSize) {
+        this.headerFontSize = Number(setStore.headerFontSize.replace('px', ''));
+        this.changeHeaderSize();
+      }
+      if (setStore.bodyFontSize) {
+        this.bodyFontSize = Number(setStore.bodyFontSize.replace('px', ''));
+        this.changeBodySize();
+      }
+    }
     this.validateForm = this.fb.group({});
 
     for (let i = 0; i < 3; i++) {
@@ -195,7 +206,10 @@ export class DataSearchbarComponent implements OnInit {
     const send: any = Object.assign({}, value);
     this.searchSets.forEach(s => {
       if (value.hasOwnProperty(s.property)) {
-        send[s.apiProperty ? s.apiProperty : s.property] = value[s.property];
+        const trueProp = s.apiProperty ? s.apiProperty : s.property;
+        if (!(mode === 'simple' && send[trueProp])) {
+          send[trueProp] = value[s.property];
+        }
       }
     });
     const id = this.util.showLoading();
@@ -272,7 +286,6 @@ export class DataSearchbarComponent implements OnInit {
   }
 
   getFinalSearchValue(filterValue: string) {
-    console.log(filterValue);
     if (filterValue) {
       let title = this.getDbTitleName(this.selectedOption.label);
       if (title) {
@@ -303,7 +316,6 @@ export class DataSearchbarComponent implements OnInit {
 
   getAllTagList(tagList: Tag[], filterList: any) {
     let label;
-    console.log(filterList);
     let keys = Object.keys(filterList).filter(value => filterList[value]);
     for (let i = 0; i < keys.length; i++) {
       let itemType = this.getItemType(keys[i]);
@@ -351,25 +363,10 @@ export class DataSearchbarComponent implements OnInit {
     if (!this.dataDrive.isDataAddable()) {
       return;
     }
-    if (!this.dataDrive.runBeforeUpdateShow({})) {
-      return;
-    }
     if (!this.dataDrive.updateSets) {
       return;
     }
-    const subscription = this.modalService.create({
-      nzTitle: '新增',
-      nzContent: DataUpdateComponent,
-      nzOnOk() {},
-      nzOnCancel() {},
-      nzFooter: null,
-      nzComponentParams: {
-        opts: this.dataDrive,
-        afterSubmitSuccess: () => {
-          subscription.destroy();
-        },
-      },
-    });
+    this.dataDriveService.toUpdate(this.dataDrive, -1, DataUpdateComponent);
   }
 
   /**
@@ -434,20 +431,22 @@ export class DataSearchbarComponent implements OnInit {
 
   changeHeaderSize() {
     this.viewerType = this.dataDrive.dataViewSet.type;
+    const size = this.headerFontSize + 'px';
     switch (this.viewerType) {
       case 'table':
-        this.dataDrive.dataViewSet.changeHeaderFontSize(
-          this.headerFontSize + 'px',
-        );
+        this.dataDrive.dataViewSet.changeHeaderFontSize(size);
+        this.dataDrive.updateSelfSetStore({ headerFontSize: size });
         break;
     }
   }
 
   changeBodySize() {
     this.viewerType = this.dataDrive.dataViewSet.type;
+    const size = this.bodyFontSize + 'px';
     switch (this.viewerType) {
       case 'table':
-        this.dataDrive.dataViewSet.changeBodyFontSize(this.bodyFontSize + 'px');
+        this.dataDrive.dataViewSet.changeBodyFontSize(size);
+        this.dataDrive.updateSelfSetStore({ bodyFontSize: size });
         break;
     }
   }
@@ -470,6 +469,9 @@ export class DataSearchbarComponent implements OnInit {
       nzFooter: null,
       nzComponentParams: {
         dataDrive: this.dataDrive,
+        succCb: () => {
+          subscription.destroy();
+        },
       },
     });
   }

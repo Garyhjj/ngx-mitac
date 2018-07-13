@@ -4,8 +4,8 @@
   [nzSize]="setDetail.size" (nzDataChange)="dataChange()" [(nzPageIndex)]="pageIndex" [nzShowTotal]="1"> -->
 <nz-table *ngIf="_dataDrive && setDetail" #nzTable [nzScroll]="setDetail.fixedHeader?.enable?{ y: setDetail.fixedHeader.scrollHeight>0?setDetail.fixedHeader.scrollHeight: 300 }:null"
   [nzData]="tableData.data?tableData.data:[]" [nzPageSize]="setDetail.pageSet.count" [nzBordered]="setDetail.border_y.enable"
-  [nzLoading]="_loading" [nzShowPagination]="setDetail.pageSet.enable" [nzFooter]="setDetail.footer.enable? '': null" [nzTitle]="null"
-  [nzSize]="setDetail.size" [(nzPageIndex)]="pageIndex" [nzShowTotal]="1">
+  [nzLoading]="_loading" [nzFrontPagination]="setDetail.pageSet.enable" [nzShowPagination]="setDetail.pageSet.enable" [nzFooter]="tableData.endPagination?.enable? loadMore: null"
+  [nzTitle]="null" [nzSize]="setDetail.size" [(nzPageIndex)]="pageIndex" [nzShowTotal]="totalRef">
   <!-- <span nz-table-title>{{tableSet.title}}</span> -->
   <thead nz-thead (nzSortChange)="sort($event)">
     <tr>
@@ -34,7 +34,7 @@
           <ng-container [ngSwitch]="types[item.property]">
             <div *ngSwitchCase="'img'">
               <button nz-button [nzType]="'primary'" *ngIf="item.value" (click)="scanImgs(item.value)">
-                <span>瀏覽圖片</span>
+                <span>{{'dataDriveModule.scanPicture' | translate}}</span>
               </button>
             </div>
             <ng-container *ngSwitchCase="'self'">
@@ -51,14 +51,14 @@
           <a *ngIf="canEdit" (click)="toUpdate(i)">
             <span *ngIf="_dataDrive.nameSets?.update;else elseBlock1 ">{{_dataDrive.nameSets?.update}}</span>
             <ng-template #elseBlock1>
-              <span>修改</span>
+              <span>{{'alter' | translate}}</span>
             </ng-template>
           </a>
           <nz-divider nzType="vertical" *ngIf="canEdit && canDelete"></nz-divider>
           <a *ngIf="canDelete" (click)="toDelete(i)">
             <span *ngIf="_dataDrive.nameSets?.delete;else elseBlock2 ">{{_dataDrive.nameSets?.delete}}</span>
             <ng-template #elseBlock2>
-              <span>删除</span>
+              <span>{{'delete' | translate}}</span>
             </ng-template>
           </a>
           <ng-container *ngIf="setDetail.paramsOut">
@@ -79,3 +79,14 @@
 </nz-table>
 
 <app-photo-viewer [imgList]="fileList" [myShowInformer]="showInformer"></app-photo-viewer>
+
+<ng-template #totalRef let-total>
+  共 {{total}} 条
+</ng-template>
+
+<ng-template #loadMore>
+  <div class="loadmore" style="text-align: center">
+    <button nz-button *ngIf="!loadingMore" (click)="onLoadMore()" style="width: 100%">loading more</button>
+    <nz-spin *ngIf="loadingMore" [nzSpinning]="loadingMore"></nz-spin>
+  </div>
+</ng-template>

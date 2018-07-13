@@ -210,10 +210,18 @@ export class DataDriveService {
   }
 
   updateData(dataDrive: DataDrive, ds: any) {
-    ds = dataDrive.runOnUpdateData(ds);
+    if (isArray(ds)) {
+      ds = ds.map(d => dataDrive.runOnUpdateData(d));
+    } else {
+      ds = dataDrive.runOnUpdateData(ds);
+    }
     const isCompanyLimited = dataDrive.isCompanyLimited() as any;
     if (isCompanyLimited) {
-      ds = this.addCompanyID(ds, isCompanyLimited);
+      if (isArray(ds)) {
+        ds = ds.map(d => this.addCompanyID(d, isCompanyLimited));
+      } else {
+        ds = this.addCompanyID(ds, isCompanyLimited);
+      }
     }
     const newUpdateWay = dataDrive.runChangeUpdateWay(ds) as Observable<any>;
     if (newUpdateWay instanceof Observable) {
@@ -288,18 +296,30 @@ export class DataDriveService {
   getDataByIdx(dataDrive: DataDrive, idx: number) {
     const data = dataDrive.getData()[idx];
     const out: any = {};
-    data.forEach(d => {
-      out[d.property] = d.value;
-    });
-    return out;
+    if (isArray(data)) {
+      data.forEach(d => {
+        out[d.property] = d.value;
+      });
+      return out;
+    } else {
+      return null;
+    }
   }
 
   toUpdate(d: DataDrive, idx: number, component: any) {
     if (!d.runBeforeUpdateShow(this.getDataByIdx(d, idx))) {
       return false;
     }
+    const notPrimarySets = d.updateSets.filter(u => {
+      if (u.InputOpts.type !== 'primary') {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    const colNum = Math.ceil(notPrimarySets.length / 8);
     const subscription = this.modalService.create({
-      nzTitle: '更新',
+      nzTitle: idx > -1 ? '更新' : '新增',
       nzContent: component,
       nzOnOk() {},
       nzOnCancel() {},
@@ -311,6 +331,7 @@ export class DataDriveService {
           subscription.destroy();
         },
       },
+      nzWidth: 520 + Math.max(colNum - 1, 0) * 300 + 'px',
     });
   }
 }

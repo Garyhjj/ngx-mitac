@@ -16,7 +16,8 @@ export class ProjectScanComponent implements OnInit {
   finishDataDrive: DataDrive;
   normalTips = 0;
   outTimeTips = 0;
-  getAPI = 'projects/headers?status={status}&startDate={startDate}&endDate={endDate}&member={*EMPNO}';
+  getAPI =
+    'projects/headers?status={status}&startDate={startDate}&endDate={endDate}&member={*EMPNO}&owner={OWNER}&type={TYPE}&code={CODE}&parent={PARENT_HEADER}';
   bodyCellStyle = (data, prop) => {
     if (this.targetProject && this.targetProject.ID === data.ID) {
       return {

@@ -1,5 +1,5 @@
 <div nz-row *ngIf="project">
-  <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="18">
+  <div nz-col nzXs="24" nzSm="24" nzMd="24" [nzLg]="isHistoryFold?23:18">
     <div class="sub-child">
       <div class="card-container">
         <nz-tabset [nzTabPosition]="'top'" [nzType]="'card'">
@@ -7,102 +7,21 @@
             <app-data-drive [name]="'projectPeople'" (dataDriveInit)="getDataDrivePeople($event)" [bodyCellStyle]="bodyCellStyle"></app-data-drive>
           </nz-tab>
           <nz-tab [nzTitle]="'projectModule.projectTask' | translate">
-            <nz-tabset>
-              <nz-tab [nzTitle]="nzTabHeading1">
-                <ng-template #nzTabHeading1>
-                  {{'projectModule.projectOpen' | translate}}
-                  <nz-badge [nzCount]="normalTips">
-                    <ng-template #content>
-                      &nbsp;&nbsp;
-                    </ng-template>
-                  </nz-badge>
-                </ng-template>
-                <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDriveSub($event)" [bodyCellStyle]="bodyCellStyle">
-                  <ng-template #actionRef let-data="data">
-                    <span>
-                      <nz-divider nzType="vertical" *ngIf="isOwner"></nz-divider>
-                      <ng-template [ngTemplateOutlet]="seeDetailFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
-                    </span>
-                  </ng-template>
-                </app-data-drive>
-              </nz-tab>
-              <nz-tab [nzTitle]="nzTabHeading0">
-                <ng-template #nzTabHeading0>
-                  {{'projectModule.taskNoAssignee' | translate}}
-                  <nz-badge [nzCount]="noAssigneeTips">
-                    <ng-template #content>
-                      &nbsp;&nbsp;
-                    </ng-template>
-                  </nz-badge>
-                </ng-template>
-                <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDriveSub0($event)" [bodyCellStyle]="bodyCellStyle">
-                  <ng-template #actionRef let-data="data">
-                    <span>
-                      <nz-divider nzType="vertical" *ngIf="isOwner"></nz-divider>
-                      <ng-template [ngTemplateOutlet]="seeDetailFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
-                    </span>
-                  </ng-template>
-                </app-data-drive>
-              </nz-tab>
-              <nz-tab [nzTitle]="nzTabHeading2">
-                <ng-template #nzTabHeading2>
-                  {{'projectModule.projectOutTime' | translate}}
-                  <nz-badge [nzCount]="outTimeTips">
-                    <ng-template #content>
-                      &nbsp;&nbsp;
-                    </ng-template>
-                  </nz-badge>
-                </ng-template>
-                <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDriveSub1($event)" [bodyCellStyle]="bodyCellStyle">
-                  <ng-template #actionRef let-data="data">
-                    <span>
-                      <nz-divider nzType="vertical" *ngIf="isOwner"></nz-divider>
-                      <ng-template [ngTemplateOutlet]="seeDetailFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
-                    </span>
-                  </ng-template>
-                </app-data-drive>
-              </nz-tab>
-              <nz-tab [nzTitle]="nzTabHeading3">
-                <ng-template #nzTabHeading3>
-                  {{'projectModule.taskFinished' | translate}}
-                  <nz-badge [nzCount]="needConfimTips">
-                    <ng-template #content>
-                      &nbsp;&nbsp;
-                    </ng-template>
-                  </nz-badge>
-                </ng-template>
-                <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDriveSub2($event)" [bodyCellStyle]="bodyCellStyle">
-                  <ng-template #actionRef let-data="data">
-                    <span>
-                      <a (click)="closeTask(data)">{{'projectModule.closeProject' | translate}}</a>
-                      <nz-divider nzType="vertical"></nz-divider>
-                      <a (click)="rollbackTask(data)">{{'projectModule.notMyTask' | translate}}</a>
-                      <nz-divider nzType="vertical"></nz-divider>
-                      <ng-template [ngTemplateOutlet]="seeDetailFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
-                    </span>
-                  </ng-template>
-                </app-data-drive>
-              </nz-tab>
-              <nz-tab [nzTitle]="nzTabHeading4">
-                <ng-template #nzTabHeading4>
-                  {{'projectModule.taskClosed' | translate}}
-                </ng-template>
-                <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDriveSub3($event)">
-                  <ng-template #actionRef let-data="data">
-                    <span>
-                      <ng-template [ngTemplateOutlet]="seeDetailFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
-                    </span>
-                  </ng-template>
-                </app-data-drive>
-              </nz-tab>
-            </nz-tabset>
+            <app-task-tabset [project]="project" [afterDataChange]="afterTaskTabChange" [projectPeople]="peopleList"></app-task-tabset>
           </nz-tab>
         </nz-tabset>
       </div>
     </div>
   </div>
-  <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="6" style="padding-left: 16px">
-    <nz-card [nzTitle]="'projectModule.history' | translate">
+  <div nz-col nzXs="24" nzSm="24" nzMd="24" [nzLg]="isHistoryFold?1:6" style="padding-left: 24px">
+    <button nz-button [nzType]="'primary'" (click)="isHistoryFold = false" nz-tooltip [nzTitle]="'projectModule.showHistory' | translate"
+      *ngIf="isHistoryFold">
+      <i class="anticon anticon-menu-fold"></i>
+    </button>
+    <nz-card [nzTitle]="'projectModule.history' | translate" *ngIf="!isHistoryFold" [nzExtra]="extraTemplate">
+      <ng-template #extraTemplate>
+        <a (click)="isHistoryFold = true">{{'projectModule.hide' | translate}}</a>
+      </ng-template>
       <nz-list nzSize="large" class="activities" [nzDataSource]="history" [nzRenderItem]="item" [nzLoadMore]="loadMore">
         <ng-template #item let-item>
           <nz-list-item>
@@ -173,18 +92,19 @@
                 <ng-container *ngIf="item.TARGET_TYPE === 2">
                   <ng-container *ngIf="item.CHANGE_TYPE === 1">
                     <span>{{'projectModule.newTask' | translate}}:
-                      <a (click)="seeTaskDetail({ID:item.AFTER_STORE.ID})" class="link">{{item.AFTER_STORE.DESCRIPTION}}</a>, {{'projectModule.ASSIGNEE' | translate}}: {{item.AFTER_STORE.ASSIGNEE
-                      | myFlex: {name:'empno',params:['CH(NO)']} | async}}</span>
+                      <a (click)="seeTaskDetail({ID:item.AFTER_STORE.ID})" class="link">{{item.AFTER_STORE.CODE}}
+                      </a>, {{'projectModule.ASSIGNEE' | translate}}: {{item.AFTER_STORE.ASSIGNEE | myFlex: {name:'empno',params:['CH(NO)']}
+                      | async}}</span>
                   </ng-container>
                   <ng-container *ngIf="item.CHANGE_TYPE === 3">
                     <span>{{'projectModule.deleteTask' | translate}}:
-                      <a (click)="seeTaskDetail({ID:item.AFTER_STORE.ID})" class="link" *ngIf="item.AFTER_STORE">{{item.AFTER_STORE.DESCRIPTION}}
+                      <a (click)="seeTaskDetail({ID:item.AFTER_STORE.ID})" class="link" *ngIf="item.AFTER_STORE">{{item.AFTER_STORE.CODE}}
                       </a>
                     </span>
                   </ng-container>
                   <ng-container *ngIf="item.CHANGE_TYPE === 2">
                     {{'projectModule.alterTask' | translate}} (
-                    <a (click)="seeTaskDetail({ID:item.AFTER_STORE.ID})" class="link">{{item.AFTER_STORE.DESCRIPTION}}</a>):
+                    <a (click)="seeTaskDetail({ID:item.AFTER_STORE.ID})" class="link">{{item.AFTER_STORE.CODE}}</a>):
                     <div *ngFor="let di of item.DIFF" class="markdown">
                       <ng-container [ngSwitch]="di">
                         <span *ngSwitchCase="'MODEL'">{{'projectModule.MODEL' | translate}}
@@ -222,6 +142,15 @@
                           <span *ngIf="item.BEFORE_STORE[di] === 'Finished' && item.AFTER_STORE[di] === 'Open'">{{'projectModule.taskNoPass' | translate}}</span>
                           <span *ngIf="item.BEFORE_STORE[di] === 'Finished' && item.AFTER_STORE[di] === 'Closed'">{{'projectModule.taskClosedH' | translate}}</span>
                         </span>
+                        <span *ngSwitchCase="'ATTACHMENT'">{{'projectModule.attachment' | translate}} (
+                          <span style="display: block;" *ngIf="getAttachemntChangeDetail(item.AFTER_STORE[di],item.BEFORE_STORE[di],1)">{{'add' | translate}}:
+                            <app-file-list [fileList]="getAttachemntChangeDetail(item.AFTER_STORE[di],item.BEFORE_STORE[di],1)"></app-file-list>
+                          </span>
+
+                          <span style="display: block;" *ngIf="getAttachemntChangeDetail(item.AFTER_STORE[di],item.BEFORE_STORE[di],2)">{{'delete' | translate}}:
+                            <app-file-list [fileList]="getAttachemntChangeDetail(item.AFTER_STORE[di],item.BEFORE_STORE[di],2)"></app-file-list>
+                          </span>)
+                        </span>
                         <span *ngSwitchDefault>{{di}}
                           <ng-template [ngTemplateOutlet]="changeDetailString" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
                         </span>
@@ -244,7 +173,7 @@
                     {{'projectModule.updateTask' | translate}}(
                     <a (click)="seeTaskDetail({
                       ID:item.AFTER_STORE.LINE_ID
-                    })" class="link">{{item.AFTER_STORE.LINE_ID | myFlex: {name:'lazyLoad',params:['projects/lines?id='+item.AFTER_STORE.LINE_ID,['ID','DESCRIPTION']
+                    })" class="link">{{item.AFTER_STORE.LINE_ID | myFlex: {name:'lazyLoad',params:['projects/lines?id='+item.AFTER_STORE.LINE_ID,['ID','CODE']
                       ]} | async}}</a>){{'projectModule.progress' | translate}}
                   </ng-container>
                 </ng-container>
@@ -253,7 +182,7 @@
                     {{'projectModule.inTask' | translate}}(
                     <a (click)="seeTaskDetail({
                         ID:item.AFTER_STORE.LINE_ID
-                      })" class="link">{{item.AFTER_STORE.LINE_ID | myFlex: {name:'lazyLoad',params:['projects/lines?id='+item.AFTER_STORE.LINE_ID,['ID','DESCRIPTION']
+                      })" class="link">{{item.AFTER_STORE.LINE_ID | myFlex: {name:'lazyLoad',params:['projects/lines?id='+item.AFTER_STORE.LINE_ID,['ID','CODE']
                       ]} | async}}</a>){{'projectModule.leftComment' | translate}}
                   </ng-container>
                 </ng-container>
@@ -295,9 +224,5 @@
 </ng-template>
 
 <ng-template #projectName let-id>
-  {{id | myFlex: {name:'lazyLoad',params:['projects/headers',['ID','NAME'],true]} | async}}
-</ng-template>
-
-<ng-template #seeDetailFn let-data>
-  <a (click)=seeTaskDetail(data)>{{'projectModule.taskDetail' | translate}}</a>
+  {{id}}
 </ng-template>

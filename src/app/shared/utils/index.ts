@@ -94,7 +94,7 @@ export const isDate = date => {
   return moment(date).isValid();
 };
 export const isNumber = num => {
-  return !Number.isNaN(Number(num));
+  return !Number.isNaN(Number(num)) && num !== null;
 };
 export const sortUtils = {
   byCharCode: (a: string, b: string, isAscend = true) => {
@@ -127,33 +127,53 @@ export const sortUtils = {
     const res = toDateA.toDate().getTime() - toDateB.toDate().getTime();
     return isAscend ? res : -res;
   },
-  byNumber: (a: number, b: number, isAscend = true) => {
-    if (!isNumber(a) || !isNumber(b)) {
-      return 0;
-    }
+  byNumber: (
+    a: number | string,
+    b: number | string,
+    isAscend = true,
+    from?: number,
+    to?: number,
+  ) => {
+    const prefixDo = t => {
+      if (typeof t === 'string') {
+        const _fr = from || 0;
+        const _to = to || t.length;
+        t = t.slice(_fr, _to);
+      }
+      return t;
+    };
+    a = prefixDo(a);
+    b = prefixDo(b);
+    // if (!isNumber(a) || !isNumber(b)) {
+    //   return 0;
+    // }
+    a = isNumber(a) ? +a : 0;
+    b = isNumber(b) ? +b : 0;
     const res = Number(a) - Number(b);
     return isAscend ? res : -res;
   },
 };
 
 export const copyToClipboard = (value: string): Promise<string> => {
-  const promise = new Promise<string>((resolve, reject): void => {
-    let copyTextArea = null as HTMLTextAreaElement;
-    try {
-      copyTextArea = document.createElement('textarea');
-      copyTextArea.style.height = '0px';
-      copyTextArea.style.opacity = '0';
-      copyTextArea.style.width = '0px';
-      document.body.appendChild(copyTextArea);
-      copyTextArea.value = value;
-      copyTextArea.select();
-      document.execCommand('copy');
-      resolve(value);
-    } finally {
-      if (copyTextArea && copyTextArea.parentNode) {
-        copyTextArea.parentNode.removeChild(copyTextArea);
+  const promise = new Promise<string>(
+    (resolve, reject): void => {
+      let copyTextArea = null as HTMLTextAreaElement;
+      try {
+        copyTextArea = document.createElement('textarea');
+        copyTextArea.style.height = '0px';
+        copyTextArea.style.opacity = '0';
+        copyTextArea.style.width = '0px';
+        document.body.appendChild(copyTextArea);
+        copyTextArea.value = value;
+        copyTextArea.select();
+        document.execCommand('copy');
+        resolve(value);
+      } finally {
+        if (copyTextArea && copyTextArea.parentNode) {
+          copyTextArea.parentNode.removeChild(copyTextArea);
+        }
       }
-    }
-  });
+    },
+  );
   return promise;
 };

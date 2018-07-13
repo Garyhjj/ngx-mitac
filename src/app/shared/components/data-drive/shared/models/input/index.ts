@@ -12,6 +12,25 @@ export interface InputSet {
   more?: any;
 }
 
+export class FileUpload implements InputSet {
+  type?: InputTypes;
+  editable?: boolean;
+  default?: string;
+  more?: {
+    maxCount?: number;
+    hideUploadButton?: boolean;
+  };
+  constructor(opts?: any) {
+    // tslint:disable-next-line:no-unused-expression
+    opts && Object.assign(this, opts);
+    this.more = this.more || {};
+    if (!this.more.hasOwnProperty('hideUploadButton')) {
+      this.more.hideUploadButton = true;
+    }
+    this.type = 'fileUpload';
+  }
+}
+
 export class PhotoUpload implements InputSet {
   type?: InputTypes;
   editable?: boolean;
@@ -26,12 +45,6 @@ export class PhotoUpload implements InputSet {
   constructor(opts?: any) {
     // tslint:disable-next-line:no-unused-expression
     opts && Object.assign(this, opts);
-    // this.more = this.more || {};
-    // this.more.pickerFormat = this.more.pickerFormat || 'string';
-    // this.more.maxCount = this.more.maxCount || 9;
-    // this.more.removable = this.more.removable || true;
-    // this.more.addabble = this.more.addabble || true;
-    // this.more.scanable = this.more.scanable || true;
     this.type = 'photoUpload';
   }
 }
@@ -39,6 +52,9 @@ export class PhotoUpload implements InputSet {
 export class ColleagueSearcher implements InputSet {
   type: InputTypes;
   default?: string | number;
+  more: {
+    pickerFormat?: string;
+  };
   constructor(opts?: any) {
     // tslint:disable-next-line:no-unused-expression
     opts && Object.assign(this, opts);
@@ -210,6 +226,41 @@ export class SelectInputSet implements InputSet {
   }
 }
 
+export class AutoCompleteSet implements InputSet {
+  type: InputTypes = 'autoComplete';
+  editable?: boolean;
+  placeHolder?: string;
+  default?: string | boolean | number;
+  more?: {
+    options?: { property: string; value: string | number }[];
+    lazyAPI?: string;
+    lazyParams?: string[];
+    lazyAPIUserMes?: any;
+    isSelection?: boolean; // 是否只能限定选项内容
+  };
+  constructor(opts?: InputSet) {
+    // tslint:disable-next-line:no-unused-expression
+    opts && Object.assign(this, opts);
+    this.more = this.more || {};
+    this.more.options = this.more.options || [];
+    this.type = 'autoComplete';
+  }
+  setOptions(options: any[]) {
+    const newOpts = [];
+    if (options && options.length > 0) {
+      options.forEach(o => {
+        if (typeof o === 'object') {
+          newOpts.push(o);
+        } else if (typeof o === 'string' || typeof o === 'number') {
+          newOpts.push({ property: o, value: o });
+        }
+      });
+    }
+    // tslint:disable-next-line:no-unused-expression
+    newOpts.length > 0 && (this.more.options = newOpts);
+  }
+}
+
 export class InputSetFactory extends InputSetDefault {
   constructor(opts: InputSet = {}) {
     super();
@@ -240,6 +291,10 @@ export class InputSetFactory extends InputSetDefault {
         return new TextareaInputSet(opts);
       case 'primary':
         return new PrimaryInputSet(opts);
+      case 'fileUpload':
+        return new FileUpload(opts);
+      case 'autoComplete':
+        return new AutoCompleteSet(opts);
       case 'text':
       default:
         return new TextInputSet(opts);
@@ -260,7 +315,9 @@ export type InputTypes =
   | 'photoUpload'
   | 'textarea'
   | 'primary'
-  | 'checkbox';
+  | 'checkbox'
+  | 'fileUpload'
+  | 'autoComplete';
 
 export class TextInputSet implements InputSet {
   type: InputTypes;

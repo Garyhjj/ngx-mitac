@@ -48,12 +48,24 @@ export class DriveEditComponent implements OnInit {
   SearchIdx;
   updateIdx;
   otherInputSetTip;
+  positionType;
+  targetFormArray;
+  isPositionVisible;
 
   // InputOpts里more的各種配置placeHolder
   otherInputSetTipList = {
     primary: '無',
     text: '{"editable": true}// 是否只讀，不能編輯',
     textarea: '{"editable": true} // 是否只讀，不能編輯',
+    autoComplete: `
+    {
+      "options": [{ "property": "IPQA", value: "IPQA巡檢" }],
+      "lazyAPI": "IPQA/XXX?company={company}" // 當不能提供options時，向網絡懶加載
+      "lazyParams": ["TYPE", "DESCRIPTION"] //第一個參數是form獲得的表單值，後一個是顯示的文字
+      "lazyAPIUserMes"： {"company": "COMPANY_ID"} //API需要當前用戶信息時,屬性key是替換的參數，value是user對象的屬性，可在localStorage里查看
+      "isSelection": boolean // 是否只能限定选项内容
+    }
+    `,
     select: `
     {
       "options": [{ "property": "IPQA", value: "IPQA巡檢" }],
@@ -93,7 +105,11 @@ export class DriveEditComponent implements OnInit {
       "falseFormat": "N" //關的值
     }
     `,
-    colleagueSearcher: '無',
+    colleagueSearcher: `
+    {
+      editable:boolean,
+      pickerFormat:string
+    `,
     photoUpload: `
     {
       pickerFormat: "string", // 表單獲得的格式 string | array
@@ -125,6 +141,10 @@ export class DriveEditComponent implements OnInit {
     可看例子： 消防設備登記表
     */
     `,
+    fileUpload: `
+    {
+      maxCount: 8, //最大上传数
+    }`,
   };
   typeNameOptions = [
     { property: '', value: '不設置' },
@@ -153,6 +173,8 @@ export class DriveEditComponent implements OnInit {
     { property: 'colleagueSearcher', value: '員工搜索' },
     { property: 'photoUpload', value: '圖片上傳' },
     { property: 'cascader', value: '级联' },
+    { property: 'fileUpload', value: '文件上传' },
+    { property: 'autoComplete', value: '自动完成' },
   ];
   pipeOptions = [
     { property: '', value: '不設置' },
@@ -407,8 +429,9 @@ export class DriveEditComponent implements OnInit {
     return form;
   }
 
-  newUpdateSetTab(fa: FormArray) {
-    fa.push(this.initUpdateSetForm());
+  newUpdateSetTab(fa: FormArray, idx?: number) {
+    idx = idx > -1 ? idx : fa.length + 1;
+    fa.insert(idx, this.initUpdateSetForm());
   }
   /**
    * 初始化數據列的配置表單
@@ -442,8 +465,26 @@ export class DriveEditComponent implements OnInit {
     fa.removeAt(idx);
   }
 
-  newColumnTab(fa: FormArray) {
-    fa.push(this.initColumnForm());
+  finishSelctPosition(idx: number) {
+    this.isPositionVisible = false;
+    idx = idx > 0 ? idx - 1 : NaN;
+    const type = this.positionType;
+    if (type === 1) {
+      this.newColumnTab(this.targetFormArray, idx);
+    } else if (type === 2) {
+      this.newUpdateSetTab(this.targetFormArray, idx);
+    }
+  }
+
+  showPositonModal(fa: FormArray, type) {
+    this.isPositionVisible = true;
+    this.targetFormArray = fa;
+    this.positionType = type;
+  }
+
+  newColumnTab(fa: FormArray, idx?: number) {
+    idx = idx > -1 ? idx : fa.length + 1;
+    fa.insert(idx, this.initColumnForm());
   }
   /**
    * 初始化視圖配置的表單
@@ -798,7 +839,9 @@ class DataDriveSetting {
       };
       delete more.pageCount;
     } else {
-      delete more.pageSet;
+      more.pageSet = {
+        enable: false,
+      };
     }
     if (more.border_y) {
       more.border_y = { enable: true };

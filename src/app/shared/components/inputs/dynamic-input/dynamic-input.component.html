@@ -38,9 +38,13 @@
     [myFalseFormat]="inputOptions?.falseFormat"></app-my-switch>
 
   <app-colleague-searcher [(ngModel)]="_value" (ngModelChange)="change()" [miDisabled]="!inputOptions?.more?.editable" [miSearchFilter]="inputOptions?.more?.searchFilter"
-    *ngIf="inputOptions?.type === 'colleagueSearcher'"></app-colleague-searcher>
+    [miPickerFormat]="inputOptions?.more?.pickerFormat" *ngIf="inputOptions?.type === 'colleagueSearcher'"></app-colleague-searcher>
 
   <app-photo-upload [(ngModel)]="_value" (ngModelChange)="change()" *ngIf="inputOptions?.type === 'photoUpload'" [pickerFormat]="inputOptions?.more?.pickerFormat"
     [maxCount]="inputOptions?.more?.maxCount" [removable]="inputOptions?.more?.removable" [addable]="inputOptions?.more?.addable"
     [scanable]="inputOptions?.more?.scanable"></app-photo-upload>
+
+  <app-mx-auto-complete [(ngModel)]="_value" (ngModelChange)="change()" *ngIf="inputOptions?.type === 'autoComplete'" [myPlaceHolder]="inputOptions.placeHolder"
+    [options]="inputOptions?.more?.options" [lazyAPI]="inputOptions?.more?.lazyAPI" [lazyParams]="inputOptions?.more?.lazyParams"
+    [lazyAPIUserMes]="inputOptions?.more?.lazyAPIUserMes" [isSelection]="inputOptions?.more?.isSelection"></app-mx-auto-complete>
 </ng-container>

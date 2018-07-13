@@ -54,6 +54,7 @@ export class TableComponent
   showInformer = new Subject<any>();
   fileList;
   allChecked;
+  loadingMore;
   @Input() actionRef: TemplateRef<void>;
   @Input() tableCellRef: TemplateRef<void>;
   @Input() headerCellRef: TemplateRef<void>;
@@ -273,6 +274,7 @@ export class TableComponent
         this.updateFilterColumns();
       }
       this._loading = s;
+      this.ref.markForCheck();
     });
   }
 
@@ -589,11 +591,18 @@ export class TableComponent
     const allData = this.tableData.data;
     this.allChecked = allData.every(a => a[0] && a[0].checked === true);
   }
+
+  onLoadMore() {
+    this.loadingMore = true;
+  }
+
   ngOnInit() {
     if (!this.isModal) {
       this.sub3 = this._dataDrive
         .observeIsShowModal()
         .subscribe(s => (this.canScroll = !s));
+    } else {
+      this.dataChange();
     }
     this.updateFilterColumns();
   }

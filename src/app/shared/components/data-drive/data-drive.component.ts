@@ -100,10 +100,7 @@ export class DataDriveComponent implements OnInit, OnDestroy {
       };
       updateViewData();
     } else {
-      if (
-        (!searchSets || searchSets.length === 0) &&
-        this.dataDrive.canAutoUpdate
-      ) {
+      if (this.dataDrive.canAutoUpdate) {
         this.dataDrive.observeScrollToBottom().subscribe(_ => {
           this.dataDriveService.updateViewData(this.dataDrive);
         });

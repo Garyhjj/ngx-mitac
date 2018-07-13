@@ -51,12 +51,21 @@
   float: right;
 }
 
-:host ::ng-deep .ant-tree li span.ant-tree-switcher,
-.ant-tree li span.ant-tree-iconEle {
-  margin-bottom: 49px;
+:host ::ng-deep .ant-tree.ant-tree-show-line li span.ant-tree-switcher:after {
+  margin-top: 65px;
 }
 
 :host ::ng-deep .inMoal .ant-tree {
   overflow: auto;
   max-height: 75vh;
+}
+
+:host ::ng-deep .ant-tree.ant-tree-show-line .ant-tree-child-tree>nz-tree-node:not(:last-child)>li:before,
+.ant-tree.ant-tree-show-line>nz-tree-node:not(:last-child)>li:before {
+  margin: 80px 0;
+}
+
+:host ::ng-deep .ant-tree.ant-tree-show-line li span.ant-tree-switcher {
+  background: none;
+  color: rgba(0, 0, 0, 0.45);
 }

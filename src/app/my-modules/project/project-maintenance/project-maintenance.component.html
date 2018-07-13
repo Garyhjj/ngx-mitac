@@ -61,7 +61,7 @@
 </nz-tabset>
 <ng-container *ngIf="targetProject">
   <nz-divider></nz-divider>
-  <h2 style="margin-top: 16px; margin-left: 16px">
+  <h2 style="margin-top: 16px; margin-left: 16px" #detialView>
     <span>{{'projectModule.projectDetail' | translate}}: </span>
   </h2>
   <app-project-detail [project]="targetProject" [afterBigChange]="afterTasksBigChange"></app-project-detail>
@@ -73,13 +73,13 @@
   <ng-template #modalContent>
     <form nz-form [nzLayout]="'horizontal'">
       <nz-form-item>
-        <nz-form-label [nzSpan]="6">*{{'projectModule.parentList' | translate}}</nz-form-label>
+        <nz-form-label [nzSpan]="6">*{{'projectModule.projectCode' | translate}}</nz-form-label>
         <nz-form-control [nzSpan]="16">
-          <app-mx-select #parentInput [options]="parentOpts" name="p" [(ngModel)]="parentVal"></app-mx-select>
+          <app-dynamic-input [inputOptions]="{type:'text',more:{editable:true}}" name="parentVal" #parentInput [(ngModel)]="parentVal"></app-dynamic-input>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item style="display:block;text-align:center">
-        <button nz-button type="button" [nzType]="'primary'" style="width: 45%" (click)="setParent()" [disabled]="!parentVal">{{'serviceModule.confirm' | translate}}</button>
+        <button nz-button type="button" [nzType]="'primary'" style="width: 45%" (click)="setParent()">{{'serviceModule.confirm' | translate}}</button>
       </nz-form-item>
     </form>
   </ng-template>
