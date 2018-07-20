@@ -360,9 +360,11 @@ export class TableComponent
       }
     }
     if (idx < lg) {
-      if (this.canScroll && !isInBackground) {
+      if (this.canScroll && !isInBackground && this.tableSet.scrollSet) {
+        this.tableSet.isScrolling = true;
         this.dataViewList[idx].scrollIntoView();
       } else {
+        this.tableSet.isScrolling = false;
         --idx;
       }
       this.timeEvent1 = setTimeout(

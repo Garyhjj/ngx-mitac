@@ -1,3 +1,4 @@
+import { TableDataColumn } from './../../../shared/components/data-drive/shared/models/table-data/index';
 import { sortUtils, isNumber } from './../../../shared/utils/index';
 import { DataDrive } from './../../../shared/components/data-drive/shared/models/index';
 import { Component, OnInit } from '@angular/core';
@@ -13,15 +14,35 @@ export class ShippingComponent implements OnInit {
     data: any /* 所在行的数据 */,
     property: string /* 栏位位 */,
   ) => {
-    if (data.ATTRIBUTE10 > 0) {
-      return {
-        color: 'yellow',
+    let color =
+        data.ATTRIBUTE9 > 0 ? 'red' : data.ATTRIBUTE10 > 0 ? 'yellow' : 'green',
+      padding = '16px 6px',
+      style = {
+        color,
+        padding,
+        ['min-width']:
+          property === 'PN_NUMBER'
+            ? '175px'
+            : property.startsWith('DAY')
+              ? '86px'
+              : 'none',
       };
-    } else {
-      return {
-        color: 'green',
+    return style;
+  };
+
+  headerCellStyle = (c: TableDataColumn) => {
+    let padding = '16px 6px',
+      property = c.property,
+      style = {
+        padding,
+        ['min-width']:
+          property === 'PN_NUMBER'
+            ? '175px'
+            : property.startsWith('DAY')
+              ? '86px'
+              : 'none',
       };
-    }
+    return style;
   };
   constructor() {}
 
@@ -29,12 +50,12 @@ export class ShippingComponent implements OnInit {
 
   getDrive(d: DataDrive) {
     d.beforeInitTableData(ls => {
+      const m = moment().get('day');
       if (ls.length > 0) {
         let startDate = ls[0].WEEK_START_DATE;
         if (startDate) {
           ls = ls.filter(l => l.WEEK_START_DATE === startDate);
         } else {
-          const m = moment().get('day');
           startDate = m === 6 ? moment() : moment().weekday(-6);
         }
         d.tableData.columns = d.tableData.columns.map(c => {
@@ -52,13 +73,20 @@ export class ShippingComponent implements OnInit {
         .map(data => {
           const g = isNumber(data.AVAILABLE_QTY) ? +data.AVAILABLE_QTY : 0,
             sendQty = isNumber(data.SENT_QTY) ? +data.SENT_QTY : 0;
-          let all = 0;
+          let all = 0,
+            beforeNow = 0;
+          let dayBefore = m + 1 > 7 ? m + 1 - 7 : m + 1;
           for (let i = 1; i < 8; i++) {
             let dayData = data['DAY' + i];
             data['DAY' + i] = isNumber(dayData) ? +dayData : 0;
             all += data['DAY' + i];
+            if (i <= dayBefore) {
+              beforeNow += data['DAY' + i];
+            }
           }
-          data.ATTRIBUTE10 = all - (g + sendQty);
+          const finish = g + sendQty;
+          data.ATTRIBUTE10 = all - finish;
+          data.ATTRIBUTE9 = beforeNow - finish;
           return data;
         })
         .sort((a, b) => {
@@ -82,6 +110,9 @@ export class ShippingComponent implements OnInit {
                 ? Number(bAch).toFixed(2)
                 : bAch;
           }
+          // TODO: 把红色的排在前面
+          aAch = a.ATTRIBUTE9 > 0 ? +aAch - 100 : aAch;
+          bAch = b.ATTRIBUTE9 > 0 ? +bAch - 100 : bAch;
           const res = aAch - bAch;
           return res;
         });

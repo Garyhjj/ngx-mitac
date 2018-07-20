@@ -39,6 +39,25 @@
             </a>
           </nz-tooltip>
 
+          <ng-container *ngIf="dataDrive.additionalFn?.scrollSet && dataDrive.dataViewSet?.type === 'table'">
+            <nz-tooltip [nzTitle]="'dataDriveModule.stopScrolling' | translate" [nzPlacement]="'top'" *ngIf="dataDrive.dataViewSet.scrollSet">
+              <a nz-tooltip>
+                <button nz-button [nzType]="'default'" (click)="stopScrolling()">
+                  <i class="anticon anticon-pause-circle-o"></i>
+                </button>
+              </a>
+            </nz-tooltip>
+
+            <nz-tooltip [nzTitle]="'dataDriveModule.beginScrolling' | translate" [nzPlacement]="'top'" *ngIf="!dataDrive.dataViewSet.scrollSet">
+              <a nz-tooltip>
+                <button nz-button [nzType]="'default'" (click)="beginScrolling()">
+                  <i class="anticon anticon-play-circle-o"></i>
+                </button>
+              </a>
+            </nz-tooltip>
+          </ng-container>
+
+
           <nz-tooltip [nzTitle]="'downloadExcelFile' | translate" [nzPlacement]="'top'">
             <a nz-tooltip>
               <button nz-button [nzType]="'default'" (click)="toExcel()" *ngIf="dataDrive.additionalFn?.toExcel">

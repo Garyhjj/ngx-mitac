@@ -8,6 +8,7 @@ export interface AdditionalFn {
   addItem?: boolean;
   mutiUpdate?: boolean;
   switchViewType?: string[];
+  scrollSet?: boolean;
   LinkToPhone?: {
     name: string;
     url: string;

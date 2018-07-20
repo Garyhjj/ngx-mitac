@@ -1,5 +1,4 @@
 export const environment = {
   production: true,
-  fileEndUrl: 'http://miapphost01.mic.com.cn/',
-  fileProtocol: 'http://',
+  fileEndUrl: 'http://webupload.mic.com.cn:8088/',
 };

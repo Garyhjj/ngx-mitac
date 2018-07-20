@@ -82,7 +82,9 @@
     "mutiUpdateConfirm": "此插入数据操作需用户验证数据的合法性,你确定已审核完毕吗？",
     "readExcelFail": "无法读取此文件",
     "noDataDrive": "必须传入 DataDrive的实例",
-    "scanPicture": "浏览图片"
+    "scanPicture": "浏览图片",
+    "stopScrolling": "停止滚动",
+    "beginScrolling": "开始滚动"
   },
   "examModule": {
     "maintenanceHeader": "维护考卷头",

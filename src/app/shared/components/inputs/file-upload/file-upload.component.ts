@@ -1,6 +1,6 @@
 import { UtilService } from './../../../../core/services/util.service';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { filter, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 // tslint:disable
 import {
   Component,
@@ -11,7 +11,7 @@ import {
   OnDestroy,
   forwardRef,
 } from '@angular/core';
-import { HttpRequest, HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { UploadFile, NzMessageService } from 'ng-zorro-antd';
 import { environment } from '../../../../../environments/environment';
 import { Observable, Subscription } from 'rxjs';
@@ -60,7 +60,7 @@ export class FileUploadComponent implements OnInit, OnDestroy {
           if (v) {
             this.fileList.push({
               name: this.getName(v),
-              url: environment.fileProtocol + v,
+              url: v,
               uid: new Date().getTime() + Math.ceil(Math.random() * 10000),
             } as any);
           }
@@ -132,9 +132,7 @@ export class FileUploadComponent implements OnInit, OnDestroy {
   handleUpload() {
     const fileList = this.fileList.filter(f => !f.url);
     if (fileList.length === 0) {
-      const out = this.fileList
-        .filter(f => f.url)
-        .map(f => f.url.replace(environment.fileProtocol, ''));
+      const out = this.fileList.filter(f => f.url).map(f => f.url);
       this.propagateChange(out);
       this.uploadSuccess.emit(out);
     } else {
@@ -171,14 +169,12 @@ export class FileUploadComponent implements OnInit, OnDestroy {
                 if (v) {
                   hasUpload.push({
                     name: this.getName(v),
-                    url: environment.fileProtocol + v,
+                    url: v,
                   } as any);
                 }
               });
               this.fileList = hasUpload;
-              const out = this.fileList.map(f =>
-                f.url.replace(environment.fileProtocol, ''),
-              );
+              const out = this.fileList.map(f => f.url);
               this.propagateChange(out);
               this.uploadSuccess.emit(out);
             },

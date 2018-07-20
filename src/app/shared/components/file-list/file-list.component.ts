@@ -1,4 +1,3 @@
-import { environment } from './../../../../environments/environment.prod';
 import {
   Component,
   OnInit,
@@ -21,7 +20,7 @@ export class FileListComponent implements OnInit {
         if (typeof f === 'string') {
           return {
             name: this.getName(f),
-            url: environment.fileProtocol + f,
+            url: f,
           };
         }
         return f;
@@ -30,7 +29,7 @@ export class FileListComponent implements OnInit {
       this._fileList = [
         {
           name: this.getName(fs),
-          url: environment.fileProtocol + fs,
+          url: fs,
         },
       ];
     }

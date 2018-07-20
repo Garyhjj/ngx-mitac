@@ -1,3 +1,4 @@
+import { Subject } from 'rxjs';
 import { DataViewType, DataViewSet } from './index';
 export interface TabelViewSetMore {
   title?: {
@@ -58,6 +59,9 @@ export class TabelViewSet implements DataViewSet {
   title?: string;
   more: TabelViewSetMore;
   hasInited?: boolean;
+  isScrolling?: boolean;
+  private _scrollSet?: boolean;
+  private scrollSetSubject = new Subject<any>();
   constructor(opts: DataViewSet = {}) {
     if (opts) {
       Object.assign(this, opts);
@@ -71,6 +75,27 @@ export class TabelViewSet implements DataViewSet {
     this.more.footer = this.more.footer || { enable: false, content: '' };
     this.type = 'table';
     this.hasInited = true;
+    if (this.more.fixedHeader && this.more.fixedHeader.autoScroll) {
+      this._scrollSet = true;
+    }
+  }
+
+  get scrollSet() {
+    return this._scrollSet;
+  }
+
+  get scrollSetChange() {
+    return this.scrollSetSubject.asObservable();
+  }
+
+  beginScrolling() {
+    this._scrollSet = true;
+    this.scrollSetSubject.next(true);
+  }
+
+  stopScrolling() {
+    this._scrollSet = false;
+    this.scrollSetSubject.next(false);
   }
   changeHeaderFontSize(size: string) {
     this.more = this.more || {};

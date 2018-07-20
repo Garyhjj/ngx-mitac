@@ -1,3 +1,4 @@
+import { TabelViewSet } from './../../shared/models/viewer/table';
 import { DataViewType } from './../../shared/models/viewer/index';
 import { DataUpdateComponent } from './../data-update/data-update.component';
 import { NzModalService, NzMessageService } from 'ng-zorro-antd';
@@ -474,6 +475,22 @@ export class DataSearchbarComponent implements OnInit {
         },
       },
     });
+  }
+
+  stopScrolling() {
+    let d = this.dataDrive;
+    if (d.dataViewSet && d.dataViewSet.type === 'table') {
+      let tableView = d.dataViewSet as TabelViewSet;
+      tableView.stopScrolling();
+    }
+  }
+
+  beginScrolling() {
+    let d = this.dataDrive;
+    if (d.dataViewSet && d.dataViewSet.type === 'table') {
+      let tableView = d.dataViewSet as TabelViewSet;
+      tableView.beginScrolling();
+    }
   }
 }
 

@@ -82,7 +82,9 @@
     "mutiUpdateConfirm": "此插入數據操作需用戶驗證數據的合法性,妳確定已審核完畢嗎？",
     "readExcelFail": "無法讀取此文件",
     "noDataDrive": "必須傳入 DataDrive的實例",
-    "scanPicture": "瀏覽圖片"
+    "scanPicture": "瀏覽圖片",
+    "stopScrolling": "停止滾動",
+    "beginScrolling": "開始滾動"
   },
   "examModule": {
     "maintenanceHeader": "維護考卷頭",

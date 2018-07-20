@@ -1,9 +1,8 @@
 import { environment } from './../../../environments/environment';
 import { Subject } from 'rxjs';
 import { throttleTime } from 'rxjs/operators';
-import { Headers, RequestOptions } from '@angular/http';
 import { LoginConfig } from './../../login/shared/config/login.config';
-import { AuthService, TokenMes } from './../services/auth.service';
+import { TokenMes } from './../services/auth.service';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import {

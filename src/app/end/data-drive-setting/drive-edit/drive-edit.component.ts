@@ -192,6 +192,7 @@ export class DriveEditComponent implements OnInit {
     { property: 'filterColumn', value: '挑選列' },
     { property: 'fullScreen', value: '視圖全屏顯示' },
     { property: 'mutiUpdate', value: '批量插入数据(读取Excel)' },
+    { property: 'scrollSet', value: '滚动控制(必须先开启滚动)' },
   ];
 
   viewTypeOptions = [
