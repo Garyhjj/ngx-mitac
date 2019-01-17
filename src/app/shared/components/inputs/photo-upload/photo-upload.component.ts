@@ -1,10 +1,10 @@
+import { APPConfig } from './../../../config/app.config';
 // tslint:disable
 import { Subject } from 'rxjs';
 import { Component, OnInit, forwardRef, Input } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { APIGlobalConfig } from '../../../config/api-global.config';
 import { AppService } from '../../../../core/services/app.service';
-import { APPConfig } from '../../../config/app.config';
 import { NzModalService } from 'ng-zorro-antd';
 
 const maxsize = 500 * 1024;
@@ -165,7 +165,7 @@ export class PhotoUploadComponent implements OnInit {
     };
     const that = this;
     reader.onload = function() {
-      var result = this.result;
+      var result: any = this.result;
       var img = new Image();
       img.src = result;
       //如果图片大小小于100kb，则直接上传

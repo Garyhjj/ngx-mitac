@@ -1,7 +1,9 @@
 {
   "globalDependencies": {
     "echarts": "registry:dt/echarts#0.0.0+20161005184000",
-    "moment": "registry:dt/moment#2.11.1+20161010105546"
+    "moment": "registry:dt/moment#2.11.1+20161010105546",
+    "node-schedule": "registry:dt/node-schedule#1.1.0+20161119044246",
+    "signature_pad": "registry:dt/signature_pad#0.0.0+20160510002910"
   },
   "globalDevDependencies": {
     "less": "registry:dt/less#0.0.0+20161212190028"

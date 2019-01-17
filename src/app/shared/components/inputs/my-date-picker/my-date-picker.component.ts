@@ -1,6 +1,8 @@
+import { filter } from 'rxjs/operators';
 import { Component, OnInit, forwardRef, Input } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import * as moment from 'moment';
+import { isArray } from '../../../utils';
 
 @Component({
   selector: 'app-my-date-picker',
@@ -20,7 +22,7 @@ export class MyDatePickerComponent implements OnInit {
   @Input() myFormat = 'YYYY-MM-DD';
   @Input() myPlaceHolder = '請選擇時間';
   @Input() myMode = 'day';
-  _date: Date = null;
+  _date: any = null;
   dataString: string;
   private propagateChange = (_: string) => {};
   constructor() {}
@@ -32,12 +34,35 @@ export class MyDatePickerComponent implements OnInit {
    *
    * @param {*} value
    */
-  writeValue(value: string) {
+  writeValue(value: any) {
     if (value) {
-      const date = new Date(value);
-      if (date.toString() !== 'Invalid Date') {
-        this.dataString = value;
-        this._date = date;
+      if (this.myMode === 'range') {
+        if (isArray(value)) {
+          this._date = value
+            .map(v => {
+              const m = moment(v);
+              if (m.isValid()) {
+                return m.toDate();
+              } else {
+                return null;
+              }
+            })
+            .filter(v => !!v);
+        }
+      } else {
+        const date = new Date(value);
+        if (date.toString() !== 'Invalid Date') {
+          this.dataString = value;
+          this._date = date;
+        } else {
+          this._date = null;
+          setTimeout(() => this.change(null), 20);
+        }
+      }
+    } else {
+      if (this._date) {
+        this._date = null;
+        setTimeout(() => this.change(null), 20);
       }
     }
   }
@@ -61,8 +86,14 @@ export class MyDatePickerComponent implements OnInit {
    * 内部更改例子
    * @param {*} fn
    */
-  change(value: Date) {
-    this.dataString = value ? moment(value).format(this.myPickerFormat) : '';
+  change(value: any) {
+    if (this.myMode === 'range' && isArray(value)) {
+      this.dataString = value
+        .map(v => moment(v).format(this.myPickerFormat))
+        .join(',');
+    } else {
+      this.dataString = value ? moment(value).format(this.myPickerFormat) : '';
+    }
     this.propagateChange(this.dataString); // 去触发外部监控的函数
   }
 }

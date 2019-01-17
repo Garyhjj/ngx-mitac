@@ -1,3 +1,4 @@
+import { MailSettingComponent } from './mail-setting/mail-setting.component';
 import { ProjectBasicComponent } from './project-basic.component';
 import { TaskBuComponent } from './task-bu/task-bu.component';
 import { NgModule } from '@angular/core';
@@ -24,6 +25,10 @@ const bRoutes: Routes = [
       {
         path: 'bu',
         component: TaskBuComponent,
+      },
+      {
+        path: 'mail',
+        component: MailSettingComponent,
       },
     ],
   },

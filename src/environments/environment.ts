@@ -5,5 +5,6 @@
 
 export const environment = {
   production: false,
+  hmr: false,
   fileEndUrl: 'http://webupload.mic.com.cn:8088/',
 };

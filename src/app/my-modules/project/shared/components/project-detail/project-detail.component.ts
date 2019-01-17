@@ -1,3 +1,4 @@
+import { filter } from 'rxjs/operators';
 import { replaceQuery } from './../../../../../shared/utils/index';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
@@ -85,7 +86,11 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
 
   getTranslation() {
     this.sub = this.translateService
-      .stream(['projectModule.actionName', 'projectModule.addPerson'])
+      .stream([
+        'projectModule.actionName',
+        'projectModule.addPerson',
+        'projectModule.taskDetail',
+      ])
       .subscribe(t => {
         this.translateTexts = t;
       });
@@ -192,9 +197,11 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
    * @returns
    * @memberof ProjectDetailComponent
    */
-  getAttachemntChangeDetail(now: string[], before: string[], type: number) {
-    now = isArray(now) ? now : [];
-    before = isArray(before) ? before : [];
+  getAttachemntChangeDetail(now: any, before: any, type: number) {
+    now = isArray(now) ? now : [now];
+    before = isArray(before) ? before : [before];
+    before = before.filter(b => !!b);
+    now = now.filter(b => !!b);
     if (type === 1) {
       const addOne = now.filter(n => before.indexOf(n) < 0);
       return addOne.length > 0 ? addOne : null;
@@ -202,5 +209,30 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
       const deleteOne = before.filter(b => now.indexOf(b) < 0);
       return deleteOne.length > 0 ? deleteOne : null;
     }
+  }
+
+  seeTaskDetail(data) {
+    this.targetTask = data;
+    const subscription = this.modalService.create({
+      nzTitle: this.translateTexts['projectModule.taskDetail'],
+      nzContent: TaskDetailComponent,
+      nzOnOk() {},
+      nzOnCancel() {},
+      nzFooter: null,
+      nzComponentParams: {
+        task: data,
+        afterUpdate: () => {
+          setTimeout(_ => {
+            this.updateParent();
+          }, 500);
+        },
+      },
+      nzWidth: '80vw',
+    });
+    subscription.afterClose.subscribe(_ => (this.targetTask = null));
+  }
+
+  getAssigneeList(assignee) {
+    return isArray(assignee) ? assignee : [assignee];
   }
 }

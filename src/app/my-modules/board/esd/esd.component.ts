@@ -4,19 +4,18 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { Subscription, forkJoin } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import * as moment from 'moment';
 import { BoardService } from '../shared/services/board.service';
 import { UtilService } from '../../../core/services/util.service';
 import { APPConfig } from '../../../shared/config/app.config';
 import { isArray } from '../../../shared/utils/index';
-
+import * as schedule from 'node-schedule';
 @Component({
   selector: 'app-esd',
   templateUrl: './esd.component.html',
   styleUrls: ['./esd.component.css'],
 })
 export class EsdComponent implements OnInit, OnDestroy {
-  date = moment(new Date()).format('YYYY-MM-DD');
+  date = this.util.dateFormat(new Date(), 'YYYY-MM-DD');
 
   notPassQuantity = 0;
   passQuantity = 0;
@@ -42,9 +41,20 @@ export class EsdComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.initForm();
     this.lazyChangeSubOptions();
+    this.updateHeaderMes();
+    schedule.scheduleJob('0 0 * * *', () => {
+      this.date = this.util.dateFormat(new Date(), 'YYYY-MM-DD HH:mm');
+    });
+  }
+  ngOnDestroy() {
+    // tslint:disable-next-line:no-unused-expression
+    this.sub1 && this.sub1.unsubscribe();
+  }
+
+  updateHeaderMes(bu_deptno?: string, chu_deptno?: string) {
     forkJoin(
-      this.boardService.getEsdQuantity('N'),
-      this.boardService.getEsdQuantity('Y'),
+      this.boardService.getEsdQuantity('N', bu_deptno, chu_deptno),
+      this.boardService.getEsdQuantity('Y', bu_deptno, chu_deptno),
     ).subscribe(
       a => {
         this.notPassQuantity = (a[0] as number) || 0;
@@ -52,10 +62,6 @@ export class EsdComponent implements OnInit, OnDestroy {
       },
       err => this.util.errDeal(err),
     );
-  }
-  ngOnDestroy() {
-    // tslint:disable-next-line:no-unused-expression
-    this.sub1 && this.sub1.unsubscribe();
   }
 
   lazyChangeSubOptions() {
@@ -105,6 +111,7 @@ export class EsdComponent implements OnInit, OnDestroy {
     const value = this.validateForm.value;
     const list = value['sub'];
     const top = value['top'];
+    this.updateHeaderMes(top, list);
     if (list) {
       this.targetSubList = list.split(',');
     } else {

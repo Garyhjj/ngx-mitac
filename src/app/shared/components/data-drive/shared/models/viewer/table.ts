@@ -53,6 +53,7 @@ export interface TabelViewSetMore {
     local?: string;
   };
   showCheckbox?: boolean;
+  showIndex?: boolean;
 }
 export class TabelViewSet implements DataViewSet {
   type: DataViewType;
@@ -62,6 +63,10 @@ export class TabelViewSet implements DataViewSet {
   isScrolling?: boolean;
   private _scrollSet?: boolean;
   private scrollSetSubject = new Subject<any>();
+  private _cbList;
+  eventNames = {
+    onScrollTo: 'onScrollTo',
+  };
   constructor(opts: DataViewSet = {}) {
     if (opts) {
       Object.assign(this, opts);
@@ -78,6 +83,7 @@ export class TabelViewSet implements DataViewSet {
     if (this.more.fixedHeader && this.more.fixedHeader.autoScroll) {
       this._scrollSet = true;
     }
+    this._cbList = {};
   }
 
   get scrollSet() {
@@ -112,5 +118,26 @@ export class TabelViewSet implements DataViewSet {
   }
   hideCheckbox() {
     this.more.showCheckbox = false;
+  }
+
+  showIndex() {
+    this.more.showIndex = true;
+  }
+  hideIndex() {
+    this.more.showIndex = false;
+  }
+
+  onScrollTo(callback: (any) => void) {
+    let name = this.eventNames.onScrollTo;
+    this._cbList[name] = this._cbList[name] || [];
+    this._cbList[name].push(callback);
+  }
+
+  emitFn(name: string, ...parmas) {
+    if (Array.isArray(this._cbList[name])) {
+      this._cbList[name].forEach(fn => {
+        fn(...parmas);
+      });
+    }
   }
 }

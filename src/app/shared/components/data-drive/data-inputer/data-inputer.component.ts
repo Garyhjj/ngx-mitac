@@ -30,7 +30,7 @@ export class DataInputerComponent implements OnInit {
   validateForm: FormGroup;
 
   submitForm() {
-    console.log(this.validateForm.value);
+    // console.log(this.validateForm.value);
   }
 
   get isHorizontal() {

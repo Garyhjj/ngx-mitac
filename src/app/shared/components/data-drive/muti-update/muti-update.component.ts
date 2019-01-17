@@ -37,15 +37,17 @@ export class MutiUpdateComponent implements OnInit {
   };
 
   handleUpload() {
-    if (!this.primaryKey) {
-      return this.util.showGlobalErrMes(
-        this.translateText['dataDriveModule.noPrimaryKey'],
-      );
-    }
+    // if (!this.primaryKey) {
+    //   return this.util.showGlobalErrMes(
+    //     this.translateText['dataDriveModule.noPrimaryKey'],
+    //   );
+    // }
     const doUpload = () => {
       this.readExcel().subscribe((data: any[]) => {
         data = data.map(d => {
-          d[this.primaryKey] = 0;
+          if (this.primaryKey) {
+            d[this.primaryKey] = 0;
+          }
           return d;
         });
         this.uploading = true;
@@ -72,9 +74,7 @@ export class MutiUpdateComponent implements OnInit {
                 this.succCb();
               }
               this.uploading = false;
-              this.util.showGlobalSucMes(
-                this.translateText['serviceModule.submitSuccess'],
-              );
+              this.util.showGlobalSucMes(this.translateText['submitSuccess']);
               this.dataDriveService.updateViewData(dataDrive, true);
             },
             err => {
@@ -165,7 +165,7 @@ export class MutiUpdateComponent implements OnInit {
         nzOnCancel() {},
         nzFooter: null,
         nzComponentParams: {
-          name: this.dataDrive.id,
+          name: dataDrive.id,
           dataDriveInit2: (d: DataDrive) => {
             if (d instanceof DataDrive) {
               d.additionalFn = {};
@@ -193,8 +193,7 @@ export class MutiUpdateComponent implements OnInit {
     const dataDrive = this.dataDrive;
     const tableData = dataDrive.tableData;
     const dataViewSet = dataDrive.dataViewSet;
-    let title =
-      (this.dataDrive.dataViewSet && this.dataDrive.dataViewSet.title) || '';
+    let title = (dataViewSet && dataViewSet.title) || '';
     title = title + '-' + this.translateText['template'];
     const columns = tableData.columns;
     const data = tableData.data;
@@ -214,15 +213,17 @@ export class MutiUpdateComponent implements OnInit {
     if (!(this.dataDrive instanceof DataDrive)) {
       throw new Error(this.translateText['dataDriveModule.noDataDrive']);
     }
-    const primaryKeySet = this.dataDrive.updateSets.find(
-      s => s.InputOpts.type === 'primary',
-    );
-    if (primaryKeySet) {
-      this.primaryKey = primaryKeySet.property;
+    if (this.dataDrive.updateSets) {
+      const primaryKeySet = this.dataDrive.updateSets.find(
+        s => s.InputOpts.type === 'primary',
+      );
+      if (primaryKeySet) {
+        this.primaryKey = primaryKeySet.property;
+      }
     }
     this.translateService
       .get([
-        'serviceModule.submitSuccess',
+        'submitSuccess',
         'preview',
         'template',
         'dataDriveModule.noPrimaryKey',

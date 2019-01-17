@@ -1,10 +1,12 @@
 const cac = require('cac'),
-  createDDc = require('./createDDC');
+  createDDC = require('./createDDC'),
+  createInput = require('./createInput');
 
 
 const cli = cac();
 
-createDDc(cli);
+createDDC(cli);
+createInput(cli);
 
 cli.on('error', err => {
   console.error('command failed:', err)

@@ -1,0 +1,11 @@
+.esd-header {
+  margin: 15px 0;
+  background-color: #e4f7d6;
+  border: 1px solid #91d5ff;
+  padding: 8px 15px;
+}
+
+.esd-header nz-row {
+  font-size: 1.6rem;
+  line-height: 2.5rem;
+}

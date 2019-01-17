@@ -24,8 +24,6 @@ export class ChineseConv implements PipeTransform {
           return value;
       }
     }
+    return '';
   }
-}
-
-{
 }

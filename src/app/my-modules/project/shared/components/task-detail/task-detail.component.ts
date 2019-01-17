@@ -10,7 +10,6 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import * as moment from 'moment';
 import { isArray, sortUtils } from '../../../../../shared/utils';
 
 @Component({
@@ -66,7 +65,9 @@ export class TaskDetailComponent implements OnInit {
   updating = false;
 
   get isAssigner() {
-    return this._task && this._task.ASSIGNEE === this.empno;
+    let assignees = this._task.ASSIGNEE;
+    assignees = isArray(assignees) ? assignees : [assignees];
+    return this._task && assignees.indexOf(this.empno) > -1;
   }
 
   constructor(
@@ -94,7 +95,7 @@ export class TaskDetailComponent implements OnInit {
         if (isArray(s)) {
           let map = Object.create(null);
           s.forEach(l => {
-            const date = moment(l.CREATION_DATE).format('YYYY-MM-DD');
+            const date = this.util.dateFormat(l.CREATION_DATE, 'YYYY-MM-DD');
             map[date] = map[date] || [];
             map[date].push(l);
           });
@@ -134,7 +135,7 @@ export class TaskDetailComponent implements OnInit {
 
   updateProgress() {
     const dismiss = this.util.showLoading2();
-    let nowDate = moment().format('YYYY-MM-DD');
+    let nowDate = this.util.dateFormat(new Date(), 'YYYY-MM-DD');
     const LINE_ID = this.task.ID;
     const { CONTENT, ATTACHMENT } = this.progressForm.value;
     const send = {

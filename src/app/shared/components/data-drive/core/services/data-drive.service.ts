@@ -1,3 +1,8 @@
+import { TabelViewSet } from './../../shared/models/viewer/table';
+import {
+  TableInsideData,
+  TableInsideDataModel,
+} from './../../shared/models/table-data/index';
 import { NzModalService } from 'ng-zorro-antd';
 import { CacheService } from './../../../../../core/services/cache.service';
 import { isArray, parse } from './../../../../utils/index';
@@ -163,11 +168,16 @@ export class DataDriveService {
         return;
       }
     }
+    const dismiss = this.utilSerive.showLoading2();
     this.getInitData(dataDrive).subscribe(
       (c: any[]) => {
         this.initTableData(dataDrive, c);
+        dismiss();
       },
-      err => this.utilSerive.errDeal(err),
+      err => {
+        dismiss();
+        this.utilSerive.errDeal(err);
+      },
     );
   }
 
@@ -186,17 +196,34 @@ export class DataDriveService {
       const mySort = tableData.columns.map(c => c.property);
       // tableData.columns.sort((a, b) => sortMes.indexOf(a.property) - sortMes.indexOf(b.property));
       const columnsPros = tableData.columns.map(c => c.property);
+      const checkedDataSubject = dataDrive.checkedDataSubject;
       const data = ds.map(d => {
         const trs = [];
+        trs['_data'] = d;
         for (const prop in d) {
           if (Object.prototype.hasOwnProperty.call(d, prop)) {
-            trs.push({
-              property: prop,
-              value: d[prop],
-              hide: columnsPros.indexOf(prop) > -1 ? false : true,
-            });
+            trs.push(
+              new TableInsideDataModel(
+                {
+                  property: prop,
+                  value: d[prop],
+                  hide: columnsPros.indexOf(prop) > -1 ? false : true,
+                },
+                checkedDataSubject,
+              ),
+            );
           }
         }
+        mySort.forEach(prop => {
+          if (!Object.prototype.hasOwnProperty.call(d, prop)) {
+            trs.push(
+              new TableInsideDataModel({
+                property: prop,
+                value: '',
+              }),
+            );
+          }
+        });
         // 根據配置排序拿到的數據
         return trs.sort(
           (a, b) => mySort.indexOf(a.property) - mySort.indexOf(b.property),
@@ -252,19 +279,60 @@ export class DataDriveService {
       return;
     }
     const tableData = dataDrive.tableData;
-    const dataViewSet = dataDrive.dataViewSet;
+    const dataViewSet = dataDrive.dataViewSet as TabelViewSet;
     const name = (dataViewSet && dataViewSet.title) || 'default';
     const columns = tableData.columns;
     const data = tableData.data;
     let excelHeader = [];
     let excelData = [];
+    const isShowIndex = dataViewSet.more.showIndex;
     if (columns && columns.length > 0) {
       excelHeader = columns.map(c => c.value);
+      if (isShowIndex) {
+        excelHeader.unshift('NO');
+      }
     }
     if (data && data.length > 0) {
-      excelData = data.map(c => c.filter(s => !s.hide).map(d => d.value));
+      const notHide = data.map(c => c.filter(s => !s.hide));
+      const dismiss = this.utilSerive.showLoading2();
+      dataDrive
+        .runOnDownloadExcel(notHide.map(c => this.tableInsideDataToObject(c)))
+        .subscribe(
+          ds => {
+            dismiss();
+            if (ds) {
+              excelData = notHide.map((c, idx) => {
+                const cs = c.map(d => {
+                  const property = d.property;
+                  const n = ds[idx];
+                  if (n && n.hasOwnProperty(property)) {
+                    return n[property];
+                  } else {
+                    return d.value;
+                  }
+                });
+                if (isShowIndex) {
+                  cs.unshift(idx + 1);
+                }
+                return cs;
+              });
+            }
+            this.utilSerive.toExcel(name, excelHeader, excelData);
+          },
+          err => {
+            this.utilSerive.errDeal(err);
+            dismiss();
+          },
+        );
     }
-    this.utilSerive.toExcel(name, excelHeader, excelData);
+  }
+
+  tableInsideDataToObject(t: TableInsideData[]) {
+    const out: any = {};
+    t.forEach(d => {
+      out[d.property] = d.value;
+    });
+    return out;
   }
 
   addCompanyID(send: any, otherName: string) {

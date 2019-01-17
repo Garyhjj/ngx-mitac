@@ -25,8 +25,8 @@
       <nz-list nzSize="large" class="activities" [nzDataSource]="history" [nzRenderItem]="item" [nzLoadMore]="loadMore">
         <ng-template #item let-item>
           <nz-list-item>
-            <nz-list-item-meta [nzAvatar]="item.USER_NAME | myFlex: {name:'empno',params:['{AVATAR_URL}']} | async" [nzTitle]="activeTitle"
-              [nzDescription]="activeDescription">
+            <nz-list-item-meta [nzAvatar]="item.USER_NAME | myFlex: {name:'empno',params:['{AVATAR_URL}']} | async"
+              [nzTitle]="activeTitle" [nzDescription]="activeDescription">
               <ng-template #activeTitle>
                 <a class="username">{{item.USER_NAME | myFlex: {name:'empno',params:['CH']} | async}}</a>
                 &nbsp;
@@ -57,7 +57,8 @@
                           <ng-template [ngTemplateOutlet]="changeDetailDate" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
                         </span>
                         <span *ngSwitchCase="'STATUS'">
-                          <span *ngIf="item.BEFORE_STORE[di] === 'Open' && item.AFTER_STORE[di] === 'Closed'">{{'projectModule.DoneProject' | translate}}</span>
+                          <span *ngIf="item.BEFORE_STORE[di] === 'Open' && item.AFTER_STORE[di] === 'Closed'">{{'projectModule.DoneProject'
+                            | translate}}</span>
                         </span>
                         <span *ngSwitchCase="'PARENT_HEADER'">
                           <span *ngIf="!item.BEFORE_STORE[di] && item.AFTER_STORE[di]">
@@ -93,8 +94,10 @@
                   <ng-container *ngIf="item.CHANGE_TYPE === 1">
                     <span>{{'projectModule.newTask' | translate}}:
                       <a (click)="seeTaskDetail({ID:item.AFTER_STORE.ID})" class="link">{{item.AFTER_STORE.CODE}}
-                      </a>, {{'projectModule.ASSIGNEE' | translate}}: {{item.AFTER_STORE.ASSIGNEE | myFlex: {name:'empno',params:['CH(NO)']}
-                      | async}}</span>
+                      </a> {{'projectModule.ASSIGNEE' | translate}}: </span>
+                    <div *ngFor="let assignee of getAssigneeList(item.AFTER_STORE.ASSIGNEE)">{{assignee | myFlex:
+                      {name:'empno',params:['CH(NO)']}
+                      | async}}</div>
                   </ng-container>
                   <ng-container *ngIf="item.CHANGE_TYPE === 3">
                     <span>{{'projectModule.deleteTask' | translate}}:
@@ -138,16 +141,21 @@
                           <ng-template [ngTemplateOutlet]="changeDetailDate" [ngTemplateOutletContext]="{item: item, di:di}"></ng-template>
                         </span>
                         <span *ngSwitchCase="'STATUS'">
-                          <span *ngIf="item.BEFORE_STORE[di] === 'Open' && item.AFTER_STORE[di] === 'Finished'">{{'projectModule.taskFinishConfirming' | translate}}</span>
-                          <span *ngIf="item.BEFORE_STORE[di] === 'Finished' && item.AFTER_STORE[di] === 'Open'">{{'projectModule.taskNoPass' | translate}}</span>
-                          <span *ngIf="item.BEFORE_STORE[di] === 'Finished' && item.AFTER_STORE[di] === 'Closed'">{{'projectModule.taskClosedH' | translate}}</span>
+                          <span *ngIf="item.BEFORE_STORE[di] === 'Open' && item.AFTER_STORE[di] === 'Finished'">{{'projectModule.taskFinishConfirming'
+                            | translate}}</span>
+                          <span *ngIf="item.BEFORE_STORE[di] === 'Finished' && item.AFTER_STORE[di] === 'Open'">{{'projectModule.taskNoPass'
+                            | translate}}</span>
+                          <span *ngIf="item.BEFORE_STORE[di] === 'Finished' && item.AFTER_STORE[di] === 'Closed'">{{'projectModule.taskClosedH'
+                            | translate}}</span>
                         </span>
                         <span *ngSwitchCase="'ATTACHMENT'">{{'projectModule.attachment' | translate}} (
-                          <span style="display: block;" *ngIf="getAttachemntChangeDetail(item.AFTER_STORE[di],item.BEFORE_STORE[di],1)">{{'add' | translate}}:
+                          <span style="display: block;" *ngIf="getAttachemntChangeDetail(item.AFTER_STORE[di],item.BEFORE_STORE[di],1)">{{'add'
+                            | translate}}:
                             <app-file-list [fileList]="getAttachemntChangeDetail(item.AFTER_STORE[di],item.BEFORE_STORE[di],1)"></app-file-list>
                           </span>
 
-                          <span style="display: block;" *ngIf="getAttachemntChangeDetail(item.AFTER_STORE[di],item.BEFORE_STORE[di],2)">{{'delete' | translate}}:
+                          <span style="display: block;" *ngIf="getAttachemntChangeDetail(item.AFTER_STORE[di],item.BEFORE_STORE[di],2)">{{'delete'
+                            | translate}}:
                             <app-file-list [fileList]="getAttachemntChangeDetail(item.AFTER_STORE[di],item.BEFORE_STORE[di],2)"></app-file-list>
                           </span>)
                         </span>
@@ -173,7 +181,9 @@
                     {{'projectModule.updateTask' | translate}}(
                     <a (click)="seeTaskDetail({
                       ID:item.AFTER_STORE.LINE_ID
-                    })" class="link">{{item.AFTER_STORE.LINE_ID | myFlex: {name:'lazyLoad',params:['projects/lines?id='+item.AFTER_STORE.LINE_ID,['ID','CODE']
+                    })"
+                      class="link">{{item.AFTER_STORE.LINE_ID | myFlex:
+                      {name:'lazyLoad',params:['projects/lines?id='+item.AFTER_STORE.LINE_ID,['ID','CODE']
                       ]} | async}}</a>){{'projectModule.progress' | translate}}
                   </ng-container>
                 </ng-container>
@@ -182,7 +192,9 @@
                     {{'projectModule.inTask' | translate}}(
                     <a (click)="seeTaskDetail({
                         ID:item.AFTER_STORE.LINE_ID
-                      })" class="link">{{item.AFTER_STORE.LINE_ID | myFlex: {name:'lazyLoad',params:['projects/lines?id='+item.AFTER_STORE.LINE_ID,['ID','CODE']
+                      })"
+                      class="link">{{item.AFTER_STORE.LINE_ID | myFlex:
+                      {name:'lazyLoad',params:['projects/lines?id='+item.AFTER_STORE.LINE_ID,['ID','CODE']
                       ]} | async}}</a>){{'projectModule.leftComment' | translate}}
                   </ng-container>
                 </ng-container>
@@ -218,9 +230,26 @@
 </ng-template>
 
 <ng-template #changeDetailPerson let-item="item" let-di="di">
-  ({{'projectModule.from' | translate}}
-  <code>{{item.BEFORE_STORE[di] | myFlex: {name:'empno',params:['CH(NO)']} | async}}</code> {{'projectModule.to' | translate}}
-  <code>{{item.AFTER_STORE[di] | myFlex: {name:'empno',params:['CH(NO)']} | async}}</code>)
+  <ng-container *ngIf="item.AFTER_STORE.rejectFlag">
+    <div *ngFor="let item of getAttachemntChangeDetail(item.AFTER_STORE[di],item.BEFORE_STORE[di],2)">{{item | myFlex:
+      {name:'empno',params:['CH(NO)']} | async}} {{'projectModule.notMyTask' | translate}}</div>
+  </ng-container>
+  <ng-container *ngIf="!item.AFTER_STORE.rejectFlag">
+    (<span style="display: block;" *ngIf="getAttachemntChangeDetail(item.AFTER_STORE[di],item.BEFORE_STORE[di],1)">{{'add'
+      | translate}}:
+      <div *ngFor="let item of getAttachemntChangeDetail(item.AFTER_STORE[di],item.BEFORE_STORE[di],1)">{{item |
+        myFlex:
+        {name:'empno',params:['CH(NO)']} | async}}</div>
+    </span>
+
+    <span style="display: block;" *ngIf="getAttachemntChangeDetail(item.AFTER_STORE[di],item.BEFORE_STORE[di],2)">{{'delete'
+      | translate}}:
+      <div *ngFor="let item of getAttachemntChangeDetail(item.AFTER_STORE[di],item.BEFORE_STORE[di],2)">{{item |
+        myFlex:
+        {name:'empno',params:['CH(NO)']} | async}}</div>
+    </span>)
+  </ng-container>
+
 </ng-template>
 
 <ng-template #projectName let-id>

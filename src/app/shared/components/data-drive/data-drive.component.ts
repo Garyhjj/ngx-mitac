@@ -1,5 +1,5 @@
 import { TableDataColumn } from './shared/models/table-data/index';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { DataDrive, TableDataModel } from './shared/models/index';
 import {
   Component,
@@ -11,10 +11,6 @@ import {
   TemplateRef,
   ContentChild,
 } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { APPConfig } from '../../../shared/config/app.config';
-import { NzModalService } from 'ng-zorro-antd';
-import { NzMessageService } from 'ng-zorro-antd';
 import { DataDriveService } from './core/services/data-drive.service';
 import { UtilService } from '../../../core/services/util.service';
 import { of } from 'rxjs';
@@ -40,6 +36,7 @@ export class DataDriveComponent implements OnInit, OnDestroy {
   set name(n: string) {
     this._name = n;
   }
+  @Input() viewerMinWidth;
   @Input() headerCellStyle: (c: TableDataColumn) => any;
   @Input() bodyCellStyle: (data: any, property: string) => any;
   @Input() dataDriveInit2: (d: DataDrive) => void;
@@ -47,9 +44,6 @@ export class DataDriveComponent implements OnInit, OnDestroy {
   @Output() dataDriveInit: EventEmitter<DataDrive> = new EventEmitter();
 
   constructor(
-    private http: HttpClient,
-    private modalService: NzModalService,
-    private _message: NzMessageService,
     private dataDriveService: DataDriveService,
     private utilService: UtilService,
   ) {}

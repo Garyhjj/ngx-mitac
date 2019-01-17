@@ -16,18 +16,30 @@ const dRoutes: Routes = [
       {
         path: 'list',
         component: DriveListComponent,
+        data: {
+          noAuthority: true,
+        },
       },
       {
         path: 'edit',
         component: DriveEditComponent,
+        data: {
+          noAuthority: true,
+        },
       },
       {
         path: 'edit/:id',
         component: DriveEditComponent,
+        data: {
+          noAuthority: true,
+        },
       },
       {
         path: 'api',
         component: DriveAPIComponent,
+        data: {
+          noAuthority: true,
+        },
       },
     ],
   },

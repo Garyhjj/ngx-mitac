@@ -10,9 +10,7 @@
     </ng-template>
     <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDrive1($event)" [bodyCellStyle]="bodyCellStyle">
       <ng-template #tableCellRef let-data="data" let-property="property">
-        <div *ngIf="property === 'ATTACHMENT' && data['ATTACHMENT']">
-          <app-file-list [fileList]="data['ATTACHMENT']"></app-file-list>
-        </div>
+        <ng-template [ngTemplateOutlet]="myTableCellRef" [ngTemplateOutletContext]="{data: data,property:property}"></ng-template>
       </ng-template>
       <ng-template #actionRef let-data="data">
         <ng-template [ngTemplateOutlet]="openFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
@@ -30,9 +28,7 @@
     </ng-template>
     <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDrive2($event)" [bodyCellStyle]="bodyCellStyle">
       <ng-template #tableCellRef let-data="data" let-property="property">
-        <div *ngIf="property === 'ATTACHMENT' && data['ATTACHMENT']">
-          <app-file-list [fileList]="data['ATTACHMENT']"></app-file-list>
-        </div>
+        <ng-template [ngTemplateOutlet]="myTableCellRef" [ngTemplateOutletContext]="{data: data,property:property}"></ng-template>
       </ng-template>
       <ng-template #actionRef let-data="data">
         <ng-template [ngTemplateOutlet]="openFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
@@ -50,9 +46,7 @@
     </ng-template>
     <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDrive3($event)" [bodyCellStyle]="bodyCellStyle">
       <ng-template #tableCellRef let-data="data" let-property="property">
-        <div *ngIf="property === 'ATTACHMENT' && data['ATTACHMENT']">
-          <app-file-list [fileList]="data['ATTACHMENT']"></app-file-list>
-        </div>
+        <ng-template [ngTemplateOutlet]="myTableCellRef" [ngTemplateOutletContext]="{data: data,property:property}"></ng-template>
       </ng-template>
       <ng-template #actionRef let-data="data">
         <a (click)="backToOpen(data)">{{'projectModule.taskBackToOpenBySelf' | translate}}</a>
@@ -67,9 +61,7 @@
     </ng-template>
     <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDrive4($event)" [bodyCellStyle]="bodyCellStyle">
       <ng-template #tableCellRef let-data="data" let-property="property">
-        <div *ngIf="property === 'ATTACHMENT' && data['ATTACHMENT']">
-          <app-file-list [fileList]="data['ATTACHMENT']"></app-file-list>
-        </div>
+        <ng-template [ngTemplateOutlet]="myTableCellRef" [ngTemplateOutletContext]="{data: data,property:property}"></ng-template>
       </ng-template>
       <ng-template #actionRef let-data="data">
         <ng-template [ngTemplateOutlet]="seeDetailFn" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
@@ -98,4 +90,14 @@
 
 <ng-template #seeDetailFn let-data>
   <a (click)=seeDetail(data)>{{'projectModule.taskDetail' | translate}}</a>
+</ng-template>
+
+<ng-template #myTableCellRef let-data="data" let-property="property">
+  <div *ngIf="property === 'ATTACHMENT' && data['ATTACHMENT']">
+    <app-file-list [fileList]="data['ATTACHMENT']"></app-file-list>
+  </div>
+  <div *ngIf="property === 'ASSIGNEE_LIST' && data['ASSIGNEE_LIST']">
+    <div *ngFor="let item of data['ASSIGNEE_LIST']"> {{item | myFlex: {name:'empno',params:['CH(NO)']} | async}}
+    </div>
+  </div>
 </ng-template>

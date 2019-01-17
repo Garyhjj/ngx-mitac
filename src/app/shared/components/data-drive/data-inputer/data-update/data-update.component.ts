@@ -69,20 +69,22 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
     private util: UtilService,
   ) {}
 
+  arrayDataToObject(array) {
+    let out = {};
+    if (isArray(array)) {
+      array.forEach(o => {
+        out[o.property] = o.value;
+      });
+    }
+    return out;
+  }
+
   submitForm() {
-    this.updating = true;
     let out = {};
     let res = this.dataDrive.runBeforeUpdateSubmit(
       this.validateForm,
       this.globalUpdateErrSubject,
-      (() => {
-        if (isArray(this.orinalData)) {
-          this.orinalData.forEach(o => {
-            out[o.property] = o.value;
-          });
-        }
-        return out;
-      })(),
+      this.arrayDataToObject(this.orinalData),
     );
     if (!res) {
       return setTimeout(() => this.globalUpdateErrSubject.next(''), 3000);
@@ -107,6 +109,7 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
     const hasFileUpload = !!this.inputTypeList.find(
       i => i.type === 'fileUpload',
     );
+    this.updating = true;
     if (hasFileUpload) {
       this.onSubmit.next(1);
     } else {
@@ -220,7 +223,7 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
             valid = [];
             match.fns.forEach(f => {
               const validFn = this.validExd[f.name];
-              const validParmas = f.parmas || [];
+              const validParmas = f.params || f.parmas || [];
               // tslint:disable-next-line:no-unused-expression
               validFn && valid.push(validFn(...validParmas));
             });
@@ -234,8 +237,9 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
         const label = mapColumn ? mapColumn.value : s.property;
         return Object.assign(
           {
-            label: isRequired ? '*' + label : label,
+            label: label,
             property: s.property,
+            isRequired,
           },
           s.InputOpts,
         );
@@ -249,7 +253,7 @@ export class DataUpdateComponent implements OnInit, OnDestroy {
       this.validateForm,
       this.globalUpdateErrSubject,
       this.inputTypeList,
-      this.orinalData,
+      this.arrayDataToObject(this.orinalData),
     );
   }
 }

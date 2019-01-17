@@ -19,6 +19,7 @@
       <li nz-menu-item data-route="/board/urgentNo">{{'urgentNoBoard' | translate}}</li>
       <li nz-menu-item data-route="/board/esd">{{'esd' | translate}}</li>
       <li nz-menu-item data-route="/board/shipping">{{'shippingBoard' | translate}}</li>
+      <li nz-menu-item data-route="/board/cvte">{{'cvte' | translate}}</li>
     </ul>
   </li>
   <li nz-submenu *ngIf="canSeeModule(26025)">
@@ -30,6 +31,7 @@
       <li nz-menu-item data-route="/exam/question">{{'question' | translate}}</li>
       <li nz-menu-item data-route="/exam/unit">{{'unit' | translate}}</li>
       <li nz-menu-item data-route="/exam/result">{{'examResult' | translate}}</li>
+      <li nz-menu-item data-route="/exam/contacts">{{'examModule.userContacts' | translate}}</li>
     </ul>
   </li>
   <li nz-submenu *ngIf="canSeeModule(61)">
@@ -58,7 +60,8 @@
           </nz-badge>
         </span>
         <ul>
-          <li nz-menu-item data-route="/inspection/boss/schedule" *ngIf="canSeeFunction(124)">{{'schedule' | translate}}</li>
+          <li nz-menu-item data-route="/inspection/boss/schedule" *ngIf="canSeeFunction(124)">{{'schedule' |
+            translate}}</li>
           <li nz-menu-item data-route="/inspection/boss/report">
             <span>{{'inspectionReport' | translate}}</span>
             <nz-badge [nzCount]="bossInspectionReportTip | async">
@@ -83,8 +86,10 @@
               </ng-template>
             </nz-badge>
           </li>
-          <li nz-menu-item data-route="/inspection/boss/attendance" *ngIf="canSeeFunction(163)">{{'attendance' | translate}}</li>
-          <li nz-menu-item data-route="/inspection/boss/comment" *ngIf="canSeeFunction(164)">{{'inspectionReportScore' | translate}}</li>
+          <li nz-menu-item data-route="/inspection/boss/attendance" *ngIf="canSeeFunction(163)">{{'attendance' |
+            translate}}</li>
+          <li nz-menu-item data-route="/inspection/boss/comment" *ngIf="canSeeFunction(164)">{{'inspectionReportScore'
+            | translate}}</li>
         </ul>
       </li>
       <li nz-submenu *ngIf="canSeeFunction(5)">
@@ -97,7 +102,8 @@
         </span>
         <ul>
           <li nz-menu-item data-route="/inspection/equip/list" *ngIf="canSeeFunction(317)">{{'eqRegistry' | translate}}</li>
-          <li nz-menu-item data-route="/inspection/equip/checkList" *ngIf="canSeeFunction(343)">{{'eqCheckList' | translate}}</li>
+          <li nz-menu-item data-route="/inspection/equip/checkList" *ngIf="canSeeFunction(343)">{{'eqCheckList' |
+            translate}}</li>
           <li nz-menu-item data-route="/inspection/equip/improvement">
             <span>{{'improvement' | translate}}</span>
             <nz-badge [nzCount]="equipInspectionUndoneTip | async">
@@ -115,7 +121,8 @@
             </nz-badge>
           </li>
           <li nz-menu-item data-route="/inspection/equip/status" *ngIf="canSeeFunction(343)">{{'eqStatus' | translate}}</li>
-          <li nz-menu-item data-route="/inspection/equip/history" *ngIf="canSeeFunction(343)">{{'eqHistory' | translate}}</li>
+          <li nz-menu-item data-route="/inspection/equip/history" *ngIf="canSeeFunction(343)">{{'eqHistory' |
+            translate}}</li>
         </ul>
       </li>
     </ul>
@@ -200,23 +207,39 @@
       <i class="anticon anticon-solution"></i>
       <span class="nav-text">{{'projectModule.name' | translate}}</span>
     </span>
-    <ul *ngIf="canSeeFunction(476, true)">
+    <ul>
       <li nz-submenu>
         <span title>{{'baseSetting' | translate}}</span>
         <ul>
           <li nz-menu-item data-route="/project/basic/type">{{'projectModule.setType' | translate}}</li>
           <li nz-menu-item data-route="/project/basic/bu">{{'projectModule.setBU' | translate}}</li>
           <li nz-menu-item data-route="/project/basic/customer">{{'projectModule.setCustomer' | translate}}</li>
+          <li nz-menu-item data-route="/project/basic/mail">{{'projectModule.mailSetting' | translate}}</li>
         </ul>
       </li>
     </ul>
     <ul>
-      <li nz-menu-item data-route="/project/main" *ngIf="canSeeFunction(476, true)">{{'projectModule.routeMain' | translate}}</li>
+      <li nz-menu-item data-route="/project/main">{{'projectModule.routeMain' |
+        translate}}</li>
       <li nz-menu-item data-route="/project/task">{{'projectModule.routeTask' | translate}}</li>
-      <li nz-menu-item data-route="/project/mtask" *ngIf="canSeeFunction(476, true)">{{'projectModule.mtask' | translate}}</li>
+      <li nz-menu-item data-route="/project/mtask">{{'projectModule.mtask' |
+        translate}}</li>
       <li nz-menu-item data-route="/project/scan">{{'projectModule.routeScan' | translate}}</li>
-      <li nz-menu-item data-route="/project/net" *ngIf="canSeeFunction(476, true)">{{'projectModule.routeNet' | translate}}</li>
-      <li nz-menu-item data-route="/project/analysis" *ngIf="canSeeFunction(476, true)">{{'projectModule.analysis' | translate}}</li>
+      <li nz-menu-item data-route="/project/net">{{'projectModule.routeNet' |
+        translate}}</li>
+      <li nz-menu-item data-route="/project/analysis">{{'projectModule.analysis' |
+        translate}}</li>
+    </ul>
+  </li>
+
+  <li nz-submenu>
+    <span title>
+      <i class="anticon anticon-solution"></i>
+      <span class="nav-text">{{'taxModule.name' | translate}}</span>
+    </span>
+    <ul>
+      <li nz-menu-item data-route="/tax/report">{{'taxModule.searchReduction' |
+        translate}}</li>
     </ul>
   </li>
 </ul>

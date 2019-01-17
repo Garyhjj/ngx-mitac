@@ -12,19 +12,21 @@ export class MessageTimePipe implements PipeTransform {
     let nowTime = new Date();
     let nowyear = nowTime.getFullYear();
     let nowday = nowTime.getDate();
+    let nowMonth = nowTime.getMonth();
     let show = '';
+    const during = nowTime.getTime() - mesTime.getTime();
     if (nowyear - year > 0) {
       show = 'year';
-    } else if (nowday - day > 0) {
-      if (nowday - day === 1) {
+    } else if (nowyear === year) {
+      if (month === nowMonth && nowday - day === 1) {
         show = '昨天';
-      } else if (nowday - day === 2) {
+      } else if (month === nowMonth && nowday - day === 2) {
         show = '前天';
+      } else if (month === nowMonth && nowday === day) {
+        show = 'time';
       } else {
         show = 'month';
       }
-    } else {
-      show = 'time';
     }
     let prefix = '';
     if (show === 'year') {
@@ -38,7 +40,7 @@ export class MessageTimePipe implements PipeTransform {
     }
     let minuteFormat: any = minute < 10 ? '0' + minute : minute;
     let hourFormat = '';
-    if (nowTime.getTime() - mesTime.getTime() < 1000 * 60) {
+    if (during < 1000 * 60) {
       return 'less than a minute';
     } else if (hour >= 0 && hour < 6) {
       hourFormat = '凌晨 ' + hour;

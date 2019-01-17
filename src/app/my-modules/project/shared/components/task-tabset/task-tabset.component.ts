@@ -52,11 +52,18 @@ export class TaskTabsetComponent implements OnInit, OnDestroy {
     return this.project && this.project.OWNER === this.empno;
   }
   bodyCellStyle = (data, prop) => {
+    const style = {};
     if (this.targetTask && this.targetTask.ID === data.ID) {
-      return {
+      Object.assign(style, {
         'background-color': '#e6f7ff',
-      };
+      });
     }
+    if (prop === 'DESCRIPTION') {
+      Object.assign(style, {
+        'max-width': '200px',
+      });
+    }
+    return style;
   };
   @Input()
   set project(p) {
@@ -115,8 +122,9 @@ export class TaskTabsetComponent implements OnInit, OnDestroy {
 
   validateWeight(d: DataDrive) {
     d.beforeUpdateSubmit((fg, sub, ori) => {
-      const { WEIGHT } = fg.value;
-      const ID = ori ? ori.ID : 0;
+      const { WEIGHT } = fg.value,
+        ID = ori ? ori.ID : 0,
+        HEADER_ID = ori ? ori.HEADER_ID : 0;
       const taskWeight = this.dataDriveSub
         .getData()
         .concat(this.dataDriveClosed.getData())
@@ -124,9 +132,10 @@ export class TaskTabsetComponent implements OnInit, OnDestroy {
         .concat(this.dataDriveNoAssignee.getData())
         .concat(this.dataDriveOutTime.getData())
         .filter(data => {
-          const id = data.find(_ => _.property === 'ID');
-          if (id) {
-            return id.value !== ID;
+          if (ID > 0) {
+            const header_id = data.find(_ => _.property === 'HEADER_ID'),
+              id = data.find(_ => _.property === 'ID');
+            return header_id.value === HEADER_ID && id.value !== ID;
           }
           return true;
         })
@@ -135,8 +144,8 @@ export class TaskTabsetComponent implements OnInit, OnDestroy {
         .map(data => data.value)
         .reduce((a, b) => {
           a = a || 0;
-          b = b || 0;
-          return a + b;
+          const c = +b || 0;
+          return a + c;
         }, 0);
       if (WEIGHT > 100 - taskWeight) {
         sub.next(
@@ -175,15 +184,19 @@ export class TaskTabsetComponent implements OnInit, OnDestroy {
   getUpdateTargetHeaderID(d: DataDrive) {
     if (!this.project) {
       d.onUpdateFormShow((fg, sub, i, data) => {
-        const idl = data.find(c => c.property === 'HEADER_ID');
+        const idl = data['HEADER_ID'];
         if (idl) {
-          this.targetHeaderID = idl.value;
+          this.targetHeaderID = idl;
         }
       });
     }
   }
 
+  onDownloadExcel(d: DataDrive) {
+    d.onDownloadExcel(data => this.projectService.linesOnDownExcel(data));
+  }
   getDataDriveSub(d: DataDrive) {
+    this.onDownloadExcel(d);
     this.hideStatusTemp(d);
     this.hideAssigneer(d);
     this.validateWeight(d);
@@ -240,7 +253,7 @@ export class TaskTabsetComponent implements OnInit, OnDestroy {
                 ) {
                   outTime.push(l);
                 } else {
-                  if (l.ASSIGNEE) {
+                  if (l.ASSIGNEE_LIST && l.ASSIGNEE_LIST.length > 0) {
                     normal.push(l);
                   } else {
                     noAssignee.push(l);
@@ -274,6 +287,7 @@ export class TaskTabsetComponent implements OnInit, OnDestroy {
     }
   }
   getDataDriveSub0(d: DataDrive) {
+    this.onDownloadExcel(d);
     this.hideStatusTemp(d);
     this.hideAssigneer(d);
     this.validateWeight(d);
@@ -285,9 +299,11 @@ export class TaskTabsetComponent implements OnInit, OnDestroy {
       : true;
     this.dataDriveNoAssignee = d;
     d.afterDataInit(data => (this.noAssigneeTips = data.length));
+    // 组件的设计默认为更新后去重新获取数据，下面禁止此行为
     this.stopInsideUpdate(d);
   }
   getDataDriveSub1(d: DataDrive) {
+    this.onDownloadExcel(d);
     this.hideStatusTemp(d);
     this.hideAssigneer(d);
     this.validateWeight(d);
@@ -302,6 +318,7 @@ export class TaskTabsetComponent implements OnInit, OnDestroy {
     this.stopInsideUpdate(d);
   }
   getDataDriveSub2(d: DataDrive) {
+    this.onDownloadExcel(d);
     this.hideStatusTemp(d);
     this.hideAssigneer(d);
     this.validateWeight(d);
@@ -312,6 +329,7 @@ export class TaskTabsetComponent implements OnInit, OnDestroy {
     this.stopInsideUpdate(d);
   }
   getDataDriveSub3(d: DataDrive) {
+    this.onDownloadExcel(d);
     this.hideStatusTemp(d);
     this.hideAssigneer(d);
     this.validateWeight(d);
@@ -403,7 +421,7 @@ export class TaskTabsetComponent implements OnInit, OnDestroy {
 
   filterEmpno(d: DataDrive) {
     const updateSets = d.updateSets;
-    const target = updateSets.find(s => s.property === 'ASSIGNEE');
+    const target = updateSets.find(s => s.property === 'ASSIGNEE_LIST');
     if (target) {
       target.InputOpts = target.InputOpts || {};
       target.InputOpts.more = target.InputOpts.more || {};

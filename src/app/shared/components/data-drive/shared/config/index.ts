@@ -8,6 +8,17 @@ import { inspectionAttendanceConfig } from './inspection-attendance.config';
 import { inspectionScheduleLineConfig } from './inspection-schedule-line.config';
 import { inspectionCommentConfig } from './inspection-comment.config';
 export const DataDriveStore = {
+  taxReportEdu: 307,
+  taxReportParents: 306,
+  taxReportIll: 305,
+  taxReportRental: 304,
+  taxReportLoan: 303,
+  taxReportChild: 301,
+  taxReportHeader: 302,
+  projectMailSetting: 284,
+  userContacts: 283,
+  cvteItem: 282,
+  cvteBoard: 281,
   shippingBoard: 261,
   projectAnalysis: 241,
   projectCustomer: 225,

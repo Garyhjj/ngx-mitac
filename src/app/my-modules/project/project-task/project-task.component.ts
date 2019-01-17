@@ -1,3 +1,4 @@
+import { filter } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { UtilService } from './../../../core/services/util.service';
@@ -29,11 +30,18 @@ export class ProjectTaskComponent implements OnInit, OnDestroy {
   translateTexts = {};
   sub: Subscription;
   bodyCellStyle = (data, prop) => {
+    const style = {};
     if (this.targetTask && this.targetTask.ID === data.ID) {
-      return {
+      Object.assign(style, {
         'background-color': '#e6f7ff',
-      };
+      });
     }
+    if (prop === 'DESCRIPTION') {
+      Object.assign(style, {
+        'max-width': '200px',
+      });
+    }
+    return style;
   };
   constructor(
     private auth: AuthService,
@@ -72,7 +80,12 @@ export class ProjectTaskComponent implements OnInit, OnDestroy {
     d.allHideLists.push('STATUS');
   }
 
+  onDownloadExcel(d: DataDrive) {
+    d.onDownloadExcel(data => this.projectService.linesOnDownExcel(data));
+  }
+
   getDataDrive1(d: DataDrive) {
+    this.onDownloadExcel(d);
     this.hideStatusTemp(d);
     this.changeNameSetSub(d);
     this.unDoneDataDrive = d;
@@ -90,6 +103,7 @@ export class ProjectTaskComponent implements OnInit, OnDestroy {
   }
 
   getDataDrive2(d: DataDrive) {
+    this.onDownloadExcel(d);
     this.hideStatusTemp(d);
     this.changeNameSetSub(d);
     this.outTimeDataDrive = d;
@@ -101,6 +115,7 @@ export class ProjectTaskComponent implements OnInit, OnDestroy {
   }
 
   getDataDrive3(d: DataDrive) {
+    this.onDownloadExcel(d);
     this.hideStatusTemp(d);
     this.changeNameSetSub(d);
     this.doneDataDrive = d;
@@ -109,6 +124,7 @@ export class ProjectTaskComponent implements OnInit, OnDestroy {
     this.dataDriveService.updateViewData(d);
   }
   getDataDrive4(d: DataDrive) {
+    this.onDownloadExcel(d);
     this.hideStatusTemp(d);
     this.changeNameSetSub(d);
     this.finishedDataDrive = d;
@@ -149,7 +165,9 @@ export class ProjectTaskComponent implements OnInit, OnDestroy {
   notMyTask(t) {
     const okCb = () => {
       const dismiss = this.util.showLoading2();
-      t.ASSIGNEE = '';
+      t.ASSIGNEE = t.ASSIGNEE.filter(a => a !== this.empno);
+      t.ASSIGNEE_LIST = t.ASSIGNEE;
+      t.rejectFlag = 'Y';
       this.dataDriveService.updateData(this.unDoneDataDrive, t).subscribe(
         res => {
           this.updateUndone();

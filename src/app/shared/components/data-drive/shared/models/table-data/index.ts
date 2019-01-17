@@ -1,3 +1,4 @@
+import { Subject } from 'rxjs';
 export interface TableDataColumn {
   property: string;
   value: string;
@@ -63,5 +64,26 @@ export class TableDataModel implements TableData {
     this.addable = false;
     this.visible = true;
     Object.assign(this, opts);
+  }
+}
+
+export class TableInsideDataModel implements TableInsideData {
+  property: string;
+  value: string;
+  hide: boolean;
+  private _checked: boolean;
+  private _checkedChangeSubject: Subject<any>;
+  constructor(opts: TableInsideData, sub?: Subject<any>) {
+    Object.assign(this, opts);
+    this._checkedChangeSubject = sub;
+  }
+  get checked() {
+    return this._checked;
+  }
+  set checked(c) {
+    this._checked = !!c;
+    if (this._checkedChangeSubject) {
+      this._checkedChangeSubject.next(1);
+    }
   }
 }

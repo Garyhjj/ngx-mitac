@@ -12,8 +12,8 @@ export class BoardService {
     this.user = this.auth.user;
   }
 
-  getEsdQuantity(flag: 'Y' | 'N') {
-    const send = { flag };
+  getEsdQuantity(flag: 'Y' | 'N', bu_deptno?: string, chu_deptno?: string) {
+    const send = { flag, bu_deptno, chu_deptno };
     return this.http.get(replaceQuery(boardConfig.getEsdQuantity, send));
   }
 

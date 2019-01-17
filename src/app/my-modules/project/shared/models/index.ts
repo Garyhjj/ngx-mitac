@@ -39,4 +39,6 @@ export class ProjectLine implements BasicTable {
   LAST_UPDATED_BY?: number;
   CREATION_DATE?: string;
   CREATED_BY?: number;
+  ASSIGNER?: string;
+  ASSIGNEE?: string;
 }

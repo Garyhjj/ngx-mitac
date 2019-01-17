@@ -37,6 +37,7 @@
   "urgentNoBoard": "急料工單看板",
   "esd": "門禁狀況",
   "shippingBoard": "產出vs出貨計劃",
+  "cvte": "CVTE車載產品產能",
   "exam": "訓練考試",
   "question": "考試題目",
   "unit": "考卷維護",
@@ -101,7 +102,8 @@
     "examOkTitle": "考卷已準備好",
     "examOkContent": "是否馬上考試",
     "examErrTitle": "該考卷不可用！",
-    "examErrContent": "請找管理員確認"
+    "examErrContent": "請找管理員確認",
+    "userContacts": "員工聯繫方式"
   },
   "boardModule": {
     "query": "檢索",
@@ -289,10 +291,15 @@
     "setBU": "單位(BU)設定",
     "setCustomer": "客戶設定",
     "mtask": "任務清單搜尋",
-    "analysis": "統計圖表"
+    "analysis": "統計圖表",
+    "mailSetting": "郵件設置"
   },
   "sharedModule": {
     "uploading": "上傳中",
     "doUpload": "執行上傳"
+  },
+  "taxModule": {
+    "name": "個稅專項附加扣除",
+    "searchReduction": "申報查詢"
   }
 }

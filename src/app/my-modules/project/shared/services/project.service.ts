@@ -1,3 +1,7 @@
+import { map } from 'rxjs/operators';
+import { forkJoin } from 'rxjs';
+import { FormatService } from './../../../../core/services/format.service';
+import { ProjectLine } from './../models/index';
 import { projectConfig } from './../config/index';
 import { HttpClient } from '@angular/common/http';
 import { isArray, replaceQuery } from './../../../../shared/utils/index';
@@ -5,7 +9,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class ProjectService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private formatService: FormatService) {}
 
   filterDataByDate(data) {
     let normal = [],
@@ -98,5 +102,32 @@ export class ProjectService {
     return this.http.get(
       replaceQuery(projectConfig.getProjectPeople, { header_id }),
     );
+  }
+
+  linesOnDownExcel(data: ProjectLine[]) {
+    const fs = this.formatService;
+    return forkJoin(
+      data
+        .map(a => {
+          a.START_DATE = fs.date(a.START_DATE, 'YYYY-MM-DD');
+          a.DUE_DATE = fs.date(a.DUE_DATE, 'YYYY-MM-DD');
+          return this.formatService.empno(a.ASSIGNEE, 'CH(EN)').pipe(
+            map(r => {
+              a.ASSIGNEE = r;
+              return a;
+            }),
+          );
+        })
+        .concat(
+          data.map(a => {
+            return this.formatService.empno(a.ASSIGNER, 'CH(EN)').pipe(
+              map(r => {
+                a.ASSIGNER = r;
+                return a;
+              }),
+            );
+          }),
+        ),
+    ).pipe(map(_ => data));
   }
 }

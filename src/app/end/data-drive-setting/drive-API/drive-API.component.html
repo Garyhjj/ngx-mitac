@@ -44,27 +44,22 @@
       <tr>
         <td>#tableCellRef</td>
         <td>映射模板： table视图的数据栏位(该栏位设置为自定义时设置模板才生效)
-          <br/>例子:
+          <br />例子:
           <code>
             {{'\
-            <ng-template ' +'#tableCellRef let-data="data" let-property="property" \>\ /* html */
-              <\/ng-template\>'}}
-          </code>
-        </td>
-        <td>ng-template</td>
+            <ng-template ' +' #tableCellRef let-data="data" let-property="property" \>\ /* html */
+              <\/ng-template\>'}} </code> </td> <td>ng-template</td>
         <td>-</td>
       </tr>
       <tr>
         <td>#headerCellRef</td>
         <td>映射模板： table视图的第一列栏位
-          <br/>例子:
+          <br />例子:
           <code>
             {{'\
-            <ng-template ' +'#headerCellRef let-col \>\ /* html */
-              <\/ng-template\>'}}
-          </code>
-          <td>ng-template</td>
-          <td>-</td>
+            <ng-template ' +' #headerCellRef let-col \>\ /* html */
+              <\/ng-template\>'}} </code> <td>ng-template</td>
+        <td>-</td>
       </tr>
       <tr>
         <td>dataDriveInit</td>
@@ -82,6 +77,12 @@
         <td>my-full-screen-header</td>
         <td>映射,class选择器, 插入全屏时的头部组件</td>
         <td>html</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>viewerMinWidth</td>
+        <td>设置数据视图的最小宽度</td>
+        <td>string</td>
         <td>-</td>
       </tr>
     </tbody>
@@ -274,6 +275,12 @@
         <td>Func</td>
         <td>-</td>
       </tr>
+      <tr>
+        <td>onDownloadExcel</td>
+        <td>下载数据时的钩子,可操作数据</td>
+        <td>Func</td>
+        <td>-</td>
+      </tr>
     </tbody>
   </table>
 
@@ -333,6 +340,12 @@
         <td>isScrolling</td>
         <td>是否在滚动中</td>
         <td>属性</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>onScrollTo</td>
+        <td>增加滚动头部位置的订阅</td>
+        <td>Func</td>
         <td>-</td>
       </tr>
     </tbody>
@@ -419,6 +432,42 @@
     </li>
     <li>增加属性,是否在滚动
       <code>isScrolling</code>
+    </li>
+  </ul>
+
+  <p>
+    <code>20180723</code>
+  </p>
+  <h3>
+    <span>tabel_view</span>
+  </h3>
+  <ul>
+    <li>增加滚动头部位置的订阅
+      <code>onScrollTo</code>
+    </li>
+  </ul>
+
+  <p>
+    <code>20180726</code>
+  </p>
+  <h3>
+    <span>dataDrive</span>
+  </h3>
+  <ul>
+    <li>增加API
+      <code>onDownloadExcel</code>
+    </li>
+  </ul>
+
+  <p>
+    <code>20180928</code>
+  </p>
+  <h3>
+    <span>app-data-drive</span>
+  </h3>
+  <ul>
+    <li>增加绑定属性
+      <code>viewerMinWidth</code>
     </li>
   </ul>
 </section>

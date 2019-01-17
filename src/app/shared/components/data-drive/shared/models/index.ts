@@ -1,9 +1,10 @@
-import { filter } from 'rxjs/operators';
+import { driveLifeCycle } from './../constants';
+import { filter, mergeMap, debounceTime, map } from 'rxjs/operators';
 import { deepClone } from './../../../../utils/index';
-import { Observable, Subject, BehaviorSubject } from 'rxjs';
+import { Observable, Subject, BehaviorSubject, of, isObservable } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { AdditionalFn } from './additionalFn/index';
-import { TableDataModel, TableData } from './table-data/index';
+import { TableDataModel, TableData, TableInsideData } from './table-data/index';
 import { SearchItemSet } from './searcher';
 import {
   DataViewSet,
@@ -48,7 +49,7 @@ export interface DataDriveOptions {
   selfHideLists?: string[];
   otherDataViewSets?: DataViewSet[];
 }
-
+const _selfStoreSet = new SelfStoreSet();
 export class DataDrive implements DataDriveOptions {
   private user: string;
   private _selfHideLists?: string[];
@@ -63,6 +64,7 @@ export class DataDrive implements DataDriveOptions {
   private selfSearchDataSubject = new Subject<any[]>();
   private scrollToBottomSubject = new Subject<any>();
   private isInBackgroundSubject = new Subject<any>();
+  checkedDataSubject = new Subject<any>();
   viewerChange = new Subject<any>();
   isInBackground = false;
   eventSubject = new Subject<string>();
@@ -94,7 +96,7 @@ export class DataDrive implements DataDriveOptions {
     user: string = 'default',
     dataViewSetFactory: DataViewSetFactory = DataViewSetFactory,
     inputSetFactory = InputSetFactory,
-    selfStoreSet = SelfStoreSet,
+    selfStoreSet = _selfStoreSet,
     selfStore = SelfStore,
     tableDataModel = TableDataModel,
   ) {
@@ -102,7 +104,7 @@ export class DataDrive implements DataDriveOptions {
     this.user = user;
     this.dataViewSetFactory = dataViewSetFactory;
     this.inputSetFactory = inputSetFactory;
-    this.selfStoreSet = new selfStoreSet();
+    this.selfStoreSet = selfStoreSet;
     this.selfStore = selfStore;
     this.tableDataModel = tableDataModel;
     this.init();
@@ -312,12 +314,18 @@ export class DataDrive implements DataDriveOptions {
     const data = this.getData().filter(d => d[0] && d[0].checked === true);
     if (data.length > 0) {
       return data.map(d => {
-        let out = {};
-        d.forEach(l => (out[l.property] = l.value));
-        return out;
+        // let out: { [prop: string]: string } = {};
+        // d.forEach(l => (out[l.property] = l.value));
+        return d['_data'];
       });
     }
-    return null;
+    return [];
+  }
+  observeCheckedData() {
+    return this.checkedDataSubject.asObservable().pipe(
+      debounceTime(300),
+      map(() => this.getCheckedData()),
+    );
   }
   /**
    * 增加默認搜索參數
@@ -355,8 +363,8 @@ export class DataDrive implements DataDriveOptions {
    * @returns {any[]}
    * @memberof DataDrive
    */
-  getData(): any[] {
-    if (this.tableData.data && this.tableData.data.length > 0) {
+  getData(): TableInsideData[][] {
+    if (Array.isArray(this.tableData.data)) {
       return this.tableData.data;
     } else {
       return [];
@@ -392,6 +400,15 @@ export class DataDrive implements DataDriveOptions {
   observeIsShowModal(): Observable<boolean> {
     return this.isShowModalSubject.asObservable();
   }
+  /**
+   * 下载数据时，可对数据进行格式化。
+   *
+   * @param {((data: any) => any | void)} cb
+   * @memberof DataDrive
+   */
+  onDownloadExcel(cb: (data: any) => any | void) {
+    this.on(driveLifeCycle.ON_DOWNLOAD_EXCEL, cb);
+  }
 
   /**
    * 更新操作的生命週期----表單顯示時
@@ -407,7 +424,7 @@ export class DataDrive implements DataDriveOptions {
       data: any,
     ) => void,
   ) {
-    this.on('updateFormShow', cb);
+    this.on(driveLifeCycle.UPDATE_FORM_SHOW, cb);
   }
 
   /**
@@ -429,7 +446,7 @@ export class DataDrive implements DataDriveOptions {
   beforeUpdateSubmit(
     cb: (fg: FormGroup, sub: Subject<string>, originalData: any) => any,
   ) {
-    this.on('beforeUpdateSubmit', cb);
+    this.on(driveLifeCycle.BEFORE_UPDATE_SUBMIT, cb);
   }
 
   /**
@@ -439,11 +456,11 @@ export class DataDrive implements DataDriveOptions {
    * @memberof DataDrive
    */
   beforeUpdateShow(cb: (data: any) => Boolean) {
-    this.on('beforeUpdateShow', cb);
+    this.on(driveLifeCycle.BEFORE_UPDATE_SHOW, cb);
   }
 
   runBeforeUpdateShow(data) {
-    return this.emitEvent('beforeUpdateShow', data);
+    return this.emitEvent(driveLifeCycle.BEFORE_UPDATE_SHOW, data);
   }
 
   /**
@@ -453,7 +470,7 @@ export class DataDrive implements DataDriveOptions {
    * @memberof DataDrive
    */
   beforeSearch(cb: (data: any) => any) {
-    this.on('beforeSearch', cb);
+    this.on(driveLifeCycle.BEFORE_SEARCH, cb);
   }
 
   /**
@@ -463,7 +480,7 @@ export class DataDrive implements DataDriveOptions {
    * @memberof DataDrive
    */
   afterDataInit(cb: (data: any) => void) {
-    this.on('afterDataInit', cb);
+    this.on(driveLifeCycle.AFTER_DATA_INIT, cb);
   }
   /**
    * 數據視圖的渲染週期---視圖顯示數據前
@@ -472,7 +489,7 @@ export class DataDrive implements DataDriveOptions {
    * @memberof DataDrive
    */
   beforeInitTableData(cb: (data: any[]) => any | void) {
-    this.on('beforeInitTableData', cb);
+    this.on(driveLifeCycle.BEFORE_INIT_TABLE_DATA, cb);
   }
 
   /**
@@ -482,11 +499,15 @@ export class DataDrive implements DataDriveOptions {
    * @memberof DataDrive
    */
   onUpdateData(cb: (data: any) => any | void) {
-    this.on('onUpdateData', cb);
+    this.on(driveLifeCycle.ON_UPDATE_DATA, cb);
   }
 
   runOnUpdateData(data) {
-    return this.onAlterData('onUpdateData', data);
+    return this.onAlterData(driveLifeCycle.ON_UPDATE_DATA, data);
+  }
+
+  runOnDownloadExcel(data) {
+    return this.onAlterDataFlex(driveLifeCycle.ON_DOWNLOAD_EXCEL, data);
   }
 
   /**
@@ -496,16 +517,16 @@ export class DataDrive implements DataDriveOptions {
    * @memberof DataDrive
    */
   changeSearchWay(cb: (data?: any) => Observable<any>) {
-    if (this.eventsQueue['changeSearchWay']) {
+    if (this.eventsQueue[driveLifeCycle.CHANGE_SEARCH_WAY]) {
       this.eventsQueue[0] = cb;
     } else {
-      this.eventsQueue['changeSearchWay'] = [cb];
+      this.eventsQueue[driveLifeCycle.CHANGE_SEARCH_WAY] = [cb];
     }
   }
 
   runChangeSearchWay(data) {
     const eventQueue: Array<Function> =
-      this.eventsQueue['changeSearchWay'] || [];
+      this.eventsQueue[driveLifeCycle.CHANGE_SEARCH_WAY] || [];
     if (eventQueue.length > 0) {
       return eventQueue[0](data);
     }
@@ -519,15 +540,15 @@ export class DataDrive implements DataDriveOptions {
    * @memberof DataDrive
    */
   changeUpdateWay(cb: (data: any) => Observable<any> | boolean) {
-    if (this.eventsQueue['changeUpdateWay']) {
+    if (this.eventsQueue[driveLifeCycle.CHANGE_UPDATE_WAY]) {
       this.eventsQueue[0] = cb;
     } else {
-      this.eventsQueue['changeUpdateWay'] = [cb];
+      this.eventsQueue[driveLifeCycle.CHANGE_UPDATE_WAY] = [cb];
     }
   }
   runChangeUpdateWay(data) {
     const eventQueue: Array<Function> =
-      this.eventsQueue['changeUpdateWay'] || [];
+      this.eventsQueue[driveLifeCycle.CHANGE_UPDATE_WAY] || [];
     if (eventQueue.length > 0) {
       return eventQueue[0](data);
     }
@@ -540,26 +561,26 @@ export class DataDrive implements DataDriveOptions {
    * @memberof DataDrive
    */
   beforeInsideUpdateView(cb: () => any) {
-    if (this.eventsQueue['beforeInsideUpdateView']) {
+    if (this.eventsQueue[driveLifeCycle.BEFORE_INSIDE_UPDATE_VIEW]) {
       this.eventsQueue[0] = cb;
     } else {
-      this.eventsQueue['beforeInsideUpdateView'] = [cb];
+      this.eventsQueue[driveLifeCycle.BEFORE_INSIDE_UPDATE_VIEW] = [cb];
     }
   }
 
   runBeforeInsideUpdateView() {
     const eventQueue: Array<Function> =
-      this.eventsQueue['beforeInsideUpdateView'] || [];
+      this.eventsQueue[driveLifeCycle.BEFORE_INSIDE_UPDATE_VIEW] || [];
     if (eventQueue.length > 0) {
       return eventQueue[0]();
     }
     return true;
   }
   emitAfterDataInit(data) {
-    return this.onAlterData('afterDataInit', data);
+    return this.onAlterData(driveLifeCycle.AFTER_DATA_INIT, data);
   }
   emitParamsOut(data) {
-    this.emitEvent('paramsOut', data);
+    this.emitEvent(driveLifeCycle.PARAMS_OUT, data);
   }
 
   emitEvent(name: string, ...p) {
@@ -583,6 +604,42 @@ export class DataDrive implements DataDriveOptions {
       this.eventsQueue[eventType] = [cb];
     }
   }
+  onAlterDataFlex(eventName: string, data: any) {
+    const eventQueue: Array<Function> = this.eventsQueue[eventName] || [];
+    const runFlex = (observable: Observable<any>, fn) => {
+      return observable.pipe(
+        mergeMap(d => {
+          if (typeof fn === 'function') {
+            const res = fn(d);
+            if (isObservable(res)) {
+              return res;
+            } else if (res instanceof Promise) {
+              return new Observable<any>(ob => {
+                res
+                  .then(_ => {
+                    ob.next(isArray(_) ? _ : d);
+                    ob.complete();
+                  })
+                  .catch(e => ob.error(e));
+              });
+            } else if (isArray(res)) {
+              return of(res);
+            } else {
+              return of(d);
+            }
+          } else {
+            return of(d);
+          }
+        }),
+      );
+    };
+    let observe = of(data);
+    for (let i = 0; i < eventQueue.length; i++) {
+      const cb = eventQueue[i];
+      observe = runFlex(observe, cb);
+    }
+    return observe;
+  }
 
   onAlterData(eventName: string, data: any) {
     const eventQueue: Array<Function> = this.eventsQueue[eventName] || [];
@@ -599,10 +656,11 @@ export class DataDrive implements DataDriveOptions {
   }
 
   runBeforeInitTableData(data) {
-    return this.onAlterData('beforeInitTableData', data);
+    return this.onAlterData(driveLifeCycle.BEFORE_INIT_TABLE_DATA, data);
   }
   runBeforeSearch(data: any) {
-    const eventQueue: Array<Function> = this.eventsQueue['beforeSearch'] || [];
+    const eventQueue: Array<Function> =
+      this.eventsQueue[driveLifeCycle.BEFORE_SEARCH] || [];
     if (typeof data !== 'object') {
       return data;
     }
@@ -624,7 +682,7 @@ export class DataDrive implements DataDriveOptions {
     originalData: any,
   ) {
     const eventQueue: Array<Function> =
-      this.eventsQueue['beforeUpdateSubmit'] || [];
+      this.eventsQueue[driveLifeCycle.BEFORE_UPDATE_SUBMIT] || [];
     if (eventQueue.length > 0) {
       return eventQueue[0](fg, globalUpdateErrSubject, originalData);
     }
@@ -685,7 +743,7 @@ export class DataDrive implements DataDriveOptions {
     data,
   ) {
     return this.emitEvent(
-      'updateFormShow',
+      driveLifeCycle.UPDATE_FORM_SHOW,
       fg,
       globalUpdateErrSubject,
       inputTypeList,

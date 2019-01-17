@@ -1,0 +1,15 @@
+<ng-container>
+  <form [formGroup]="mutiForm" *ngIf="mutiForm">
+    <ng-container formArrayName="arr" *ngIf="mutiForm.get('arr')">
+      <ng-container *ngFor="let a of mutiForm.get('arr').controls; let i = index;">
+        <ng-container [formGroupName]="i">
+          <app-colleague-searcher [miDisabled]="!searcherOption?.more?.editable" [miSearchFilter]="searcherOption?.more?.searchFilter"
+            [miPickerFormat]="searcherOption?.more?.pickerFormat" formControlName="col"></app-colleague-searcher>
+          <i class="anticon anticon-minus-circle-o dynamic-delete-button" (click)="cancleEmp(i)" *ngIf="i > 0"></i>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </form>
+  <button nz-button nzType="dashed" style="width:200px" (click)="addEmp()"><i class="anticon anticon-plus"></i>
+    Add </button>
+</ng-container>

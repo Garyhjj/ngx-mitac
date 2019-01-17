@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import * as XLSX from 'xlsx';
+import * as moment from 'moment';
 
 @Injectable()
 export class UtilService {
@@ -218,6 +219,15 @@ export class UtilService {
         default:
           return value;
       }
+    }
+  }
+
+  dateFormat(date: any, toFormat: string, fromFormat?: string) {
+    const m = moment(date, fromFormat);
+    if (m.isValid()) {
+      return m.format(toFormat);
+    } else {
+      return date;
     }
   }
 }

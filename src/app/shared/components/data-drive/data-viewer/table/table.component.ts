@@ -1,3 +1,5 @@
+import { APPConfig } from './../../../../config/app.config';
+import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/overlay';
 import { TableDataColumn } from './../../shared/models/table-data/index';
 import { NgxValidatorExtendService } from './../../../../../core/services/ngx-validator-extend.service';
 import { UtilService } from './../../../../../core/services/util.service';
@@ -18,30 +20,34 @@ import {
   Input,
   AfterViewInit,
   OnDestroy,
-  AfterViewChecked,
   ChangeDetectorRef,
   TemplateRef,
+  ViewChild,
+  HostListener,
+  Renderer2,
+  ElementRef,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { DataDrive } from '../../../data-drive/shared/models/index';
 import { throttle, isArray, sortUtils } from '../../../../utils/index';
-import { Observable, Subject } from 'rxjs';
-import { APPConfig } from '../../../../config/app.config';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableComponent
-  implements OnInit, AfterViewInit, OnDestroy, AfterViewChecked {
+export class TableComponent implements OnInit, AfterViewInit, OnDestroy {
   _dataDrive: DataDrive;
 
   tableSet: TabelViewSet;
   setDetail: TabelViewSetMore;
   tableData: TableData;
-  dataViewList: any = [];
+  dataViewList: any[] = [];
   canScroll = true;
   informTime: Date;
+  showData: any[];
   private timeEvent1;
   private timeEvent2;
   private timeEvent3;
@@ -55,6 +61,8 @@ export class TableComponent
   fileList;
   allChecked;
   loadingMore;
+  tableBody;
+  @ViewChild('myDriveTable') myDriveTable;
   @Input() actionRef: TemplateRef<void>;
   @Input() tableCellRef: TemplateRef<void>;
   @Input() headerCellRef: TemplateRef<void>;
@@ -93,6 +101,9 @@ export class TableComponent
     private modalService: NzModalService,
     private util: UtilService,
     private validatorExtendService: NgxValidatorExtendService,
+    private render: Renderer2,
+    private scrollDispatcher: ScrollDispatcher,
+    private elementRef: ElementRef,
   ) {}
 
   _headerCellStyle(item: TableDataColumn) {
@@ -117,6 +128,11 @@ export class TableComponent
   }
   get canDelete() {
     return this._dataDrive.isDataDeletable();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onresize(event) {
+    throttle(this.cacalScrollHeight, this, [], 200);
   }
   sort(name: string, v: string, by: { name: string; params: any[] }) {
     if (!name || !v || !by) {
@@ -144,23 +160,31 @@ export class TableComponent
       .slice();
   }
 
-  cacalScrollHeight() {
-    if (
-      this.setDetail &&
-      this.setDetail.fixedHeader &&
-      this.setDetail.fixedHeader.scrollHeight === 'auto'
-    ) {
-      if (this.isModal) {
-        const body: any = document.querySelector('.my-modal .ant-table-body');
-        body.style.maxHeight = `calc(99vh)`;
-      } else {
-        const table = document.querySelector('app-table table');
-        if (table) {
-          const otherHeight = table.getBoundingClientRect().bottom + 50 + 3;
-          const body: any = document.querySelector(
-            '.main-view .ant-table-body',
-          );
-          body.style.maxHeight = `calc(100vh - ${otherHeight}px)`;
+  cacalScrollHeight(spec?) {
+    if (this.setDetail && this.setDetail.fixedHeader) {
+      if (this.myDriveTable && this.myDriveTable.nativeElement) {
+        let tableContainer = this.myDriveTable.nativeElement;
+        if (this.setDetail.fixedHeader.scrollHeight === 'auto') {
+          let body = (this.tableBody = tableContainer.querySelector(
+            '.ant-table-body',
+          ));
+          if (this.tableBody) {
+            if (this.isModal) {
+              const top = body.offsetTop;
+              this.render.setStyle(body, 'maxHeight', `calc(100vh - ${top}px)`);
+            } else {
+              const table = tableContainer.querySelector('table');
+              if (table) {
+                const otherHeight =
+                  table.getBoundingClientRect().bottom + 50 + 3;
+                this.render.setStyle(
+                  body,
+                  'maxHeight',
+                  `calc(100vh - ${spec ? 600 : otherHeight}px)`,
+                );
+              }
+            }
+          }
         }
       }
     }
@@ -180,9 +204,40 @@ export class TableComponent
   bindTableData() {
     this._dataDrive.afterDataInit(() => {
       // this.tableData.data = this._dataDrive.tableData.data;
-      this.updateFilterColumns();
-      this.dataChange();
+      this.allChecked = false;
+      this.updateFilterColumns(true);
+      this.loadData();
     });
+  }
+
+  loadData() {
+    const data = this.tableData.data;
+    if (data) {
+      // 防止一次性加载太多
+      const INERVAL = 10,
+        lg = data.length;
+      if (lg > INERVAL && !this.setDetail.pageSet.enable /* 不分页*/) {
+        this.tableData.data = [];
+        const fn = start => {
+          if (lg < start) {
+            return this.dataChange();
+          }
+          this.tableData.data = this.tableData.data.concat(
+            data.slice(start, start + INERVAL),
+          );
+          try {
+            this.ref.detectChanges();
+          } catch (err) {}
+          setTimeout(() => fn(start + INERVAL), 300);
+        };
+        fn(0);
+      } else {
+        this.dataChange();
+        try {
+          this.ref.detectChanges();
+        } catch (err) {}
+      }
+    }
   }
 
   getPipes() {
@@ -237,9 +292,11 @@ export class TableComponent
   getDataByIdx(idx: number) {
     const data = this._dataDrive.getData()[idx];
     const out: any = {};
-    data.forEach(d => {
-      out[d.property] = d.value;
-    });
+    if (isArray(data)) {
+      data.forEach(d => {
+        out[d.property] = d.value;
+      });
+    }
     return out;
   }
 
@@ -270,37 +327,42 @@ export class TableComponent
     // tslint:disable-next-line:no-unused-expression
     this.sub2 && this.sub2.unsubscribe();
     this.sub2 = this._dataDrive.observeIsGettingData().subscribe(s => {
-      if (!s && this._loading) {
-        this.updateFilterColumns();
-      }
+      // if (!s && this._loading) {
+      //   this.updateFilterColumns();
+      // }
       this._loading = s;
-      this.ref.markForCheck();
+      this.ref.detectChanges();
     });
   }
 
-  updateFilterColumns() {
+  updateFilterColumns(fromAfterInit?) {
     const ls = this.hideLists;
-    const filter = c => ls.indexOf(c.property) < 0;
+    const myFilter = c => ls.indexOf(c.property) < 0;
     const filterColumns = this._dataDrive.tableData.columns
       .slice()
-      .filter(filter);
+      .filter(myFilter);
     const originData =
       this._dataDrive.tableData.data && this._dataDrive.tableData.data.slice();
     let filterData = [];
     if (originData && originData.length > 0) {
-      filterData = originData.map(trs => trs.filter(filter));
+      filterData = originData.map(trs => trs.filter(myFilter));
     }
     this.tableData.columns = filterColumns;
     if (filterData) {
       this.tableData.data = filterData;
     }
-    try {
-      this.ref.detectChanges();
-    } catch (err) {}
+    if (!fromAfterInit) {
+      try {
+        this.ref.detectChanges();
+      } catch (err) {}
+    }
   }
   dataChange() {
     clearTimeout(this.timeEvent3);
-    this.timeEvent3 = setTimeout(() => this.initAutoScroll(), 50);
+    this.timeEvent3 = setTimeout(() => {
+      this.cacalScrollHeight();
+      this.initAutoScroll();
+    }, 50);
   }
 
   subscribeIsInBackground() {
@@ -319,10 +381,26 @@ export class TableComponent
       this.setDetail.fixedHeader &&
       (autoScroll = this.setDetail.fixedHeader.autoScroll)
     ) {
-      const selector = this.isModal
-        ? '.my-modal app-table tr'
-        : '.main-view app-table tr';
-      this.dataViewList = document.querySelectorAll(selector);
+      const tableContainer = this.myDriveTable.nativeElement;
+      let body = this.tableBody
+        ? this.tableBody
+        : tableContainer.querySelector('.ant-table-body');
+      let dataViewList = (this.dataViewList = tableContainer.querySelectorAll(
+        'tbody tr',
+      ));
+      if (body) {
+        body.addEventListener('scroll', e => {
+          for (let lg = dataViewList.length, i = lg - 1; i > -1; i--) {
+            if (dataViewList[i].offsetTop <= e.target.scrollTop) {
+              this.tableSet.emitFn(
+                this.tableSet.eventNames.onScrollTo,
+                this.getDataByIdx(i),
+              );
+              break;
+            }
+          }
+        });
+      }
       this._scrollInterval = autoScroll.interval;
       this._loopScroll = autoScroll.loop;
       this.canScroll = true;
@@ -408,13 +486,12 @@ export class TableComponent
   arrayToObjectForData(idx: number) {
     idx = this.calIdx(idx);
     const data = this._dataDrive.getData()[idx];
-    const out: any = {};
+    // const out: any = {};
     if (isArray(data)) {
-      data.forEach(d => {
-        out[d.property] = d.value;
-      });
+      return data['_data'];
+    } else {
+      return {};
     }
-    return out;
   }
 
   linkToPhone(params: { url: string; local: string }, idx: number) {
@@ -475,14 +552,18 @@ export class TableComponent
     },
     property?: string,
   ) {
+    const bS = this.bodyCellStyle;
+    if (!body && !bS) {
+      return Object.create(null);
+    }
     const cache = this.styleCache;
     dataIdx = this.calIdx(dataIdx);
-    const allData = this._dataDrive.getData();
-    const target = allData && allData[dataIdx];
     const test = () => {
       if (!body) {
         return Object.create(null);
       }
+      const allData = this._dataDrive.getData();
+      const target = allData && allData[dataIdx];
       let rules: {
         matches: string[][];
         textColor?: string;
@@ -549,11 +630,8 @@ export class TableComponent
       'font-size': cache.textSize,
     };
     let outStyle;
-    if (this.bodyCellStyle) {
-      outStyle = this.bodyCellStyle(
-        this.arrayToObjectForData(dataIdx),
-        property,
-      );
+    if (bS) {
+      outStyle = bS(this.arrayToObjectForData(dataIdx), property);
     }
     return typeof outStyle === 'object'
       ? Object.assign({}, def, outStyle)
@@ -603,10 +681,17 @@ export class TableComponent
       this.sub3 = this._dataDrive
         .observeIsShowModal()
         .subscribe(s => (this.canScroll = !s));
+      this.updateFilterColumns();
     } else {
-      this.dataChange();
+      this.updateFilterColumns(true);
+      this.loadData();
     }
-    this.updateFilterColumns();
+    this.scrollDispatcher
+      .ancestorScrolled(this.elementRef, 1000)
+      .subscribe((scrollable: CdkScrollable) => {
+        this.cacalScrollHeight(true);
+        setTimeout(() => this.cacalScrollHeight(), 50);
+      });
   }
 
   ngOnDestroy() {
@@ -614,12 +699,12 @@ export class TableComponent
     this.unsubscribeAll();
   }
   ngAfterViewInit() {
-    this.cacalScrollHeight();
+    setTimeout(this.cacalScrollHeight.bind(this), 50);
   }
 
-  ngAfterViewChecked() {
-    this.timeEvent2 = throttle(this.cacalScrollHeight, this, [], 500);
-  }
+  // ngAfterViewChecked() {
+  //   this.timeEvent2 = throttle(this.cacalScrollHeight, this, [], 500);
+  // }
 }
 
 class StyleCache {

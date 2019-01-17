@@ -7,6 +7,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { UrgentMaterialComponent } from './urgent-material/urgent-material.component';
 import { EsdComponent } from './esd/esd.component';
 import { ShippingComponent } from './shipping/shipping.component';
+import { CvteComponent } from './cvte/cvte.component';
 
 const bRoutes: Routes = [
   {
@@ -31,6 +32,13 @@ const bRoutes: Routes = [
       {
         path: 'shipping',
         component: ShippingComponent,
+        data: {
+          reuse: false,
+        },
+      },
+      {
+        path: 'cvte',
+        component: CvteComponent,
         data: {
           reuse: false,
         },

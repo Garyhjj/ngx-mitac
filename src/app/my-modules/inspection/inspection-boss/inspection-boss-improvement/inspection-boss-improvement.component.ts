@@ -1,8 +1,8 @@
+import { UtilService } from './../../../../core/services/util.service';
 import { AppService } from './../../../../core/services/app.service';
 import { Component, OnInit } from '@angular/core';
 import { DataDrive } from '../../../../shared/components/data-drive/shared/models/index';
 import { AuthService } from '../../../../core/services/auth.service';
-import * as moment from 'moment';
 
 @Component({
   selector: 'app-inspection-boss-improvement',
@@ -10,7 +10,11 @@ import * as moment from 'moment';
   styleUrls: ['./inspection-boss-improvement.component.css'],
 })
 export class InspectionBossImprovementComponent implements OnInit {
-  constructor(private auth: AuthService, private appService: AppService) {}
+  constructor(
+    private auth: AuthService,
+    private appService: AppService,
+    private util: UtilService,
+  ) {}
 
   ngOnInit() {}
 
@@ -18,7 +22,9 @@ export class InspectionBossImprovementComponent implements OnInit {
     d.addDefaultSearchParams({ empno: this.auth.user.EMPNO });
 
     d.onUpdateFormShow(fg => {
-      fg.get('ACTION_DATE').setValue(moment(new Date()).format('YYYY-MM-DD'));
+      fg.get('ACTION_DATE').setValue(
+        this.util.dateFormat(new Date(), 'YYYY-MM-DD'),
+      );
     });
 
     d.onUpdateData(data => {

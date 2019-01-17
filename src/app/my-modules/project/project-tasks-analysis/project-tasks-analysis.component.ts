@@ -347,7 +347,7 @@ export class ProjectTasksAnalysisComponent implements OnInit, OnDestroy {
     this.dataDrive = d;
     d.afterDataInit(data => {
       const total = data.pop();
-      const tN = total.total;
+      const tN = total.total - total.notFinishAheadTime;
       if (total && tN > 0) {
         this.rate = +((total.closed / tN) * 100).toFixed(2);
       } else {

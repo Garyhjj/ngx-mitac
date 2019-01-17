@@ -1,3 +1,4 @@
+import { FormatService } from './services/format.service';
 import { MyErrorHandlerService } from './services/myErrorHandler.service';
 import { CacheService } from './services/cache.service';
 import { UtilService } from './services/util.service';
@@ -29,6 +30,7 @@ import { Store } from '@ngrx/store';
     UtilService,
     AuthGuard,
     MyErrorHandlerService,
+    FormatService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpHeaderInterceptor,

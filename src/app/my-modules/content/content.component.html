@@ -12,7 +12,7 @@
       </ng-template>
     </nz-tab>
   </nz-tabset>
-  <nz-content style="background:#fff; padding: 3px; overflow: auto; height: 30px">
+  <nz-content style="background:#fff; padding: 3px; overflow: auto" cdkScrollable [style.height]="breadcrumb?.length > 0? 'calc(100vh - 180px)': 'calc(100vh - 124px)'">
     <router-outlet></router-outlet>
   </nz-content>
   <nz-footer style="text-align: center;">Ant Design ©{{year}} Implement By Mitac</nz-footer>

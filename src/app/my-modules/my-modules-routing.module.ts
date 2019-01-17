@@ -39,6 +39,10 @@ const mRoutes: Routes = [
         path: 'project',
         loadChildren: './project/project.module#ProjectModule',
       },
+      {
+        path: 'tax',
+        loadChildren: './tax/tax.module#TaxModule',
+      },
     ],
   },
 ];

@@ -76,14 +76,18 @@ export class DriveEditComponent implements OnInit {
     checkbox: `
     {
       "options": [{ "property": "IPQA", value: "IPQA巡檢" }],
+      "lazyAPI": "IPQA/XXX?company={company}" // 當不能提供options時，向網絡懶加載
+      "lazyParams": ["TYPE", "DESCRIPTION"] //第一個參數是form獲得的表單值，後一個是顯示的文字
+      "lazyAPIUserMes": {"company": "COMPANY_ID"} //API需要當前用戶信息時,屬性key是替換的參數，value是user對象的屬性，可在localStorage里查看
+      "pickerFormat": "string" | "array"
     }
     `,
     datePicker: `
     {
       "pickerFormat": "YYYY/MM/DD HH:mm", //就是表單獲得的日期格式
       "showFormat": "YYYY/MM/DD HH:mm", //控件顯示的日期格式
-      "showTime": false, //是否可選擇時分秒
-      "showMode"： "Day" //選擇到什麼位置,這是可選擇到天 day | month
+      "showTime": 一个对象或boolean, //是否可選擇時分秒，请看官网
+      "showMode"： "Day" //選擇到什麼位置,這是可選擇到天 day | month | range(范围)
     }
     `,
     timePicker: `
@@ -182,6 +186,7 @@ export class DriveEditComponent implements OnInit {
     { property: 'lazyLoad', value: '網絡請求后替換' },
     { property: 'date', value: '日期格式化' },
     { property: 'empno', value: '员工信息格式化' },
+    { property: 'toFixed', value: '保留小数位数' },
   ];
   additionalFnOptions = [
     { property: 'changeBodyFontSize', value: '表格數據字體大小調整' },

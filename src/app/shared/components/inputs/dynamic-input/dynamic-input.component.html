@@ -15,7 +15,8 @@
     [lazyAPIUserMes]="inputOptions?.more?.lazyAPIUserMes"></app-mx-select>
 
   <app-mx-checkbox [(ngModel)]="_value" (ngModelChange)="change()" *ngIf="inputOptions?.type === 'checkbox'" [myPlaceHolder]="inputOptions.placeHolder"
-    [options]="inputOptions?.more?.options"></app-mx-checkbox>
+    [options]="inputOptions?.more?.options" [lazyAPI]="inputOptions?.more?.lazyAPI" [lazyParams]="inputOptions?.more?.lazyParams"
+    [lazyAPIUserMes]="inputOptions?.more?.lazyAPIUserMes"></app-mx-checkbox>
 
   <!-- <nz-datepicker [(ngModel)]="_value" (ngModelChange)="change()" [nzSize]="'large'" *ngIf="inputOptions?.type === 'datepicker'" nzShowTime="'hh:mm'" [nzFormat]="'YYYY-MM-DD hh:mm'">
               </nz-datepicker> -->
@@ -28,8 +29,12 @@
     [myFormat]="inputOptions.more?.showFormat" [myPlaceHolder]="inputOptions.placeHolder">
   </app-my-time-picker>
 
-  <nz-input-number [(ngModel)]="_value" (ngModelChange)="change()" [nzStep]="inputOptions.more?.step" [nzMax]="inputOptions.more?.max"
-    [nzMin]="inputOptions.more?.min" [style.width]="'50%'" *ngIf="inputOptions?.type === 'number'"></nz-input-number>
+  <ng-container *ngIf="inputOptions?.type === 'number'">
+    <nz-input-number [(ngModel)]="_value" (ngModelChange)="change()" [nzStep]="inputOptions.more?.step" [nzMax]="inputOptions.more?.max"
+      [nzMin]="inputOptions.more?.min" [style.width]="inputOptions?.more?.width || '50%'"></nz-input-number>
+    <span *ngIf="inputOptions?.more?.unitText"> &nbsp;{{inputOptions?.more?.unitText}}</span>
+  </ng-container>
+
 
   <app-my-cascader [(ngModel)]="_value" (ngModelChange)="change()" *ngIf="inputOptions?.type === 'cascader'" [myPlaceHolder]="inputOptions?.more?.placeHolder"
     [myOptions]="inputOptions?.more?.options" [myCascaderLazySets]="inputOptions?.more?.cascaderLazySets" [myProperties]="inputOptions?.more?.properties"></app-my-cascader>
@@ -47,4 +52,6 @@
   <app-mx-auto-complete [(ngModel)]="_value" (ngModelChange)="change()" *ngIf="inputOptions?.type === 'autoComplete'" [myPlaceHolder]="inputOptions.placeHolder"
     [options]="inputOptions?.more?.options" [lazyAPI]="inputOptions?.more?.lazyAPI" [lazyParams]="inputOptions?.more?.lazyParams"
     [lazyAPIUserMes]="inputOptions?.more?.lazyAPIUserMes" [isSelection]="inputOptions?.more?.isSelection"></app-mx-auto-complete>
+  <app-input-group [(ngModel)]="_value" (ngModelChange)="change()" *ngIf="inputOptions?.type === 'inputGroup'" [afterInputSet]="inputOptions?.more?.afterInputSet"
+    [mainInputSet]="inputOptions?.more?.mainInputSet"></app-input-group>
 </ng-container>

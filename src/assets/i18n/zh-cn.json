@@ -37,6 +37,7 @@
   "urgentNoBoard": "急料工单看板",
   "esd": "门禁状况",
   "shippingBoard": "产出vs出货计划",
+  "cvte": "CVTE车载产品产能",
   "exam": "训练考试",
   "question": "考试题目",
   "unit": "考卷维护",
@@ -101,7 +102,8 @@
     "examOkTitle": "考卷已准备好",
     "examOkContent": "是否马上考试",
     "examErrTitle": "该考卷不可用！",
-    "examErrContent": "请找管理员确认"
+    "examErrContent": "请找管理员确认",
+    "userContacts": "员工联系方式"
   },
   "boardModule": {
     "query": "检索",
@@ -289,10 +291,15 @@
     "setBU": "单位(BU)设定",
     "setCustomer": "客户设定",
     "mtask": "任务清单搜寻",
-    "analysis": "统计图表"
+    "analysis": "统计图表",
+    "mailSetting": "邮件设置"
   },
   "sharedModule": {
     "uploading": "上传中",
     "doUpload": "执行上传"
+  },
+  "taxModule": {
+    "name": "个税专项附加扣除",
+    "searchReduction": "申报查询"
   }
 }

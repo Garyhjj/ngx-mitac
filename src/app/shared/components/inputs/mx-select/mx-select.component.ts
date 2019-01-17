@@ -32,7 +32,7 @@ export class MxSelectComponent implements OnInit {
   @Input() lazyParams: string[];
   @Input() lazyAPIUserMes;
 
-  private propagateChange = (_: any) => {};
+  propagateChange = (_: any) => {};
   constructor(
     private dataDriveService: DataDriveService,
     private auth: AuthService,
@@ -120,7 +120,8 @@ export class MxSelectComponent implements OnInit {
               }
             })
             .sort((a, b) => sortUtils.byCharCode(a.value, b.value));
-          this._options = options;
+          this._options.length = 0;
+          this._options.push(...options);
         }
       });
     }

@@ -42,6 +42,12 @@ export class DataDriveSettingService {
       }
     }
     return this.http.post(DataDriveSettingConfig.uploadSetting, send);
+    // return this.http.put(DataDriveSettingConfig.uploadSetting, {
+    //   columns: { ...send },
+    //   where: {
+    //     id: send.ID,
+    //   },
+    // });
   }
 
   getSetting(id) {

@@ -3,8 +3,6 @@ import {
   isSelfTemplateRef,
 } from './../shared/models/viewer/index';
 import { Subscription } from 'rxjs';
-import { ProjectTreeComponent } from './../../../../my-modules/project/shared/components/project-tree/project-tree.component';
-import { TableDataColumn } from './../shared/models/table-data/index';
 import { DataDrive, DataViewSet } from '../../data-drive/shared/models/index';
 import {
   Component,
@@ -17,6 +15,8 @@ import {
   ComponentFactory,
   ComponentRef,
   OnDestroy,
+  EmbeddedViewRef,
+  EventEmitter,
 } from '@angular/core';
 
 @Component({
@@ -30,8 +30,10 @@ export class DataViewerComponent implements OnInit, OnDestroy {
   @ViewChild('selfContainer', { read: ViewContainerRef })
   container: ViewContainerRef;
   componentRef: ComponentRef<any>;
+  EmbeddedViewRef: EmbeddedViewRef<{}>;
   sub: Subscription;
-
+  componentSubs: Subscription[] = [];
+  viewerMinWidth: string;
   @Input()
   set opts(opts: DataDrive) {
     this._dataDrive = opts;
@@ -57,6 +59,9 @@ export class DataViewerComponent implements OnInit, OnDestroy {
     if (m.bodyCellStyle) {
       this.bodyCellStyle = m.bodyCellStyle;
     }
+    if (m.viewerMinWidth) {
+      this.viewerMinWidth = m.viewerMinWidth;
+    }
   }
   tableCellRef: TemplateRef<void>;
   actionRef: TemplateRef<void>;
@@ -66,39 +71,75 @@ export class DataViewerComponent implements OnInit, OnDestroy {
   constructor(private resolver: ComponentFactoryResolver) {}
 
   ngOnInit() {
-    this.sub = this._dataDrive.viewerChange.subscribe(
-      (t: { type: string; params: any; container: any }) => {
-        const { type, params, container } = t;
-        if (typeof type === 'string') {
-          if (isSelfComponent(type)) {
-            this.createComponent(container, params);
-          } else if (isSelfTemplateRef(type)) {
-            this.createEmbeddedView(container, params);
-          } else {
-            this.container.clear();
-          }
-        }
-      },
-    );
+    this.sub = this._dataDrive.viewerChange.subscribe((t: DataViewSet) => {
+      this.initSelfViewer(t);
+    });
+    this.initSelfViewer(this._viewSet);
   }
 
+  initSelfViewer(t: DataViewSet) {
+    const { type, params, container } = t;
+    if (typeof type === 'string') {
+      if (isSelfComponent(type)) {
+        this.createComponent(container, params);
+      } else if (isSelfTemplateRef(type)) {
+        this.createEmbeddedView(container, params);
+      } else {
+        this.container.clear();
+      }
+    }
+  }
   ngOnDestroy() {
     this.sub.unsubscribe();
+    this.destroyComponent();
+    this.destroyViewRef();
   }
 
   createComponent(component, params) {
+    this.destroyComponent();
     this.container.clear();
     const factory: ComponentFactory<
       any
     > = this.resolver.resolveComponentFactory(component);
     this.componentRef = this.container.createComponent(factory);
     if (typeof params === 'object') {
+      const instance = this.componentRef.instance;
+      for (let prop in instance) {
+        if (instance.hasOwnProperty(prop)) {
+          if (instance[prop] instanceof EventEmitter) {
+            const { [prop]: obFn, ...rest } = params;
+            if (typeof obFn === 'function') {
+              const emitter = instance[prop] as EventEmitter<any>;
+              const sub = emitter.subscribe((...ps) => obFn(...ps));
+              this.componentSubs.push(sub);
+            }
+            params = rest;
+          }
+        }
+      }
       Object.assign(this.componentRef.instance, params);
     }
   }
 
+  destroyComponent() {
+    if (this.componentRef) {
+      this.componentRef.destroy();
+    }
+    this.componentSubs.forEach(s => s.unsubscribe());
+  }
+
+  destroyViewRef() {
+    if (this.EmbeddedViewRef) {
+      this.EmbeddedViewRef.destroy();
+    }
+  }
+
   createEmbeddedView(templateRef, context = {}) {
+    this.destroyViewRef();
     this.container.clear();
-    this.container.createEmbeddedView(templateRef, context);
+    this.EmbeddedViewRef = this.container.createEmbeddedView(
+      templateRef,
+      context,
+    );
   }
 }

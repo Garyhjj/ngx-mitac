@@ -11,7 +11,6 @@ import { ReservationITService } from './../shared/services/reservaton-IT.service
 import { NzMessageService } from 'ng-zorro-antd';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import * as moment from 'moment';
 import { isArray } from '../../../../shared/utils';
 
 @Component({
@@ -220,15 +219,15 @@ export class ApplicationITComponent implements OnInit {
   getDetailByDate(date: any) {
     const target = this.dateMes.find(
       d =>
-        moment(new Date(d.CDATE)).format(this.dateFormat) ===
-        moment(date).format(this.dateFormat),
+        this.util.dateFormat(new Date(d.CDATE), this.dateFormat) ===
+        this.util.dateFormat(date, this.dateFormat),
     );
     return target ? target.REMAIN_NUMBER : 0;
   }
 
   selectDate(date: any) {
     if (this.getDetailByDate(date) > 0) {
-      this.selectedDate = moment(date.date).format('YYYY-MM-DD');
+      this.selectedDate = this.util.dateFormat(date, 'YYYY-MM-DD');
       this.next();
     }
   }

@@ -1,0 +1,30 @@
+<app-data-drive [name]="'cvteBoard'" (dataDriveInit)="getDataDrive($event)"></app-data-drive>
+
+<ng-template #mainBody>
+  <nz-tabset [(nzSelectedIndex)]="tabIdx">
+    <nz-tab [nzTitle]="item.WO_NO" *ngFor="let item of lists">
+      <div class="esd-header">
+        <nz-row alert-body [nzType]="'flex'" [nzJustify]="'space-around'">
+          <nz-col>
+            <span>{{'线别' | translate}}：{{item.LINE_ID | myFlex: {name:'lazyLoad',params:['boards/cvte/lines',['LINE_ID','LINE_NAME']
+              ]} | async }}</span>
+          </nz-col>
+          <nz-col>
+            <span>{{'机种' | translate}}：{{item.MODEL}}</span>
+          </nz-col>
+          <nz-col>
+            <span>{{'料号' | translate}}：{{item.PART_NO}}</span>
+          </nz-col>
+          <nz-col>
+            <span>{{'工单' | translate}}：{{item.WO_NO}}</span>
+          </nz-col>
+        </nz-row>
+      </div>
+      <div nz-row nzGutter="16" nzType="flex">
+        <div nz-col nzSpan="12" *ngFor="let oo of item.operations;let i = index" style="padding-bottom: 16px">
+          <app-data-drive [name]="'cvteItem'" [bodyCellStyle]="getBodyCellStyleFn(i)" [headerCellStyle]="getHeaderCellStyle(i)" (dataDriveInit)="getDataDriveItem($event, oo, item)"></app-data-drive>
+        </div>
+      </div>
+    </nz-tab>
+  </nz-tabset>
+</ng-template>

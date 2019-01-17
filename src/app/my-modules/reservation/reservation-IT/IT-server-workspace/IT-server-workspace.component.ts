@@ -10,7 +10,6 @@ import { DataDriveService } from './../../../../shared/components/data-drive/cor
 import { ReservationITService } from './../shared/services/reservaton-IT.service';
 import { Component, OnInit } from '@angular/core';
 import { DataDrive } from '../../../../shared/components/data-drive/shared/models';
-import * as moment from 'moment';
 import { isArray } from '../../../../shared/utils';
 import { UserState } from '../../../../core/store';
 
@@ -149,7 +148,9 @@ export class ITServerWorkspaceComponent implements OnInit {
         const dept = this.reservationITService.dept;
         const PRE_MIN_MINUTE = dept.PRE_MIN_MINUTE ? dept.PRE_MIN_MINUTE : 0;
         const date =
-          moment(ds.SERVICE_DATE).format('YYYY-MM-DD') + ' ' + ds.END_TIME;
+          this.util.dateFormat(ds.SERVICE_DATE, 'YYYY-MM-DD') +
+          ' ' +
+          ds.END_TIME;
         const status = ds.STATUS;
         const during = new Date().getTime() - new Date(date).getTime();
         if (during > 0) {
@@ -203,7 +204,8 @@ export class ITServerWorkspaceComponent implements OnInit {
       });
     });
     d.addDefaultSearchParams({
-      date_fm: moment(new Date().getTime() - 1000 * 60 * 60 * 24 * 30).format(
+      date_fm: this.util.dateFormat(
+        new Date().getTime() - 1000 * 60 * 60 * 24 * 30,
         'YYYY-MM-DD',
       ),
     });
@@ -282,7 +284,9 @@ export class ITServerWorkspaceComponent implements OnInit {
             t.DEPT_ID === this.reservationITService.deptId
           ) {
             const date =
-              moment(t.SERVICE_DATE).format('YYYY-MM-DD') + ' ' + t.END_TIME;
+              this.util.dateFormat(t.SERVICE_DATE, 'YYYY-MM-DD') +
+              ' ' +
+              t.END_TIME;
             if (new Date().getTime() - new Date(date).getTime() > 0) {
               return true;
             }
@@ -390,7 +394,7 @@ export class ITServerWorkspaceComponent implements OnInit {
     const val = this.doneForm.value;
     const alter = Object.assign({}, val, {
       STATUS: 'Scoring',
-      PROCESS_TIME: moment().format('YYYY-MM-DDT HH:mm:ss'),
+      PROCESS_TIME: this.util.dateFormat(new Date(), 'YYYY-MM-DDT HH:mm:ss'),
     });
     const doDone = () => {
       const send = Object.assign({}, this.doneTarget, alter);

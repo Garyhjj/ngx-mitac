@@ -1,15 +1,17 @@
+import { deepClone } from './../../../../../utils/index';
 import { isNumber } from '../../../../../utils/index';
 
 export interface InputSet {
   type?: InputTypes;
   editable?: boolean;
   placeHolder?: string;
-  default?: string | boolean | number;
+  default?: string | boolean | number | any[];
   match?: {
-    fns: { name: string; parmas: any[] }[];
+    fns: { name: string; parmas: any[]; params?: any[] }[];
     err: string;
   };
   more?: any;
+  hasInit?: boolean;
 }
 
 export class FileUpload implements InputSet {
@@ -262,9 +264,14 @@ export class AutoCompleteSet implements InputSet {
 }
 
 export class InputSetFactory extends InputSetDefault {
+  hasInit;
   constructor(opts: InputSet = {}) {
     super();
+    if (opts.hasInit) {
+      return Object.assign(this, opts);
+    }
     Object.assign(this, this.get(opts.type, opts));
+    this.hasInit = true;
   }
 
   private get(type: InputTypes = 'text', opts?: InputSet) {
@@ -295,6 +302,18 @@ export class InputSetFactory extends InputSetDefault {
         return new FileUpload(opts);
       case 'autoComplete':
         return new AutoCompleteSet(opts);
+      case 'inputGroup':
+        opts.more = opts.more || {};
+        opts = deepClone(opts);
+        const mainInputSet = opts.more.mainInputSet;
+        // tslint:disable-next-line:no-unused-expression
+        mainInputSet &&
+          (opts.more.mainInputSet = new InputSetFactory(mainInputSet));
+        const afterInputSet = opts.more.afterInputSet;
+        // tslint:disable-next-line:no-unused-expression
+        afterInputSet &&
+          (opts.more.afterInputSet = new InputSetFactory(afterInputSet));
+        return opts;
       case 'text':
       default:
         return new TextInputSet(opts);
@@ -317,7 +336,8 @@ export type InputTypes =
   | 'primary'
   | 'checkbox'
   | 'fileUpload'
-  | 'autoComplete';
+  | 'autoComplete'
+  | 'inputGroup';
 
 export class TextInputSet implements InputSet {
   type: InputTypes;

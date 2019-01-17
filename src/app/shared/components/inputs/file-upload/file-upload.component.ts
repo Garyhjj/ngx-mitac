@@ -41,12 +41,12 @@ export class FileUploadComponent implements OnInit, OnDestroy {
   @Output() uploadSuccess = new EventEmitter<any>();
 
   @Output() uploadError = new EventEmitter<any>();
-  private propagateChange = (_: any) => {};
+  private propagateChange = (_: any) => { };
   constructor(
     private http: HttpClient,
     private msg: NzMessageService,
     private util: UtilService,
-  ) {}
+  ) { }
 
   /**
    * 给外部formControl写入数据
@@ -86,7 +86,7 @@ export class FileUploadComponent implements OnInit, OnDestroy {
    * 也是一样注册,当 touched 然后调用
    * @param {*} fn
    */
-  registerOnTouched(fn: any) {}
+  registerOnTouched(fn: any) { }
 
   getName(raw: string) {
     const rawName = raw.split('/').pop();

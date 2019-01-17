@@ -1,7 +1,8 @@
+import { BreadcrumbModel } from './../../core/models/breadcrumb.model';
 import { BreadcrumbCancel } from './../../core/actions/breadcrumb.action';
 import { MyStore, BreadcrumbState } from './../../core/store';
 import { Store } from '@ngrx/store';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
@@ -15,7 +16,11 @@ export class ContentComponent implements OnInit, OnDestroy {
   breadcrumb: BreadcrumbState[];
   sub: Subscription;
   year = new Date().getFullYear();
-  constructor(private store$: Store<MyStore>, private router: Router) {}
+  constructor(
+    private store$: Store<MyStore>,
+    private router: Router,
+    private cd: ChangeDetectorRef,
+  ) {}
 
   ngOnInit() {
     this.sub = this.store$
@@ -24,6 +29,7 @@ export class ContentComponent implements OnInit, OnDestroy {
         this.breadcrumb = b;
         const idx = b.findIndex(r => r.active);
         this.tabIdx = idx > -1 ? idx : b.length - 1;
+        this.cd.detectChanges();
       });
   }
 
@@ -35,7 +41,16 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   tabIdxChange(idx: number) {
     if (idx > -1) {
-      this.router.navigate([this.breadcrumb[idx].routeUrl]);
+      if (this.breadcrumb[idx]) {
+        this.router.navigate([this.breadcrumb[idx].routeUrl]).then(() => {
+          let breadcrumbModel = new BreadcrumbModel([
+            [this.breadcrumb[idx].routeName],
+            this.breadcrumb[idx].routeUrl,
+            1,
+          ]);
+          breadcrumbModel.update(this.store$);
+        });
+      }
     }
   }
 

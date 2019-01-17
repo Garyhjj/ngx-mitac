@@ -1,0 +1,25 @@
+<app-data-drive [name]="'taxReportHeader'" (dataDriveInit)="getDataDrive($event)"></app-data-drive>
+
+
+<ng-template #body>
+  <nz-tabset [nzTabPosition]="'top'" [nzType]="'card'">
+    <nz-tab [nzTitle]="'子女教育' | translate" *ngIf="typeList.length === 0 || typeList.indexOf('CHILD_EDUCATION') >-1">
+      <app-data-drive [name]="'taxReportChild'" (dataDriveInit)="getDataDriveSub($event,'CHILD_EDUCATION')"></app-data-drive>
+    </nz-tab>
+    <nz-tab [nzTitle]="'住房贷款' | translate" *ngIf="typeList.length === 0 || typeList.indexOf('HOME_LOAN') >-1">
+      <app-data-drive [name]="'taxReportLoan'" (dataDriveInit)="getDataDriveSub($event,'HOME_LOAN')"></app-data-drive>
+    </nz-tab>
+    <nz-tab [nzTitle]="'住房租金' | translate" *ngIf="typeList.length === 0 || typeList.indexOf('HOME_RENT') >-1">
+      <app-data-drive [name]="'taxReportRental'" (dataDriveInit)="getDataDriveSub($event,'HOME_RENT')"></app-data-drive>
+    </nz-tab>
+    <nz-tab [nzTitle]="'继续教育' | translate" *ngIf="typeList.length === 0 || typeList.indexOf('CONTINUING_EDUCATION_1,CONTINUING_EDUCATION_2') >-1">
+      <app-data-drive [name]="'taxReportEdu'" (dataDriveInit)="getDataDriveSub($event,'CONTINUING_EDUCATION_1,CONTINUING_EDUCATION_2')"></app-data-drive>
+    </nz-tab>
+    <nz-tab [nzTitle]="'赡养老人' | translate" *ngIf="typeList.length === 0 || typeList.indexOf('SUPPORT_ELDER') >-1">
+      <app-data-drive [name]="'taxReportParents'" (dataDriveInit)="getDataDriveSub($event,'SUPPORT_ELDER')"></app-data-drive>
+    </nz-tab>
+    <nz-tab [nzTitle]="'大病医疗' | translate" *ngIf="typeList.length === 0 || typeList.indexOf('SERIOUS_ILL') >-1">
+      <app-data-drive [name]="'taxReportIll'" (dataDriveInit)="getDataDriveSub($event,'SERIOUS_ILL')"></app-data-drive>
+    </nz-tab>
+  </nz-tabset>
+</ng-template>

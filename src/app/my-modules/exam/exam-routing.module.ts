@@ -1,3 +1,4 @@
+import { UserContactsComponent } from './user-contacts/user-contacts.component';
 import { ExamGuard } from './exam-guard.service';
 import { AuthGuard } from './../../route/auth-guard.service';
 import { NgModule } from '@angular/core';
@@ -32,6 +33,11 @@ const bRoutes: Routes = [
         canActivate: [ExamGuard],
         path: 'result',
         component: ExamResultComponent,
+      },
+      {
+        canActivate: [ExamGuard],
+        path: 'contacts',
+        component: UserContactsComponent,
       },
     ],
   },

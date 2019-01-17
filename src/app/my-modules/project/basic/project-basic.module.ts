@@ -1,3 +1,4 @@
+import { MailSettingComponent } from './mail-setting/mail-setting.component';
 import { DataDriveModule } from './../../../shared/components/data-drive/data-drive.module';
 import { SharedModule } from './../../../shared/shared.module';
 import { ProjectBasicRoutingModule } from './project-basic-routing';
@@ -20,6 +21,7 @@ import { TaskCustomerComponent } from './task-customer/task-customer.component';
     ProjectTypeComponent,
     TaskBuComponent,
     TaskCustomerComponent,
+    MailSettingComponent,
   ],
 })
 export class ProjectBasicModule {}

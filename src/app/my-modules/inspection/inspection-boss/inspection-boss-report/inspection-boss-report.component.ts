@@ -1,12 +1,11 @@
+import { UtilService } from './../../../../core/services/util.service';
 import { AppService } from './../../../../core/services/app.service';
 import { DataDriveService } from './../../../../shared/components/data-drive/core/services/data-drive.service';
 import { InspectionReportState } from './../../shared/models/index';
 import { InspectionService } from './../../shared/services/inspection.service';
 import { tap } from 'rxjs/operators';
 import { DataDrive } from './../../../../shared/components/data-drive/shared/models/index';
-import { InspectionBossService } from './../shared/services/inspection-boss.service';
 import { Component, OnInit } from '@angular/core';
-import * as moment from 'moment';
 import {
   InspectionReportLineState,
   InspectionReportHeader,
@@ -20,7 +19,7 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./inspection-boss-report.component.css'],
 })
 export class InspectionBossReportComponent implements OnInit {
-  date = moment(new Date()).format('YYYY-MM-DD');
+  date = this.util.dateFormat(new Date(), 'YYYY-MM-DD');
 
   issueCount = 0;
   tabIdx;
@@ -34,12 +33,12 @@ export class InspectionBossReportComponent implements OnInit {
   }[];
   translateTexts: any;
   constructor(
-    private inspectionBossService: InspectionBossService,
     private inspectionService: InspectionService,
     private dataDriveService: DataDriveService,
     private route: ActivatedRoute,
     private translate: TranslateService,
     private appService: AppService,
+    private util: UtilService,
   ) {}
 
   ngOnInit() {

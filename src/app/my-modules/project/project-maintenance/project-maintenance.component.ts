@@ -178,7 +178,6 @@ export class ProjectMaintenanceComponent implements OnInit, OnDestroy {
     project.title = project;
     project.key = project.ID;
     const dismiss = this.util.showLoading2();
-    console.log(project);
     this.projectService.getProjectChildren(project.CODE).subscribe(
       res => {
         this.showProjectTree(Object.assign(project, { children: res }));

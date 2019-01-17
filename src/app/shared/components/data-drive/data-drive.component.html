@@ -22,10 +22,10 @@
 <!-- <app-data-inputer [opts]="dataDrive" [type]="1" [changeIdx]="2" *ngIf="dataDrive && dataDrive.tableData && dataDrive.tableData.data"></app-data-inputer> -->
 
 <app-data-viewer [opts]="dataDrive" class="main-view" *ngIf="dataDrive && dataDrive.tableData && dataDrive.tableData.visible"
-  [more]="{actionRef:actionRef,tableCellRef:tableCellRef,headerCellRef:headerCellRef, headerCellStyle: headerCellStyle, bodyCellStyle: bodyCellStyle}"></app-data-viewer>
+  [more]="{actionRef:actionRef,tableCellRef:tableCellRef,headerCellRef:headerCellRef, headerCellStyle: headerCellStyle, bodyCellStyle: bodyCellStyle,viewerMinWidth:viewerMinWidth}"></app-data-viewer>
 <ng-content select=".my-data-viewer"></ng-content>
 
 <div class="my-modal" *ngIf="isShowModal | async">
   <ng-content select=".my-full-screen-header"></ng-content>
-  <app-data-viewer [opts]="dataDrive" [isModal]="true" [more]="{actionRef:actionRef,tableCellRef:tableCellRef,headerCellRef:headerCellRef, headerCellStyle: headerCellStyle, bodyCellStyle: bodyCellStyle}"></app-data-viewer>
+  <app-data-viewer [opts]="dataDrive" [isModal]="true" [more]="{actionRef:actionRef,tableCellRef:tableCellRef,headerCellRef:headerCellRef, headerCellStyle: headerCellStyle, bodyCellStyle: bodyCellStyle,viewerMinWidth:viewerMinWidth}"></app-data-viewer>
 </div>

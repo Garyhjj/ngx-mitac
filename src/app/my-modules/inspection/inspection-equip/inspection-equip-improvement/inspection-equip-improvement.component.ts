@@ -1,7 +1,7 @@
+import { UtilService } from './../../../../core/services/util.service';
 import { AppService } from './../../../../core/services/app.service';
 import { DataDrive } from './../../../../shared/components/data-drive/shared/models/index';
 import { Component, OnInit } from '@angular/core';
-import * as moment from 'moment';
 
 @Component({
   selector: 'app-inspection-equip-improvement',
@@ -9,13 +9,15 @@ import * as moment from 'moment';
   styleUrls: ['./inspection-equip-improvement.component.css'],
 })
 export class InspectionEquipImprovementComponent implements OnInit {
-  constructor(private appService: AppService) {}
+  constructor(private appService: AppService, private util: UtilService) {}
 
   ngOnInit() {}
 
   getDataDrive(d: DataDrive) {
     d.onUpdateFormShow(fg => {
-      fg.get('ACTION_DATE').setValue(moment(new Date()).format('YYYY-MM-DD'));
+      fg.get('ACTION_DATE').setValue(
+        this.util.dateFormat(new Date(), 'YYYY-MM-DD'),
+      );
     });
 
     d.onUpdateData(data => {

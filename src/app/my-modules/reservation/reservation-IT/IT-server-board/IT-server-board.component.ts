@@ -3,7 +3,6 @@ import { ReservationITService } from './../shared/services/reservaton-IT.service
 import { DataDriveService } from './../../../../shared/components/data-drive/core/services/data-drive.service';
 import { DataDrive } from './../../../../shared/components/data-drive/shared/models/index';
 import { Component, OnInit } from '@angular/core';
-import * as moment from 'moment';
 import { sortUtils } from '../../../../shared/utils';
 
 @Component({
@@ -37,7 +36,9 @@ export class ITServerBoardComponent implements OnInit {
               ? dept.PRE_MIN_MINUTE
               : 0;
             const date =
-              moment(l.SERVICE_DATE).format('YYYY-MM-DD') + ' ' + l.END_TIME;
+              this.util.dateFormat(l.SERVICE_DATE, 'YYYY-MM-DD') +
+              ' ' +
+              l.END_TIME;
             const during = new Date().getTime() - new Date(date).getTime();
             if (during > 0 || -during < PRE_MIN_MINUTE * 60 * 1000) {
               return true;
@@ -48,8 +49,12 @@ export class ITServerBoardComponent implements OnInit {
         })
         .sort((a, b) =>
           sortUtils.byDate(
-            moment(a.SERVICE_DATE).format('YYYY-MM-DD') + ' ' + a.START_TIME,
-            moment(b.SERVICE_DATE).format('YYYY-MM-DD') + ' ' + b.END_TIME,
+            this.util.dateFormat(a.SERVICE_DATE, 'YYYY-MM-DD') +
+              ' ' +
+              a.START_TIME,
+            this.util.dateFormat(b.SERVICE_DATE, 'YYYY-MM-DD') +
+              ' ' +
+              b.END_TIME,
           ),
         ),
     );

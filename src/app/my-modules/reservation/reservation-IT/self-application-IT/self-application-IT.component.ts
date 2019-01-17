@@ -8,7 +8,6 @@ import { DataDriveService } from './../../../../shared/components/data-drive/cor
 import { ReservationITService } from './../shared/services/reservaton-IT.service';
 import { Component, OnInit } from '@angular/core';
 import { DataDrive } from '../../../../shared/components/data-drive/shared/models';
-import * as moment from 'moment';
 import { ImpressionListComponent } from '../shared/components/impression-list/impression-list.component';
 import { isArray } from '../../../../shared/utils';
 
@@ -262,7 +261,7 @@ export class SelfApplicationITComponent implements OnInit {
       }
     }
     send.STATUS = 'Closed';
-    send.COMMENT_TIME = moment().format(this.dateFormat);
+    send.COMMENT_TIME = this.util.dateFormat(new Date(), this.dateFormat);
     const loadingID = this.util.showLoading();
     const final = () => {
       this.util.dismissLoading(loadingID);

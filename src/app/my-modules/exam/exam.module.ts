@@ -1,3 +1,4 @@
+import { UserContactsComponent } from './user-contacts/user-contacts.component';
 import { EXAM_CONFIG } from './shared/tokens/exam.tokens';
 import { ExamPaperModule } from './../../shared/components/data-drive/data-viewer/exam-paper/exam-paper.module';
 import { ExamGuard } from './exam-guard.service';
@@ -28,6 +29,7 @@ import { examConfig } from './shared/config';
     ExamUnitComponent,
     DoExamComponent,
     ExamResultComponent,
+    UserContactsComponent,
   ],
   providers: [
     ExamService,

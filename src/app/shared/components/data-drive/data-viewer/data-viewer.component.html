@@ -1,6 +1,8 @@
-<div [ngSwitch]="_dataDrive.dataViewSet.type">
-  <app-exam-paper [opts]="_dataDrive" *ngSwitchCase="'exam'" [isModal]="isModal" [header]="_dataDrive.dataViewSet?.tempAddition"></app-exam-paper>
-  <app-table [opts]="_dataDrive" *ngSwitchCase="'table'" [isModal]="isModal" [actionRef]="actionRef" [tableCellRef]="tableCellRef"
-    [headerCellRef]="headerCellRef" [headerCellStyle]="headerCellStyle" [bodyCellStyle]="bodyCellStyle"></app-table>
+<div [ngSwitch]="_dataDrive.dataViewSet.type" style="width: 100%;overflow-x: auto;">
+  <div style="margin: auto" [style.minWidth]="viewerMinWidth?viewerMinWidth:'100%'">
+    <app-exam-paper [opts]="_dataDrive" *ngSwitchCase="'exam'" [isModal]="isModal" [header]="_dataDrive.dataViewSet?.tempAddition"></app-exam-paper>
+    <app-table [opts]="_dataDrive" *ngSwitchCase="'table'" [isModal]="isModal" [actionRef]="actionRef" [tableCellRef]="tableCellRef"
+      [headerCellRef]="headerCellRef" [headerCellStyle]="headerCellStyle" [bodyCellStyle]="bodyCellStyle"></app-table>
+  </div>
   <ng-template #selfContainer></ng-template>
 </div>

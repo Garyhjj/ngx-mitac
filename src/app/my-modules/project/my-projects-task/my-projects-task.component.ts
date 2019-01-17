@@ -36,7 +36,5 @@ export class MyProjectsTaskComponent implements OnInit {
     }, 50);
   }
 
-  showAttachmentDetail(files) {
-    console.log(files);
-  }
+  showAttachmentDetail(files) {}
 }

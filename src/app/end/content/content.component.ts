@@ -1,3 +1,4 @@
+import { BreadcrumbModel } from './../../core/models/breadcrumb.model';
 import { BreadcrumbCancel } from './../../core/actions/breadcrumb.action';
 import { MyStore, BreadcrumbState } from './../../core/store';
 import { Store } from '@ngrx/store';
@@ -47,7 +48,16 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   tabIdxChange(idx: number) {
     if (idx > -1) {
-      this.router.navigate([this.breadcrumb[idx].routeUrl]);
+      if (this.breadcrumb[idx]) {
+        this.router.navigate([this.breadcrumb[idx].routeUrl]).then(() => {
+          let breadcrumbModel = new BreadcrumbModel([
+            [this.breadcrumb[idx].routeName],
+            this.breadcrumb[idx].routeUrl,
+            1,
+          ]);
+          breadcrumbModel.update(this.store$);
+        });
+      }
     }
   }
 

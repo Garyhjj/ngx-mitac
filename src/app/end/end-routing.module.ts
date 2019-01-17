@@ -11,6 +11,9 @@ const eRoutes: Routes = [
     children: [
       {
         path: 'dataDrive',
+        data: {
+          noAuthority: true,
+        },
         loadChildren:
           'app/end/data-drive-setting/data-drive-setting.module#DataDriveSettingModule',
       },

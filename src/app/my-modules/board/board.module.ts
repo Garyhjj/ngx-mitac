@@ -10,6 +10,7 @@ import { EsdComponent } from './esd/esd.component';
 import { BoardService } from './shared/services/board.service';
 import { OspComponent } from './osp/osp.component';
 import { ShippingComponent } from './shipping/shipping.component';
+import { CvteComponent } from './cvte/cvte.component';
 
 @NgModule({
   imports: [CommonModule, BoardRoutingModule, SharedModule, DataDriveModule],
@@ -20,6 +21,7 @@ import { ShippingComponent } from './shipping/shipping.component';
     EsdComponent,
     OspComponent,
     ShippingComponent,
+    CvteComponent,
   ],
   providers: [BoardService],
 })

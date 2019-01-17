@@ -6,12 +6,7 @@ import { deepClone } from './../../../../utils/index';
 import { SearchItemSet } from './../../shared/models/searcher/index';
 import { DataDrive, TableDataColumn } from './../../shared/models/index';
 import { Component, OnInit, Input } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormControl,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { NgxValidatorExtendService } from '../../../../../core/services/ngx-validator-extend.service';
 import { DataDriveService } from '../../core/services/data-drive.service';
 import { UtilService } from '../../../../../core/services/util.service';
@@ -77,11 +72,6 @@ export class DataSearchbarComponent implements OnInit {
   tagList = [];
   mode: string;
   notShowSearchInput = false;
-  // selectList: [{ label: string, value: any[] }]; {property: "TF", value: "判斷"
-  selectList: Array<{
-    label: string;
-    values: Array<{ property: string; value: string }>;
-  }> = new Array();
 
   // 调整字体大小
   showFontSizeModal = false;
@@ -135,7 +125,7 @@ export class DataSearchbarComponent implements OnInit {
             valid = [];
             match.fns.forEach(f => {
               const validFn = this.validExd[f.name];
-              const validParmas = f.parmas || [];
+              const validParmas = f.params || f.parmas || [];
               if (validFn) {
                 valid.push(validFn(...validParmas));
               }
@@ -143,10 +133,16 @@ export class DataSearchbarComponent implements OnInit {
           }
         }
         myForm[s.property] = [def, valid];
+        const isRequired =
+          s.InputOpts.match &&
+          isArray(s.InputOpts.match.fns) &&
+          !!s.InputOpts.match.fns.find(_ => _.name === 'required');
+        const label = mapColumn ? mapColumn.value : s.property;
         return Object.assign(
           {
-            label: mapColumn ? mapColumn.value : s.property,
+            label: label,
             apiProperty: s.apiProperty,
+            isRequired,
           },
           s.InputOpts,
         );
@@ -158,6 +154,9 @@ export class DataSearchbarComponent implements OnInit {
           value.type === 'textarea' ||
           value.type === 'number',
       );
+      if (this.optionList.length === 0) {
+        this.show = true;
+      }
       this.selectedOption = this.optionList[0];
       if (this.selectedOption) {
         this.selectedOption.placeHolder =
@@ -167,6 +166,7 @@ export class DataSearchbarComponent implements OnInit {
         this.notShowSearchInput = false;
       } else {
         this.notShowSearchInput = true;
+        this.show = true;
       }
     }
   }
@@ -181,6 +181,10 @@ export class DataSearchbarComponent implements OnInit {
 
   reSet() {
     this.validateForm.reset();
+  }
+
+  updateView() {
+    this.dataDriveService.updateViewData(this.dataDrive);
   }
 
   submitForm(mode: string) {
@@ -248,7 +252,6 @@ export class DataSearchbarComponent implements OnInit {
    */
   clearAllFilter(mode: string) {
     this.reSet();
-    this.show = false;
     this.filterList = {};
     this.tagList = [];
     this.submitForm(mode);
@@ -319,15 +322,29 @@ export class DataSearchbarComponent implements OnInit {
     let label;
     let keys = Object.keys(filterList).filter(value => filterList[value]);
     for (let i = 0; i < keys.length; i++) {
-      let itemType = this.getItemType(keys[i]);
-      let chineseTitle = this.getChineseTitleName(keys[i]);
+      const key = keys[i];
+      let itemType = this.getItemType(key);
+      let chineseTitle = this.getChineseTitleName(key);
 
-      let value = filterList[keys[i]];
+      let value = filterList[key];
 
-      // 如果是select类型的，需要转换成对应的中文
-      if (itemType === 'select') {
-        let list = this.selectList.find(v => v.label === chineseTitle);
-        value = list.values.find(vv => vv.property === value).value;
+      if (itemType === 'checkbox' || itemType === 'select') {
+        const set = this.searchSets
+          .filter(s => {
+            const type = s.InputOpts.type;
+            return type === 'checkbox' || type === 'select';
+          })
+          .find(s => s.property === key);
+        if (set) {
+          const vL = (value + '').split(',') as string[];
+          set.InputOpts.more.options.forEach(v => {
+            const idx = vL.indexOf(v.property + '');
+            if (idx > -1) {
+              vL[idx] = v.value;
+            }
+          });
+          value = vL.join(',');
+        }
       }
 
       // 判断value是否为object，如果是，则把object的所有value值拼接起来
@@ -362,9 +379,6 @@ export class DataSearchbarComponent implements OnInit {
    */
   addItem() {
     if (!this.dataDrive.isDataAddable()) {
-      return;
-    }
-    if (!this.dataDrive.updateSets) {
       return;
     }
     this.dataDriveService.toUpdate(this.dataDrive, -1, DataUpdateComponent);
@@ -450,15 +464,6 @@ export class DataSearchbarComponent implements OnInit {
         this.dataDrive.updateSelfSetStore({ bodyFontSize: size });
         break;
     }
-  }
-
-  /**
-   * 获取select组件返回回来的key value 列表
-   * @param list
-   */
-  getSelectList(list) {
-    delete this.selectList[list];
-    this.selectList.push(list);
   }
 
   showMutiUpdate() {

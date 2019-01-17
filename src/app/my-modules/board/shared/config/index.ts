@@ -1,7 +1,7 @@
 import { APPConfig } from './../../../../shared/config/app.config';
 
 export const boardConfig = {
-  getEsdQuantity: APPConfig.baseUrl + 'ESD/GetQuantity?flag={flag}',
+  getEsdQuantity: APPConfig.baseUrl + 'ESD/GetQuantity?flag={flag}&bu_deptno={bu_deptno}&chu_deptno={chu_deptno}',
 
   getTopDep: APPConfig.baseUrl + 'ESD/GetBuDeptno',
 

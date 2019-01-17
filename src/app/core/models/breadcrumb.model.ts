@@ -24,10 +24,7 @@ export class BreadcrumbModel {
     }
   }
   update(store$: Store<MyStore>) {
-    setTimeout(
-      () => store$.dispatch(new BreadcrumbUpdate(this.breadcrumb)),
-      500,
-    );
+    setTimeout(() => store$.dispatch(new BreadcrumbUpdate(this.breadcrumb)), 0);
   }
   unshift(store$: Store<MyStore>) {
     store$.dispatch(new BreadcrumbUnshift(this.breadcrumb[0]));

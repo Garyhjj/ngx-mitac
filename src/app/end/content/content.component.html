@@ -2,18 +2,31 @@
   <!-- <nz-breadcrumb style="margin:12px 0;">
     <nz-breadcrumb-item *ngFor="let item of breadcrumb | async">{{item.routeName}}</nz-breadcrumb-item>
   </nz-breadcrumb> -->
-  <nz-tabset [nzType]="'card'" *ngIf="breadcrumb?.length > 0" [nzSelectedIndex]="tabIdx" (nzSelectedIndexChange)="tabIdxChange($event)">
-    <nz-tab *ngFor="let tab of breadcrumb; let i = index" [nzTitle]="nzTabHeading">
+  <nz-tabset
+    [nzType]="'card'"
+    *ngIf="breadcrumb?.length > 0"
+    [nzSelectedIndex]="tabIdx"
+    (nzSelectedIndexChange)="tabIdxChange($event)"
+  >
+    <nz-tab
+      *ngFor="let tab of breadcrumb; let i = index"
+      [nzTitle]="nzTabHeading"
+    >
       <ng-template #nzTabHeading>
         <div>
-          {{tab?.routeName[tab?.routeName?.length -1]}}
+          {{ (tab?.routeName)[tab?.routeName?.length - 1] }}
           <i class="anticon anticon-cross" (click)="closeTab(tab)"></i>
         </div>
       </ng-template>
     </nz-tab>
   </nz-tabset>
-  <nz-content style="background:#fff; padding: 3px; overflow: auto; height: 30px">
+  <nz-content
+    style="background:#fff; padding: 3px; overflow: auto"
+    [style.height]="
+      breadcrumb?.length > 0 ? 'calc(100vh - 180px)' : 'calc(100vh - 124px)'
+    "
+  >
     <router-outlet></router-outlet>
   </nz-content>
-  <nz-footer style="text-align: center;">Ant Design ©{{year}} Implement By Mitac</nz-footer>
+  <nz-footer style="text-align: center;">Implement By MiTAC</nz-footer>
 </div>

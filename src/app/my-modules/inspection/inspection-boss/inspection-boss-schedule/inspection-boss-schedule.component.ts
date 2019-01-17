@@ -59,6 +59,7 @@ export class InspectionBossScheduleComponent implements OnInit {
   }
 
   initForm(data?) {
+    data = data || {};
     if (this.tabIdx === 2 && !this.mriWeekList) {
       this.inspectionBossService.getMriWeek().subscribe(c => {
         this.mriWeekList = c;
@@ -80,7 +81,7 @@ export class InspectionBossScheduleComponent implements OnInit {
       this.linesList = [];
     }
     this.scheduleForm = this.fb.group({
-      SCHEDULE_HEADER_ID: [data.SCHEDULE_HEADER_ID],
+      SCHEDULE_HEADER_ID: [data.SCHEDULE_HEADER_ID || 0],
       SCHEDULE_NAME: [
         this.tabIdx === 2
           ? (() => {
@@ -98,7 +99,7 @@ export class InspectionBossScheduleComponent implements OnInit {
         this.tabIdx === 2 ? this.validatorExtendService.required() : null,
       ],
       FROM_DATE: [
-        data.FROM_DATE,
+        data.FROM_DATE || new Date(),
         this.tabIdx !== 2 ? this.validatorExtendService.required() : null,
       ],
       FROM_TIME: [

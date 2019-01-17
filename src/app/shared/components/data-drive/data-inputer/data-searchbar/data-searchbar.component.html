@@ -2,9 +2,13 @@
   <nz-content style="background:#fff; padding: 3px;height:100%">
     <!-- 搜索框栏 -->
     <div class="fliter-container">
+      <button nz-button nzType="primary" nzShape="circle" (click)="updateView()" *ngIf="dataDrive.tableData.searchable && !dataDrive.searchSets"><i
+          class=" anticon anticon-search"></i></button>
       <div class="left-container" *ngIf="!notShowSearchInput && dataDrive.tableData">
-        <nz-input-group style="width:350px" [nzAddOnBefore]="addOnBeforeTemplate" [nzAddOnAfter]="addOnAfterTemplate" *ngIf="dataDrive.tableData.searchable && optionList && optionList.length >0">
-          <input type="text" nz-input [(ngModel)]="filterValue" [placeholder]="selectedOption?.placeHolder | sgChineseConv" [disabled]="!validateForm.valid">
+        <nz-input-group style="width:350px" [nzAddOnBefore]="addOnBeforeTemplate" [nzAddOnAfter]="addOnAfterTemplate"
+          *ngIf="dataDrive.tableData.searchable && optionList && optionList.length >0">
+          <input type="text" nz-input [(ngModel)]="filterValue" [placeholder]="(selectedOption?.placeHolder?selectedOption.placeHolder: '') | sgChineseConv"
+            [disabled]="!validateForm.valid">
         </nz-input-group>
         <ng-template #addOnBeforeTemplate>
           <nz-select style="width: 100px;" [(ngModel)]="selectedOption">
@@ -28,8 +32,12 @@
         </div>
       </div>
       <div class="right-controler">
-        <a class="high-level-search" (click)="toggle()" *ngIf="!show && dataDrive.tableData  && dataDrive.tableData.searchable && dataDrive?.searchSets && dataDrive?.searchSets.length > 0">{{'queryDetailPra' | translate}}</a>
-        <a class="high-level-search" (click)="toggle()" *ngIf="show">{{'queryPra' | translate}}</a>
+        <ng-container *ngIf="optionList && optionList.length >0 && !notShowSearchInput">
+          <a class="high-level-search" (click)="toggle()" *ngIf="!show && dataDrive.tableData  && dataDrive.tableData.searchable && dataDrive?.searchSets && dataDrive?.searchSets.length > 0">{{'queryDetailPra'
+            | translate}}</a>
+          <a class="high-level-search" (click)="toggle()" *ngIf="show">{{'queryPra' | translate}}</a>
+        </ng-container>
+
         <ng-container *ngIf="dataDrive.additionalFn?.menu">
           <nz-tooltip [nzTitle]="'mutiUpdate' | translate" [nzPlacement]="'top'">
             <a nz-tooltip>
@@ -84,7 +92,8 @@
 
           <nz-tooltip [nzTitle]="'viewType' | translate" [nzPlacement]="'top'">
             <a nz-tooltip>
-              <button nz-button [nzType]="'default'" (click)="switchViewType(dataDrive.additionalFn.switchViewType)" *ngIf="dataDrive.additionalFn?.switchViewType">
+              <button nz-button [nzType]="'default'" (click)="switchViewType(dataDrive.additionalFn.switchViewType)"
+                *ngIf="dataDrive.additionalFn?.switchViewType">
                 <i class="anticon anticon-laptop"></i>
               </button>
             </a>
@@ -106,9 +115,11 @@
       <i class="anticon anticon-filter" style="margin-right:10px"></i>
       <span style="margin-right:10px">{{'queryItem' | translate}}:</span>
       <span>
-        <nz-tag nzClosable (nzClose)="onCloseTag(tag,'simple')" *ngFor="let tag of tagList">{{tag.label | sgChineseConv}}</nz-tag>
+        <nz-tag nzClosable (nzClose)="onCloseTag(tag,'simple')" *ngFor="let tag of tagList">{{tag.label |
+          sgChineseConv}}</nz-tag>
       </span>
-      <span style="margin-right:10px;cursor:pointer;" *ngIf="tagList && tagList.length >0" (click)="clearAllFilter('simple')">{{'clear' | translate}}</span>
+      <span style="margin-right:10px;cursor:pointer;" *ngIf="tagList && tagList.length >0" (click)="clearAllFilter('simple')">{{'clear'
+        | translate}}</span>
     </div>
     <!-- End 检索项 -->
 
@@ -118,55 +129,19 @@
         <div nz-row [nzGutter]="10">
           <div nz-col [nzSpan]="8" *ngFor="let item of columnNameStrings;let i =index">
             <nz-form-item>
-              <nz-form-label [nzSpan]="7" [attr.for]="inputTypeList[i].label">{{inputTypeList[i].label}}
+              <nz-form-label [nzSpan]="7" [attr.for]="inputTypeList[i].label" [nzRequired]="inputTypeList[i].isRequired">{{inputTypeList[i].label}}
               </nz-form-label>
               <nz-form-control [nzSpan]="17">
-                <!-- <nz-input [nzSize]="'large'" [nzPlaceHolder]="inputTypeList[i].placeHolder" [formControlName]="item" [nzId]="i"></nz-input> -->
-                <input nz-input [formControlName]="item" [placeholder]="inputTypeList[i].placeHolder?inputTypeList[i].placeHolder:' '" *ngIf="inputTypeList[i]?.type === 'text'">
-
-                <textarea nz-input [formControlName]="item" [placeholder]="inputTypeList[i].placeHolder?inputTypeList[i].placeHolder:' '"
-                  *ngIf="inputTypeList[i]?.type === 'textarea'" [nzAutosize]="1"></textarea>
-
-
-
-                <app-my-select [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'select'" [myPlaceHolder]="inputTypeList[i].placeHolder"
-                  [options]="inputTypeList[i]?.more?.options" [lazyAPI]="inputTypeList[i]?.more?.lazyAPI" [lazyParams]="inputTypeList[i]?.more?.lazyParams"
-                  [lazyAPIUserMes]="inputTypeList[i]?.more?.lazyAPIUserMes" [label]="inputTypeList[i].label" (emitSelectList)="getSelectList($event)"></app-my-select>
-
-                <!-- <app-my-select [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'select'" [allOptions]="inputTypeList[i]"></app-my-select> -->
-
-
-                <app-my-date-picker [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'datePicker'" [myPickerFormat]="inputTypeList[i].more?.pickerFormat"
-                  [myFormat]="inputTypeList[i].more?.showFormat" [myShowTime]="inputTypeList[i].more?.showTime" [myPlaceHolder]="inputTypeList[i].placeHolder"
-                  [myMode]="inputTypeList[i].more?.showMode"></app-my-date-picker>
-
-
-                <app-my-time-picker [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'timePicker'" [myPickerFormat]="inputTypeList[i].more?.pickerFormat"
-                  [myFormat]="inputTypeList[i].more?.showFormat" [myPlaceHolder]="inputTypeList[i].placeHolder">
-                </app-my-time-picker>
-
-                <nz-input-number [formControlName]="item" [nzStep]="inputTypeList[i].more?.step" [nzMax]="inputTypeList[i].more?.max" [nzMin]="inputTypeList[i].more?.min"
-                  [style.width]="'50%'" *ngIf="inputTypeList[i]?.type === 'number'"></nz-input-number>
-
-                <app-my-cascader [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'cascader'" [myPlaceHolder]="inputTypeList[i].placeHolder"
-                  [myOptions]="inputTypeList[i].more?.options" [myCascaderLazySets]="inputTypeList[i].more?.cascaderLazySets"
-                  [myProperties]="inputTypeList[i].more?.properties"></app-my-cascader>
-
-                <app-my-switch [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'switch'" [myTrueFormat]="inputTypeList[i]?.trueFormat"
-                  [myFalseFormat]="inputTypeList[i]?.falseFormat"></app-my-switch>
-
-                <app-dynamic-input [inputOptions]="inputTypeList[i]" [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'colleagueSearcher'"></app-dynamic-input>
-
-                <app-photo-upload [formControlName]="item" *ngIf="inputTypeList[i]?.type === 'photoUpload'" [pickerFormat]="inputTypeList[i]?.more?.pickerFormat"
-                  [maxCount]="inputTypeList[i]?.more?.maxCount" [removable]="inputTypeList[i]?.more?.removable" [addable]="inputTypeList[i]?.more?.addable"
-                  [scanable]="inputTypeList[i]?.more?.scanable"></app-photo-upload>
+                <app-dynamic-input [formControlName]="item" [inputOptions]="inputTypeList[i]"></app-dynamic-input>
               </nz-form-control>
             </nz-form-item>
           </div>
         </div>
         <div nz-row>
           <div nz-col [nzSpan]="24" style="text-align: right;">
-            <button nz-button [nzType]="'primary'" [disabled]="!validateForm.valid" (click)="submitForm('high-level')">{{'query' | translate}}</button>
+            <button nz-button [nzType]="'primary'" [disabled]="!validateForm.valid" (click)="submitForm('high-level')"
+              style="margin-right: 8px">{{'query'
+              | translate}}</button>
             <button nz-button (click)="reSet()">{{'reset' | translate}}</button>
           </div>
         </div>

@@ -1,6 +1,6 @@
 import { DataDrive } from './../../../../shared/components/data-drive/shared/models/index';
 import { Component, OnInit } from '@angular/core';
-import * as moment from 'moment';
+import { UtilService } from '../../../../core/services/util.service';
 
 @Component({
   selector: 'app-task-bu',
@@ -8,7 +8,7 @@ import * as moment from 'moment';
   styleUrls: ['./task-bu.component.css'],
 })
 export class TaskBuComponent implements OnInit {
-  constructor() {}
+  constructor(private util: UtilService) {}
 
   ngOnInit() {}
 
@@ -17,7 +17,8 @@ export class TaskBuComponent implements OnInit {
       data.LOOKUP_TYPE = 'PROJECT_BU';
       data.DESCRIPTION = 'N/A';
       data.ENABLED_FLAG = 'Y';
-      data.START_DATE = data.START_DATE || moment().format('YYYY-MM-DD');
+      data.START_DATE =
+        data.START_DATE || this.util.dateFormat(new Date(), 'YYYY-MM-DD');
     });
   }
 }
