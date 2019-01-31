@@ -64,6 +64,7 @@ export class TabelViewSet implements DataViewSet {
   private _scrollSet?: boolean;
   private scrollSetSubject = new Subject<any>();
   private _cbList;
+  private _forceUpdate: () => void;
   eventNames = {
     onScrollTo: 'onScrollTo',
   };
@@ -84,6 +85,16 @@ export class TabelViewSet implements DataViewSet {
       this._scrollSet = true;
     }
     this._cbList = {};
+  }
+
+  setForceUpdate(fn: () => void) {
+    this._forceUpdate = fn;
+  }
+
+  forceUpdate() {
+    if (this._forceUpdate) {
+      this._forceUpdate();
+    }
   }
 
   get scrollSet() {
@@ -107,11 +118,13 @@ export class TabelViewSet implements DataViewSet {
     this.more = this.more || {};
     this.more.header = this.more.header || {};
     this.more.header.textSize = size;
+    this.forceUpdate();
   }
   changeBodyFontSize(size: string) {
     this.more = this.more || {};
     this.more.body = this.more.body || {};
     this.more.body.textSize = size;
+    this.forceUpdate();
   }
   showCheckbox() {
     this.more.showCheckbox = true;

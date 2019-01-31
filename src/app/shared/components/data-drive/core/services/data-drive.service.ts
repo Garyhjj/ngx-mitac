@@ -199,7 +199,7 @@ export class DataDriveService {
       const checkedDataSubject = dataDrive.checkedDataSubject;
       const data = ds.map(d => {
         const trs = [];
-        trs['_data'] = d;
+        trs['originalData'] = Object.assign({}, d);
         for (const prop in d) {
           if (Object.prototype.hasOwnProperty.call(d, prop)) {
             trs.push(

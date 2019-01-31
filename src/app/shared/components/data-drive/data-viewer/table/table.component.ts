@@ -71,6 +71,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input()
   set opts(opts: DataDrive) {
     this.tableSet = opts.dataViewSet as TabelViewSet;
+    this.tableSet.setForceUpdate(() => this.ref.detectChanges());
     this.calAdditionalColNum();
     this.setDetail = this.tableSet.more;
     this.tableData = Object.assign({}, opts.tableData);
@@ -488,7 +489,13 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy {
     const data = this._dataDrive.getData()[idx];
     // const out: any = {};
     if (isArray(data)) {
-      return data['_data'];
+      let out = data['originalData'];
+      if (!out) {
+        out = {};
+        data.forEach(l => (out[l.property] = l.value));
+        data['originalData'] = Object.assign({}, out);
+      }
+      return out;
     } else {
       return {};
     }

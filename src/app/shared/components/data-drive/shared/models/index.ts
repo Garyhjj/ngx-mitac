@@ -314,9 +314,12 @@ export class DataDrive implements DataDriveOptions {
     const data = this.getData().filter(d => d[0] && d[0].checked === true);
     if (data.length > 0) {
       return data.map(d => {
-        // let out: { [prop: string]: string } = {};
-        // d.forEach(l => (out[l.property] = l.value));
-        return d['_data'];
+        let out = d['originalData'];
+        if (!out) {
+          out = {};
+          d.forEach(l => (out[l.property] = l.value));
+        }
+        return out;
       });
     }
     return [];

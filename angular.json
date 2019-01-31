@@ -21,7 +21,7 @@
               "src/favicon.ico"
             ],
             "styles": [
-              "src/assets/styles/my.less",
+              "node_modules/ng-zorro-antd/src/ng-zorro-antd.min.css",
               "src/styles.css"
             ],
             "scripts": [
@@ -43,12 +43,6 @@
                 "replace": "src/environments/environment.ts",
                 "with": "src/environments/environment.prod.ts"
               }]
-            },
-            "hmr": {
-              "fileReplacements": [{
-                "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.hmr.ts"
-              }]
             }
           }
         },
@@ -60,10 +54,6 @@
           "configurations": {
             "production": {
               "browserTarget": "ngx-mitac:build:production"
-            },
-            "hmr": {
-              "hmr": true,
-              "browserTarget": "ngx-mitac:build:hmr"
             }
           }
         },

@@ -1,3 +1,4 @@
+import { MutiColleagueSearcherComponent } from './components/inputs/muti-colleague-searcher/muti-colleague-searcher.component';
 import { DirectivesModule } from './directives/directives.module';
 import { InputGroupComponent } from './components/inputs/input-group/input-group.component';
 import { MxAutoCompleteComponent } from './components/inputs/mx-auto-complete/mx-auto-complete.component';
@@ -53,6 +54,7 @@ import { FileListComponent } from './components/file-list/file-list.component';
     InputGroupComponent,
     MyFlexPipe,
     FileListComponent,
+    MutiColleagueSearcherComponent,
   ],
   exports: [
     TranslateModule,
@@ -74,6 +76,8 @@ import { FileListComponent } from './components/file-list/file-list.component';
     FileUploadComponent,
     DynamicInputComponent,
     MyFlexPipe,
+    FileListComponent,
+    MutiColleagueSearcherComponent,
     OverlayModule,
     DirectivesModule,
   ],
