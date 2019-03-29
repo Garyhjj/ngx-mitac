@@ -1,5 +1,5 @@
 import { map } from 'rxjs/operators';
-import { forkJoin } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
 import { FormatService } from './../../../../core/services/format.service';
 import { ProjectLine } from './../models/index';
 import { projectConfig } from './../config/index';
@@ -107,27 +107,34 @@ export class ProjectService {
   linesOnDownExcel(data: ProjectLine[]) {
     const fs = this.formatService;
     return forkJoin(
-      data
-        .map(a => {
-          a.START_DATE = fs.date(a.START_DATE, 'YYYY-MM-DD');
-          a.DUE_DATE = fs.date(a.DUE_DATE, 'YYYY-MM-DD');
-          return this.formatService.empno(a.ASSIGNEE, 'CH(EN)').pipe(
+      data.map(a => {
+        const nD: any = { ...a };
+        nD.START_DATE = fs.date(a.START_DATE, 'YYYY-MM-DD');
+        nD.DUE_DATE = fs.date(a.DUE_DATE, 'YYYY-MM-DD');
+        const { ASSIGNEE_LIST: aList } = a;
+        const formatAssigner = this.formatService
+          .empno(a.ASSIGNER, 'CH(EN)')
+          .pipe(
             map(r => {
-              a.ASSIGNEE = r;
+              nD.ASSIGNER = r;
               return a;
             }),
           );
-        })
-        .concat(
-          data.map(a => {
-            return this.formatService.empno(a.ASSIGNER, 'CH(EN)').pipe(
-              map(r => {
-                a.ASSIGNER = r;
-                return a;
+        if (aList.length) {
+          return forkJoin([
+            forkJoin(
+              aList.map(_ => this.formatService.empno(_, 'CH(EN)')),
+            ).pipe(
+              map(res => {
+                nD.ASSIGNEE_LIST = res.join(' ; ');
               }),
-            );
-          }),
-        ),
-    ).pipe(map(_ => data));
+            ),
+            formatAssigner,
+          ]).pipe(map(() => nD));
+        } else {
+          return formatAssigner.pipe(map(() => nD));
+        }
+      }),
+    );
   }
 }

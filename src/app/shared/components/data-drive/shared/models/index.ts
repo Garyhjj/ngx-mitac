@@ -357,6 +357,7 @@ export class DataDrive implements DataDriveOptions {
       if (status) {
         status.InputOpts = status.InputOpts || {};
         status.InputOpts.default = def;
+        this.addDefaultSearchParams({[prop]: def});
       }
     }
   }

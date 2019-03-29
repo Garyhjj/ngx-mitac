@@ -93,11 +93,11 @@
   <nz-tab [nzTitle]="nzTabHeading5">
     <ng-template #nzTabHeading5>
       {{'serviceModule.waitingScore' | translate}}
-      <nz-badge [nzCount]="commentCount" *ngIf="commentCount">
+      <!-- <nz-badge [nzCount]="commentCount" *ngIf="commentCount">
         <ng-template #content>
           &nbsp;&nbsp;
         </ng-template>
-      </nz-badge>
+      </nz-badge> -->
     </ng-template>
     <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive4($event)">
     </app-data-drive>
@@ -128,6 +128,26 @@
     <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive6($event)">
       <ng-template #actionRef let-data="data">
         <span>
+          <a (click)="resetResvation(data)">{{'serviceModule.reset' | translate}}</a>
+        </span>
+      </ng-template>
+    </app-data-drive>
+  </nz-tab>
+
+  <nz-tab [nzTitle]="nzTabHeading8">
+    <ng-template #nzTabHeading8>
+      {{'serviceModule.otherHandling' | translate}}
+      <nz-badge [nzCount]="otherProcessingCount" *ngIf="otherProcessingCount">
+        <ng-template #content>
+          &nbsp;&nbsp;
+        </ng-template>
+      </nz-badge>
+    </ng-template>
+    <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive7($event)">
+      <ng-template #actionRef let-data="data">
+        <span>
+          <a (click)="doneResvation(data)">{{'serviceModule.finish' | translate}}</a>
+          <nz-divider nzType="vertical"></nz-divider>
           <a (click)="resetResvation(data)">{{'serviceModule.reset' | translate}}</a>
         </span>
       </ng-template>

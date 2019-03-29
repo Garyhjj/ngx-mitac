@@ -111,12 +111,6 @@ export class DataDriveService {
   }
 
   searchData(dataDrive: DataDrive, params: any = {}) {
-    const newSearchWay = dataDrive.runChangeSearchWay(params) as Observable<
-      any
-    >;
-    if (newSearchWay instanceof Observable) {
-      return newSearchWay;
-    }
     if (Object.keys(params).length === 0) {
       params = dataDrive.lastestSearchParams
         ? dataDrive.lastestSearchParams
@@ -136,6 +130,12 @@ export class DataDriveService {
       this.bindUserMesFordefaultSearchParams(defaultSearchParams),
     );
     params = Object.assign(copyDefault, params);
+    const newSearchWay = dataDrive.runChangeSearchWay(params) as Observable<
+      any
+    >;
+    if (newSearchWay instanceof Observable) {
+      return newSearchWay;
+    }
     return this.http.get(
       replaceQuery(
         APPConfig.baseUrl + dataDrive.APIs.search,

@@ -9,14 +9,14 @@
     <nz-form-item>
       <nz-form-label [nzSpan]="3">*{{'insoectionModule.startTime' | translate}}</nz-form-label>
       <nz-form-control [nzSpan]="20">
-        <app-my-time-picker [myPickerFormat]="'HH:mm'" [myFormat]="'HH:mm'" formControlName="fromTime" [myDisabledHours]="disabledHours"
+        <app-my-time-picker [myPickerFormat]="'HH:mm'" [myFormat]="'HH:mm'" formControlName="fromTime"
           [myDisabledMinutes]="disabledMinutes"></app-my-time-picker>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
       <nz-form-label [nzSpan]="3">*{{'insoectionModule.endTime' | translate}}</nz-form-label>
       <nz-form-control [nzSpan]="20">
-        <app-my-time-picker [myPickerFormat]="'HH:mm'" [myFormat]="'HH:mm'" formControlName="endTime" [myDisabledHours]="disabledHours"
+        <app-my-time-picker [myPickerFormat]="'HH:mm'" [myFormat]="'HH:mm'" formControlName="endTime"
           [myDisabledMinutes]="disabledMinutes"></app-my-time-picker>
       </nz-form-control>
     </nz-form-item>
@@ -45,20 +45,20 @@
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-      <nz-form-label [nzSpan]="3">*{{'serviceModule.handler' | translate}}</nz-form-label>
+      <nz-form-label [nzSpan]="3">{{'serviceModule.handler' | translate}}</nz-form-label>
       <nz-form-control [nzSpan]="20">
         <app-colleague-searcher formControlName="HANDLER" [miSearchFilter]="searchFilter"></app-colleague-searcher>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-      <nz-form-label [nzSpan]="3">*{{'serviceModule.problemType' | translate}}</nz-form-label>
+      <nz-form-label [nzSpan]="3">{{'serviceModule.problemType' | translate}}</nz-form-label>
       <nz-form-control [nzSpan]="20">
         <app-mx-select [lazyAPI]="'IPQA/GetMRILookup?lookup_type=IT_SERVICE_TYPE'" [lazyParams]="['LOOKUP_CODE', 'LOOKUP_CODE']"
           formControlName="TYPE"></app-mx-select>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-      <nz-form-label [nzSpan]="3">*{{'serviceModule.handleTime' | translate}}(h)</nz-form-label>
+      <nz-form-label [nzSpan]="3">{{'serviceModule.handleTime' | translate}}(h)</nz-form-label>
       <nz-form-control [nzSpan]="20">
         <nz-input-number [style.width]="'50%'" nzAllowClear="true" formControlName="HANDLE_TIME"></nz-input-number>
       </nz-form-control>
@@ -67,6 +67,13 @@
       <nz-form-label [nzSpan]="3">{{'serviceModule.handleDesc' | translate}}</nz-form-label>
       <nz-form-control [nzSpan]="20">
         <textarea nz-input [nzAutosize]="'1'" formControlName="REMARK" [style.width]="'50%'"></textarea>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="3">{{'serviceModule.status' | translate}}</nz-form-label>
+      <nz-form-control [nzSpan]="20">
+        <app-mx-select [options]="statusOpts"
+          formControlName="STATUS"></app-mx-select>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item style="display:block;text-align:center">

@@ -17,8 +17,13 @@ import { isArray, sortUtils } from '../../../../shared/utils';
 export class ITServerAddComponent implements OnInit {
   myForm: FormGroup;
   translateText: any = {};
-  disabledHours;
+  // disabledHours;
   searchFilter;
+  statusOpts = [
+    { property: 'Closed', value: '完成' },
+    { property: 'New', value: '待受理' },
+    { property: 'Processing', value: '处理中' },
+  ];
   disabledMinutes = () => {
     let arr = [];
     for (let i = 1; i < 60; i++) {
@@ -47,41 +52,45 @@ export class ITServerAddComponent implements OnInit {
       this.searchFilter = ds =>
         ds.filter(d => d).filter(d => res.find(r => r.EMPNO === d.EMPNO));
     });
-    this.reservationITService.getServiceTime(deptId).subscribe((m: any[]) => {
-      if (m && m.length > 0) {
-        const min = m.sort((a: any, b: any) =>
-          sortUtils.byTime(a.START_TIME, b.END_TIME, true),
-        )[0];
-        const max = m.sort((a: any, b: any) =>
-          sortUtils.byTime(a.START_TIME, b.END_TIME, false),
-        )[0];
-        const minTime = min.START_TIME ? +min.START_TIME.slice(0, 2) : 0;
-        const endTime = max.END_TIME ? +max.END_TIME.slice(0, 2) : 23;
-        const timeHourValues: number[] = [];
-        for (let i = 0; i <= 23; i++) {
-          timeHourValues.push(i);
-        }
-        timeHourValues.splice(minTime, endTime - minTime + 1);
-        this.myForm.patchValue({
-          fromTime: (minTime < 10 ? '0' + minTime : minTime) + ':00',
-          endTime: endTime + ':30',
-        });
-        this.disabledHours = () => timeHourValues;
-      }
-    });
+    // this.reservationITService.getServiceTime(deptId).subscribe((m: any[]) => {
+    //   if (m && m.length > 0) {
+    //     const min = m.sort((a: any, b: any) =>
+    //       sortUtils.byTime(a.START_TIME, b.END_TIME, true),
+    //     )[0];
+    //     const max = m.sort((a: any, b: any) =>
+    //       sortUtils.byTime(a.START_TIME, b.END_TIME, false),
+    //     )[0];
+    //     const minTime = min.START_TIME ? +min.START_TIME.slice(0, 2) : 0;
+    //     const endTime = max.END_TIME ? +max.END_TIME.slice(0, 2) : 23;
+    // const timeHourValues: number[] = [];
+    // for (let i = 0; i <= 23; i++) {
+    //   timeHourValues.push(i);
+    // }
+    // timeHourValues.splice(minTime, endTime - minTime + 1);
+    // this.myForm.patchValue({
+    //   fromTime: (minTime < 10 ? '0' + minTime : minTime) + ':00',
+    //   endTime: endTime + ':30',
+    // });
+    // this.disabledHours = () => timeHourValues;
+    //   }
+    // });
   }
 
   initForm() {
     let form = this.fb.group({
-      SERVICE_DATE: [null, this.validatorExtendService.required()],
+      SERVICE_DATE: [
+        moment().format('YYYY-MM-DD'),
+        this.validatorExtendService.required(),
+      ],
       SERVICE_DESC: ['', this.validatorExtendService.required()],
       IMAGES: [],
       CONTACT: ['', this.validatorExtendService.required()],
       MOBILE: ['', this.validatorExtendService.required()],
-      HANDLER: ['', this.validatorExtendService.required()],
-      TYPE: [null, this.validatorExtendService.required()],
+      HANDLER: [''],
+      TYPE: [null],
       REMARK: [''],
-      HANDLE_TIME: [null, this.validatorExtendService.required()],
+      HANDLE_TIME: [null],
+      STATUS: [''],
     });
     const validate = () => {
       const from = form.get('fromTime');
@@ -140,6 +149,23 @@ export class ITServerAddComponent implements OnInit {
       });
     }, 200);
     this.myForm = form;
+    const today = new Date(),
+      hour = today.getHours(),
+      minute = today.getMinutes();
+
+    if (minute > 30) {
+      const nextHour = hour + 1;
+      this.myForm.patchValue({
+        fromTime: (hour < 10 ? '0' + hour : hour) + ':30',
+        endTime: (nextHour < 10 ? '0' + nextHour : nextHour) + ':00',
+      });
+    } else {
+      const hourFormat = hour < 10 ? '0' + hour : hour;
+      this.myForm.patchValue({
+        fromTime: hourFormat + ':00',
+        endTime: hourFormat + ':30',
+      });
+    }
   }
 
   submitForm() {
@@ -155,7 +181,10 @@ export class ITServerAddComponent implements OnInit {
         this.util.showGlobalSucMes(
           this.translateText['serviceModule.submitSuccess'],
         );
-        setTimeout(() => this.myForm.reset(), 10);
+        this.myForm = null;
+        setTimeout(() => {
+          this.initForm();
+        }, 10);
       },
       err => {
         final();

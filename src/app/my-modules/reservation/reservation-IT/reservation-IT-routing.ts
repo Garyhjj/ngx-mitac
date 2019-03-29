@@ -1,3 +1,4 @@
+import { ITServerWholeComponent } from './IT-server-Whole/IT-server-Whole.component';
 import { ITServerAddComponent } from './IT-server-add/IT-server-add.component';
 import { ITServerBoardComponent } from './IT-server-board/IT-server-board.component';
 import { ReservationGuard } from './../reservation-guard.service';
@@ -50,6 +51,11 @@ const bRoutes: Routes = [
         canActivateChild: [ReservationGuard],
         path: 'add',
         component: ITServerAddComponent,
+      },
+      {
+        canActivateChild: [ReservationGuard],
+        path: 'whole',
+        component: ITServerWholeComponent,
       },
     ],
   },

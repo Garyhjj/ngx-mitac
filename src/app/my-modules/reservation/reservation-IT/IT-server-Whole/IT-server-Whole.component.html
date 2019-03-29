@@ -1,0 +1,31 @@
+<nz-tabset>
+    <nz-tab nzTitle="已超时">
+        <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive1($event)">
+    
+        </app-data-drive>
+    </nz-tab>
+    <nz-tab nzTitle="今日待辦">
+        <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive2($event)">
+    
+        </app-data-drive>
+    </nz-tab>
+    <nz-tab nzTitle="周待辦">
+        <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive3($event)">
+        </app-data-drive>
+    </nz-tab>
+    <nz-tab nzTitle="月待辦">
+        <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive4($event)">
+        </app-data-drive>
+    </nz-tab>
+
+    <nz-tab nzTitle="待评价">
+        <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive5($event)">
+        </app-data-drive>
+    </nz-tab>
+
+    <nz-tab nzTitle="已結案">
+        <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive6($event)">
+        </app-data-drive>
+    </nz-tab>
+  </nz-tabset>
+  

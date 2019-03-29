@@ -1,3 +1,5 @@
+import { DataDriveModule } from './../shared/components/data-drive/data-drive.module';
+import { TempDDCComponent } from './temp-ddc/temp-ddc.component';
 import { ContentComponent } from './content/content.component';
 import { ModulesSiderComponent } from './modules-sider/modules-sider.component';
 import { SharedModule } from './../shared/shared.module';
@@ -13,8 +15,9 @@ import { TranslateModule } from '@ngx-translate/core';
     MyModulesRoutingModule,
     SharedModule,
     TranslateModule,
+    DataDriveModule
   ],
-  declarations: [MyModulesComponent, ModulesSiderComponent, ContentComponent],
+  declarations: [MyModulesComponent, ModulesSiderComponent, ContentComponent, TempDDCComponent],
   providers: [],
 })
 export class MyModulesModule {}

@@ -10,6 +10,7 @@ import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { replaceQuery } from '../../shared/utils/index';
 import { AuthService } from './auth.service';
+import { Throttle } from '../../shared/decorators';
 
 @Injectable()
 export class AppService {
@@ -41,6 +42,7 @@ export class AppService {
     );
   }
 
+  @Throttle(300)
   getAllTips() {
     const user = this.auth.user;
     const send = {

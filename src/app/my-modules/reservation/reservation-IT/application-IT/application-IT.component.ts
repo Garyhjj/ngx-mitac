@@ -27,6 +27,7 @@ export class ApplicationITComponent implements OnInit {
   dateMes: {
     CDATE: string;
     REMAIN_NUMBER: number;
+    DONE_FLAG: string;
   }[];
   dayInfo: ServiceTimeInfo[] = [];
   deptId = 1;
@@ -36,6 +37,7 @@ export class ApplicationITComponent implements OnInit {
   serviceTime;
   selectedTimeMes: ServiceTimeInfo;
   noServiceText: string;
+  loading: boolean;
   constructor(
     private _message: NzMessageService,
     private fb: FormBuilder,
@@ -64,8 +66,10 @@ export class ApplicationITComponent implements OnInit {
       val.ID = 0;
       if (this.testTime()) {
         let loadingId = this.util.showLoading();
+        this.loading = true;
         const final = id => {
           this.util.dismissLoading(id);
+          this.loading = false;
         };
         this.reservationITService.updateService(val).subscribe(
           res => {
@@ -73,6 +77,7 @@ export class ApplicationITComponent implements OnInit {
             this.current += 1;
             this.changeContent();
             this.appService.getAllTips();
+            this.reservationITService.callForWholeUpdate();
           },
           err => {
             this.util.errDeal(err);
@@ -223,6 +228,15 @@ export class ApplicationITComponent implements OnInit {
         this.util.dateFormat(date, this.dateFormat),
     );
     return target ? target.REMAIN_NUMBER : 0;
+  }
+
+  getIsHasApplictionByDate(date: any) {
+    const target = this.dateMes.find(
+      d =>
+        this.util.dateFormat(new Date(d.CDATE), this.dateFormat) ===
+        this.util.dateFormat(date, this.dateFormat),
+    );
+    return target ? target.DONE_FLAG === 'Y' : false;
   }
 
   selectDate(date: any) {

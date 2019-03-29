@@ -58,6 +58,8 @@ export class MyRouteReuseStrategy implements RouteReuseStrategy {
     this.store$.dispatch(new BreadcrumbReuseUpdate(item));
     this.removeUrlBuffer = null;
     if (handle && handle.componentRef) {
+      const instance = handle.componentRef.instance;
+      instance._resued = false;
       this.runHook('_onReuseDestroy', url, handle.componentRef);
     }
   }
@@ -78,7 +80,11 @@ export class MyRouteReuseStrategy implements RouteReuseStrategy {
     let /** @type {?} */ data = this.get(url);
     let /** @type {?} */ ret = (data && data._handle) || null;
     if (ret && ret.componentRef) {
-      this.runHook('_onReuseInit', url, ret.componentRef);
+      const instance = ret.componentRef.instance;
+      if (!instance._resued) {
+        instance._resued = true;
+        this.runHook('_onReuseInit', url, ret.componentRef);
+      }
     }
     return ret;
   }
@@ -102,8 +108,9 @@ export class MyRouteReuseStrategy implements RouteReuseStrategy {
   }
 
   runHook(method, url, comp) {
-    if (comp.instance && typeof comp.instance[method] === 'function') {
-      comp.instance[method]();
+    const instance = comp.instance;
+    if (instance && typeof instance[method] === 'function') {
+      instance[method]();
     }
   }
   isSameUrl(a: string, b: string) {

@@ -7,8 +7,8 @@ import { EncryptUtilService } from './encryptUtil.service';
 import { LoginConfig } from './../../login/shared/config/login.config';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { BehaviorSubject, Subscription, timer } from 'rxjs';
+import { tap, concatMap } from 'rxjs/operators';
 import { replaceQuery, isArray } from '../../shared/utils/index';
 import { UtilService } from './util.service';
 
@@ -20,6 +20,7 @@ export class AuthService {
   loginPageSubject = new BehaviorSubject<boolean>(false);
   user: UserState = {};
   tokenEffectTime: number = 1000 * 60 * 20;
+  sub: Subscription;
   constructor(
     private http: HttpClient,
     private encryptUtilService: EncryptUtilService,
@@ -32,6 +33,7 @@ export class AuthService {
       .select(s => s.userReducer)
       .subscribe(u => Object.assign(this.user, u));
     this.getSelfPrivilege();
+    this.autoUpdateToken();
   }
 
   login(data: any) {
@@ -55,6 +57,27 @@ export class AuthService {
           this.store$.dispatch(new UserLogin(user));
         }),
       );
+  }
+  autoUpdateToken() {
+    // tslint:disable-next-line:no-unused-expression
+    this.sub && this.sub.unsubscribe();
+    this.sub = null;
+    let user = this.user;
+    let tokenMes = this.getTokenMes();
+    const now = Date.now();
+    if (tokenMes && now < tokenMes.expires) {
+      this.sub = timer(tokenMes.expires - now - 60 * 1000)
+        .pipe(
+          concatMap(() =>
+            this.login({
+              userName: user.USER_NAME,
+              password: user.password,
+              remember: user.rememberPWD,
+            }),
+          ),
+        )
+        .subscribe();
+    }
   }
 
   updateToken() {

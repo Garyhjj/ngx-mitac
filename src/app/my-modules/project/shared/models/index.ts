@@ -41,4 +41,5 @@ export class ProjectLine implements BasicTable {
   CREATED_BY?: number;
   ASSIGNER?: string;
   ASSIGNEE?: string;
+  ASSIGNEE_LIST?: string[];
 }

@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { MyModulesComponent } from './my-modules.component';
+import { TempDDCComponent } from './temp-ddc/temp-ddc.component';
 
 const mRoutes: Routes = [
   {
@@ -42,6 +43,10 @@ const mRoutes: Routes = [
       {
         path: 'tax',
         loadChildren: './tax/tax.module#TaxModule',
+      },
+      {
+        path: 'temp_ddc/:id',
+        component: TempDDCComponent,
       },
     ],
   },

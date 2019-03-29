@@ -66,3 +66,7 @@
 :host ::ng-deep .ant-fullcalendar-fullscreen .ant-fullcalendar-date {
   height: 80px;
 }
+
+.hasApp {
+  color: red;
+}

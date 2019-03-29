@@ -1,0 +1,96 @@
+
+<div class="card-container">
+    <nz-tabset [nzTabPosition]="'top'" [nzType]="'card'" [nzSelectedIndex]="1">
+      <nz-tab [nzTitle]="'待受理'">
+        <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive1($event)">
+            <ng-template #actionRef let-data="data">
+                <span>
+                  <a (click)="closeResvation(data)">{{'serviceModule.close' | translate}}</a>
+                  <nz-divider nzType="vertical"></nz-divider>
+                  <a (click)="receiveResvation(data)">{{'serviceModule.accept' | translate}}</a>
+                </span>
+              </ng-template>
+        </app-data-drive>
+
+      </nz-tab>
+      <nz-tab [nzTitle]="'处理中(我)'">
+        <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive2($event)">
+            <ng-template #actionRef let-data="data">
+                <span>
+                  <a (click)="doneResvation(data)">{{'serviceModule.finish' | translate}}</a>
+                  <nz-divider nzType="vertical"></nz-divider>
+                  <a (click)="resetResvation(data)">{{'serviceModule.reset' | translate}}</a>
+                </span>
+              </ng-template>
+        </app-data-drive>
+
+      </nz-tab>
+      <nz-tab [nzTitle]="'处理中(他)'">
+        <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive3($event)">
+            <ng-template #actionRef let-data="data">
+                <span>
+                  <a (click)="doneResvation(data)">{{'serviceModule.finish' | translate}}</a>
+                  <nz-divider nzType="vertical"></nz-divider>
+                  <a (click)="resetResvation(data)">{{'serviceModule.reset' | translate}}</a>
+                </span>
+              </ng-template>
+        </app-data-drive>
+
+      </nz-tab>
+    </nz-tabset>
+  </div>
+
+
+  <nz-modal [nzVisible]="isClosedVisible" [nzTitle]="'serviceModule.closeReason' | translate" [nzContent]="modalContent1" [nzFooter]="modalFooter1"
+  (nzOnCancel)="isClosedVisible = false" nzWidth="560px">
+  <ng-template #modalContent1>
+    <form nz-form [nzLayout]="'horizontal'">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">{{'serviceModule.closeReason' | translate}}</nz-form-label>
+        <nz-form-control [nzSpan]="16" [style.textAlign]="'center'">
+          <input nz-input [(ngModel)]="reason" name="reason">
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item style="display:block;text-align:center">
+        <button nz-button type="button" [nzType]="'primary'" style="width: 45%" (click)="submitClosedForm()" [disabled]="!reason">{{'serviceModule.confirm' | translate}}</button>
+      </nz-form-item>
+    </form>
+  </ng-template>
+  <ng-template #modalFooter1>
+
+  </ng-template>
+</nz-modal>
+
+
+<nz-modal [nzVisible]="isDoneVisible" [nzTitle]="'serviceModule.handle' | translate" [nzContent]="modalContent" [nzFooter]="modalFooter"
+  (nzOnCancel)="isDoneVisible = false" nzWidth="560px">
+  <ng-template #modalContent>
+    <form nz-form [nzLayout]="'horizontal'" [formGroup]="doneForm" *ngIf="doneForm">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">*{{'serviceModule.problemType' | translate}}</nz-form-label>
+        <nz-form-control [nzSpan]="16">
+          <app-mx-select [lazyAPI]="'IPQA/GetMRILookup?lookup_type=IT_SERVICE_TYPE'" [lazyParams]="['LOOKUP_CODE', 'LOOKUP_CODE']"
+            formControlName="TYPE"></app-mx-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">*{{'serviceModule.handleTime' | translate}}(h)</nz-form-label>
+        <nz-form-control [nzSpan]="16">
+          <nz-input-number [style.width]="'50%'" formControlName="HANDLE_TIME" nzAllowClear="true"></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">{{'serviceModule.handleDesc' | translate}}</nz-form-label>
+        <nz-form-control [nzSpan]="16">
+          <textarea nz-input [nzAutosize]="'1'" formControlName="REMARK"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item style="display:block;text-align:center">
+        <button nz-button type="button" [nzType]="'primary'" style="width: 45%" (click)="submitDoneForm()" [disabled]="doneForm.invalid">{{'serviceModule.confirm' | translate}}</button>
+      </nz-form-item>
+    </form>
+  </ng-template>
+  <ng-template #modalFooter>
+
+  </ng-template>
+</nz-modal>

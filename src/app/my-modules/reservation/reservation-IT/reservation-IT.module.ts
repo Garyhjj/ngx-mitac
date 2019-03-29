@@ -1,3 +1,6 @@
+import { ServerSubClosedComponent } from './shared/components/server-sub-closed/server-sub-closed.component';
+import { ServerSubComponent } from './shared/components/server-sub/server-sub.component';
+import { ITServerWholeComponent } from './IT-server-Whole/IT-server-Whole.component';
 import { ImpressionListComponent } from './shared/components/impression-list/impression-list.component';
 import { ReservationITService } from './shared/services/reservaton-IT.service';
 import { ReservationITRoutingModule } from './reservation-IT-routing';
@@ -13,6 +16,7 @@ import { ITServerTrackComponent } from './IT-server-track/IT-server-track.compon
 import { ITServerRateComponent } from './IT-server-rate/IT-server-rate.component';
 import { ITServerBoardComponent } from './IT-server-board/IT-server-board.component';
 import { ITServerAddComponent } from './IT-server-add/IT-server-add.component';
+import { ServerSubScoringComponent } from './shared/components/server-sub-scoring/server-sub-scoring.component';
 
 @NgModule({
   imports: [
@@ -31,8 +35,17 @@ import { ITServerAddComponent } from './IT-server-add/IT-server-add.component';
     ITServerRateComponent,
     ITServerBoardComponent,
     ITServerAddComponent,
+    ITServerWholeComponent,
+    ServerSubComponent,
+    ServerSubScoringComponent,
+    ServerSubClosedComponent,
   ],
-  entryComponents: [ImpressionListComponent],
+  entryComponents: [
+    ImpressionListComponent,
+    ServerSubComponent,
+    ServerSubScoringComponent,
+    ServerSubClosedComponent,
+  ],
   providers: [ReservationITService],
 })
 export class ReservationITModule {}

@@ -111,6 +111,7 @@ export class DataSearchbarComponent implements OnInit {
       return;
     }
     const myForm: any = {};
+    let hasRequired;
     if (this.searchSets && this.searchSets.length > 0) {
       this.inputTypeList = this.searchSets.map(s => {
         let def = (s.InputOpts && s.InputOpts.default) || '';
@@ -137,6 +138,9 @@ export class DataSearchbarComponent implements OnInit {
           s.InputOpts.match &&
           isArray(s.InputOpts.match.fns) &&
           !!s.InputOpts.match.fns.find(_ => _.name === 'required');
+        if (isRequired) {
+          hasRequired = true;
+        }
         const label = mapColumn ? mapColumn.value : s.property;
         return Object.assign(
           {
@@ -162,7 +166,7 @@ export class DataSearchbarComponent implements OnInit {
         this.selectedOption.placeHolder =
           this.selectedOption.placeHolder || ' ';
       }
-      if (this.validateForm.valid) {
+      if (this.validateForm.valid && !hasRequired) {
         this.notShowSearchInput = false;
       } else {
         this.notShowSearchInput = true;

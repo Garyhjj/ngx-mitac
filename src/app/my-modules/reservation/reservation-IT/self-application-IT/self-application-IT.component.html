@@ -1,7 +1,7 @@
 <nz-tabset [(nzSelectedIndex)]="tabIdx" (nzSelectedIndexChange)="tabChange($event)">
   <nz-tab [nzTitle]="nzTabHeading1">
     <ng-template #nzTabHeading1>
-      {{'serviceModule.waitingToAccept' | translate}}
+      {{'serviceModule.unFinish' | translate}}
       <nz-badge [nzCount]="newCount" *ngIf="newCount">
         <ng-template #content>
           &nbsp;&nbsp;
@@ -17,7 +17,7 @@
       </ng-template>
     </app-data-drive>
   </nz-tab>
-  <nz-tab [nzTitle]="nzTabHeading2">
+  <!-- <nz-tab [nzTitle]="nzTabHeading2">
     <ng-template #nzTabHeading2>
       {{'serviceModule.handling' | translate}}
       <nz-badge [nzCount]="processingCount" *ngIf="processingCount">
@@ -34,7 +34,7 @@
         </span>
       </ng-template>
     </app-data-drive>
-  </nz-tab>
+  </nz-tab> -->
   <nz-tab [nzTitle]="nzTabHeading3">
     <ng-template #nzTabHeading3>
       {{'serviceModule.waitingScore' | translate}}

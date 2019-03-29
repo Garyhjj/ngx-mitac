@@ -1,3 +1,4 @@
+import { AuthService } from './../../../core/services/auth.service';
 import { DataDriveService } from './../../../shared/components/data-drive/core/services/data-drive.service';
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { DataDrive } from '../../../shared/components/data-drive/shared/models';
@@ -14,13 +15,19 @@ export class TaxReportComponent implements OnInit {
   subList: { d: DataDrive; type: string }[] = [];
   typeList = [];
   hasFirstSearch = false;
-  constructor(private dataDriveService: DataDriveService) {}
+  constructor(
+    private dataDriveService: DataDriveService,
+    private auth: AuthService,
+  ) {}
 
   ngOnInit() {}
 
   getDataDrive(d: DataDrive) {
+    const isAdmin = this.auth.hasPrivilege('TAX_ADMIN', '//');
+    if (!isAdmin) {
+      d.searchSets = d.searchSets.filter(_ => _.apiProperty !== 'name');
+    }
     d.changeSearchWay(data => {
-      console.log(data);
       if (!this.hasFirstSearch) {
         this.hasFirstSearch = true;
       }
@@ -33,6 +40,9 @@ export class TaxReportComponent implements OnInit {
       if (this.subList.length > 0) {
         this.subList.forEach(s => {
           const sub = s.d;
+          if (!isAdmin) {
+            data.name = this.auth.user.ID;
+          }
           sub.addDefaultSearchParams(data);
           this.dataDriveService.updateViewData(sub);
         });

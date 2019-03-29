@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs';
 import { AppService } from './../../../../core/services/app.service';
 import { NgxValidatorExtendService } from './../../../../core/services/ngx-validator-extend.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
@@ -6,7 +7,7 @@ import { NzModalService } from 'ng-zorro-antd';
 import { ReservationApplication } from './../shared/models/index';
 import { DataDriveService } from './../../../../shared/components/data-drive/core/services/data-drive.service';
 import { ReservationITService } from './../shared/services/reservaton-IT.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DataDrive } from '../../../../shared/components/data-drive/shared/models';
 import { ImpressionListComponent } from '../shared/components/impression-list/impression-list.component';
 import { isArray } from '../../../../shared/utils';
@@ -17,7 +18,7 @@ import { isArray } from '../../../../shared/utils';
   templateUrl: './self-application-IT.component.html',
   styleUrls: ['./self-application-IT.component.css'],
 })
-export class SelfApplicationITComponent implements OnInit {
+export class SelfApplicationITComponent implements OnInit, OnDestroy {
   tabIdx;
   timeMes;
 
@@ -37,6 +38,7 @@ export class SelfApplicationITComponent implements OnInit {
   newCount;
   processingCount;
   commentCount;
+  sub: Subscription;
   constructor(
     private reservationITService: ReservationITService,
     private dataDriveService: DataDriveService,
@@ -45,10 +47,22 @@ export class SelfApplicationITComponent implements OnInit {
     private fb: FormBuilder,
     private validatorExtendService: NgxValidatorExtendService,
     private gbService: AppService,
-    private appService: AppService,
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.ob$Update();
+  }
+
+  ob$Update() {
+    this.sub = this.reservationITService.$update.subscribe(() => {
+      this.updateAllDataDrive();
+    });
+  }
+
+  ngOnDestroy() {
+    // tslint:disable-next-line:no-unused-expression
+    this.sub && this.sub.unsubscribe();
+  }
 
   tabChange(idx) {}
   alterUpdate(d: DataDrive) {
@@ -63,18 +77,23 @@ export class SelfApplicationITComponent implements OnInit {
   async getDataDrive1(d: DataDrive) {
     this.alterUpdate(d);
     this.d1 = d;
+    d.tableData.searchable = false;
     d.tableData.columns = d.tableData.columns.filter(
       c => this.extralList.indexOf(c.property) < 0,
     );
-    await this.alterData(d);
-    d.addDefaultSearchParams({ status: 'New' });
-    d.beforeUpdateShow(data => {
-      if (data.STATUS === 'New') {
-        return true;
-      } else {
-        return false;
-      }
+    d.beforeInitTableData(data => {
+      return data
+        .sort((a , b) => this.reservationITService.sortByTime(a, b, true));
     });
+    // await this.alterData(d);
+    // d.addDefaultSearchParams({ status: 'New' });
+    // d.beforeUpdateShow(data => {
+    //   if (data.STATUS === 'New') {
+    //     return true;
+    //   } else {
+    //     return false;
+    //   }
+    // });
     d.onUpdateFormShow(fg => {
       const contactInput = fg.get('CONTACT');
       contactInput.valueChanges.subscribe(v => {
@@ -98,35 +117,45 @@ export class SelfApplicationITComponent implements OnInit {
       contactInput.setValue(this.reservationITService.user.EMPNO);
     });
     d.afterDataInit(ds => (this.newCount = ds.length));
-    this.dataDriveService.updateViewData(d);
+    // this.dataDriveService.updateViewData(d);
+    d.beforeInsideUpdateView(() => {
+      this.reservationITService.callForWholeUpdate();
+      return false;
+    });
   }
 
-  async getDataDrive2(d: DataDrive) {
-    this.alterUpdate(d);
-    this.d2 = d;
-    d.tableData.columns = d.tableData.columns.filter(
-      c => this.extralList.indexOf(c.property) < 0,
-    );
-    await this.alterData(d);
-    d.addDefaultSearchParams({ status: 'Processing' });
-    d.afterDataInit(ds => (this.processingCount = ds.length));
-    this.dataDriveService.updateViewData(d);
-  }
+  // async getDataDrive2(d: DataDrive) {
+  //   this.alterUpdate(d);
+  //   this.d2 = d;
+  //   d.tableData.columns = d.tableData.columns.filter(
+  //     c => this.extralList.indexOf(c.property) < 0,
+  //   );
+  //   await this.alterData(d);
+  //   d.addDefaultSearchParams({ status: 'Processing' });
+  //   d.afterDataInit(ds => (this.processingCount = ds.length));
+  //   this.dataDriveService.updateViewData(d);
+  // }
 
   async getDataDrive3(d: DataDrive) {
     this.alterUpdate(d);
     this.d3 = d;
     d.tableData.editable = false;
+    d.tableData.searchable = false;
     d.tableData.columns = d.tableData.columns.filter(
       c => this.extralList.indexOf(c.property) < 0,
     );
-    await this.alterData(d);
-    d.addDefaultSearchParams({ status: 'Scoring' });
+    // await this.alterData(d);
+    // d.addDefaultSearchParams({ status: 'Scoring' });
     d.afterDataInit(ds => (this.commentCount = ds.length));
-    this.dataDriveService.updateViewData(d);
+    // this.dataDriveService.updateViewData(d);
+    d.beforeInsideUpdateView(() => {
+      this.reservationITService.callForWholeUpdate();
+      return false;
+    });
   }
 
   async getDataDrive4(d: DataDrive) {
+    const srv = this.dataDriveService;
     this.alterUpdate(d);
     this.d4 = d;
     d.tableData.editable = false;
@@ -142,13 +171,25 @@ export class SelfApplicationITComponent implements OnInit {
     }
     await this.alterData(d);
     d.beforeInitTableData(data => {
-      return data.filter(s => {
+      const unFinish = [],
+        scroing = [],
+        done = [],
+        list = ['Closed', 'Canceled', 'CX'];
+      data.forEach(s => {
         const status = s.STATUS;
-        const list = ['Closed', 'Canceled', 'CX'];
-        return list.indexOf(status) > -1;
+        if (list.indexOf(status) > -1) {
+          done.push(s);
+        } else if (status === 'Scoring') {
+          scroing.push(s);
+        } else if (status === 'Processing' || status === 'New') {
+          unFinish.push(s);
+        }
       });
+      this.d1.selfUpdateTableData(unFinish);
+      this.d3.selfUpdateTableData(scroing);
+      return done;
     });
-    this.dataDriveService.updateViewData(d);
+    srv.updateViewData(d);
   }
 
   async alterData(d: DataDrive) {
@@ -156,22 +197,27 @@ export class SelfApplicationITComponent implements OnInit {
     this.timeMes = this.reservationITService.timeMes;
     const id = this.reservationITService.deptId;
     d.beforeInitTableData(data => {
-      return data.filter(l => l.DEPT_ID === id).map(t => {
-        const time = this.timeMes.find(m => m.ID === t.TIME_ID);
-        if (time) {
-          t.TIME_ID = time.START_TIME + ' ~ ' + time.END_TIME;
-        }
-        return t;
-      });
+      return data
+        .filter(l => l.DEPT_ID === id)
+        .map(t => {
+          const time = this.timeMes.find(m => m.ID === t.TIME_ID);
+          if (time) {
+            t.TIME_ID = time.START_TIME + ' ~ ' + time.END_TIME;
+          } else {
+            t.TIME_ID = t.START_TIME + ' ~ ' + t.END_TIME;
+          }
+          return t;
+        })
+        .sort((a , b) => this.reservationITService.sortByTime(a, b, false));
     });
   }
 
   updateAllDataDrive() {
-    this.dataDriveService.updateViewData(this.d1);
-    this.dataDriveService.updateViewData(this.d2);
-    this.dataDriveService.updateViewData(this.d3);
-    this.dataDriveService.updateViewData(this.d4);
-    this.appService.getAllTips();
+    // this.dataDriveService.updateViewData(this.d1);
+    // this.dataDriveService.updateViewData(this.d2);
+    // this.dataDriveService.updateViewData(this.d3);
+    // tslint:disable-next-line:no-unused-expression
+    this.d4 && this.dataDriveService.updateViewData(this.d4);
   }
 
   updateService(data: ReservationApplication) {
@@ -180,7 +226,7 @@ export class SelfApplicationITComponent implements OnInit {
     this.reservationITService.updateService(data).subscribe(
       () => {
         final();
-        this.updateAllDataDrive();
+        this.reservationITService.callForWholeUpdate();
       },
       err => {
         this.util.errDeal(err);
@@ -270,12 +316,20 @@ export class SelfApplicationITComponent implements OnInit {
       res => {
         final();
         this.isCommentVisible = false;
-        this.updateAllDataDrive();
+        this.reservationITService.callForWholeUpdate();
       },
       err => {
         this.util.errDeal(err);
         final();
       },
     );
+  }
+
+  _onReuseDestroy() {
+    this.ngOnDestroy();
+  }
+  _onReuseInit() {
+    this.ob$Update();
+    this.updateAllDataDrive();
   }
 }

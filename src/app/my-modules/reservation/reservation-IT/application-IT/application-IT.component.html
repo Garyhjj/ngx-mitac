@@ -10,7 +10,7 @@
   <ng-container *ngIf="current === 0 && dateMes">
     <nz-calendar [nzMode]="'month'">
       <ng-container *nzDateCell="let day">
-        <div class="cell-containar" (click)="selectDate(day)" *ngIf="getDetailByDate(day)>0">
+        <div class="cell-containar" (click)="selectDate(day)" *ngIf="getDetailByDate(day)>0" [class.hasApp]="getIsHasApplictionByDate(day)">
           {{getDetailByDate(day) > -1 ? ('serviceModule.leftNum' | translate) :''}}
           <div class="align-center">{{getDetailByDate(day)}}</div>
         </div>
@@ -24,7 +24,7 @@
   <ng-container *ngIf="current === 1">
     <nz-card nzNoHovering [nzTitle]="'serviceModule.chooseTime' | translate">
       <div nz-card-grid class="card-item" *ngFor="let item of dayInfo" [class.card-select]="selectedTimeId === item.TIME_ID" (click)="selectCard(item)"
-        [class.hasremain]="item.REMAIN_NUMBER>0" [class.noremain]="item.REMAIN_NUMBER==0">
+        [class.hasremain]="item.REMAIN_NUMBER>0" [class.noremain]="item.REMAIN_NUMBER==0" [class.hasApp] = "item.REMAIN_NUMBER>0 && item.REMAIN_NUMBER< item.MAX_COUNT">
         <div> {{item.START_TIME + ' ~ ' + item.END_TIME}} </div>
         {{'serviceModule.leftNum' | translate}}： {{item.REMAIN_NUMBER}}
       </div>
@@ -84,7 +84,7 @@
     <button nz-button [nzType]="'primary'" (click)="pre()" *ngIf="current > 0" class="step-button">
       <span>{{'serviceModule.prev' | translate}}</span>
     </button>
-    <button nz-button [nzType]="'primary'" (click)="next()" *ngIf="current < 3 && canNext()" class="step-button" style="margin-left: 16px">
+    <button nz-button [nzType]="'primary'" (click)="next()" *ngIf="current < 3 && canNext()" class="step-button" style="margin-left: 16px" [nzLoading]="loading">
       <span>{{'serviceModule.next' | translate}}</span>
     </button>
     <button nz-button [nzType]="'primary'" (click)="done()" *ngIf="current === 3">

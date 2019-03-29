@@ -1,0 +1,12 @@
+<div class="card-container">
+  <nz-tabset [nzTabPosition]="'top'" [nzType]="'card'">
+    <nz-tab [nzTitle]="'已結案(我)'">
+      <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive1($event)">
+      </app-data-drive>
+    </nz-tab>
+    <nz-tab [nzTitle]="'已結案(他)'">
+      <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive2($event)">
+      </app-data-drive>
+    </nz-tab>
+  </nz-tabset>
+</div>

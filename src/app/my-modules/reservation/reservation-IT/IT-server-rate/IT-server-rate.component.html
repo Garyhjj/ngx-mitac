@@ -6,8 +6,8 @@
   </ng-template>
 </app-data-drive>
 
-<nz-modal [nzVisible]="isDetailVisible" [nzTitle]="'serviceModule.detail' | translate" [nzContent]="modalContent" [nzFooter]="modalFooter"
-  (nzOnCancel)="isDetailVisible = false" nzWidth="460px">
+<nz-modal [nzVisible]="isDetailVisible" [nzTitle]="'serviceModule.detail' | translate" [nzContent]="modalContent"
+  [nzFooter]="modalFooter" (nzOnCancel)="isDetailVisible = false" nzWidth="460px">
   <ng-template #modalContent>
     <div class="yinxiang-container">
       <div class="title">{{'serviceModule.moreDetail' | translate}}:</div>
@@ -35,3 +35,95 @@
 
   </ng-template>
 </nz-modal>
+
+
+<ng-template #myTable>
+  <nz-table nzBordered *ngIf="dataList" [nzData]="dataList">
+    <thead>
+      <tr>
+        <th rowspan="2">姓名</th>
+        <th colspan="2">已完成</th>
+        <th colspan="2">预约占比</th>
+        <th colspan="2">外部需求占比</th>
+        <th colspan="2">外部評價占比</th>
+        <th colspan="4">效率占比</th>
+        <th colspan="2">未完成件數</th>
+      </tr>
+      <tr>
+        <th>工时</th>
+        <th>件数</th>
+
+        <th>工时</th>
+        <th>件数</th>
+
+        <th>工时</th>
+        <th>件数</th>
+
+        <th>参评率</th>
+        <th>好评率</th>
+
+        <th>响应</th>
+        <th>半小时处理</th>
+        <th>1天处理</th>
+        <th>1周处理</th>
+
+        <th>超期</th>
+        <th>未超期</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of dataList; index as i;" class="rate-body">
+        <td>{{ data.handler | myFlex: {name:'empno',params:['CH']} | async }}</td>
+        <td [ngClass]="{'text-red': +ave.workTime> +data.workTime.data}"
+          (click)="showDetails('已完成 -- 工时', data.handler, data.workTime.from)">{{ data.workTime.data }}</td>
+        <td [ngClass]="{'text-red': +ave.doneCount> +data.doneCount.data}"
+          (click)="showDetails('已完成 -- 件数', data.handler, data.doneCount.from)">{{ data.doneCount.data }}</td>
+        <td [ngClass]="{'text-red': +ave.normalTimeRate.data> +data.normalTimeRate.data}"
+          (click)="showDetails('预约占比 -- 工时', data.handler, data.normalTimeRate.from)">{{ data.normalTimeRate.data }}%
+        </td>
+        <td [ngClass]="{'text-red': +ave.normalCountRate.data> +data.normalCountRate.data}"
+          (click)="showDetails('预约占比 -- 件数', data.handler, data.normalCountRate.from)">
+          {{ data.normalCountRate.data }}%</td>
+        <td [ngClass]="{'text-red': +ave.helpOtherRate.data> +data.helpOtherRate.data}"
+          (click)="showDetails('外部需求占比 -- 工时', data.handler, data.helpOtherRate.from)">{{ data.helpOtherRate.data }}%
+        </td>
+        <td [ngClass]="{'text-red': +ave.helpOtherCountRate.data> +data.helpOtherCountRate.data}"
+            (click)="showDetails('外部需求占比 -- 件数', data.handler, data.helpOtherCountRate.from)"
+          >{{ data.helpOtherCountRate.data }}%
+        </td>
+        <td [ngClass]="{'text-red': +ave.commentRate.data> +data.commentRate.data}"
+            (click)="showDetails('外部評價占比 -- 参评率', data.handler, data.commentRate.from)">{{ data.commentRate.data }}%</td>
+        <td [ngClass]="{'text-red': +ave.goodCommentRate.data> +data.goodCommentRate.data}"
+            (click)="showDetails('外部評價占比 -- 好评率', data.handler, data.goodCommentRate.from)">{{ data.goodCommentRate.data }}%</td>
+        <td [ngClass]="{'text-red': +ave.fastResponseRate.data> +data.fastResponseRate.data}"
+            (click)="showDetails('效率占比 -- 响应', data.handler, data.fastResponseRate.from)">{{ data.fastResponseRate.data }}%</td>
+        <td [ngClass]="{'text-red': +ave.halfHourDoneRate.data> +data.halfHourDoneRate.data}"
+            (click)="showDetails('效率占比 -- 半小时处理', data.handler, data.halfHourDoneRate.from)">{{ data.halfHourDoneRate.data }}%</td>
+        <td [ngClass]="{'text-red': +ave.oneDayDoneRate.data> +data.oneDayDoneRate.data}"
+            (click)="showDetails('效率占比 -- 1天处理', data.handler, data.oneDayDoneRate.from)">{{ data.oneDayDoneRate.data }}%</td>
+        <td [ngClass]="{'text-red': +ave.weekDoneRate.data> +data.weekDoneRate.data}"
+            (click)="showDetails('效率占比 -- 1周处理', data.handler, data.weekDoneRate.from)">{{ data.weekDoneRate.data }}%</td>
+        <td [ngClass]="{'text-red': +ave.outTimeUndone> +data.outTimeUndone}">{{ data.outTimeUndone }}</td>
+        <td [ngClass]="{'text-red': +ave.normalUndone> +data.normalUndone}">{{ data.normalUndone }}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+</ng-template>
+
+<div *ngIf="targetFrom">
+
+  <h2>{{ targetEmpno | myFlex: {name:'empno',params:['CH']} | async }} -- {{targetColumn}} </h2>
+  <nz-tabset>
+    <nz-tab [nzTitle]="!targetFrom.second? '总数据':'分子'">
+      <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive1($event)">
+
+      </app-data-drive>
+    </nz-tab>
+    <nz-tab nzTitle="分母" *ngIf="targetFrom.second">
+      <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive2($event)">
+
+      </app-data-drive>
+    </nz-tab>
+  </nz-tabset>
+
+</div>

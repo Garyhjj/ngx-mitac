@@ -1,4 +1,3 @@
-import { AppService } from './../../../../core/services/app.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NgxValidatorExtendService } from './../../../../core/services/ngx-validator-extend.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
@@ -8,10 +7,11 @@ import { NzModalService } from 'ng-zorro-antd';
 import { ReservationApplication } from './../shared/models/index';
 import { DataDriveService } from './../../../../shared/components/data-drive/core/services/data-drive.service';
 import { ReservationITService } from './../shared/services/reservaton-IT.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DataDrive } from '../../../../shared/components/data-drive/shared/models';
 import { isArray } from '../../../../shared/utils';
 import { UserState } from '../../../../core/store';
+import { Subscription } from 'rxjs';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -19,18 +19,21 @@ import { UserState } from '../../../../core/store';
   templateUrl: './IT-server-workspace.component.html',
   styleUrls: ['./IT-server-workspace.component.css'],
 })
-export class ITServerWorkspaceComponent implements OnInit {
+export class ITServerWorkspaceComponent implements OnInit, OnDestroy {
   newCount: number;
   processingCount: number;
   outTimeCount: number;
   otherOutTimeCount: number;
   nearlyOutTimeCount: number;
+  otherProcessingCount: number;
   d0: DataDrive;
   d1: DataDrive;
   d2: DataDrive;
   d3: DataDrive;
   d4: DataDrive;
+  d5: DataDrive;
   d6: DataDrive;
+  d7: DataDrive;
   user: UserState;
   commentCount;
   impressionName = 'impression';
@@ -43,6 +46,7 @@ export class ITServerWorkspaceComponent implements OnInit {
   yinxiangText: string;
   confirmToAccept: string;
   confirmToReset: string;
+  sub: Subscription;
   constructor(
     private reservationITService: ReservationITService,
     private dataDriveService: DataDriveService,
@@ -51,7 +55,6 @@ export class ITServerWorkspaceComponent implements OnInit {
     private fb: FormBuilder,
     private validatorExtendService: NgxValidatorExtendService,
     private translateService: TranslateService,
-    private appService: AppService,
   ) {}
 
   ngOnInit() {
@@ -63,13 +66,23 @@ export class ITServerWorkspaceComponent implements OnInit {
         'serviceModule.confirmToReset',
       ])
       .subscribe(data => {
-        // console.log(data);
         this.yinxiangText = data['serviceModule.yinxiang2'];
         this.confirmToAccept = data['serviceModule.confirmToAccept'];
         this.confirmToReset = data['serviceModule.confirmToReset'];
       });
+    this.ob$Update();
   }
 
+  ob$Update() {
+    this.sub = this.reservationITService.$update.subscribe(() => {
+      this.updateAllDataDrive();
+    });
+  }
+
+  ngOnDestroy() {
+    // tslint:disable-next-line:no-unused-expression
+    this.sub && this.sub.unsubscribe();
+  }
   getDataDrive0(d: DataDrive) {
     this.d0 = d;
     const hideList = [
@@ -144,28 +157,30 @@ export class ITServerWorkspaceComponent implements OnInit {
       const newList = [];
       const processingList = [];
       const nearlyOutTimeList = [];
-      const last = data.filter(ds => {
-        const dept = this.reservationITService.dept;
-        const PRE_MIN_MINUTE = dept.PRE_MIN_MINUTE ? dept.PRE_MIN_MINUTE : 0;
-        const date =
-          this.util.dateFormat(ds.SERVICE_DATE, 'YYYY-MM-DD') +
-          ' ' +
-          ds.END_TIME;
-        const status = ds.STATUS;
-        const during = new Date().getTime() - new Date(date).getTime();
-        if (during > 0) {
-          return true;
-        } else if (-during < PRE_MIN_MINUTE * 60 * 1000) {
-          nearlyOutTimeList.push(ds);
-        } else {
-          if (status === 'New') {
-            newList.push(ds);
-          } else if (status === 'Processing') {
-            processingList.push(ds);
+      const last = data
+        .sort((a, b) => this.reservationITService.sortByTime(a, b, true))
+        .filter(ds => {
+          const dept = this.reservationITService.dept;
+          const PRE_MIN_MINUTE = dept.PRE_MIN_MINUTE ? dept.PRE_MIN_MINUTE : 0;
+          const date =
+            this.util.dateFormat(ds.SERVICE_DATE, 'YYYY-MM-DD') +
+            ' ' +
+            ds.END_TIME;
+          const status = ds.STATUS;
+          const during = new Date().getTime() - new Date(date).getTime();
+          if (during > 0) {
+            return true;
+          } else if (-during < PRE_MIN_MINUTE * 60 * 1000) {
+            nearlyOutTimeList.push(ds);
+          } else {
+            if (status === 'New') {
+              newList.push(ds);
+            } else if (status === 'Processing') {
+              processingList.push(ds);
+            }
           }
-        }
-        return false;
-      });
+          return false;
+        });
       this.d1.selfUpdateTableData(newList);
       this.d2.selfUpdateTableData(processingList);
       this.d0.selfUpdateTableData(nearlyOutTimeList);
@@ -196,6 +211,11 @@ export class ITServerWorkspaceComponent implements OnInit {
   }
 
   async getDataDrive5(d: DataDrive) {
+    // d.setSearchInputDefault('date_fm', this.util.dateFormat(
+    //   new Date().getTime() - 1000 * 60 * 60 * 24 * 30,
+    //   'YYYY-MM-DD',
+    // ));
+    this.d5 = d;
     await this.reservationITService.getITDeptId();
     d.beforeInitTableData(data => {
       return data.map(da => {
@@ -203,12 +223,12 @@ export class ITServerWorkspaceComponent implements OnInit {
         return da;
       });
     });
-    d.addDefaultSearchParams({
-      date_fm: this.util.dateFormat(
-        new Date().getTime() - 1000 * 60 * 60 * 24 * 30,
-        'YYYY-MM-DD',
-      ),
-    });
+    // d.addDefaultSearchParams({
+    //   date_fm: this.util.dateFormat(
+    //     new Date().getTime() - 1000 * 60 * 60 * 24 * 30,
+    //     'YYYY-MM-DD',
+    //   ),
+    // });
     this.set45Default(d, 'Closed');
     d.addDefaultSearchParams({ date_fm: '' });
   }
@@ -248,7 +268,8 @@ export class ITServerWorkspaceComponent implements OnInit {
         .map(l => {
           l.TIME_ID = l.START_TIME + ' - ' + l.END_TIME;
           return l;
-        }),
+        })
+        .sort((a, b) => this.reservationITService.sortByTime(a, b, false)),
     );
     this.dataDriveService.updateViewData(d);
   }
@@ -276,30 +297,49 @@ export class ITServerWorkspaceComponent implements OnInit {
       status: 'Processing',
     });
     const empno = this.user.EMPNO;
-    d.beforeInitTableData(ds =>
-      ds
-        .filter((t: ReservationApplication) => {
-          if (
-            t.HANDLER !== empno &&
-            t.DEPT_ID === this.reservationITService.deptId
-          ) {
-            const date =
-              this.util.dateFormat(t.SERVICE_DATE, 'YYYY-MM-DD') +
-              ' ' +
-              t.END_TIME;
-            if (new Date().getTime() - new Date(date).getTime() > 0) {
-              return true;
-            }
+    d.beforeInitTableData(ds => {
+      const outTime = [],
+        normal = [];
+      ds.sort((a, b) =>
+        this.reservationITService.sortByTime(a, b, true),
+      ).forEach(l => {
+        l.TIME_ID = l.START_TIME + ' - ' + l.END_TIME;
+        if (
+          l.HANDLER !== empno &&
+          l.DEPT_ID === this.reservationITService.deptId
+        ) {
+          const date =
+            this.util.dateFormat(l.SERVICE_DATE, 'YYYY-MM-DD') +
+            ' ' +
+            l.END_TIME;
+          if (new Date().getTime() - new Date(date).getTime() > 0) {
+            outTime.push(l);
+          } else {
+            normal.push(l);
           }
-          return false;
-        })
-        .map(l => {
-          l.TIME_ID = l.START_TIME + ' - ' + l.END_TIME;
-          return l;
-        }),
-    );
+        }
+      });
+      this.d7.selfUpdateTableData(normal);
+      return outTime;
+    });
     d.afterDataInit(ds => (this.otherOutTimeCount = ds.length));
     this.dataDriveService.updateViewData(d);
+  }
+
+  async getDataDrive7(d: DataDrive) {
+    this.d7 = d;
+    const hideList = [
+      'REMARK',
+      'TYPE',
+      'HANDLE_TIME',
+      'SCORE',
+      'USER_COMMENT',
+      'impression',
+    ];
+    d.tableData.columns = d.tableData.columns.filter(
+      c => hideList.indexOf(c.property) < 0,
+    );
+    d.afterDataInit(list => (this.otherProcessingCount = list.length));
   }
 
   updateService(data: ReservationApplication, succ?: () => void) {
@@ -310,8 +350,7 @@ export class ITServerWorkspaceComponent implements OnInit {
         final();
         // tslint:disable-next-line:no-unused-expression
         succ && succ();
-        this.updateAllDataDrive();
-        this.appService.getAllTips();
+        this.reservationITService.callForWholeUpdate();
       },
       err => {
         this.util.errDeal(err);
@@ -321,8 +360,12 @@ export class ITServerWorkspaceComponent implements OnInit {
   }
 
   updateAllDataDrive() {
-    this.dataDriveService.updateViewData(this.d3);
-    this.dataDriveService.updateViewData(this.d6);
+    // tslint:disable-next-line:no-unused-expression
+    this.d3 && this.dataDriveService.updateViewData(this.d3);
+    // tslint:disable-next-line:no-unused-expression
+    this.d5 && this.dataDriveService.updateViewData(this.d5);
+    // tslint:disable-next-line:no-unused-expression
+    this.d6 && this.dataDriveService.updateViewData(this.d6);
   }
 
   closeResvation(data: ReservationApplication) {
@@ -399,7 +442,6 @@ export class ITServerWorkspaceComponent implements OnInit {
     const doDone = () => {
       const send = Object.assign({}, this.doneTarget, alter);
       this.updateService(send, () => {
-        this.dataDriveService.updateViewData(this.d4);
         this.isDoneVisible = false;
         this.doneForm = null;
       });
@@ -423,5 +465,13 @@ export class ITServerWorkspaceComponent implements OnInit {
       },
       nzOnCancel() {},
     });
+  }
+
+  _onReuseDestroy() {
+    this.ngOnDestroy();
+  }
+  _onReuseInit() {
+    this.ob$Update();
+    this.updateAllDataDrive();
   }
 }

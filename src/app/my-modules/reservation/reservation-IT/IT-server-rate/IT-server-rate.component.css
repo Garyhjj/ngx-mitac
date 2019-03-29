@@ -148,3 +148,19 @@
   font-size: 15px;
   color: #888888;
 }
+
+
+
+.text-red {
+  color: red;
+}
+
+.rate-body td:not(:first-child) {
+  cursor: pointer;
+  transition: all 0.5s;
+}
+
+.rate-body td:not(:first-child):hover {
+  font-size: 18px
+}
+
