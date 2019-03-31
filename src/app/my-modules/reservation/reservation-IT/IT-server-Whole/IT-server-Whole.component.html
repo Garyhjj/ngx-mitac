@@ -1,31 +1,78 @@
 <nz-tabset>
-    <nz-tab nzTitle="已超时">
-        <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive1($event)">
-    
-        </app-data-drive>
-    </nz-tab>
-    <nz-tab nzTitle="今日待辦">
-        <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive2($event)">
-    
-        </app-data-drive>
-    </nz-tab>
-    <nz-tab nzTitle="周待辦">
-        <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive3($event)">
-        </app-data-drive>
-    </nz-tab>
-    <nz-tab nzTitle="月待辦">
-        <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive4($event)">
-        </app-data-drive>
-    </nz-tab>
+  <nz-tab [nzTitle]="nzTabHeading1">
+    <ng-template #nzTabHeading1>
+      已超时
+      <nz-badge [nzCount]="(dataChange1 | async).length" *ngIf="(dataChange1 | async).length">
+        <ng-template #content>
+          &nbsp;&nbsp;
+        </ng-template>
+      </nz-badge>
+    </ng-template>
+    <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive1($event)">
 
-    <nz-tab nzTitle="待评价">
-        <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive5($event)">
-        </app-data-drive>
-    </nz-tab>
+    </app-data-drive>
+  </nz-tab>
+  <nz-tab [nzTitle]="nzTabHeading2">
+    <ng-template #nzTabHeading2>
+      今日待辦
+      <nz-badge [nzCount]="(dataChange2 | async).length" *ngIf="(dataChange2 | async).length">
+        <ng-template #content>
+          &nbsp;&nbsp;
+        </ng-template>
+      </nz-badge>
+    </ng-template>
+    <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive2($event)">
 
-    <nz-tab nzTitle="已結案">
-        <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive6($event)">
-        </app-data-drive>
-    </nz-tab>
-  </nz-tabset>
-  
+    </app-data-drive>
+  </nz-tab>
+  <nz-tab [nzTitle]="nzTabHeading3">
+    <ng-template #nzTabHeading3>
+      周待辦
+      <nz-badge [nzCount]="(dataChange3 | async).length" *ngIf="(dataChange3 | async).length">
+        <ng-template #content>
+          &nbsp;&nbsp;
+        </ng-template>
+      </nz-badge>
+    </ng-template>
+    <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive3($event)">
+    </app-data-drive>
+  </nz-tab>
+  <nz-tab [nzTitle]="nzTabHeading4">
+    <ng-template #nzTabHeading4>
+      月待辦
+      <nz-badge [nzCount]="(dataChange4 | async).length" *ngIf="(dataChange4 | async).length">
+        <ng-template #content>
+          &nbsp;&nbsp;
+        </ng-template>
+      </nz-badge>
+    </ng-template>
+    <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive4($event)">
+    </app-data-drive>
+  </nz-tab>
+
+  <nz-tab [nzTitle]="nzTabHeading5">
+    <ng-template #nzTabHeading5>
+      待评价
+      <nz-badge [nzCount]="(dataChange5 | async).length" *ngIf="(dataChange5 | async).length">
+        <ng-template #content>
+          &nbsp;&nbsp;
+        </ng-template>
+      </nz-badge>
+    </ng-template>
+    <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive5($event)">
+    </app-data-drive>
+  </nz-tab>
+
+  <nz-tab [nzTitle]="nzTabHeading6">
+    <ng-template #nzTabHeading6>
+      已結案
+      <nz-badge [nzCount]="(dataChange6 | async).length" *ngIf="(dataChange6 | async).length">
+        <ng-template #content>
+          &nbsp;&nbsp;
+        </ng-template>
+      </nz-badge>
+    </ng-template>
+    <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive6($event)">
+    </app-data-drive>
+  </nz-tab>
+</nz-tabset>

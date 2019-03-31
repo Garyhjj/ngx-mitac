@@ -35,6 +35,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
             tap(() => dismiss()),
             catchError(err => {
               dismiss();
+              this.storeBeforeToLoginUrl();
               this.router.navigate(['/login']);
               if (err.status === 400) {
                 this.$store.dispatch(new UserUpdate({ rememberPWD: false }));
@@ -43,10 +44,15 @@ export class AuthGuard implements CanActivate, CanActivateChild {
             }),
           );
       } else {
+        this.storeBeforeToLoginUrl();
         this.router.navigate(['/login']);
         return false;
       }
     }
+  }
+
+  storeBeforeToLoginUrl() {
+    localStorage.setItem('lastURL', window.location.pathname + window.location.search);
   }
   canActivate() {
     return this.checkAuth();

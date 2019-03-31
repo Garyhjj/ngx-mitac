@@ -8,7 +8,8 @@
         </ng-template>
       </nz-badge>
     </ng-template>
-    <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive0($event)">
+    <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive0($event)" viewerMinWidth="1600px"
+    [bodyCellStyle]="bodyCellStyleFn">
       <ng-template #actionRef let-data="data">
         <span>
           <ng-container *ngIf="data?.STATUS==='Processing'">
@@ -34,7 +35,8 @@
         </ng-template>
       </nz-badge>
     </ng-template>
-    <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive1($event)">
+    <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive1($event)" viewerMinWidth="1600px"
+    [bodyCellStyle]="bodyCellStyleFn">
       <ng-template #actionRef let-data="data">
         <span>
           <a (click)="closeResvation(data)">{{'serviceModule.close' | translate}}</a>
@@ -53,7 +55,8 @@
         </ng-template>
       </nz-badge>
     </ng-template>
-    <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive2($event)">
+    <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive2($event)" viewerMinWidth="1600px"
+    [bodyCellStyle]="bodyCellStyleFn">
       <ng-template #actionRef let-data="data">
         <span>
           <a (click)="doneResvation(data)">{{'serviceModule.finish' | translate}}</a>
@@ -72,7 +75,8 @@
         </ng-template>
       </nz-badge>
     </ng-template>
-    <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive3($event)">
+    <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive3($event)" viewerMinWidth="1600px"
+    [bodyCellStyle]="bodyCellStyleFn">
       <ng-template #actionRef let-data="data">
         <span>
           <ng-container *ngIf="data?.STATUS==='Processing'">
@@ -99,7 +103,8 @@
         </ng-template>
       </nz-badge> -->
     </ng-template>
-    <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive4($event)">
+    <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive4($event)" viewerMinWidth="1600px"
+    [bodyCellStyle]="bodyCellStyleFn">
     </app-data-drive>
   </nz-tab>
 
@@ -107,7 +112,8 @@
     <ng-template #nzTabHeading6>
       {{'serviceModule.ClosedService' | translate}}
     </ng-template>
-    <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive5($event)">
+    <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive5($event)" viewerMinWidth="1600px"
+    [bodyCellStyle]="bodyCellStyleFn">
       <ng-template #tableCellRef let-data="data" let-property="property">
         <button nz-button [nzType]="'primary'" *ngIf="property === impressionName" (click)="showImpressionDetail(data)">
           <span>{{'serviceModule.showDetail' | translate}}</span>
@@ -125,7 +131,8 @@
         </ng-template>
       </nz-badge>
     </ng-template>
-    <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive6($event)">
+    <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive6($event)" viewerMinWidth="1600px"
+    [bodyCellStyle]="bodyCellStyleFn">
       <ng-template #actionRef let-data="data">
         <span>
           <a (click)="resetResvation(data)">{{'serviceModule.reset' | translate}}</a>
@@ -143,7 +150,8 @@
         </ng-template>
       </nz-badge>
     </ng-template>
-    <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive7($event)">
+    <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive7($event)" viewerMinWidth="1600px"
+    [bodyCellStyle]="bodyCellStyleFn">
       <ng-template #actionRef let-data="data">
         <span>
           <a (click)="doneResvation(data)">{{'serviceModule.finish' | translate}}</a>

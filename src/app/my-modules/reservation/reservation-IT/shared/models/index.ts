@@ -34,4 +34,5 @@ export interface ReservationApplication {
   END_TIME?: string;
   images?: string[];
   actionType?: number;
+  FIRST_RESPONSE_TIME?: string;
 }

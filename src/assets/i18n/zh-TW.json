@@ -70,7 +70,7 @@
   "workspace": "服務台",
   "rank": "排行榜",
   "serviceTrack": "服務追蹤",
-  "serviceOvertime": "超期或快超期看板",
+  "serviceOvertime": "待辦看板",
   "serviceAdd": "服務補登",
   "insertSuccess": "插入成功",
   "updateSuccess": "更新成功",

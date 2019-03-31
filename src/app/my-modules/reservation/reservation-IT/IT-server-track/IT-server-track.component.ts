@@ -4,6 +4,7 @@ import { ImpressionListComponent } from './../shared/components/impression-list/
 import { ReservationApplication } from './../shared/models/index';
 import { Component, OnInit } from '@angular/core';
 import { DataDrive } from '../../../../shared/components/data-drive/shared/models';
+import { ReservationITService } from '../shared/services/reservaton-IT.service';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -14,9 +15,17 @@ import { DataDrive } from '../../../../shared/components/data-drive/shared/model
 export class ITServerTrackComponent implements OnInit {
   impressionName = 'impression';
   translateText: string;
+  bodyCellStyleFn = (data, prop) => {
+    if (prop === 'SERVICE_DESC') {
+      return {
+        'max-width': '350px'
+      };
+    }
+  }
   constructor(
     private modalService: NzModalService,
     private translateService: TranslateService,
+    private itSre: ReservationITService
   ) {}
 
   ngOnInit() {
@@ -26,11 +35,12 @@ export class ITServerTrackComponent implements OnInit {
   }
 
   getDataDrive(d: DataDrive) {
+    d.dataViewSet.more.showAction = false;
     d.beforeInitTableData(data => {
       return data.map(da => {
         da[this.impressionName] = '';
         return da;
-      });
+      }).sort((a, b) => this.itSre.sortByTime(a, b, true));
     });
   }
 

@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     private store$: Store<MyStore>,
     private _notification: NzNotificationService,
     private util: UtilService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.authService.loginPageSubject.next(true);
@@ -50,7 +50,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     let value = this.validateForm.value;
     this.authService.login(value).subscribe(
       user => {
-        this.router.navigate(['/modules']);
+        const lastURL = localStorage.getItem('lastURL');
+        this.router.navigateByUrl(lastURL ? lastURL : '/modules');
+        localStorage.removeItem('lastURL');
         this.loading = false;
         this._notification.create(
           'success',

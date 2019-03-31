@@ -103,8 +103,10 @@
             (click)="showDetails('效率占比 -- 1天处理', data.handler, data.oneDayDoneRate.from)">{{ data.oneDayDoneRate.data }}%</td>
         <td [ngClass]="{'text-red': +ave.weekDoneRate.data> +data.weekDoneRate.data}"
             (click)="showDetails('效率占比 -- 1周处理', data.handler, data.weekDoneRate.from)">{{ data.weekDoneRate.data }}%</td>
-        <td [ngClass]="{'text-red': +ave.outTimeUndone> +data.outTimeUndone}">{{ data.outTimeUndone }}</td>
-        <td [ngClass]="{'text-red': +ave.normalUndone> +data.normalUndone}">{{ data.normalUndone }}</td>
+        <td [ngClass]="{'text-red': +ave.outTimeUndone> +data.outTimeUndone.data}"
+            (click)="showDetails('未完成件數 -- 超期', data.handler, data.outTimeUndone.from)">{{ data.outTimeUndone.data }}</td>
+        <td [ngClass]="{'text-red': +ave.normalUndone> +data.normalUndone.data}"
+            (click)="showDetails('未完成件數 -- 未超期', data.handler, data.normalUndone.from)">{{ data.normalUndone.data }}</td>
       </tr>
     </tbody>
   </nz-table>
@@ -115,12 +117,14 @@
   <h2>{{ targetEmpno | myFlex: {name:'empno',params:['CH']} | async }} -- {{targetColumn}} </h2>
   <nz-tabset>
     <nz-tab [nzTitle]="!targetFrom.second? '总数据':'分子'">
-      <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive1($event)">
+      <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive1($event)" viewerMinWidth="2000px"
+      [bodyCellStyle]="bodyCellStyleFn">
 
       </app-data-drive>
     </nz-tab>
     <nz-tab nzTitle="分母" *ngIf="targetFrom.second">
-      <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive2($event)">
+      <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive2($event)" viewerMinWidth="2000px"
+      [bodyCellStyle]="bodyCellStyleFn">
 
       </app-data-drive>
     </nz-tab>

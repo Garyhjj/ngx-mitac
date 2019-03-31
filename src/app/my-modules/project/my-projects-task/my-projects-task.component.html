@@ -1,4 +1,4 @@
-<app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDrive($event)">
+<app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDrive($event)" viewerMinWidth="1600px">
   <ng-template #tableCellRef let-data="data" let-property="property">
     <div *ngIf="property === 'ATTACHMENT' && data['ATTACHMENT']">
       <app-file-list [fileList]="data['ATTACHMENT']"></app-file-list>

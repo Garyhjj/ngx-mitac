@@ -1,4 +1,5 @@
-<app-data-drive [name]="'reservationITTeack'" (dataDriveInit)="getDataDrive($event)">
+<app-data-drive [name]="'reservationITTeack'" (dataDriveInit)="getDataDrive($event)" viewerMinWidth="1600px"
+[bodyCellStyle]="bodyCellStyleFn">
   <ng-template #tableCellRef let-data="data" let-property="property">
     <button nz-button [nzType]="'primary'" *ngIf="property === impressionName && data.STATUS === 'Closed'" (click)="showImpressionDetail(data)">
       <span>{{'serviceModule.showDetail' | translate}}</span>

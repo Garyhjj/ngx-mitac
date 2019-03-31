@@ -1,3 +1,4 @@
+import { TabelViewSet } from './../../../../shared/components/data-drive/shared/models/viewer/table';
 import { filter } from 'rxjs/operators';
 import { DataDriveService } from './../../../../shared/components/data-drive/core/services/data-drive.service';
 import { forkJoin, Subscription } from 'rxjs';
@@ -40,11 +41,26 @@ export class ITServerRateComponent implements OnInit, OnDestroy {
   secondD: DataDrive;
 
   @ViewChild('myTable') myTable: TemplateRef<void>;
+  bodyCellStyleFn = (data, prop) => {
+    if (prop === 'SERVICE_DESC') {
+      return {
+        'max-width': '200px'
+      };
+    } else if (prop === 'REMARK') {
+      return {
+        'max-width': '200px'
+      };
+    } else if (prop === 'TYPE') {
+      return {
+        'max-width': '100px'
+      };
+    }
+  }
   constructor(
     private reservationITService: ReservationITService,
     private util: UtilService,
     private dSrv: DataDriveService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     // this.reservationITService.getReservationList().subscribe((list:any[]) => {
@@ -58,18 +74,23 @@ export class ITServerRateComponent implements OnInit, OnDestroy {
     this.targetEmpno = n;
     this.targetFrom = f;
     if (this.firstD) {
-      this.firstD.selfUpdateTableData(f.first.slice());
+      this.firstD.selfUpdateTableData(f.first);
     }
     if (this.secondD && f.second) {
-      this.secondD.selfUpdateTableData(f.second.slice());
+      this.secondD.selfUpdateTableData(f.second);
     }
   }
 
+  hideColumn(d: DataDrive) {
+    const viewer = d.dataViewSet as TabelViewSet;
+    viewer.more.showAction = false;
+  }
   getDataDrive1(d: DataDrive) {
     this.firstD = d;
+    this.hideColumn(d);
     if (this.targetFrom) {
       setTimeout(
-        () => d.selfUpdateTableData(this.targetFrom.first.slice()),
+        () => d.selfUpdateTableData(this.targetFrom.first),
         80,
       );
     }
@@ -77,9 +98,10 @@ export class ITServerRateComponent implements OnInit, OnDestroy {
 
   getDataDrive2(d: DataDrive) {
     this.secondD = d;
+    this.hideColumn(d);
     const t = this.targetFrom;
     if (t && t.second) {
-      setTimeout(() => d.selfUpdateTableData(t.second.slice()), 80);
+      setTimeout(() => d.selfUpdateTableData(t.second), 80);
     }
   }
 
@@ -98,7 +120,7 @@ export class ITServerRateComponent implements OnInit, OnDestroy {
     this.dataList = data;
   }
 
-  cac(prop: string, tar: any[]) {
+  cac(prop: string, tar: ReservationApplication[]) {
     const out: any = { handler: prop };
     const doneType = tar.filter(t => {
       const { STATUS } = t;
@@ -154,7 +176,6 @@ export class ITServerRateComponent implements OnInit, OnDestroy {
     // 需求人不是自己的
     const notMyContact = tar.filter(t => t.CONTACT !== prop);
     const helpOthersType = doneType.filter(t => t.CONTACT !== prop);
-    console.log(prop, helpOthersType);
     const helpOtherTime = helpOthersType.reduce((t, b) => {
       const bt = +b.HANDLE_TIME || 0;
       return bt + t;
@@ -186,7 +207,10 @@ export class ITServerRateComponent implements OnInit, OnDestroy {
     };
 
     // 不是自己提出,但是自己处理的已结案
-    const closedType = notMyContact.filter(t => t.STATUS === 'Closed');
+    const closedType = notMyContact.filter(t => t.STATUS === 'Closed').map(_ => {
+      _.SCORE = _.SCORE || 5;
+      return _;
+    });
     const goodCommentType = closedType.filter(t => t.SCORE >= 4);
     out.closedType = closedType;
     out.goodCommentType = goodCommentType;
@@ -237,7 +261,7 @@ export class ITServerRateComponent implements OnInit, OnDestroy {
     });
 
     const fastResponse = normalType.filter(_ => {
-      const reponseTime = _.FIRST_RESPONSE_TIME || new Date('2018-01-01'),
+      const reponseTime: any = _.FIRST_RESPONSE_TIME || new Date('2018-01-01'),
         endTime = moment(_.SERVICE_DATE).format('YYYY-MM-DD ') + _.END_TIME;
       const during =
         new Date(reponseTime).getTime() - new Date(endTime).getTime();
@@ -249,13 +273,13 @@ export class ITServerRateComponent implements OnInit, OnDestroy {
     // ).toFixed(0);
     out.fastResponseRate = {
       data: ((fastResponse.length / normalType.length) *
-      100
-    ).toFixed(0),
-      from:{
+        100
+      ).toFixed(0),
+      from: {
         first: [...fastResponse],
         second: [...normalType]
       }
-    }
+    };
     // out.halfHourDoneRate = (
     //   (halfHourType.length / normalType.length) *
     //   100
@@ -269,7 +293,7 @@ export class ITServerRateComponent implements OnInit, OnDestroy {
         first: [...halfHourType],
         second: [...normalType]
       }
-    }
+    };
     // out.oneDayDoneRate = (
     //   ((oneDayType.length + halfHourType.length) / normalType.length) *
     //   100
@@ -283,7 +307,7 @@ export class ITServerRateComponent implements OnInit, OnDestroy {
         first: [...halfHourType, ...oneDayType],
         second: [...normalType]
       }
-    }
+    };
     // out.weekDoneRate = (
     //   ((weekType.length + oneDayType.length + halfHourType.length) /
     //     normalType.length) *
@@ -300,18 +324,28 @@ export class ITServerRateComponent implements OnInit, OnDestroy {
         first: [...halfHourType, ...oneDayType, ...weekType],
         second: [...normalType]
       }
-    }
+    };
 
     const undoneType = tar.filter(t => {
       const { STATUS } = t;
       return STATUS === 'New' || STATUS === 'Processing';
     });
-    const outTime = undoneType.filter(_ => {
+    const outTime = [],
+      notOutTime = [];
+    undoneType.forEach(_ => {
       const endTime = moment(_.SERVICE_DATE).format('YYYY-MM-DD ') + _.END_TIME;
-      return moment().isAfter(moment(endTime));
+      moment().isAfter(moment(endTime)) ? outTime.push(_) : notOutTime.push(_);
     });
-    out.outTimeUndone = outTime.length;
-    out.normalUndone = undoneType.length - outTime.length;
+    // out.outTimeUndone = outTime.length;
+    out.outTimeUndone = {
+      data: outTime.length,
+      from: [...outTime]
+    };
+    // out.normalUndone = notOutTime.length;
+    out.normalUndone = {
+      data: notOutTime.length,
+      from: [...notOutTime]
+    };
     return out;
   }
 

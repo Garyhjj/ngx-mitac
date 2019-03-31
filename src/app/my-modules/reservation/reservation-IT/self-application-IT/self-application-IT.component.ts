@@ -39,6 +39,21 @@ export class SelfApplicationITComponent implements OnInit, OnDestroy {
   processingCount;
   commentCount;
   sub: Subscription;
+  bodyCellStyleFn = (data, prop) => {
+    if (prop === 'SERVICE_DESC') {
+      return {
+        'max-width': '200px'
+      };
+    } else if (prop === 'REMARK') {
+      return {
+        'max-width': '200px'
+      };
+    } else if (prop === 'TYPE') {
+      return {
+        'max-width': '100px'
+      };
+    }
+  }
   constructor(
     private reservationITService: ReservationITService,
     private dataDriveService: DataDriveService,

@@ -8,7 +8,8 @@
         </ng-template>
       </nz-badge>
     </ng-template>
-    <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive1($event)">
+    <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive1($event)" viewerMinWidth="1600px"
+    [bodyCellStyle]="bodyCellStyleFn">
       <ng-template #actionRef let-data="data">
         <span>
           <nz-divider nzType="vertical"></nz-divider>
@@ -44,7 +45,8 @@
         </ng-template>
       </nz-badge>
     </ng-template>
-    <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive3($event)">
+    <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive3($event)" viewerMinWidth="2000px"
+    [bodyCellStyle]="bodyCellStyleFn">
       <ng-template #actionRef let-data="data">
         <span>
           <a (click)="commentResvation(data)">{{'serviceModule.score' | translate}}</a>
@@ -57,7 +59,8 @@
     <ng-template #nzTabHeading4>
       {{'serviceModule.ClosedService' | translate}}
     </ng-template>
-    <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive4($event)">
+    <app-data-drive [name]="'reservationITSelf'" (dataDriveInit)="getDataDrive4($event)" viewerMinWidth="2000px"
+    [bodyCellStyle]="bodyCellStyleFn">
       <ng-template #tableCellRef let-data="data" let-property="property">
         <button nz-button [nzType]="'primary'" *ngIf="property === impressionName" (click)="showImpressionDetail(data)">
           <span>{{'serviceModule.showDetail' | translate}}</span>

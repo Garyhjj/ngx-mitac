@@ -8,7 +8,7 @@
         </ng-template>
       </nz-badge>
     </ng-template>
-    <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDrive1($event)" [bodyCellStyle]="bodyCellStyle">
+    <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDrive1($event)" viewerMinWidth="1600px" [bodyCellStyle]="bodyCellStyle">
       <ng-template #tableCellRef let-data="data" let-property="property">
         <ng-template [ngTemplateOutlet]="myTableCellRef" [ngTemplateOutletContext]="{data: data,property:property}"></ng-template>
       </ng-template>
@@ -26,7 +26,7 @@
         </ng-template>
       </nz-badge>
     </ng-template>
-    <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDrive2($event)" [bodyCellStyle]="bodyCellStyle">
+    <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDrive2($event)" viewerMinWidth="1600px" [bodyCellStyle]="bodyCellStyle">
       <ng-template #tableCellRef let-data="data" let-property="property">
         <ng-template [ngTemplateOutlet]="myTableCellRef" [ngTemplateOutletContext]="{data: data,property:property}"></ng-template>
       </ng-template>
@@ -44,7 +44,7 @@
         </ng-template>
       </nz-badge>
     </ng-template>
-    <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDrive3($event)" [bodyCellStyle]="bodyCellStyle">
+    <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDrive3($event)" viewerMinWidth="1600px" [bodyCellStyle]="bodyCellStyle">
       <ng-template #tableCellRef let-data="data" let-property="property">
         <ng-template [ngTemplateOutlet]="myTableCellRef" [ngTemplateOutletContext]="{data: data,property:property}"></ng-template>
       </ng-template>
@@ -59,7 +59,7 @@
     <ng-template #nzTabHeading4>
       {{'projectModule.taskClosed' | translate}}
     </ng-template>
-    <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDrive4($event)" [bodyCellStyle]="bodyCellStyle">
+    <app-data-drive [name]="'projectSubTask'" (dataDriveInit)="getDataDrive4($event)" viewerMinWidth="1600px" [bodyCellStyle]="bodyCellStyle">
       <ng-template #tableCellRef let-data="data" let-property="property">
         <ng-template [ngTemplateOutlet]="myTableCellRef" [ngTemplateOutletContext]="{data: data,property:property}"></ng-template>
       </ng-template>

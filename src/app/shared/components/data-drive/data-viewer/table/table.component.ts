@@ -86,6 +86,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   @Input() isModal: boolean;
+  @Input() minWidth;
   _loading = false;
   _header = true;
 

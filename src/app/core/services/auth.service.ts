@@ -31,9 +31,14 @@ export class AuthService {
     reqObserve.subscribe(a => this.updateToken());
     this.store$
       .select(s => s.userReducer)
-      .subscribe(u => Object.assign(this.user, u));
+      .subscribe(u => {
+        if (!this.user) {
+          timer(100).subscribe(() => this.autoUpdateToken());
+        }
+        Object.assign(this.user, u);
+      });
     this.getSelfPrivilege();
-    this.autoUpdateToken();
+    // this.autoUpdateToken();
   }
 
   login(data: any) {

@@ -14,6 +14,19 @@ export class ServerSubScoringComponent implements OnInit, OnDestroy {
   subList = new Set();
   user = this.auth.user;
   d2: DataDrive;
+  myCount: number;
+  otherCount: number;
+  bodyCellStyleFn = (data, prop) => {
+    if (prop === 'SERVICE_DESC') {
+      return {
+        'max-width': '200px'
+      };
+    } else if (prop === 'REMARK') {
+      return {
+        'max-width': '200px'
+      };
+    }
+  }
   constructor(private auth: AuthService) {}
 
   ngOnInit() {}
@@ -53,11 +66,13 @@ export class ServerSubScoringComponent implements OnInit, OnDestroy {
       this.d2.selfUpdateTableData(others);
       return myTask;
     });
+    d.afterDataInit((ls) => this.myCount = ls.length);
     timer(10).subscribe(() => this.obData(d));
   }
 
   getDataDrive2(d: DataDrive) {
     this.d2 = d;
+    d.afterDataInit((ls) => this.otherCount = ls.length);
     this.hideColumns(d);
   }
 }

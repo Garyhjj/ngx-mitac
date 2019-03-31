@@ -8,7 +8,7 @@
         </ng-template>
       </nz-badge>
     </ng-template>
-    <app-data-drive [name]="'projectMain'" (dataDriveInit)="getDataDrive1($event)" [bodyCellStyle]="bodyCellStyle">
+    <app-data-drive [name]="'projectMain'" (dataDriveInit)="getDataDrive1($event)" viewerMinWidth="1600px" [bodyCellStyle]="bodyCellStyle">
       <ng-template #actionRef let-data="data">
         <span>
           <ng-template [ngTemplateOutlet]="detailAction" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
@@ -25,7 +25,7 @@
         </ng-template>
       </nz-badge>
     </ng-template>
-    <app-data-drive [name]="'projectMain'" (dataDriveInit)="getDataDrive2($event)" [bodyCellStyle]="bodyCellStyle">
+    <app-data-drive [name]="'projectMain'" (dataDriveInit)="getDataDrive2($event)"  viewerMinWidth="1600px" [bodyCellStyle]="bodyCellStyle">
       <ng-template #actionRef let-data="data">
         <span>
           <ng-template [ngTemplateOutlet]="detailAction" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>
@@ -37,7 +37,7 @@
     <ng-template #nzTabHeading3>
       {{'projectModule.projectClosed' | translate}}
     </ng-template>
-    <app-data-drive [name]="'projectMain'" (dataDriveInit)="getDataDrive3($event)">
+    <app-data-drive [name]="'projectMain'" (dataDriveInit)="getDataDrive3($event)" viewerMinWidth="1600px">
       <ng-template #actionRef let-data="data">
         <span>
           <ng-template [ngTemplateOutlet]="detailAction" [ngTemplateOutletContext]="{$implicit: data}"></ng-template>

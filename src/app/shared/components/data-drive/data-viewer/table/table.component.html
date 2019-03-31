@@ -3,7 +3,7 @@
   [nzLoading]="_loading" [nzIsPagination]="setDetail.pageSet.enable" [nzShowFooter]="setDetail.footer.enable" [nzShowTitle]="setDetail.title.enable && !isModal"
   [nzSize]="setDetail.size" (nzDataChange)="dataChange()" [(nzPageIndex)]="pageIndex" [nzShowTotal]="1"> -->
 <div #myDriveTable>
-  <nz-table *ngIf="_dataDrive && setDetail" #nzTable [nzScroll]="setDetail.fixedHeader?.enable?{ y: setDetail.fixedHeader.scrollHeight>0?setDetail.fixedHeader.scrollHeight: 300 }:null"
+  <nz-table *ngIf="_dataDrive && setDetail" #nzTable [nzScroll]="setDetail.fixedHeader?.enable?{ y: setDetail.fixedHeader.scrollHeight>0?setDetail.fixedHeader.scrollHeight: 300 }:minWidth?{x:minWidth}:null"
     [nzData]="tableData.data?tableData.data:[]" [nzPageSize]="setDetail.pageSet.count" [nzBordered]="setDetail.border_y.enable"
     [nzLoading]="_loading" [nzFrontPagination]="setDetail.pageSet.enable" [nzShowPagination]="setDetail.pageSet.enable"
     [nzFooter]="tableData.endPagination?.enable? loadMore: null" [nzTitle]="null" [nzSize]="setDetail.size"
@@ -24,7 +24,7 @@
           <!-- <nz-table-sort (nzValueChange)="sort(item.property, $event, item.more.sortBy)" *ngIf="item.more && item.more.sortBy"></nz-table-sort> -->
         </th>
         <th nz-th [ngStyle]="_headerCellStyle({})" [nzWidth]="setDetail.fixedHeader?.enable &&setDetail.fixedHeader?.width && setDetail.fixedHeader?.width[i]?setDetail.fixedHeader?.width[i]:!setDetail.fixedHeader?'':(100/(tableData.columns.length+additionalColNum)) + '%'"
-          *ngIf="setDetail.showAction">
+          *ngIf="setDetail.showAction" nzRight="0px">
           <span *ngIf="_dataDrive.nameSets?.actionCol;else elseBlock ">{{_dataDrive.nameSets?.actionCol}}</span>
           <ng-template #elseBlock>
             <span>Action</span>
@@ -58,7 +58,7 @@
             </ng-container>
           </td>
         </ng-container>
-        <td [ngStyle]="runRegExp(i, setDetail.body,'')" nz-td *ngIf="setDetail.showAction">
+        <td [ngStyle]="runRegExp(i, setDetail.body,'')" nz-td *ngIf="setDetail.showAction" nzRight="0px">
           <span>
             <a *ngIf="canEdit" (click)="toUpdate(i)">
               <span *ngIf="_dataDrive.nameSets?.update;else elseBlock1 ">{{_dataDrive.nameSets?.update}}</span>

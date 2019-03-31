@@ -90,7 +90,7 @@ export class ITServerAddComponent implements OnInit {
       TYPE: [null],
       REMARK: [''],
       HANDLE_TIME: [null],
-      STATUS: [''],
+      STATUS: ['Closed'],
     });
     const validate = () => {
       const from = form.get('fromTime');

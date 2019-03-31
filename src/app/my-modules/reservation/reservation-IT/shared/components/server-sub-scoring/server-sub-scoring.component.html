@@ -1,11 +1,29 @@
 <div class="card-container">
   <nz-tabset [nzTabPosition]="'top'" [nzType]="'card'">
-    <nz-tab [nzTitle]="'待评价(我)'">
-      <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive1($event)">
+    <nz-tab [nzTitle]="nzTabHeading1">
+      <ng-template #nzTabHeading1>
+        待评价(我)
+        <nz-badge [nzCount]="myCount" *ngIf="myCount">
+          <ng-template #content>
+            &nbsp;&nbsp;
+          </ng-template>
+        </nz-badge>
+      </ng-template>
+      <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive1($event)" viewerMinWidth="1800px"
+      [bodyCellStyle]="bodyCellStyleFn">
       </app-data-drive>
     </nz-tab>
-    <nz-tab [nzTitle]="'待评价(他)'">
-      <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive2($event)">
+    <nz-tab [nzTitle]="nzTabHeading2">
+      <ng-template #nzTabHeading2>
+        待评价(他)
+        <nz-badge [nzCount]="otherCount" *ngIf="otherCount">
+          <ng-template #content>
+            &nbsp;&nbsp;
+          </ng-template>
+        </nz-badge>
+      </ng-template>
+      <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive2($event)" viewerMinWidth="1800px"
+      [bodyCellStyle]="bodyCellStyleFn">
       </app-data-drive>
     </nz-tab>
   </nz-tabset>

@@ -31,6 +31,16 @@ export class ServerSubComponent implements OnInit, OnDestroy {
   closedTarget: ReservationApplication;
   doneTarget: ReservationApplication;
   doneForm: FormGroup;
+  newCount: number;
+  myCount: number;
+  otherCount: number;
+  bodyCellStyleFn = (data, prop) => {
+    if (prop === 'SERVICE_DESC') {
+      return {
+        'max-width': '350px'
+      };
+    }
+  }
 
   constructor(
     private auth: AuthService,
@@ -105,16 +115,19 @@ export class ServerSubComponent implements OnInit, OnDestroy {
       this.d3.selfUpdateTableData(others);
       return newList;
     });
+    d.afterDataInit((ls) => this.newCount = ls.length);
     timer(10).subscribe(() => this.obData(d));
   }
 
   getDataDrive2(d: DataDrive) {
     this.hideColumns(d);
     this.d2 = d;
+    d.afterDataInit((ls) => this.myCount = ls.length);
   }
   getDataDrive3(d: DataDrive) {
     this.hideColumns(d);
     this.d3 = d;
+    d.afterDataInit((ls) => this.otherCount = ls.length);
   }
 
   receiveResvation(data: ReservationApplication) {
@@ -154,6 +167,22 @@ export class ServerSubComponent implements OnInit, OnDestroy {
   closeResvation(data: ReservationApplication) {
     this.isClosedVisible = true;
     this.closedTarget = data;
+  }
+
+  submitClosedForm() {
+    if (this.reason) {
+      const doClose = () => {
+        const send = Object.assign({}, this.closedTarget, {
+          STATUS: 'CX',
+          REMARK: this.reason,
+        });
+        this.updateService(send, () => {
+          this.isClosedVisible = false;
+        });
+        this.closedTarget = null;
+      };
+      doClose();
+    }
   }
 
   doneResvation(data: ReservationApplication) {

@@ -1,8 +1,17 @@
 
 <div class="card-container">
     <nz-tabset [nzTabPosition]="'top'" [nzType]="'card'" [nzSelectedIndex]="1">
-      <nz-tab [nzTitle]="'待受理'">
-        <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive1($event)">
+      <nz-tab [nzTitle]="nzTabHeading1">
+          <ng-template #nzTabHeading1>
+              待受理
+              <nz-badge [nzCount]="newCount" *ngIf="newCount">
+                <ng-template #content>
+                  &nbsp;&nbsp;
+                </ng-template>
+              </nz-badge>
+            </ng-template>
+        <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive1($event)" viewerMinWidth="1600px"
+        [bodyCellStyle]="bodyCellStyleFn">
             <ng-template #actionRef let-data="data">
                 <span>
                   <a (click)="closeResvation(data)">{{'serviceModule.close' | translate}}</a>
@@ -13,8 +22,17 @@
         </app-data-drive>
 
       </nz-tab>
-      <nz-tab [nzTitle]="'处理中(我)'">
-        <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive2($event)">
+      <nz-tab [nzTitle]="nzTabHeading2">
+          <ng-template #nzTabHeading2>
+              处理中(我)
+              <nz-badge [nzCount]="myCount" *ngIf="myCount">
+                <ng-template #content>
+                  &nbsp;&nbsp;
+                </ng-template>
+              </nz-badge>
+            </ng-template>
+        <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive2($event)" viewerMinWidth="1600px"
+        [bodyCellStyle]="bodyCellStyleFn">
             <ng-template #actionRef let-data="data">
                 <span>
                   <a (click)="doneResvation(data)">{{'serviceModule.finish' | translate}}</a>
@@ -25,8 +43,17 @@
         </app-data-drive>
 
       </nz-tab>
-      <nz-tab [nzTitle]="'处理中(他)'">
-        <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive3($event)">
+      <nz-tab [nzTitle]="nzTabHeading3">
+          <ng-template #nzTabHeading3>
+              处理中(他)
+              <nz-badge [nzCount]="otherCount" *ngIf="otherCount">
+                <ng-template #content>
+                  &nbsp;&nbsp;
+                </ng-template>
+              </nz-badge>
+            </ng-template>
+        <app-data-drive [name]="'reservationITWorkspace'" (dataDriveInit)="getDataDrive3($event)" viewerMinWidth="1600px"
+        [bodyCellStyle]="bodyCellStyleFn">
             <ng-template #actionRef let-data="data">
                 <span>
                   <a (click)="doneResvation(data)">{{'serviceModule.finish' | translate}}</a>

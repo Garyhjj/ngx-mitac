@@ -47,6 +47,13 @@ export class ITServerWorkspaceComponent implements OnInit, OnDestroy {
   confirmToAccept: string;
   confirmToReset: string;
   sub: Subscription;
+  bodyCellStyleFn = (data, prop) => {
+    if (prop === 'SERVICE_DESC') {
+      return {
+        'max-width': '350px'
+      };
+    }
+  }
   constructor(
     private reservationITService: ReservationITService,
     private dataDriveService: DataDriveService,
@@ -55,7 +62,7 @@ export class ITServerWorkspaceComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private validatorExtendService: NgxValidatorExtendService,
     private translateService: TranslateService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.user = this.reservationITService.user;
@@ -237,8 +244,8 @@ export class ITServerWorkspaceComponent implements OnInit, OnDestroy {
     const subscription = this.modalService.create({
       nzTitle: this.yinxiangText,
       nzContent: ImpressionListComponent,
-      nzOnOk() {},
-      nzOnCancel() {},
+      nzOnOk() { },
+      nzOnCancel() { },
       nzFooter: '',
       nzComponentParams: {
         application: app,
@@ -410,7 +417,7 @@ export class ITServerWorkspaceComponent implements OnInit, OnDestroy {
       nzOnOk() {
         doReceive();
       },
-      nzOnCancel() {},
+      nzOnCancel() { },
     });
   }
 
@@ -463,7 +470,7 @@ export class ITServerWorkspaceComponent implements OnInit, OnDestroy {
       nzOnOk() {
         doReset();
       },
-      nzOnCancel() {},
+      nzOnCancel() { },
     });
   }
 
